@@ -1,0 +1,94 @@
+﻿[000]
+PlayerA=POKEMONTRAINER_Red,trchar000,boy_bike,boy_surf_offset,boy_run,boy_dive_offset,boy_fish_offset,boy_fishsurf_offset
+PlayerB=POKEMONTRAINER_Leaf,trchar001,girl_bike,girl_surf_offset,girl_run,girl_dive_offset,girl_fish_offset,girl_fishsurf_offset
+TrainerBattleBGM=005-Boss01.mid
+SurfBGM=Ship.mid
+BicycleBGM=Airship.mid
+Home=3,7,5,8
+WildBattleBGM=002-Battle02.mid
+[001]
+# Intro
+[002]
+# Pueblo Cianita
+SnapEdges=true
+Bicycle=true
+MapPosition=0,13,12
+Outdoor=true
+ShowArea=true
+[003]
+# Casa Player
+BattleBack=IndoorB
+Bicycle=false
+MapPosition=0,13,12
+Outdoor=false
+HealingSpot=2,8,8
+ShowArea=false
+[004]
+# Laboratorio
+Bicycle=false
+MapPosition=0,13,12
+Outdoor=false
+ShowArea=false
+[005]
+# Casas
+Bicycle=false
+MapPosition=0,13,11
+Outdoor=false
+ShowArea=false
+[006]
+# Ruta 1
+SnapEdges=true
+Bicycle=true
+MapPosition=0,13,11
+Outdoor=true
+ShowArea=true
+[007]
+# Pasa Ruta
+MapSize=2,11
+MapPosition=0,13,10
+Outdoor=true
+ShowArea=true
+[008]
+# Centro Pokémon
+MapPosition=0,13,12
+[009]
+# Pueblo Topacio
+SnapEdges=true
+Bicycle=true
+MapPosition=0,14,10
+Outdoor=true
+HealingSpot=8,17,11
+ShowArea=true
+[010]
+# Pasa Ruta
+BattleBack=IndoorB
+Bicycle=true
+MapPosition=0,13,10
+Outdoor=false
+ShowArea=false
+[011]
+# Centro Pokémon
+Bicycle=false
+MapPosition=0,14,10
+Outdoor=false
+HealingSpot=9,25,17
+ShowArea=false
+[012]
+# Granja Ambarina
+SnapEdges=true
+Outdoor=true
+ShowArea=true
+[018]
+# Bosque Turmalino
+SnapEdges=true
+Outdoor=true
+ShowArea=true
+[019]
+# Claro del Bosque
+SnapEdges=true
+SafariMap=false
+Outdoor=true
+[020]
+# Profundidades
+SnapEdges=true
+Outdoor=true
