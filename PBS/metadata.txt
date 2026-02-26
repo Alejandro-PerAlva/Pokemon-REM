@@ -43,7 +43,7 @@ MapPosition=0,13,11
 Outdoor=true
 ShowArea=true
 [007]
-# Pasa Ruta
+# Pasa Ruta H
 MapSize=2,11
 MapPosition=0,13,10
 Outdoor=true
@@ -92,3 +92,9 @@ Outdoor=true
 # Profundidades
 SnapEdges=true
 Outdoor=true
+[022]
+# Ruta 2
+SnapEdges=true
+Bicycle=true
+Outdoor=true
+ShowArea=true
