@@ -83,6 +83,5 @@ input, select { font-size: 13px; }
 .tbl td.ta-right, .tbl td.ta-center, .tbl td.num, .tbl td:has(.badge) { white-space: nowrap; }
 .tbl td:last-child:not(.ta-right):not(.ta-center):not(.num) { min-width: 150px; }
 
-/* sprite único y ajustado: la hoja son 2 fotogramas (128x64); se muestra solo el izquierdo, escalado al hueco */
-.pcard .picon { width: 48px !important; height: 48px !important; overflow: hidden; border-radius: 0; }
-.pcard .picon img { width: 96px !important; height: 48px !important; max-width: none !important; left: 0; top: 0; object-fit: fill; }
+/* sprite: mismo formato que el árbol evolutivo (pokeIcon 64px, sin overrides) */
+.pcard .picon { margin: 0 auto; }
