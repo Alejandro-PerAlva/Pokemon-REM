@@ -1,0 +1,1438 @@
+﻿# Pokémon REM — Crónicas de Oniria (Vol. 8): Preludio, 68 capítulos y libro de cuentas de los 6 fragmentos. Generado por tools/rebalance/phase1/build_narrative.py; no editar a mano.
+# Formato INI (UTF-8 BOM, CRLF): [PRELUDE], [CHAPTER_01..68], [FRAGMENT_LEDGER]. NarrativeText y Milestones son claves repetidas: UN párrafo (o viñeta) por línea, texto íntegro del volumen.
+# Se retiran los marcadores Markdown de énfasis (**negrita**, *cursiva*); no se resume ni se recorta nada. LocationKey = LOC_KEY; CharactersInScene = nombres tal como aparecen en la cabecera del capítulo (resolubles vía Aliases de rem_characters.txt).
+# Cada capítulo: Title, Act, LocationKey, MedalsEarned, FragmentsInPlay, WildLevels, CharactersInScene, NarrativeText (repetida), Milestones (repetida: «Hitos de gameplay»), WhyItMatters. ActTitle/ActIntro solo en el primer capítulo de cada acto.
+# Fragmentos del libro de cuentas: FragmentN = Nombre,Dominante,LOC_KEY,CHAPTER_NN,Nota (Nota = «Destino» del Vol. 8). OrbN = orbe a la que pertenece. Result = resumen del Vol. 6, Apéndice B.
+
+[PRELUDE]
+Title = Preludio — La leyenda que contó el Profesor
+Act =
+LocationKey =
+CharactersInScene =
+NarrativeText = Antes de los nombres hubo dos guardianes que no se parecían. Cresselia, de luz lunar, tejía los sueños buenos; Darkrai, de sombra, sembraba los malos para que los durmientes aprendieran a despertar. Cada uno tenía su orbe, y cada orbe, su altar: uno en una isla de flores y otro en una isla de niebla. Mientras las orbes estuvieron enteras, los hombres soñaron y despertaron en su justa medida.
+NarrativeText = Un día alguien quiso manipularlas —cuentan que para borrar el dolor de una sola persona— y ambas orbes se quebraron. Seis fragmentos, tres de cada una, cayeron al fondo de Oniria. Los hombres dijeron que se perdieron; los Pokémon, que se durmieron. Cada fragmento se escondió en el corazón de una criatura fuerte, un Dominante, y esperó a que lo despertase aquello que ni la fuerza ni el miedo consiguen: el vínculo.
+NarrativeText = Desde entonces el equilibrio cojea. Y hay quien dice que, si ambos guardianes se despiertan a la vez, no habrá ya quien distinga el sueño de la vigilia.
+
+[CHAPTER_01]
+Title = Pueblo Iolar
+Act = I
+ActTitle = Acto I — El Valle Dormido
+ActIntro = Pueblo Iolar · Ruta 1 · Pueblo Heliar · Granja Apato · Bosque Dioptasa · Ruta 2 · Ciudad Calceda · Ruta 3 · Ruta 4 · Playa Sepiola · Ciudad Calaire · Ruta 5 · Pueblo Pedernal · Lago Amatista. Prados, molinos, bosque y mar: el tono pastoral y la inocencia, hasta que aparece el primer Dominante y la primera base.
+LocationKey = PUEBLO_IOLITA
+MedalsEarned = 0
+FragmentsInPlay = Ninguno todavía. El Profesor menciona «desequilibrios en los sueños».
+WildLevels = Sin salvajes en esta escena
+CharactersInScene = Tú (Protagonista);Ambrosio;Lucián;Guiomar;Amparo;Pía
+NarrativeText = Te despierta el olor a pan. La luz entra sesgada por la ventana de tu cuarto y dibuja en el suelo un rectángulo amarillo. Abajo, tu madre, Amparo, ya ha puesto la mesa y mueve las tazas con esa precisión suya que no admite replicas.
+NarrativeText = —Hoy es el día —dice, sin volverse—. No te he llamado para que te quedes mirando el techo.
+NarrativeText = Desayunas con prisa. Ella te ajusta el cuello de la chaqueta, te coloca un mechón rebelde y te mira un segundo de más.
+NarrativeText = —Vuelve cuando quieras —añade al fin—. La casa no se mueve.
+NarrativeText = Pueblo Iolar es un lugar pequeño, de tejas azuladas y un olmo viejo en la plaza. Todo el mundo se conoce. Cada mañana la misma gallina cruza la misma calle. Al fondo, sobre una loma, la casa-laboratorio del Profesor despide humo por la chimenea.
+NarrativeText = En la verja te espera Lucián, tu vecino de toda la vida. Lleva el chaleco abrochado hasta arriba, las gafas torcidas de tanto empujárselas y una libreta bajo el brazo.
+NarrativeText = —Llegas ocho minutos tarde —dice—. Probablemente no es grave. Aunque… con un setenta por ciento de confianza, Guiomar ya está dentro.
+NarrativeText = Lo está. Cuando cruzas la puerta del laboratorio, Guiomar da botes en medio de la sala, con la coleta rojiza desordenada, las vendas de las manos y una tirita nueva en cada rodilla. Ha venido corriendo desde Pueblo Heliar.
+NarrativeText = —¡Por fin! —grita—. ¡Creía que os habíais echado atrás!
+NarrativeText = Pía, la ayudante del Profesor, intenta que baje la voz. No lo consigue.
+NarrativeText = Entonces aparece él. Ambrosio Valdemar baja las escaleras con la lentitud de quien nunca ha tenido prisa. Debajo de la bata impoluta lleva un traje oscuro de cuello alto, de otro siglo. En la mano izquierda sostiene un reloj de bolsillo de oro cuya esfera atraviesa una fina grieta. Lo consulta, lo guarda, y sonríe.
+NarrativeText = —Mis queridos —dice—. Qué día tan hermoso para empezar.
+NarrativeText = Les habla del vínculo entre las personas y las criaturas que las acompañan. Lo hace con ternura, con las manos entrelazadas a la espalda, y de pronto se detiene, como si hubiera encontrado una palabra dentro de otra.
+NarrativeText = —Últimamente he estado estudiando ciertos… desequilibrios en los sueños —confiesa, casi para sí. El reloj vuelve a su mano, a su ojo, a su bolsillo—. Pero no es día para eso. Los vínculos, queridos míos, despiertan todo lo que duerme. Recordadlo.
+NarrativeText = Cada uno dice por qué viaja. Lucián quiere completar la Pokédex; es cuestión de método. Guiomar quiere los ocho gimnasios y ser la mejor, y lo dice tres veces. Tú no dices nada: sonríes, y los dos te miran como si hubieras dicho lo más sensato.
+NarrativeText = El Profesor les entrega un Pokémon a cada uno. El tuyo te mira desde la palma abierta, pequeño, de nivel 5, con una curiosidad idéntica a la tuya. Ambrosio inclina la cabeza.
+NarrativeText = —Viajad juntos —pide—. Los tres. Prometédmelo.
+NarrativeText = Guiomar ya está en la puerta cuando termina de hablar. Lucián, en cambio, te propone un combate amistoso de tutorial en el patio. Se ajusta las gafas, elige con cuidado el Pokémon con ventaja de tipo y te explica con voz firme por qué va a ganar. Pierde el primer turno y lo anota.
+NarrativeText = Al terminar, Guiomar ya se ha marchado hacia el gimnasio más cercano sin esperar a nadie. Lucián recoge su libreta.
+NarrativeText = —Probablemente nos alcanzará en el primer cruce —murmura.
+NarrativeText = Sales a la loma. Hacia el noreste, una cueva cuya entrada está sellada con tablones; hacia el oeste, el mar, y una ruta que solo se atraviesa con barco. Hacia el sur, la Ruta 1. Detrás de ti, Amparo agita la mano desde la puerta, y la mano del Profesor, desde la ventana del laboratorio, abre y cierra la tapa de su reloj.
+Milestones = Entrega del Pokémon inicial (Nv 5) y presentación del trío; el Pokédex queda en tu poder.
+Milestones = Combate tutorial contra Lucián (guion, Nv 5): no cuenta como duelo «real».
+Milestones = Foreshadowing: el reloj agrietado y la frase «los vínculos despiertan todo lo que duerme»; el Profesor insiste en que viajen juntos (así despertarán los fragmentos).
+Milestones = Bloqueos: Ruta 20 (cueva NE) y Ruta 13 (marina, W) quedan cerradas; se abren en la fase final y a mitad del juego.
+WhyItMatters = Planta los tres hilos de la historia: el vínculo del trío, los «desequilibrios en los sueños» y la figura del Profesor, cuyo reloj agrietado y su insistencia en viajar juntos explicarán después cómo se despiertan los fragmentos.
+
+[CHAPTER_02]
+Title = Ruta 1
+Act = I
+LocationKey = RUTA_01
+MedalsEarned = 0
+FragmentsInPlay = Ninguno todavía. El Profesor menciona «desequilibrios en los sueños».
+WildLevels = Día 3–5 · Noche 4–7
+CharactersInScene = Tú (Protagonista);Eliseo
+NarrativeText = La Ruta 1 es un trozo de infancia: hierba alta, entrenadores novatos con los zapatos aún sin estrenar, zonas de observación donde cualquiera puede sentarse y ver pasar a los Pokémon salvajes. Practicas lo que has aprendido. Capturas. Pierdes un combate; aprendes. Los salvajes tienen niveles bajos (3–5 de día).
+NarrativeText = Sigues el sendero hasta una bifurcación boscosa y entonces la ves: una silueta alta, inmóvil, en lo alto de una colina. Va envuelta en una túnica de color índigo y negro. No se mueve. No te mira; mira, más bien, a través de ti.
+NarrativeText = A sus pies, los Pokémon salvajes del prado se han acercado sin miedo. Un pajarillo se posa en su manga. Un roedor se tumba junto a su sandalia. El aire se vuelve tibio y extrañamente solemne, como el de una iglesia vacía.
+NarrativeText = No hay combate. No hay palabras. Cuando parpadeas, la figura ya no está, y el pajarillo dibuja un círculo en el aire, desconcertado.
+NarrativeText = Hacia el suroeste, el camino se desvía hacia el mar, pero un cartel anuncia que la ruta marítima está cerrada. Sigues al este, hacia el pueblo donde nació Guiomar, con un frío leve en la nuca.
+Milestones = Primer encuentro cinemático con Eliseo (el Líder de Morfeo), aún sin nombre ni rostro; sin combate ni diálogo.
+Milestones = Auditoría: Nerea no aparece; su debut es la Ruta 4. El cruce de la Ruta 24 (suroeste) queda bloqueado hasta el final.
+Milestones = Salvajes Nv 3–5 (día) · 4–7 (noche): práctica de mecánicas básicas.
+WhyItMatters = Presenta al líder de Morfeo antes de que se sepa quién es: cuando Eliseo reaparezca en la Ruta 9, el jugador ya habrá sentido su calma inquietante.
+
+[CHAPTER_03]
+Title = Pueblo Heliar
+Act = I
+LocationKey = PUEBLO_HELIODORO
+MedalsEarned = 0
+FragmentsInPlay = Ninguno todavía. El Profesor menciona «desequilibrios en los sueños».
+WildLevels = Sin salvajes en esta escena
+CharactersInScene = Tú (Protagonista)
+NarrativeText = Pueblo Heliar huele a trigo, a tierra mojada y a pan de molino. Los molinos de viento giran sin descanso sobre los tejados de piedra miel. Sin embargo, desde que entras por el camino del oeste notas algo distinto: la gente no habla en las puertas, y los niños miran por las ventanas.
+NarrativeText = En la plaza central hay una multitud tensa y un pequeño estrado improvisado. Sobre él, un hombre envuelto en una túnica oscura, de voz pausada y cadencias ajenas, habla de sueños colectivos y paz duradera. Imita —sin saberlo o sabiéndolo— la serenidad de otro: pero no es él. Junto al estrado, un puñado de reclutas con la insignia de Morfeo se mueve entre los vecinos con modos menos suaves.
+NarrativeText = —Si encontráis algo inusual —pide uno, alzando la voz—, fragmentos de un orbe que traerá la paz a todos los corazones, entregádnoslo. El dolor es la enfermedad del mundo; nosotros somos la medicina.
+NarrativeText = Nadie contesta. Las madres se acercan a sus hijos. Un viejo escupe en el suelo. Entonces uno de los reclutas recibe un mensaje en su comunicador, lo lee, hace un gesto seco y todos se retiran sin más. Antes de desaparecer en la esquina, el primero se vuelve:
+NarrativeText = —No podéis protegeros del dolor —sentencia—… pero nosotros podemos enseñaros a no sentirlo.
+NarrativeText = Es la primera vez que el Equipo Morfeo se muestra en público: no como una banda de ladrones, sino como una fe. Preguntas por Guiomar. La respuesta es que ya ha partido hacia su primer gimnasio, dejando solo su casa vacía y una nota clavada con una cuchara en la puerta: «¡Llegaré antes que vosotros!».
+Milestones = Primera aparición pública del Equipo Morfeo (predicador anónimo y reclutas); se menciona por primera vez el orbe que «traerá la paz a todos los corazones».
+Milestones = Guiomar ya no está: la historia la reencuentra en la Ruta 2.
+Milestones = Se desbloquea el paso al este: la Granja Apato.
+WhyItMatters = Convierte a Morfeo en una fe y no en una banda, y anuncia el objeto de la búsqueda (los fragmentos); sin este discurso el interés de Morfeo por los chicos carecería de contexto.
+
+[CHAPTER_04]
+Title = Granja Apato
+Act = I
+LocationKey = GRANJA_APATITA
+MedalsEarned = 0
+FragmentsInPlay = Ninguno todavía. El Profesor menciona «desequilibrios en los sueños».
+WildLevels = Día 6–8 · Noche 9–12
+CharactersInScene = Tú (Protagonista);Lucián;Eladio y Hortensia
+NarrativeText = Al salir por el este, el camino se abre sobre un mar de campos dorados y vallas: la Granja Apato, tan quieta como un cuadro. Establos, corrales, parcelas y, en todas partes, Pokémon de trabajo: Normal, Planta, Tierra, tirando de arados y mordisqueando cebada.
+NarrativeText = En el centro hay una casita con un cartel pintado a mano: Guardería Pokémon. Dos ancianos te saludan desde el porche, Eladio y Hortensia, hablando casi a la vez.
+NarrativeText = —Si encontráis huevos…
+NarrativeText = —… o si queréis dejar a vuestros…
+NarrativeText = —… nosotros los cuidamos —terminan juntos.
+NarrativeText = La guardería queda activada como mecánica opcional de crianza.
+NarrativeText = Junto a la valla encuentras a Lucián, con el Pokédex en alto, registrando a un Pokémon de pelaje liso que se deja medir con paciencia. Al verte, guarda el aparato y sonríe, nervioso.
+NarrativeText = —Había una probabilidad bastante alta de que aparecieras ahora —dice—. Quiero comprobar cuánto hemos mejorado desde que recibimos a nuestros compañeros. ¿Un combate?
+NarrativeText = Es vuestro primer duelo real: mejor planificado que el de Iolar, con un equipo de ventajas de tipo sin sorpresas. Lo ganas, o lo pierdes, pero lo importante es el modo en que él ajusta las gafas al terminar.
+NarrativeText = —Voy a seguir investigando las especies de la zona —anuncia—. Voy a anotarlo todo. Tú sigue adelante, ya te alcanzaré.
+NarrativeText = Se aleja con la libreta bajo el brazo. El camino siguiente se abre hacia el sur: un bosque oscuro, cuyas copas ya se ven al fondo.
+Milestones = Guardería Pokémon activada (Eladio y Hortensia).
+Milestones = Primer duelo de rivalidad real con Lucián: Nv 9.
+Milestones = Salvajes Nv 6–8 (día) · 9–12 (noche).
+Milestones = Se abre el camino al Bosque Dioptasa.
+WhyItMatters = Instala la rivalidad con Lucián y la guardería, y despide al amigo justo antes del bosque: por eso sus apariciones posteriores serán siempre reencuentros.
+
+[CHAPTER_05]
+Title = Bosque Dioptasa
+Act = I
+LocationKey = BOSQUE_DIOPTASA
+MedalsEarned = 0
+FragmentsInPlay = F1 (Pesadilla) recuperado → en manos del Profesor (custodia). Morfeo: 1/6 (en secreto).
+WildLevels = Día 9–11 · Noche 13–16
+CharactersInScene = Tú (Protagonista);Ambrosio;Lucián
+NarrativeText = El Bosque Dioptasa no te recibe; te cierra. Los árboles retorcidos se inclinan unos hacia otros formando pasillos de sombra que cambian cada vez que parpadeas. Hay puentes de raíces, claros ocultos y cuevas diminutas bajo la maleza. Los Pokémon salvajes son más agresivos que los de la granja, y el aire pesa. Por primera vez desde que saliste de Iolar, algo en tu estómago dice peligro.
+NarrativeText = Te cruzas varias veces con Lucián, que sigue su ruta paralela anotando musgos y huellas. Cada encuentro es breve —un saludo, una pregunta, un dato—, pero tranquilizador: ambos exploran el mismo laberinto, cada uno por su cuenta.
+NarrativeText = En lo más profundo se abre un claro. Ahí, una criatura salvaje de plumaje demasiado oscuro enfrenta a tres reclutas del Equipo Morfeo. Los hombres sostienen entre sus manos un resplandor tenue: han encontrado un fragmento. Pero al intentar llevárselo, la criatura ha enloquecido y los ha derrotado. Los reclutas, magullados, huyen entre la maleza jurando venganza.
+NarrativeText = La criatura se vuelve hacia ti. Tiene los ojos rojizos; el fragmento late, ahora, dentro de su pecho. Es el primer Pokémon Dominante y, potenciado por el fragmento, es más fuerte y agresivo de lo habitual. El combate es difícil (Nv 13). Cada vez que cae al suelo, se levanta con un graznido que parece venir de dentro de ti.
+NarrativeText = Cuando por fin cae del todo, la criatura huye herida o se desvanece, y en el claro queda un destello: el fragmento, el F1. Es un trozo de cristal oscuro, frío, que emite un brillo tenue y te provoca visiones confusas: una escalera infinita, una cama vacía, un reloj que marcha hacia atrás.
+NarrativeText = Apenas has dado un paso hacia él cuando oyes pasos conocidos entre la maleza. Lucián aparece corriendo… y, detrás de él, Ambrosio, sin una brizna de barro en la bata.
+NarrativeText = —Qué suerte llegar justo ahora —dice el Profesor, ajustándose la solapa—. Seguí el rastro de un desequilibrio de energía.
+NarrativeText = Se arrodilla ante el fragmento y lo recoge con las dos manos desnudas, con una reverencia casi religiosa. El reloj de su chaleco marcha, un segundo, al revés. Lo mira, lo guarda.
+NarrativeText = —Seis… —murmura—. Qué cifra tan delicada.
+NarrativeText = Les explica la leyenda de las orbes de Cresselia y Darkrai: cómo se rompieron al intentar manipularlas y cómo cada fragmento se escondió en una criatura fuerte. Este es uno de los seis perdidos, y es fundamental recuperarlos antes que el Equipo Morfeo.
+NarrativeText = —Dejad que sea yo quien cargue con el peso —dice, envolviendo el fragmento en un paño de seda—. Vosotros sois jóvenes. Lo guardaré en el laboratorio, a buen recaudo.
+NarrativeText = Os encarga oficialmente a ti, y con más libertad a Lucián, la misión de encontrar los otros cinco. Cuando se va, Lucián se queda mirando el sitio donde ha estado el fragmento, y por una vez no anota nada.
+Milestones = Primer Dominante: Dominante 1 (Siniestro/Volador), Nv 13. Los Dominantes no se capturan: son jefes de guion que se derrotan para recuperar un fragmento (su especie queda pendiente y no afecta al reparto salvaje). Se obtiene el F1 (Pesadilla) → custodia del Profesor (en realidad, Morfeo: 1/6).
+Milestones = Misión oficial: recuperar los cinco fragmentos restantes.
+Milestones = Pistas ocultas: el Profesor llega justo tras el combate, recoge el fragmento con las manos desnudas y su reloj marcha hacia atrás; sabe que son seis antes de analizar.
+Milestones = Salvajes Nv 9–11 (día) · 13–16 (noche).
+WhyItMatters = Fija las reglas del mundo: los fragmentos duermen en Dominantes y solo un vínculo los despierta. El Profesor que los «custodia» será quien los entregue a Morfeo.
+
+[CHAPTER_06]
+Title = Ruta 2
+Act = I
+LocationKey = RUTA_02
+MedalsEarned = 0
+FragmentsInPlay = F1 (Pesadilla) recuperado → en manos del Profesor (custodia). Morfeo: 1/6 (en secreto).
+WildLevels = Día 11–13 · Noche 16–19
+CharactersInScene = Tú (Protagonista);Guiomar
+NarrativeText = La Ruta 2 es un respiro: riachuelos, caminos bien marcados, entrenadores opcionales. Después de la espesura, el cielo parece un regalo. A medio camino, una figura te cierra el paso con los brazos en jarras.
+NarrativeText = —¡Eh! ¡Tú! —Guiomar te señala con un dedo vendado—. Me dijeron que habíais entrado en ese bosque. Algo huele raro por aquí y no pienso quedarme atrás. ¿Combatimos?
+NarrativeText = Su tono es seguro: quiere probar que ha avanzado más que tú. Es vuestro primer enfrentamiento directo desde que empezó el viaje (Nv 14). Gana el que gana, pero ella pierde; y tras la derrota, en vez de enfadarse, se queda un momento callada.
+NarrativeText = —Me han dicho cosas… —dice, hablando para sí en voz alta, mientras caminas a su lado—. Gente con uniformes raros. Un discurso en la plaza de mi pueblo. Un montón de gente asustada. ¿No será todo lo mismo?
+NarrativeText = Tú se lo cuentas con gestos: el claro, la criatura, el brillo del fragmento. Guiomar abre mucho los ojos.
+NarrativeText = —Eso es… ¡Eso es lo que buscan! —exclama—. Pues no pienso dejar que se lo lleven. ¡Cuenta conmigo!
+NarrativeText = Tarda en unir las piezas, sí, pero lo hace con valentía. Desde aquí, el trío es un trío de verdad.
+Milestones = Primer duelo con Guiomar: Nv 14. Ella se suma a la búsqueda de fragmentos.
+Milestones = El trío queda consolidado como unidad. Salvajes Nv 11–13 (día) · 16–19 (noche).
+WhyItMatters = Suma a Guiomar a la causa y completa el trío; su arco de orgullo hacia lealtad empieza aquí.
+
+[CHAPTER_07]
+Title = Ciudad Calceda — Llegada
+Act = I
+LocationKey = CIUDAD_CALCEDONIA
+MedalsEarned = 0
+FragmentsInPlay = F1 (Pesadilla) recuperado → en manos del Profesor (custodia). Morfeo: 1/6 (en secreto).
+WildLevels = Sin salvajes en esta escena
+CharactersInScene = Tú (Protagonista);Guiomar;Matilde
+NarrativeText = Ciudad Calceda emerge entre los árboles como un manuscrito iluminado: fachadas de piedra clara y lechosa, claustros, tejados de pizarra, estudiantes que cruzan las plazas con las libretas contra el pecho. La Academia Pokémon y la biblioteca se alzan a ambos lados de la calle principal.
+NarrativeText = Guiomar echa a correr hacia el gimnasio. Tú vas tras ella. Allí te encuentras con la puerta cerrada y un cartel: «Clase en curso». La líder, Matilde, no está.
+NarrativeText = La encontráis en la academia, con un puntero en la mano y tiza hasta el codo, explicando a treinta alumnos la diferencia entre un tipo y una estrategia. Os mira por encima de las gafas.
+NarrativeText = —Esperad fuera —ordena. Y, un minuto después, sale ella misma, con el rostro endurecido—: Acaba de llegar un aviso. Disturbios en la cueva de la Ruta 3: varios entrenadores han sido retenidos por individuos sospechosos. El gimnasio no abrirá hasta que lo resuelva.
+NarrativeText = Guiomar levanta la mano como en clase.
+NarrativeText = —¡Yo voy!
+NarrativeText = —Nadie va solo —dice Matilde—. Pero si queréis venir, venís conmigo.
+Milestones = Primera ciudad grande: academia y biblioteca. Matilde no está en su gimnasio; el aviso de la Ruta 3 desencadena la misión conjunta.
+Milestones = Guiomar acompaña al protagonista.
+WhyItMatters = Presenta a Matilde e inaugura la mecánica de misión previa al gimnasio; la ciudad quedará aislada del interior en cuanto se derrumbe la cueva.
+
+[CHAPTER_08]
+Title = Ruta 3 — La Cueva
+Act = I
+LocationKey = RUTA_03
+MedalsEarned = 0
+FragmentsInPlay = F1 (Pesadilla) recuperado → en manos del Profesor (custodia). Morfeo: 1/6 (en secreto).
+WildLevels = Día 13–15 · Noche 19–22
+CharactersInScene = Tú (Protagonista);Guiomar;Matilde
+NarrativeText = La Ruta 3 es una cueva natural, fresca y rocosa, de senderos angostos y bifurcaciones. Desde la entrada se oye el goteo y, más lejos, voces ásperas. Los reclutas del Equipo Morfeo han tomado la cueva y bloquean el paso: quieren aislar la ciudad y controlar el acceso al monte que se alza más allá.
+NarrativeText = Se suceden los combates (reclutas, Nv 14–15). Matilde pelea a vuestro lado con la calma de quien califica exámenes: corrige un movimiento aquí, señala un error allá. Guiomar le agradece cada consejo con un bufido. Tú tomas nota.
+NarrativeText = Los villanos, al verse acorralados, activan unas cargas en el techo del pasadizo superior. El derrumbe es controlado y preciso: la cueva se cierra hacia el norte y no dejan ni una rendija. Se oyen risas que se alejan.
+NarrativeText = —No lo han hecho por miedo —murmura Matilde, con el polvo en las gafas—. Lo han hecho porque ya tenían lo que querían. Esto es solo el principio.
+NarrativeText = Regresáis a la ciudad en silencio. En la entrada, Matilde se detiene.
+NarrativeText = —Habéis demostrado ser dignos de una prueba formal —declara—. El gimnasio os espera.
+Milestones = Combates cooperativos contra reclutas (Nv 14–15). Derrumbe: la salida superior de la cueva queda sellada hasta el postgame.
+Milestones = Salvajes Nv 13–15 (día) · 19–22 (noche); Matilde habilita el gimnasio.
+WhyItMatters = Primer ataque a la red de rutas: Morfeo aísla la región por tramos (Ruta 3, Ladera, Rejalgar). El derrumbe demuestra que su plan es mayor de lo que parece.
+
+[CHAPTER_09]
+Title = Ciudad Calceda — La Prueba (Gimnasio 1)
+Act = I
+LocationKey = CIUDAD_CALCEDONIA
+MedalsEarned = 1
+FragmentsInPlay = F1 (Pesadilla) recuperado → en manos del Profesor (custodia). Morfeo: 1/6 (en secreto).
+WildLevels = Sin salvajes en esta escena
+CharactersInScene = Tú (Protagonista);Matilde
+NarrativeText = El gimnasio de Matilde es un aula: pupitres de madera, pizarra táctica con esquemas de flechas y, al fondo, una mesa con lupas y manuales. Cuando entras, ella ya está de pie, con el puntero.
+NarrativeText = —Hoy vamos a hacer un examen —dice—. Y no se aprueba por fuerza: se aprueba por criterio.
+NarrativeText = Durante el combate, te plantea «preguntas»: te obliga a elegir entre un ataque seguro o un cambio arriesgado, y vigila cada decisión. Sus Pokémon son una clase entera: uno que dibuja en la pizarra, otro que corrige y, al final, su Ace (Nv 16), un tanque que cura antes de que la hagas caer.
+NarrativeText = Cuando por fin cae, Matilde guarda el puntero.
+NarrativeText = —Aprobado con sobresaliente —dice—. Ahora, lo difícil: aplicarlo fuera del aula.
+NarrativeText = Te entrega la Medalla 1.
+Milestones = Gimnasio 1 (Normal) — Matilde: Ace Nv 16. Medalla 1.
+Milestones = El Ace combate a Nv 16; su especie está pendiente de asignación.
+WhyItMatters = Primera medalla y modelo de gimnasio con narrativa: los líderes serán a la vez examinadores y aliados.
+
+[CHAPTER_10]
+Title = Ruta 4
+Act = I
+LocationKey = RUTA_04
+MedalsEarned = 1
+FragmentsInPlay = F1 (Pesadilla) recuperado → en manos del Profesor (custodia). Morfeo: 1/6 (en secreto).
+WildLevels = Día 15–17 · Noche 22–25
+CharactersInScene = Tú (Protagonista);Nerea
+NarrativeText = La Ruta 4 se extiende entre llanuras de colinas suaves y árboles dispersos, con algún acantilado y paso rocoso. Es un camino tranquilo, con aroma a hierba pisada. A mitad del camino, alguien te está esperando.
+NarrativeText = Una mujer joven de pelo negro corto y piel pálida, de ojeras marcadas, apoyada contra un árbol como si hubiera estado allí toda la vida. Lleva un uniforme discreto, gris y desgastado. A su lado, sentado y sin mirarte, un Pokémon oscuro de ojos rojos.
+NarrativeText = —Te observo desde hace un rato —dice, sin que su voz suba ni baje—. ¿Para qué viajas?
+NarrativeText = No respondes. Ella no parece esperarlo.
+NarrativeText = —¿Sufren más los Pokémon cuando pierden —pregunta—, o cuando ganan por ti?
+NarrativeText = Las palabras te quedan colgando en el pecho. Te reta a un combate de prueba (Nv 19). No es hostil: se ve que pregunta más con las criaturas que con la voz. Al terminar, se te queda mirando unos segundos en silencio.
+NarrativeText = —Interesante… —murmura. Y se marcha sin añadir nada.
+NarrativeText = No has sabido su nombre. No sabías que lo necesitarías.
+Milestones = Primer encuentro con Nerea (aún sin revelar su filiación): Nv 19.
+Milestones = Salvajes Nv 15–17 (día) · 22–25 (noche). Camino abierto hacia el lago y la playa.
+WhyItMatters = Primer contacto con Nerea: sus preguntas anticipan el tema (¿merece la pena sufrir?) y dan a su redención final una escalera de cuatro peldaños.
+
+[CHAPTER_11]
+Title = Playa Sepiola
+Act = I
+LocationKey = PLAYA_SEPIOLITA
+MedalsEarned = 1
+FragmentsInPlay = F1 (Pesadilla) recuperado → en manos del Profesor (custodia). Morfeo: 1/6 (en secreto).
+WildLevels = Día 17–19 · Noche 25–28
+CharactersInScene = Tú (Protagonista);Ismael
+NarrativeText = El mar te sorprende como una bofetada de luz. La Playa Sepiola es una explosión de sombrillas, surfistas, niños y familias; olas con espuma blanquísima y el rumor de un ukelele. Después de las rutas oscuras, parece un decorado de otro mundo.
+NarrativeText = Cerca de la orilla, un surfista de pelo rubio de sal, con una tabla bajo el brazo, ayuda a unos niños a recuperar un cubo que se ha llevado la corriente. Se ríe de buena gana. Cuando te ve, levanta el pulgar.
+NarrativeText = —¡Eh, forastero! —dice Ismael—. Si buscas dónde bañarte, esta es la mejor hora. Y si buscas pelea… vuelve cuando haya marea.
+NarrativeText = No es el momento del combate; aún no. Pero cuando le ayudas a espantar a un par de Pokémon traviesos que se habían apoderado de una toalla, ves lo que hay debajo de la sonrisa: es atento, responsable, y vigila cada ola.
+NarrativeText = —Mi ciudad está al este —añade—. Pásate por allí. Y llévate crema.
+Milestones = Encuentro con Ismael (sin combate). Pequeño evento conjunto; presenta su carácter.
+Milestones = Salvajes Nv 17–19 (día) · 25–28 (noche); se abre el camino a Ciudad Calaire.
+WhyItMatters = Presenta a Ismael antes de su gimnasio y suaviza el tono tras la tensión; sirve de contraste para el allanamiento de Calaire.
+
+[CHAPTER_12]
+Title = Ciudad Calaire (Gimnasio 2)
+Act = I
+LocationKey = CIUDAD_CALAITA
+MedalsEarned = 2
+FragmentsInPlay = F1 (Pesadilla) recuperado → en manos del Profesor (custodia). Morfeo: 1/6 (en secreto).
+WildLevels = Sin salvajes en esta escena
+CharactersInScene = Tú (Protagonista);Guiomar;Ismael
+NarrativeText = Ciudad Calaire huele a crema solar y a helado. Los hoteles blancos reflejan el mar y, en lo alto, el hotel principal parece una copa de cristal azul. Música de guitarras, toldos de colores. Es el lugar donde nada puede salir mal.
+NarrativeText = —¡Por fin! —Guiomar te agarra del brazo apenas entras—. Voy por mi segunda medalla. Pero antes… ¿te acuerdas de lo que dijo el surfista? Hay una persona a la que debíamos ir a buscar.
+NarrativeText = Seguís la pista hasta una casa de veraneo con las persianas verdes. La puerta está forzada. Dentro, los cajones por el suelo, los colchones rajados… Y, en el jardín, reclutas del Equipo Morfeo revolviendo las pertenencias de los huéspedes.
+NarrativeText = —¡Tiene que estar aquí! —grita uno—. ¡Han detectado un fragmento en esta zona!
+NarrativeText = No es verdad: el fragmento no está aquí. Pero los reclutas registran sin miramientos. Tú y Guiomar os repartís por la ciudad para expulsarlos y proteger a los habitantes. Mientras corres de calle en calle, Ismael llega en moto de agua, se planta en la entrada de la ciudad y cierra los accesos para que nadie escape.
+NarrativeText = Cuando la crisis termina, el surfista se quita las gafas.
+NarrativeText = —Gracias —dice—. Mi ciudad es tranquila porque yo me ocupo de que lo sea. Eso no es incompatible con el verano.
+NarrativeText = Abre las puertas de su gimnasio: una piscina de olas artificiales al borde de un muelle. Combate contigo sin dejar de sonreír hasta que sube la marea: su Ace (Nv 25) cambia el ritmo del combate. Cuando cae, Ismael levanta el pulgar.
+NarrativeText = —Eso ha sido un buen oleaje —dice, y te entrega la Medalla 2.
+Milestones = Allanamiento de Morfeo (búsqueda del fragmento inexistente), expulsión de los reclutas y cooperación con Guiomar e Ismael.
+Milestones = Gimnasio 2 (Agua) — Ismael: Ace Nv 25. Medalla 2.
+WhyItMatters = Muestra que Morfeo actúa con información de segunda mano (el fragmento no estaba allí) y convierte a Ismael en defensor activo de su ciudad antes del combate.
+
+[CHAPTER_13]
+Title = Ruta 5
+Act = I
+LocationKey = RUTA_05
+MedalsEarned = 2
+FragmentsInPlay = F1 (Pesadilla) recuperado → en manos del Profesor (custodia). Morfeo: 1/6 (en secreto).
+WildLevels = Día 20–22 · Noche 30–33
+CharactersInScene = Tú (Protagonista);Zenobia
+NarrativeText = La Ruta 5 es un sendero árido, de vegetación dispersa y caminos de tierra batida, que sube hacia el norte, hacia un campamento nómada. Es un tramo lineal y tranquilo: respiro, hasta que se rompe.
+NarrativeText = Cerca del final, una discusión: varios entrenadores civiles rodean a unos reclutas de Morfeo que huían tras el fracaso de la ciudad. Antes de que puedas intervenir, una mujer se abre paso. Lleva gafas monoculares, el pelo recogido tirante, un uniforme impoluto y una cicatriz fina que nace bajo la montura y cruza la sien. Sostiene una tableta.
+NarrativeText = —Dos errores de procedimiento en una sola tarde —dice, sin alzar la voz—. Sorprendente, incluso para ustedes.
+NarrativeText = Los reclutas se encogen. Ella se presenta sin rodeos: es Zenobia Montenegro, una de las generales del Equipo Morfeo. No hay combate. No hace falta: su autoridad queda clara. Se lleva a los hombres con la misma frialdad con que se retira una pieza de ajedrez.
+NarrativeText = Antes de marcharse, te mira.
+NarrativeText = —El sufrimiento es un error de gestión —dice, y es lo único que explica—. Estamos trabajando para corregirlo.
+Milestones = Presentación formal de Zenobia (sin combate). Escalada del conflicto: Morfeo tiene mando militar.
+Milestones = Salvajes Nv 20–22 (día) · 30–33 (noche).
+WhyItMatters = Introduce el mando militar de Morfeo (Zenobia) y su lógica de eficiencia; prepara la primera mazmorra.
+
+[CHAPTER_14]
+Title = Pueblo Pedernal
+Act = I
+LocationKey = PUEBLO_PEDERNAL
+MedalsEarned = 2
+FragmentsInPlay = F1 (Pesadilla) recuperado → en manos del Profesor (custodia). Morfeo: 1/6 (en secreto).
+WildLevels = Sin salvajes en esta escena
+CharactersInScene = Tú (Protagonista);Roldán;Vendedor ambulante
+NarrativeText = El Pueblo Pedernal es un cruce de caminos hecho de tiendas, carromatos y toldos remendados. Hay un centro Pokémon, un vendedor ambulante que ofrece de todo menos garantías y rincones de descanso entre fogatas. Huele a humo de leña; se oyen laúdes y cascabeles. Parece caótico, pero funciona.
+NarrativeText = Entre la gente, un hombre alto, con la barba recortada y canas, una capa pesada y la mirada de acero. Está apoyado contra un carromato como quien espera un tren que no va a llegar. Cuando te ve, esboza algo parecido a una sonrisa.
+NarrativeText = —Estoy de incógnito —dice Roldán Altamira, el Campeón de la Liga Pokémon, en voz baja—. Pero tú tienes cara de saber guardar un secreto.
+NarrativeText = Lleva tiempo siguiendo los movimientos de Morfeo. Le han hablado de la Ruta 5, de lo ocurrido en Ciudad Calaire, de las figuras sospechosas que se han visto en el lago. Escucha tu silencio como si fuera una respuesta completa.
+NarrativeText = —Voy contigo —decide—. Si me lo permites. Vamos a ver qué esconde ese lago.
+Milestones = Presentación del Campeón Roldán (de incógnito): se une como aliado temporal.
+Milestones = Se activa la misión de la base del lago. Vendedor ambulante (tienda).
+WhyItMatters = Une al Campeón al grupo: sin Roldán, el protagonista no tendría acceso a las bases de Morfeo ni a la red de aliados.
+
+[CHAPTER_15]
+Title = Lago Amatista y la Geoda Hundida (Base Morfeo 1)
+Act = I
+LocationKey = LAGO_AMATISTA
+Summary = Sub-lugar sin clave propia dentro de Lago Amatista. Ubicación en el Vol. 8: Lago Amatista y la Geoda Hundida (Base Morfeo 1).
+MedalsEarned = 2
+FragmentsInPlay = F1 (Pesadilla) recuperado → en manos del Profesor (custodia). Morfeo: 1/6 (en secreto).
+WildLevels = Día 22–24 · Noche 33–36 · Geoda Hundida: día 24–26 · noche 36–39
+CharactersInScene = Tú (Protagonista);Zenobia;Roldán
+NarrativeText = El Lago Amatista es el lugar más amable de Oniria. Tiendas de campaña, hogueras, un grupo que toca la guitarra, niños que se tiran al agua desde las rocas. Todo con un aire alternativo y desenfadado, como si nada malo pudiera ocurrir bajo ese cielo. Pero, si miras con atención, hay carteles caídos, zonas acordonadas… y un sendero acuático que se adentra hacia el centro del lago.
+NarrativeText = Ya estuviste de paso por la orilla; entonces no podías ir más allá. Ahora, junto a Roldán, rodeáis las rocas en bote, pasáis bajo un saliente y descubrís una entrada secreta tallada en la roca, al borde del agua.
+NarrativeText = La Geoda Hundida es una base natural: una geoda gigante cuyas paredes brillan con amatistas, y por dentro, un campamento de Morfeo. La primera mazmorra del juego te enseña a asaltar bases: salas extensas, grupos de reclutas, pequeños puzles de entorno (puentes que se tienden, palancas, cristales que reflejan) y, al final, un jefe.
+NarrativeText = Al fondo, junto a la tableta que lanza chispas, espera Zenobia. Esta vez, el combate (Nv 28) es formal. Sus dos criaturas ejecutan una coreografía casi aburrida de tan exacta. Cuando por fin cae, no se rinde: da una orden seca.
+NarrativeText = —Colapsad la base.
+NarrativeText = La geoda tiembla. Los cristales se agrietan. Zenobia, herida, desafiante, escapa por una galería lateral.
+NarrativeText = Fuera, mientras el lago devuelve su rumor y las hogueras vuelven a brillar, Roldán te pone una mano en el hombro.
+NarrativeText = —Sigue así —dice—. Estás más preparado de lo que crees.
+Milestones = Primera mazmorra Morfeo (Geoda Hundida), jefa Zenobia: Nv 28. Salvajes del interior: Nv 24–26 (día) · 36–39 (noche).
+Milestones = Roldán promete seguir colaborando. Las bases enemigas se vuelven una mecánica recurrente (raidear).
+WhyItMatters = Primera mazmorra y primer golpe real a Morfeo; enseña la mecánica de asalto a bases que se repetirá en la ciénaga y en el Bastión.
+
+[CHAPTER_16]
+Title = Ruta 6
+Act = II
+ActTitle = Acto II — Los Fragmentos Perdidos
+ActIntro = Ruta 6 · Central Fulgor · Ruta 7 · Ciudad Magno · Isla Sueño · Estepa Latera · Desierto Halar · Ruta 8 · Ciudad Nefral · Senda Serpentina · Ruinas Atacama · Ruta 9 · Puente Dolomar · Ciudad Azabache. La carrera por los fragmentos se vuelve persecución: el mar se hace ruta, el desierto pone a prueba el rumbo y el valle de arces concentra la calma antes de la tormenta.
+LocationKey = RUTA_06
+MedalsEarned = 2
+FragmentsInPlay = F1 (Pesadilla) recuperado → en manos del Profesor (custodia). Morfeo: 1/6 (en secreto).
+WildLevels = Día 25–27 · Noche 37–40
+CharactersInScene = Tú (Protagonista);Lucián
+NarrativeText = Cuando vuelves al Pueblo Pedernal, un operario de casco amarillo te intercepta con la cara cenicienta.
+NarrativeText = —¡La central eléctrica! —jadea—. Está fuera de control. Las máquinas fallan, los cables chisporrotean, hay quien dice que se oye gritar a las turbinas…
+NarrativeText = Tomas la Ruta 6, una llanura abierta con afloramientos bajos de roca. El cielo del este tiene un color de óxido: más allá hay una estepa que la tormenta de arena hace infranqueable. La única salida es el noreste. A mitad del camino oyes pasos rápidos.
+NarrativeText = —Estadísticamente, eras tú —dice Lucián, bajando de una roca con la libreta en la mano—. He pasado días cartografiando anomalías eléctricas en la zona. Los datos apuntan a la central.
+NarrativeText = Se acerca a ti y, antes de que digas nada, añade:
+NarrativeText = —¿Combate amistoso? Quiero saber cuánto hemos mejorado. Y creo que no pasa nada por perder un poco de tiempo.
+NarrativeText = El duelo (Nv 26) es más fino que el de la granja: ya no se limita a ventajas de tipo, y usa una criatura psíquica para forzar cambios y leer tus turnos. Cuando termina, sonríe.
+NarrativeText = —Voy contigo —dice—. A la central. Antes de que alguien más se haga daño.
+Milestones = Duelo amistoso con Lucián: Nv 26. Deciden ir juntos a la Central Fulgor.
+Milestones = La Estepa Latera (Este) sigue cerrada por la tormenta; el camino abre al noreste.
+Milestones = Salvajes Nv 25–27 (día) · 37–40 (noche).
+WhyItMatters = Reabre el hilo de Lucián y lo lleva a la Central, donde su primer fracaso empieza a deshacer su confianza.
+
+[CHAPTER_17]
+Title = Central Fulgor
+Act = II
+LocationKey = CENTRAL_FULGURITA
+MedalsEarned = 2
+FragmentsInPlay = F2 (Lunar) recuperado y robado por Zenobia. Morfeo: 2/6.
+WildLevels = Día 26–28 · Noche 39–42
+CharactersInScene = Tú (Protagonista);Ambrosio;Lucián;Zenobia
+NarrativeText = La Central Fulgor parece una catedral de cables. Postes, torres y estructuras metálicas rodean un edificio de pasillos de mantenimiento y salas de generadores. Los trabajadores evacuan en fila, con los ojos muy abiertos. Las luces parpadean; el suelo vibra con un zumbido que sube por las rodillas.
+NarrativeText = Lucián abre camino con un mapa en la tableta y un nudo en la garganta. En la sala de máquinas os espera el Dominante Eléctrico: una criatura enloquecida por la energía de un fragmento que ha absorbido, cuya piel crepita como un cielo de tormenta. El combate (Nv 31) es el más intenso hasta ahora. Lucián dirige las rotaciones; tú aguantas. Cuando la criatura cae, el F2 surge de su pecho: un fragmento plateado, tibio, que provoca una calma extraña, casi lunar.
+NarrativeText = —Lo hemos conseguido —susurra Lucián, apoyándose en la pared—. Lo hemos…
+NarrativeText = —No del todo —dice una voz detrás.
+NarrativeText = Zenobia surge de la penumbra con un pequeño escuadrón. Lleva su tableta en la mano, y esa tableta pulsa con un compás tranquilo y regular, idéntico al de otro aparato que tú has visto antes. Tú y Lucián estáis agotados. No podéis moverte.
+NarrativeText = —Tu resistencia es ineficiente —dice ella—. Procede a rendirte.
+NarrativeText = Te quita el fragmento con dos dedos, como se retira una bandeja. Se marcha con sarcasmo y sin prisa.
+NarrativeText = Fuera os espera Ambrosio, impecable. No pregunta quién ha robado el fragmento ni quién era esa mujer. Solo toma las manos de Lucián entre las suyas.
+NarrativeText = —¿Estáis bien? —pregunta—. Eso es lo importante. Los fragmentos… ya volverán. Id a Ciudad Magno. Hay allí quien necesita ayuda.
+NarrativeText = Lucián baja la mirada. No dice nada, pero te das cuenta de que su libreta tiembla.
+Milestones = Segundo Dominante: Eléctrico, Nv 31. F2 (Lunar) recuperado y robado por Zenobia (Morfeo: 2/6).
+Milestones = Pistas ocultas: la tableta de Zenobia pulsa igual que el reloj del Profesor; Ambrosio no pregunta por el fragmento y desvía a los chicos a Ciudad Magno.
+Milestones = Primer peso de culpa para Lucián. Salvajes Nv 26–28 (día) · 39–42 (noche).
+WhyItMatters = Primer fragmento robado: Morfeo va un paso por delante. Siembra la culpa de Lucián y las pistas sobre el Profesor.
+
+[CHAPTER_18]
+Title = Ruta 7
+Act = II
+LocationKey = RUTA_07
+MedalsEarned = 2
+FragmentsInPlay = F2 (Lunar) recuperado y robado por Zenobia. Morfeo: 2/6.
+WildLevels = Día 27–29 · Noche 40–43
+CharactersInScene = Tú (Protagonista);Guiomar
+NarrativeText = La Ruta 7 baja hacia el mar entre campos y senderos bordeados de árboles. Después de la Central, el verde del paisaje te cae como un bálsamo.
+NarrativeText = —¡Eh! —Guiomar te cierra el paso con los brazos en jarras—. Llevas semanas sin decirme nada. ¿Qué me he perdido?
+NarrativeText = Te lo cuentas todo con los gestos: el robo, la caída, el escuadrón. Guiomar aprieta los puños.
+NarrativeText = —Y yo no estaba… —suelta—. Estaba aquí, trabajando en el astillero para pasar el rato, mientras tú… ¡Maldita sea!
+NarrativeText = Te propone un combate amistoso (Nv 32) y lo pelea con rabia pero sin crueldad. Al terminar, se sienta en el suelo con los codos sobre las rodillas.
+NarrativeText = —Llevo días esperando al líder de Acero. Se fue a la isla antes de que pudiera retarlo. Así que he aprovechado para trabajar en el puerto —explica—. Pero no quiero volver a quedarme al margen. ¿Me oyes? No quiero volver a quedarme al margen.
+NarrativeText = Le tiendes la mano. Ella la aprieta con demasiada fuerza, pero ríe.
+Milestones = Duelo amistoso con Guiomar: Nv 32. Ella aún no ha combatido contra el Líder de Acero (aclaración: espera en el puerto y trabaja en el astillero).
+Milestones = Se consolidan los vínculos del trío. Salvajes Nv 27–29 (día) · 40–43 (noche).
+WhyItMatters = Aclara la posición de Guiomar (aún sin el gimnasio 3) y refuerza el tono de equipo; justifica por qué espera en el puerto.
+
+[CHAPTER_19]
+Title = Ciudad Magno — Llegada
+Act = II
+LocationKey = CIUDAD_MAGNETITA
+MedalsEarned = 2
+FragmentsInPlay = F2 (Lunar) recuperado y robado por Zenobia. Morfeo: 2/6.
+WildLevels = Sin salvajes en esta escena
+CharactersInScene = Tú (Protagonista);Lucián;Ismael
+NarrativeText = Ciudad Magno te recibe con sirenas, grúas y olor a salitre. Muelles, mercados de pescado, astilleros en cada ensenada. Un puerto activo desde el que parten barcos a todas las islas. Pero hoy, el barco de línea está parado.
+NarrativeText = Buscas al Líder de Acero por el astillero; no está. Un obrero se encoge de hombros: «Se fue a la Isla Sueño por trabajo. No ha vuelto».
+NarrativeText = Lucián lo había deducido unos minutos antes, cruzando partes de embarque con la tableta.
+NarrativeText = —Hay un setenta y ocho por ciento de probabilidad de que sea allí —dice.
+NarrativeText = El problema es el barco. En el muelle, Ismael —con camiseta de rescatista y una lancha amarilla con el nombre Pleamar en la proa— levanta el pulgar.
+NarrativeText = —Os llevo. No me cobraré. A cambio, volved enteros.
+Milestones = Búsqueda del Líder de Acero: se ha ido a la Isla Sueño. Cameo de Ismael como rescatista (presta su lancha).
+Milestones = Lucián deduce el destino. Preparación del viaje a la isla.
+WhyItMatters = Redirige el viaje al mar y conecta dos hilos: el trabajo del Líder de Acero y los altares gemelos.
+
+[CHAPTER_20]
+Title = Isla Sueño — Primera visita
+Act = II
+LocationKey = ISLA_OPALINA
+MedalsEarned = 2
+FragmentsInPlay = F2 (Lunar) recuperado y robado por Zenobia. Morfeo: 2/6.
+WildLevels = Sin salvajes en esta escena
+CharactersInScene = Tú (Protagonista);Lucián;Argos
+NarrativeText = La lancha rompe la niebla y, de pronto, la isla aparece: un jardín entre aguas. Isla Sueño es un lugar de gran belleza: flores silvestres, caminos naturales cuidados, arquitectura armoniosa. El aire huele a jazmín y a mar. Y, sin embargo, hay algo que no cuadra: una tensión en el aire, como una nota que suena un poco desafinada y que nadie sabe corregir.
+NarrativeText = Encontráis a Argos subido a una torre de andamios, soldando una pieza del faro. Cuando os ve, baja con el casco en la mano.
+NarrativeText = —Os agradezco la ayuda —dice, secándose las manos en el delantal—. Aquí hay un trabajo que no es de mi gremio.
+NarrativeText = Te pone a pasar herramientas, a sujetar vigas. Con cada pieza que ajusta, habla un poco más. Cuando termina, os conduce hasta un mirador. Desde allí, al otro lado del mar, apenas se adivina una mancha oscura.
+NarrativeText = —Hay altares gemelos —cuenta—. Uno aquí, en lo alto de esa colina. Otro en esa isla de allá, la de niebla. Dos guardianes, dos altares. El equilibrio entre ambos se está resquebrajando. Lo noto en el acero: los instrumentos se desvían.
+NarrativeText = Lucián anota cada palabra. Tú miras la mancha oscura de la otra isla y sientes que algo te devuelve la mirada.
+Milestones = Primera visita a la Isla Sueño (sin combate ni salvajes). Argos trabaja en el faro y menciona los altares gemelos de Cresselia y Darkrai.
+Milestones = Se despierta el misterio del desequilibrio; se anuncia la importancia de los altares como pilares de la región.
+WhyItMatters = Plantea los altares gemelos que cerrarán la historia: es la primera vez que las leyendas se enlazan con los protagonistas.
+
+[CHAPTER_21]
+Title = Ciudad Magno — La Medalla (Gimnasio 3)
+Act = II
+LocationKey = CIUDAD_MAGNETITA
+MedalsEarned = 3
+FragmentsInPlay = F2 (Lunar) recuperado y robado por Zenobia. Morfeo: 2/6.
+WildLevels = Sin salvajes en esta escena
+CharactersInScene = Tú (Protagonista);Argos
+NarrativeText = Regresas al puerto con la lancha de Ismael y el viento en la cara. Argos os sigue y, ya en tierra, te dice:
+NarrativeText = —Me debo una pelea. Mi taller está arriba.
+NarrativeText = Su gimnasio es un taller de chispas y martillos, con un yunque al centro y un olor a metal caliente que se pega a la lengua. Argos golpea el yunque con los nudillos y escucha.
+NarrativeText = —Te voy a hacer una sola pregunta —dice—: ¿aguantas?
+NarrativeText = Sus Pokémon son casco, ancla y vela: uno que atrae, otro que no cede, otro que suena a hora grave y, de Ace (Nv 35), uno que filtra y hace que lo súper efectivo duela menos. Cada ataque tuyo rebota con un campanazo. Pero tú aguantas más.
+NarrativeText = Cuando cae, Argos asiente.
+NarrativeText = —Bien soldado —dice—. Hay tensión de sobra en ti… de la buena.
+NarrativeText = Te entrega la Medalla 3.
+Milestones = Gimnasio 3 (Acero) — Argos: Ace Nv 35. Medalla 3.
+Milestones = Mapa.md decía «Segundo gimnasio (Acero)»: es el tercero, y está en Ciudad Magno.
+WhyItMatters = Medalla 3 y confirmación de que la isla importa: Argos entrega la advertencia que dará sentido a la travesía final.
+
+[CHAPTER_22]
+Title = Estepa Latera
+Act = II
+LocationKey = ESTEPA_LATERITA
+MedalsEarned = 3
+FragmentsInPlay = F2 (Lunar) recuperado y robado por Zenobia. Morfeo: 2/6.
+WildLevels = Día 29–31 · Noche 44–46
+CharactersInScene = Tú (Protagonista);Nerea
+NarrativeText = Regresas por la Ruta 7 y la Ruta 6 hasta el cruce de la estepa, y esta vez no está cerrado: la tormenta de arena se ha disipado y la Estepa Latera, roja de óxido y ocre de caliche, se abre, enorme, con sus montículos de roca y sus barrancos. Hay una visibilidad enorme; no hay dónde esconderse.
+NarrativeText = Pero alguien te espera.
+NarrativeText = —Otra vez —dice Nerea, sentada en una roca, con la Pokéball colgando de los dedos—. Te veo más sólido. Probablemente no lo notas.
+NarrativeText = Te reta a un nuevo combate (Nv 38), esta vez más intencionado: quiere medirte como entrenador… y como persona. Mientras luchas, habla sin elevar la voz:
+NarrativeText = —Los sueños son un lugar donde nadie te exige nada. La voluntad humana es débil. Hay ideales que están hechos para romperse.
+NarrativeText = Es la primera vez que sus frases dejan ver de qué lado está, aunque no lo diga: sus pupilas, cuando se detiene en tu Pokémon, se suavizan un segundo.
+NarrativeText = —Que tengas buena noche —dice al marcharse—. Si puedes.
+Milestones = Segundo combate con Nerea: Nv 38. Sus frases delatan que pertenece al equipo enemigo.
+Milestones = Salvajes Nv 29–31 (día) · 44–46 (noche). Camino al Desierto Halar.
+WhyItMatters = Segunda pista sobre Nerea: sus palabras delatan que pertenece a Morfeo y hacen creíble su dilema posterior.
+
+[CHAPTER_23]
+Title = Desierto Halar
+Act = II
+LocationKey = DESIERTO_HALITA
+MedalsEarned = 3
+FragmentsInPlay = F2 (Lunar) recuperado y robado por Zenobia. Morfeo: 2/6.
+WildLevels = Día 30–33 · Noche 45–49
+CharactersInScene = Tú (Protagonista);Alarico
+NarrativeText = El Desierto Halar es una de las zonas más hostiles de Oniria. Dunas enormes, montañas bajas, cristales de sal que crujen bajo las botas. Un laberinto natural: basta mirar hacia otro lado para perder el rumbo. La arena te muerde la cara.
+NarrativeText = Cuando divisas, a lo lejos, un grupo de reclutas (Nv 36), te agachas tras una duna. Con ellos hay un hombre que nunca habías visto: enorme, de brazos marcados de cicatrices, con el uniforme mal puesto y una sonrisa de oreja a oreja.
+NarrativeText = —¡Más rápido! —ruge—. ¡El silencio no se construye solo! ¡Hay que dinamitar el ruido!
+NarrativeText = Hablan de logística, transporte de materiales y bloqueos de rutas. Una palabra aparece una y otra vez: «la ladera». Él se vuelve y, por un instante, tú crees que te ha visto. Intentas acercarte; entonces la tormenta de arena cae como una cortina sobre el desierto.
+NarrativeText = Retrocedes ciego, con la boca llena de sal. Cuando por fin ves de nuevo, la duna está vacía. Pero ya sabes que existe otro general, hermano de la mujer fría.
+Milestones = Presentación indirecta de Alarico, hermano de Zenobia. Sin combate: la tormenta de arena obliga a retroceder.
+Milestones = Reclutas Nv 36. Salvajes Nv 30–33 (día) · 45–49 (noche).
+WhyItMatters = Presenta a Alarico antes de que robe un fragmento y confirma que Morfeo planea bloquear rutas (la Ladera, Rejalgar).
+
+[CHAPTER_24]
+Title = Ruta 8
+Act = II
+LocationKey = RUTA_08
+MedalsEarned = 3
+FragmentsInPlay = F2 (Lunar) recuperado y robado por Zenobia. Morfeo: 2/6.
+WildLevels = Día 32–35 · Noche 48–52
+CharactersInScene = Tú (Protagonista);Genzo
+NarrativeText = La Ruta 8 es un nudo de caminos sobre una meseta de arenisca roja, con un encanto rural que no esperabas tras el desierto. Al sur, el camino a Ciudad Rejalgar está cerrado por disturbios; al oeste, un sendero conduce a una ciudad de tejados curvos.
+NarrativeText = En un claro, un hombre de cabello gris, con kimono azul oscuro y pies descalzos, corrige la postura de media docena de pupilos. Los golpes, secos, sonoros, no tienen una gota de ira.
+NarrativeText = —Un puño no se lanza: se entrega —dice, y se vuelve hacia ti sin cambiar de tono—. ¿Vienes a mi ciudad?
+NarrativeText = Es Genzo, el futuro líder del Gimnasio 4. No hay combate: observa cómo te mueves y asiente con una media inclinación.
+NarrativeText = —Allí hablaremos —responde—. Hoy el camino al sur no está abierto. Es una pena.
+Milestones = Primer encuentro con Genzo (entrenamiento de pupilos), sin combate.
+Milestones = El brazo sur (Ciudad Rejalgar) sigue bloqueado por Morfeo. Salvajes Nv 32–35 (día) · 48–52 (noche).
+WhyItMatters = Introduce a Genzo y refuerza que las rutas del sur siguen cerradas: motivación geográfica para visitar primero Nefral.
+
+[CHAPTER_25]
+Title = Ciudad Nefral (Gimnasio 4)
+Act = II
+LocationKey = CIUDAD_NEFRITA
+MedalsEarned = 4
+FragmentsInPlay = F2 (Lunar) recuperado y robado por Zenobia. Morfeo: 2/6.
+WildLevels = Sin salvajes en esta escena
+CharactersInScene = Tú (Protagonista);Lucián;Guiomar;Roldán;Genzo
+NarrativeText = Ciudad Nefral se despliega en un valle de arces rojizos como una pintura sobre papel de arroz. Tejados curvos de madera oscura, jardines de grava rastrillada, estanques tranquilos y farolillos de papel. El silencio no es vacío: es respeto.
+NarrativeText = En el dojo de Genzo, el suelo de tatami cruje bajo tus pies. El sensei se inclina con una reverencia exacta.
+NarrativeText = —No toleraré trampas —dice—. Ninguna. Ni mías ni tuyas.
+NarrativeText = El combate (Ace Nv 41) es una conversación: tres luchadores de técnica limpia y, al final, su Ace, que castiga cada golpe sucio. Cuando cae, Genzo se inclina de nuevo.
+NarrativeText = —Has derrotado a mi técnica —dice—. Ahora derrota a tu orgullo.
+NarrativeText = Te entrega la Medalla 4.
+NarrativeText = Pero la tarde no ha terminado. En la casa de Genzo, bajo un techo bajo de vigas oscuras, se reúnen Roldán, Lucián, Guiomar y el propio sensei. Los cuatro escuchan tu relato sin interrumpirte: los fragmentos, los robos, el desierto.
+NarrativeText = —Están reuniendo fuerzas —resume Roldán—. Hay que dividir esfuerzos. Yo volveré al Desierto por mi cuenta: allí se está moviendo algo.
+NarrativeText = —Yo tomaré la Ruta 9 —declara Guiomar.
+NarrativeText = —Yo, la Senda —dice Lucián.
+NarrativeText = —Yo me quedo en la ciudad —añade Genzo—. Alguien debe vigilarla.
+NarrativeText = Este es un punto de inflexión: los caminos del trío se ramifican. Y todos sienten que el final de la primera gran mitad del viaje se acerca.
+Milestones = Gimnasio 4 (Lucha) — Genzo: Ace Nv 41. Medalla 4 (en el borrador se llamaba «sexto gimnasio» por error).
+Milestones = Reunión crucial: el grupo se divide (Roldán al Desierto, Guiomar a la Ruta 9, Lucián a la Senda, Genzo en la ciudad).
+WhyItMatters = Punto de inflexión: termina la primera mitad del viaje y los tres amigos separan caminos, lo que permite a Lucián y Guiomar vivir arcos propios.
+
+[CHAPTER_26]
+Title = Senda Serpentina
+Act = II
+LocationKey = SENDA_SERPENTINA
+MedalsEarned = 4
+FragmentsInPlay = F2 (Lunar) recuperado y robado por Zenobia. Morfeo: 2/6.
+WildLevels = Día 35–37 · Noche 52–55
+CharactersInScene = Tú (Protagonista);Lucián
+NarrativeText = La Senda Serpentina serpentea entre helechos, tocones y caminos ocultos. Poca gente la usa. Aquí encuentras a Lucián, sentado en un tronco, con el Pokédex apagado entre las manos.
+NarrativeText = —Hace dos horas que ando por aquí sin avanzar —dice—. Me distraigo con cada Pokémon que veo. No lo entiendo: antes era capaz de cerrar la libreta.
+NarrativeText = Habláis de la presión. De lo que pesa la expectativa. De lo difícil que es ser el listo del grupo.
+NarrativeText = —Todo el mundo me mira como si yo tuviera la respuesta —confiesa—. Y yo solo tengo preguntas.
+NarrativeText = De pronto se pone en pie. Es un gesto de orgullo y de duda a la vez.
+NarrativeText = —Combate —dice—. Me voy a ordenar así. Ahora.
+NarrativeText = Peleáis (Nv 42), con un Ace psíquico que ya no necesita de sus notas para moverse. Gana el que gana. Al final, sin mirarte, propone:
+NarrativeText = —Hay unas alcantarillas abandonadas más al sur. Se rumorea que tienen que ver con los orbes. ¿Vamos?
+Milestones = Duelo con Lucián: Nv 42. Reflexión de personaje; propone explorar las Ruinas Atacama.
+Milestones = Salvajes Nv 35–37 (día) · 52–55 (noche).
+WhyItMatters = Prepara la caída de Lucián en las ruinas: su presión interior encuentra un detonante.
+
+[CHAPTER_27]
+Title = Ruinas Atacama
+Act = II
+LocationKey = RUINAS_ATACAMITA
+MedalsEarned = 4
+FragmentsInPlay = F3 (Pesadilla) arrebatado por Alarico. Morfeo: 3/6.
+WildLevels = Día 37–39 · Noche 55–58
+CharactersInScene = Tú (Protagonista);Ambrosio;Lucián;Alarico
+NarrativeText = Las Ruinas Atacama huelen a óxido y a agua estancada. Bajo la ciudad, un laberinto de pasadizos mezcla piedra antigua y tuberías industriales cubiertas de una pátina verde. Las paredes sudan.
+NarrativeText = Los reclutas de Morfeo os cierran el paso a cada esquina. Uno de ellos desafía a Lucián a un combate individual. Lucián se ajusta las gafas, saca su Pokémon, mira a su rival con una sonrisa que se le apaga a medias, y pierde. El golpe es limpio, rápido, humillante. Se queda de pie, sin moverse, con los ojos fijos.
+NarrativeText = —No ha sido… —murmura—. No ha sido estadísticamente probable.
+NarrativeText = Tú despejas al resto. Cuando lo alcanzas, Lucián camina con las piernas tiesas. Llegáis al corazón de las ruinas con retraso.
+NarrativeText = Y llegáis tarde. En una sala de piedra, junto al charco verde de donde brota un fragmento, Alarico os espera con los brazos cruzados.
+NarrativeText = —¿No me esperabais? —sonríe—. Qué grosería: yo siempre llego a tiempo a las fiestas.
+NarrativeText = Toma el F3 del suelo con una mano, como quien recoge una moneda, y lo guarda sin prisa. Detrás de él, el Dominante Veneno se retuerce, enfurecido por la intromisión.
+NarrativeText = —Os lo dejo a vosotros —ríe, y desaparece por una galería lateral.
+NarrativeText = El Dominante se lanza contra vosotros. Lucián, paralizado, no puede ayudar; el combate (Nv 45) es tuyo. Tú lo ganas en solitario, con el fragmento ya perdido.
+NarrativeText = Después, Lucián se sienta en el suelo.
+NarrativeText = —Tenía todas las cifras —dice—. Todas. Y no sirvieron de nada. —Se quita las gafas—. Tendría que haber salido de la Senda a tiempo. Y en la Central… tampoco estuve a la altura. He fallado dos veces.
+NarrativeText = Entonces aparece Ambrosio, bajando por la escalera con el reloj en la mano.
+NarrativeText = —Queridos míos —dice—. ¿Estáis bien? ¿Os han hecho daño?
+NarrativeText = No pregunta por el fragmento. No pregunta quién era el hombre. «Recoge la información» con una paciencia de escribano. Mientras lo hace, su reloj tintinea un segundo, como si dijera «ya».
+NarrativeText = —La situación se agrava —advierte, con voz grave—. Seguid adelante. No os detengáis ahora.
+Milestones = Tercer Dominante: Veneno, Nv 45, vencido en solitario. F3 (Pesadilla) robado por Alarico (Morfeo: 3/6).
+Milestones = Primer revés personal de Lucián (pierde ante un recluta; culpa por dos robos).
+Milestones = Pistas ocultas: el Profesor no pregunta por el fragmento ni se sorprende de Alarico. Salvajes Nv 37–39 (día) · 55–58 (noche).
+WhyItMatters = Segundo robo (Alarico) y primera derrota personal de Lucián. El Profesor no pregunta por el fragmento: otra pista de su traición.
+
+[CHAPTER_28]
+Title = Ruta 9 (acceso parcial)
+Act = II
+LocationKey = RUTA_09
+MedalsEarned = 4
+FragmentsInPlay = F3 (Pesadilla) arrebatado por Alarico. Morfeo: 3/6.
+WildLevels = Día 38–40 · Noche 57–60
+CharactersInScene = Tú (Protagonista);Eliseo
+NarrativeText = La Ruta 9 es un camino de valle boscoso con muchas bifurcaciones. Solo puedes recorrer su mitad inferior: la superior, que sube hacia la ciénaga, está cerrada por el lodo. Los árboles aquí son más nudosos; el aire, más húmedo.
+NarrativeText = En mitad del camino ves a un hombre agachado. Viste una túnica de color índigo y negro. A su alrededor, una docena de Pokémon salvajes comen de su mano. Uno de ellos, un pequeño Pokémon herido, se acurruca contra su rodilla mientras él le venda la pata con una tira de su propia manga.
+NarrativeText = Cuando te ve, se levanta y te espera con una sonrisa calmada. Su rostro es claramente visible: pálido, hermoso, sereno.
+NarrativeText = —No he venido a pelear —dice Eliseo—. Solo quería ver cómo caminas cuando crees que nadie te mira.
+NarrativeText = Su voz es suave, casi tierna. Te habla de ti como de alguien a quien respeta: dice que eres fuerte, que tienes potencial. Que él entiende lo que sientes y que quizá ambos luchan por lo mismo desde lados distintos.
+NarrativeText = No intenta combatir. No amenaza. Cuando termina, se despide con una inclinación y se marcha caminando con calma, dejando tras de sí un silencio que pesa más que cualquier amenaza.
+NarrativeText = Te quedas allí un rato, sin saber si has hablado con un enemigo o con la única persona que ha entendido tu silencio.
+Milestones = Primera aparición de Eliseo con el rostro descubierto (sin combate): cuida de un Pokémon herido; presentación oficial.
+Milestones = Acceso a la Ciénaga Limonar bloqueado temporalmente (mitad superior). Salvajes Nv 38–40 (día) · 57–60 (noche).
+WhyItMatters = Humaniza a Eliseo: el villano que cuida de un Pokémon herido hace creíble que muchos lo sigan y complica el juicio moral del protagonista.
+
+[CHAPTER_29]
+Title = Puente Dolomar
+Act = II
+LocationKey = PUENTE_DOLOMITA
+MedalsEarned = 4
+FragmentsInPlay = F3 (Pesadilla) arrebatado por Alarico. Morfeo: 3/6.
+WildLevels = Sin salvajes en esta escena
+CharactersInScene = Tú (Protagonista);Guiomar
+NarrativeText = El Puente Dolomar cruza un gran cañón de roca blanca. Es una construcción colosal, un arco de piedra que une dos mundos separados por el vacío. El viento zumba. Al empezar a cruzar, ves a Guiomar esperándote al inicio, con los brazos cruzados.
+NarrativeText = —Me han llegado noticias de tus avances —dice—. He pensado que quizá quieras probar tu equipo antes de la gran ciudad. Y también el mío.
+NarrativeText = El combate (Nv 46) se tiñe pronto de otra cosa. Guiomar pelea con una determinación feroz, como si quisiera probar algo. Mientras golpea, habla:
+NarrativeText = —Estoy orgullosa de ti, ¿sabes? Pero también… me da rabia. Tú lo haces siempre bien. Y yo estoy aquí, gritando, y nadie me mira.
+NarrativeText = Al terminar, se sienta sobre el pretil, con las piernas colgando sobre el abismo.
+NarrativeText = —No quiero ser la mejor que tú —dice—. Quiero ser la mejor que yo pueda ser. Y todavía no sé cuánto es eso.
+NarrativeText = Te sonríe, con los ojos húmedos, y promete seguir luchando por lo correcto. Es el comienzo de su verdadero arco.
+Milestones = Duelo con Guiomar: Nv 46. Primeros síntomas de su conflicto interno.
+Milestones = Puente de evento: sin encuentros salvajes (fila «—» en la tabla de niveles).
+WhyItMatters = Hace estallar la tensión de Guiomar; lo que aprende aquí se convertirá en paciencia en la Ruta 17.
+
+[CHAPTER_30]
+Title = Ciudad Azabache (Gimnasio 5)
+Act = II
+LocationKey = CIUDAD_AZABACHE
+MedalsEarned = 5
+FragmentsInPlay = F3 (Pesadilla) arrebatado por Alarico. Morfeo: 3/6.
+WildLevels = Sin salvajes en esta escena
+CharactersInScene = Tú (Protagonista);Fausto
+NarrativeText = Ciudad Azabache se alza como una selva de cristal negro. Rascacielos con ventanales como espejos, calles bañadas en neón, un casino y un centro comercial; una pequeña zona portuaria al fondo. Es la ciudad más moderna de Oniria, y también la más anónima: nadie te mira, nadie te reconoce.
+NarrativeText = En el gimnasio, un cartel dice: «Cerrado por apuestas». El líder de Roca no está allí; está en el casino, entre ruletas y copas, con un traje de brocado morado manchado de polvo de diamante y una moneda de oro girando entre los dedos.
+NarrativeText = —¿Apostamos? —sonríe Fausto—. Si ganas, la medalla es tuya. Si pierdo, ya me inventaré cómo perder con estilo.
+NarrativeText = Acepta el reto en un casino subterráneo tallado en cueva, con vitrinas de fósiles a la altura de los ojos. Sus Pokémon son brutos y viejos —fósiles y rocas— y, de Ace (Nv 49), uno cuya habilidad lo convierte en un «todo o nada». Cuando por fin cae, Fausto aplaude.
+NarrativeText = —Qué delicia perder así. —Te lanza la medalla con un papirotazo—. Te debo un premio. Reúnete conmigo en el pueblo minero, al norte. Te lo daré allí.
+NarrativeText = Recibes la Medalla 5.
+Milestones = Gimnasio 5 (Roca) — Fausto: Ace Nv 49. Medalla 5.
+Milestones = Fausto cita al protagonista en el Pueblo Casitero para entregarle un premio especial.
+WhyItMatters = Medalla 5 y cambio de ritmo antes del tramo más oscuro; la promesa de Fausto lleva al protagonista al Pueblo Casitero, donde esperan Guiomar y, más arriba, la nieve.
+
+[CHAPTER_31]
+Title = Ruta 10
+Act = III
+ActTitle = Acto III — La Máscara del Mentor
+ActIntro = Ruta 10 · Cascadas Travertinas · Acantilados Rodal · Pueblo Casitero · Ruta 11 · Ruta 12 · Pueblo Nacara · Ruta 13 · Isla Pesadilla · Ruta 14 · Reserva Peridoto · Ciudad Venturina · Ruta 15 · Ruta 16 · Villa Adular. Se asciende a las montañas, se baja al mar occidental y se cruza el bosque; todo culmina con la traición del mentor.
+LocationKey = RUTA_10
+MedalsEarned = 5
+FragmentsInPlay = F3 (Pesadilla) arrebatado por Alarico. Morfeo: 3/6.
+WildLevels = Día 40–42 · Noche 60–63
+CharactersInScene = Tú (Protagonista);Lucián
+NarrativeText = La Ruta 10 es un sistema de cuevas ascendentes. Pasillos de roca viva que suben como una escalera de caracol: gneis, cuarcita, ecos. Al norte debería abrirse el camino a la Ladera, pero alguien ha atravesado las galerías con cables y generadores. Los reclutas montan guardia junto a ellos.
+NarrativeText = —¡Eh! —Lucián aparece corriendo por un túnel lateral, con la mochila abierta y el pelo revuelto—. Llevaba días estudiando estas máquinas. No es complicado: si se desconectan en este orden, el campo se cae.
+NarrativeText = Y, antes de que puedas pararlo, ya está tirando de un cable. Es una misión breve y acelerada: desactiváis generadores, esquiváis reclutas, burláis un puente colgante. Lucián improvisa. Se equivoca de palanca, se corrige a sí mismo, pega un salto en el aire.
+NarrativeText = —¡Funciona! —grita al fin—. ¡Funciona! ¡Y no lo había calculado!
+NarrativeText = Se abre el paso a las cascadas, al este, pero la Ladera, al oeste, permanece cerrada. Lucián se pasa la mano por el pelo, riendo, con los ojos brillantes.
+NarrativeText = —Creo… creo que he actuado sin pensar —admite—. Y ha salido bien.
+Milestones = Bloqueo parcial de la Ladera por reclutas con generadores. Lucián ayuda a desactivarlos; se abre el paso a las Cascadas, pero no a la Ladera.
+Milestones = Muestra su faceta impulsiva y su creciente iniciativa. Salvajes Nv 40–42 (día) · 60–63 (noche).
+WhyItMatters = Muestra la iniciativa de Lucián y cómo Morfeo bloquea la Ladera: el mismo lugar donde esconderá su última base.
+
+[CHAPTER_32]
+Title = Cascadas Travertinas
+Act = III
+LocationKey = CASCADAS_TRAVERTINAS
+MedalsEarned = 5
+FragmentsInPlay = F4 (Lunar) recuperado → Lucián lo lleva al Profesor. Morfeo: 4/6 (en secreto).
+WildLevels = Día 42–45 · Noche 63–67
+CharactersInScene = Tú (Protagonista);Lucián
+NarrativeText = Las Cascadas Travertinas se alzan como el decorado de un sueño. Acantilados altísimos, terrazas blancas que el agua ha esculpido durante siglos, vegetación verde colándose entre las rocas y cataratas que caen desde distintas alturas, envolviéndolo todo en una niebla fresca. El estruendo es dulce.
+NarrativeText = Lucián se detiene en seco.
+NarrativeText = —Algo ha cambiado —dice—. Los Pokémon están… Miradlos. Se acercan a las cascadas y se van. No se quedan. —Anota a velocidad de vértigo—. Tienen miedo de algo que hay detrás.
+NarrativeText = Os acercáis a una cortina de agua más espesa que las otras. Tras ella, una cueva oculta. Dentro, entre cristales de travertino iluminados desde dentro, se alza el Dominante Hada (Nv 52), con un fragmento latiendo en su pecho como un segundo corazón. El combate no es fácil: la criatura baila entre el agua, desvía tus golpes, borra tus ventajas. Pero Lucián te ayuda a leerla: grita un nombre de ataque medio segundo antes de que ocurra.
+NarrativeText = Cuando cae, el F4 brota con un tintineo: un fragmento lunar, de un blanco perlado, tibio y sereno.
+NarrativeText = —Se lo llevaré al Profesor —dice Lucián, de pronto, con una voz nueva—. Directamente. Yo mismo. Quiero que lo tenga cuanto antes. Y de paso pasaré por el pueblo al que vais.
+NarrativeText = Es un gesto de confianza y de utilidad. Se le nota el orgullo: por una vez, está seguro de que sirve para algo. Te estrecha la mano.
+NarrativeText = —No volveré a fallar —promete.
+NarrativeText = Se aleja bajo la cascada con el fragmento envuelto en una tela blanca. Tú le ves marchar y, por un instante, un escalofrío te cruza la espalda sin razón.
+Milestones = Cuarto Dominante: Hada, Nv 52. F4 (Lunar); Lucián lo lleva al Profesor, sin saber que lo entrega a Morfeo (4/6, en secreto).
+Milestones = Salvajes Nv 42–45 (día) · 63–67 (noche).
+WhyItMatters = Cuarto fragmento y un gesto de confianza de Lucián que será letal: entrega el F4 al traidor y su culpa posterior se alimenta de este momento.
+
+[CHAPTER_33]
+Title = Acantilados Rodal
+Act = III
+LocationKey = ACANTILADOS_RODONITA
+MedalsEarned = 5
+FragmentsInPlay = F4 (Lunar) recuperado → Lucián lo lleva al Profesor. Morfeo: 4/6 (en secreto).
+WildLevels = Día 43–45 · Noche 65–68
+CharactersInScene = Tú (Protagonista);Nicodemo
+NarrativeText = Los Acantilados Rodal son un camino estrecho y elevado entre montañas, con vistas que se te clavan en el estómago: precipicios a ambos lados, nubes bajas, rocas de un rosa pálido veteadas de negro. El silencio tiene algo de espiritual.
+NarrativeText = En un saliente, un anciano de túnica ceniza, barba larga prendida de pequeños cristales y pies descalzos observa el abismo apoyado en un báculo de cuarzo.
+NarrativeText = —Has llegado lejos —dice Nicodemo, sin volverse—. Más de lo que dicen los mapas. Me impresionas.
+NarrativeText = Es el primer miembro del Alto Mando que conoces. Te guía unos pasos, entre las rocas, hasta una entrada sellada cerca de la cima: tras ella, apenas visible, la Gruta Hialina, una cueva profunda cuyos cristales emiten un resplandor lejano.
+NarrativeText = —Las grutas solo se abren a quien ha demostrado fuerza y corazón —explica—: a quien posee las ocho medallas. Aquí lo único que hay es una promesa. Vuelve cuando seas digno.
+NarrativeText = Antes de despedirse añade una frase que se te queda grabada:
+NarrativeText = —La presión no destruye: transforma.
+Milestones = Primer Alto Mando: Nicodemo. Se introduce la mecánica de grutas opcionales (postgame) con la entrada sellada de la Gruta Hialina.
+Milestones = Salvajes Nv 43–45 (día) · 65–68 (noche).
+WhyItMatters = Introduce el Alto Mando y las grutas del postgame, y ancla a Nicodemo en la memoria del jugador para la Liga.
+
+[CHAPTER_34]
+Title = Pueblo Casitero
+Act = III
+LocationKey = PUEBLO_CASITERITA
+MedalsEarned = 5
+FragmentsInPlay = F4 (Lunar) recuperado → Lucián lo lleva al Profesor. Morfeo: 4/6 (en secreto).
+WildLevels = Sin salvajes en esta escena
+CharactersInScene = Tú (Protagonista);Guiomar;Fausto
+NarrativeText = El Pueblo Casitero vive dentro de una caverna inmensa, excavada por generaciones de mineros. Las casas están talladas en la roca, los faroles cuelgan del techo como luciérnagas gigantes, y los cristales devuelven la poca luz que baja de la superficie. En el centro, una gran bóveda: el Museo de Fósiles más importante de la región.
+NarrativeText = —¡Ya estaba esperando! —Fausto te recibe en la puerta con su traje de brocado—. Cumplo mis promesas. Pasa.
+NarrativeText = Te lleva a una sala con mostradores de cristal. Dentro, fósiles de todas las eras: conchas, hélices de piedra, garras.
+NarrativeText = —Un fósil para cada ganador de gimnasio —dice—. A elección. Puedes revivirlo aquí mismo, en el museo. Y si quieres otros, los mineros venden.
+NarrativeText = Y, con un guiño, añade:
+NarrativeText = —Es una forma de decir que el pasado también merece una segunda oportunidad.
+NarrativeText = También está Guiomar, que ha derrotado a Fausto antes que tú y mira, hechizada, un ejemplar enorme de dientes de piedra. Se vuelve al verte, con una sonrisa traviesa.
+NarrativeText = —Mi fósil es más grande que el tuyo —anuncia.
+NarrativeText = Se desbloquea la mecánica de revivir fósiles.
+Milestones = Recompensa de Fausto: un fósil a elección; se desbloquea la mecánica de revivir fósiles y el museo.
+Milestones = Reencuentro con Guiomar. Pausa narrativa antes de la nieve.
+WhyItMatters = Pausa del conflicto y recompensa de coleccionismo; fortalece el vínculo con Guiomar antes de su caída emocional en la nieve.
+
+[CHAPTER_35]
+Title = Ruta 11
+Act = III
+LocationKey = RUTA_11
+MedalsEarned = 5
+FragmentsInPlay = F4 (Lunar) recuperado → Lucián lo lleva al Profesor. Morfeo: 4/6 (en secreto).
+WildLevels = Día 44–46 · Noche 66–69
+CharactersInScene = Tú (Protagonista);Guiomar
+NarrativeText = Desde el pueblo, el camino asciende por una montaña cubierta de nieve y niebla. Por primera vez, el aire muerde. La Ruta 11 es el primer contacto real con el invierno: pinos negros, escarcha en las ramas, el crujir de la nieve bajo las botas.
+NarrativeText = Al final del tramo ves a Guiomar de pie, con los brazos cruzados, mirando una pared de nieve que cierra el paso. Hay rumores de desprendimientos más adelante. No puede continuar.
+NarrativeText = —No puedo seguir —dice, sin volverse—. Es ridículo. Llevo semanas yendo más rápido que nadie y ahora… una pared de nieve.
+NarrativeText = No te reta; no hay combate. Se sienta en una roca y se abraza las rodillas. Es un momento emocional vulnerable, y tú no necesitas hablar: te sientas a su lado.
+NarrativeText = —Creo que estoy demasiado centrada en superarme —murmura—. Y no sé en qué me estoy convirtiendo.
+NarrativeText = Tras un rato, os levantáis juntos. Ya no hay camino al norte; así que retrocedéis.
+Milestones = Sin combate. Guiomar, bloqueada por la nieve, muestra vulnerabilidad: refuerza su arco.
+Milestones = Bloqueo natural al norte (zona de evento futuro). Salvajes Nv 44–46 (día) · 66–69 (noche).
+WhyItMatters = Momento vulnerable de Guiomar sin combate: necesita ese vacío para que su cambio en la Ruta 17 resulte creíble.
+
+[CHAPTER_36]
+Title = Ruta 12
+Act = III
+LocationKey = RUTA_12
+MedalsEarned = 5
+FragmentsInPlay = F4 (Lunar) recuperado → Lucián lo lleva al Profesor. Morfeo: 4/6 (en secreto).
+WildLevels = Día 45–47 · Noche 68–71
+CharactersInScene = Tú (Protagonista);Guiomar;Nerea;Telmo
+NarrativeText = Para seguir, retrocedéis hasta Ciudad Azabache y tomáis la salida suroeste: la Ruta 12, una ruta marina de plataformas de madera sobre islotes rocosos. Es tranquila pero amplia; el mar huele a sal y a algas.
+NarrativeText = Sentada frente a las olas, con las manos entre las rodillas, está Nerea. A su lado, su compañera oscura la vigila con la cabeza ladeada.
+NarrativeText = —Tercera vez —dice, sin mirarte—. Empiezo a pensar que me sigues.
+NarrativeText = Guiomar se queda a una distancia prudente. Nerea habla con una voz que se parece cada vez menos a un uniforme.
+NarrativeText = —Me uní por admiración —admite—. No por poder. Por las ideas del líder sobre los Pokémon. Me dijo que dormir no era rendirse. Y yo tenía tantas ganas de que alguien me lo dijera.
+NarrativeText = Mira tus manos, tus Pokémon.
+NarrativeText = —Hay una conexión entre vosotros que yo no… —se detiene—. Eso pone en duda mis decisiones.
+NarrativeText = Te reta a un combate (Nv 55), pausado, casi ceremonial. Gana el que gana: lo que importa es que, al acabar, Nerea sonríe con un gesto que no llega a sonrisa y se marcha por la pasarela.
+NarrativeText = Una barca vieja se acerca. Al timón, un anciano de rostro de cuero y una pipa apagada que lo ha visto todo desde el agua.
+NarrativeText = —Me habéis hecho pasar un buen rato —dice Telmo—. Venid a mi casa: hay sopa caliente.
+Milestones = Tercer combate con Nerea: Nv 55. Confiesa su motivación (admiración por Eliseo).
+Milestones = Telmo (Viejo Pescador) presencia el duelo y los invita (aclaración: la invitación está en la Ruta 12, no en la Ruta 11). Salvajes Nv 45–47 (día) · 68–71 (noche).
+WhyItMatters = Tercer duelo con Nerea y presentación de Telmo: la confesión humaniza a la antagonista y Telmo abre el camino a la Isla Pesadilla.
+
+[CHAPTER_37]
+Title = Pueblo Nacara
+Act = III
+LocationKey = PUEBLO_NACAR
+MedalsEarned = 5
+FragmentsInPlay = F4 (Lunar) recuperado → Lucián lo lleva al Profesor. Morfeo: 4/6 (en secreto).
+WildLevels = Sin salvajes en esta escena
+CharactersInScene = Tú (Protagonista);Guiomar;Telmo
+NarrativeText = El Pueblo Nacara parece flotar sobre un espejo. Casas sobre pilotes, redes colgadas al sol, botes amarrados en los bordes. Huele a mar y a pescado ahumado. Todo brilla con un nácar de reflejos cambiantes.
+NarrativeText = La casa de Telmo tiene una mesa de madera y un fuego bajo. El viejo os sirve sopa con una calma antigua.
+NarrativeText = —Os debo algo por el espectáculo —dice. Saca de un baúl una caña de pescar y te la entrega.
+NarrativeText = Guiomar levanta la mano.
+NarrativeText = —¿Y una segunda? Para Lucián. Está en el pueblo… en Iolar. Se la voy a llevar yo misma.
+NarrativeText = Telmo la mira de reojo y le entrega otra. Cuando Guiomar se despide, te abraza con fuerza y se marcha corriendo por la pasarela. Es una forma de decir que os quiere a los dos.
+NarrativeText = Entonces Telmo se acerca al fuego y baja la voz.
+NarrativeText = —Hay una isla —empieza—, al sur. Se llama Pesadilla. Los pescadores no pasamos de la boya roja. Dicen que allí duerme algo que no debe despertar. Que nadie vuelve igual.
+NarrativeText = Te mira un largo rato, con la pipa apagada entre los dientes.
+NarrativeText = —Yo puedo llevaros —dice al fin—. En mi barca. Cuando queráis.
+Milestones = Caña de pescar (obtenida) y leyenda de la Isla Pesadilla; Guiomar se lleva una segunda caña para Lucián.
+Milestones = Telmo propone llevar al protagonista a la isla: se abre el arco de exploración.
+WhyItMatters = Entrega la caña y la leyenda de la isla del miedo; Guiomar vuelve a Lucián y el trío se reconstituye.
+
+[CHAPTER_38]
+Title = Ruta 13
+Act = III
+LocationKey = RUTA_13
+MedalsEarned = 5
+FragmentsInPlay = F4 (Lunar) recuperado → Lucián lo lleva al Profesor. Morfeo: 4/6 (en secreto).
+WildLevels = Día 45–47 · Noche 68–71
+CharactersInScene = Tú (Protagonista);Leucótea
+NarrativeText = Después de despedirte de Guiomar, recorres la Ruta 13 en solitario. Una ruta marítima amplia y tranquila: plataformas de madera, rocas costeras, redes viejas a la deriva e islotes que sobresalen del agua. Es un tramo contemplativo. Piensas en la visita a la isla que te espera, en la voz que has oído sin oír.
+NarrativeText = En una plataforma de observación, una mujer de túnica azul abisal contempla el océano. Tiene los ojos lechosos, blancos como la sal. Un bastón de coral descansa contra su rodilla.
+NarrativeText = —Te conozco —dice Leucótea, sin girar la cabeza—. Sé quién eres y lo que has hecho. —Hace una pausa—. Hay desafíos que nadie ve porque están ocultos. Cerca de aquí, al noreste, sobre una elevación rocosa a la que se llega nadando entre islotes, hay una gruta submarina. La llamamos Azur.
+NarrativeText = Te explica que solo podrás explorarla cuando hayas reunido todas las medallas. Es la presentación formal del segundo tipo de grutas.
+NarrativeText = —Los ojos engañan —añade—. La mente sabe la verdad.
+NarrativeText = Se aleja por la plataforma, con una elegancia tranquila, y desaparece mar adentro. Te deja con la impresión de que Oniria tiene muchas capas que aún no ves.
+Milestones = Segundo Alto Mando: Leucótea. Presenta la Gruta Azur (postgame; se llega con la Tabla de Surf y se abre con el Sello Abisal).
+Milestones = Respiro narrativo antes de la isla. Salvajes Nv 45–47 (día) · 68–71 (noche).
+WhyItMatters = Segundo Alto Mando y cuenta atrás hacia el postgame; la calma del tramo contrasta con el miedo de la isla que viene.
+
+[CHAPTER_39]
+Title = Isla Pesadilla — Primera visita
+Act = III
+LocationKey = ISLA_OBSIDIANA
+MedalsEarned = 5
+FragmentsInPlay = F4 (Lunar) recuperado → Lucián lo lleva al Profesor. Morfeo: 4/6 (en secreto).
+WildLevels = Día 46–48 · Noche 69–72
+CharactersInScene = Tú (Protagonista);Lucián;Telmo
+NarrativeText = Cuando regresas al muelle de Nacara, la barca de Telmo ya ha vuelto desde el este. A bordo, con una caña de pescar en las manos y los ojos muy abiertos, va Lucián: el viejo lo ha recogido en la costa de Iolar, donde Guiomar le entregó el regalo.
+NarrativeText = —Guiomar me lo ha explicado todo —dice—. Y me ha dado esto —agita la caña—. Quiero ir contigo.
+NarrativeText = Navegáis hacia el sur. La niebla se espesa. El mar se vuelve grasiento y quieto. Cuando la barca toca la arena de la Isla Pesadilla, no hay pájaros.
+NarrativeText = Desembarcáis. Los árboles son negros y retorcidos, como si intentaran huir del suelo. La neblina nunca se levanta. Los Pokémon parecen ausentes o dormidos (46–48 de día). El suelo es un vidrio negro opaco, del que te devuelven la imagen tus propios pies.
+NarrativeText = A medida que avanzáis, empezáis a oír voces. Primero, susurros; luego, una voz profunda y grave que no pertenece a ningún idioma y que, sin embargo, se entiende. Habla de cansancio, de peso, de amenaza. Lucián se aferra a tu manga.
+NarrativeText = —Probablemente… —susurra—. Probablemente deberíamos irnos.
+NarrativeText = No exploráis más. Regresáis a la orilla casi corriendo. Telmo os espera tranquilo, con la pipa entre los dientes, como si lo hubiera sabido.
+NarrativeText = —Os lo dije —dice—. Nadie vuelve igual.
+NarrativeText = Os lleva en la barca de vuelta, bordeando el continente, hasta Ciudad Magno: un trayecto largo y silencioso.
+Milestones = Primera visita a la Isla Pesadilla (huida por miedo; guion). Salvajes dormidos Nv 46–48 (día) · 69–72 (noche).
+Milestones = Transición: Telmo los devuelve en barca a Ciudad Magno (aclaración de auditoría).
+WhyItMatters = Primer contacto con la voz de Darkrai: el miedo del dúo da peso a la segunda visita, cuando el protagonista irá solo.
+
+[CHAPTER_40]
+Title = Ruta 14
+Act = III
+LocationKey = RUTA_14
+MedalsEarned = 5
+FragmentsInPlay = F4 (Lunar) recuperado → Lucián lo lleva al Profesor. Morfeo: 4/6 (en secreto).
+WildLevels = Día 46–48 · Noche 69–72
+CharactersInScene = Tú (Protagonista);Lucián
+NarrativeText = La Ruta 14 corre pegada a la costa, al noroeste de Ciudad Magno: acantilados bajos, senderos de tierra, brisa marina constante y pasarelas de madera sobre zonas pantanosas. Es corta y tranquila.
+NarrativeText = —Se me ocurre una idea —dice Lucián, aún pálido por la isla—. Un combate amistoso. Para despejar la cabeza.
+NarrativeText = El duelo (Nv 48) es más ágil que los anteriores: no usa notas ni predicciones, o eso parece. Al terminar, se ríe en voz alta por primera vez en muchos días.
+NarrativeText = El camino al norte, hacia la Ruta 16, está cerrado: no por Morfeo, sino por los propios Pokémon salvajes de la zona, que forman una barrera viva. Algunos parecen alterados, otros sobreprotectores.
+NarrativeText = —Me quedo —decide Lucián—. Estudiaré su comportamiento. Quizá pueda calmarlos o encontrar un paso.
+NarrativeText = —Tú toma el desvío al noroeste —añade—. Hay una reserva natural. Quizá encuentres alguien que sepa cómo actuar.
+Milestones = Duelo amistoso con Lucián: Nv 48. El paso a la Ruta 16 está bloqueado por Pokémon salvajes alterados; Lucián se queda a calmarlos.
+Milestones = Salvajes Nv 46–48 (día) · 69–72 (noche).
+WhyItMatters = Muestra el crecimiento de Lucián y envía al protagonista a la Reserva, donde Eliseo reaparece.
+
+[CHAPTER_41]
+Title = Reserva Peridoto
+Act = III
+LocationKey = RESERVA_PERIDOTO
+MedalsEarned = 5
+FragmentsInPlay = F4 (Lunar) recuperado → Lucián lo lleva al Profesor. Morfeo: 4/6 (en secreto).
+WildLevels = Sin salvajes en esta escena
+CharactersInScene = Tú (Protagonista);Eliseo
+NarrativeText = La Reserva Peridoto es un parque artificial de conservación, con caminos de madera, observatorios elevados, pequeños lagos y grandes prados vallados. Se prohíbe capturar. Hay niños, cuidadores con chalecos verdes y un aire de escuela de verano.
+NarrativeText = En un prado, rodeado de niños que le tiran de la manga, un hombre de túnica índigo y negro sostiene entre las manos un pajarillo herido. Con una ternura infinita, le enseña a un pequeño cómo vendar un ala.
+NarrativeText = —Así —dice—. Sin apretar. El dolor no se quita tapándolo; se le acompaña.
+NarrativeText = Levanta la vista. Es Eliseo.
+NarrativeText = No hay armas. No hay reclutas. Los cuidadores le responden con respeto: no saben, o no quieren saber, quién es. El hombre, sin ocultar nada, te hace un gesto para que te sientes en el banco.
+NarrativeText = No habla de los planes de Morfeo. Habla del sufrimiento del mundo, del poder de los sueños, de la necesidad de cambiarlo todo desde la raíz.
+NarrativeText = —El dolor es el precio de estar despierto —dice—. Permíteme pagar esa deuda por ti.
+NarrativeText = Se levanta, entrega el pajarillo a una cuidadora y mira a los niños con una sonrisa dolorosa.
+NarrativeText = —Se acercan grandes cambios —dice, como quien deja una carta sobre una mesa—. Prepárate para elegir en quién confiar.
+NarrativeText = Se marcha caminando entre la hierba. Tú sientes que nadie, en este lugar, ha entendido que estabas ante el líder del enemigo.
+Milestones = Tercera aparición directa de Eliseo (sin combate): pedagogía de la ternura y advertencia sobre la confianza.
+Milestones = Reserva sin captura: sin salvajes capturables.
+WhyItMatters = La advertencia «elige en quién confiar» solo cobra sentido tras la traición del Profesor: es la advertencia que el jugador aún no sabe leer.
+
+[CHAPTER_42]
+Title = Ciudad Venturina — Llegada
+Act = III
+LocationKey = CIUDAD_VENTURINA
+MedalsEarned = 5
+FragmentsInPlay = F4 (Lunar) recuperado → Lucián lo lleva al Profesor. Morfeo: 4/6 (en secreto).
+WildLevels = Sin salvajes en esta escena
+CharactersInScene = Tú (Protagonista);Guiomar
+NarrativeText = Tras cruzar la reserva se asoma Ciudad Venturina, hundida entre árboles tan antiguos que las casas se han convertido en parte de su tronco. Pasarelas colgantes, escaleras en espiral talladas en madera, luz verde y filtrada y un zumbido de insectos. Y en el centro, enorme, el herbolario: un árbol milenario con ventanas.
+NarrativeText = Ahí te espera Guiomar, de pie ante la puerta, con los brazos cruzados.
+NarrativeText = —Llegué antes —dice—. Para desafiar a la líder. Pero no está en la ciudad: ha salido a recoger hierbas especiales a la siguiente ruta.
+NarrativeText = Te sientes un momento sin saber qué decir: la ciudad está llena de calma, pero tú traes demasiada tormenta en el cuerpo.
+NarrativeText = —Podemos ayudarla —propone Guiomar—. Así se hace en los pueblos: se ayuda primero y se pelea después.
+Milestones = Llegada a Ciudad Venturina. Hildegarda no está: ha ido a recoger hierbas a la Ruta 15. Reencuentro con Guiomar; ciudad como punto de reconexión.
+WhyItMatters = Reúne al trío y añade la misión de ayudar a Hildegarda: la amistad pesa más que la medalla.
+
+[CHAPTER_43]
+Title = Ruta 15
+Act = III
+LocationKey = RUTA_15
+MedalsEarned = 5
+FragmentsInPlay = F4 (Lunar) recuperado → Lucián lo lleva al Profesor. Morfeo: 4/6 (en secreto).
+WildLevels = Día 47–49 · Noche 71–74
+CharactersInScene = Tú (Protagonista);Guiomar;Hildegarda
+NarrativeText = La Ruta 15 mezcla sendero montañoso y bosque húmedo: arcillas, turba, ramas bajas cargadas de agua. Desde un recodo se ve la entrada de la ciénaga, bloqueada por un barrizal enorme.
+NarrativeText = En un claro, una mujer mayor de túnica de lino verde, con el cabello plateado trenzado de hojas y las manos manchadas de tierra, recoge plantas medicinales en una cesta. A su lado, varios Pokémon salvajes la ayudan con torpeza y ternura. Habla con ellos en voz baja.
+NarrativeText = —Una planta no pregunta si merece la luz —dice, sin mirarte—: la busca.
+NarrativeText = Guiomar y tú os arremangáis. Cargáis cestas, desbrozáis, arrancáis raíces sin romperlas. Hildegarda os observa con ojos de lechuza.
+NarrativeText = —Todo lo que está vivo duele un poco al crecer —sentencia cuando termináis—. Gracias.
+NarrativeText = Es otra faceta más allá del combate: ves a la líder, no a la jueza. Y Guiomar, a tu lado, no dice una palabra, pero sonríe.
+Milestones = Evento de recolección de hierbas junto a Hildegarda y Guiomar. Salvajes Nv 47–49 (día) · 71–74 (noche).
+WhyItMatters = Gana la confianza de Hildegarda y refuerza a Guiomar; las hierbas son el instrumento que desbloquea el norte.
+
+[CHAPTER_44]
+Title = Ciudad Venturina — La Medalla (Gimnasio 6)
+Act = III
+LocationKey = CIUDAD_VENTURINA
+MedalsEarned = 6
+FragmentsInPlay = F4 (Lunar) recuperado → Lucián lo lleva al Profesor. Morfeo: 4/6 (en secreto).
+WildLevels = Sin salvajes en esta escena
+CharactersInScene = Tú (Protagonista);Guiomar;Roldán;Hildegarda
+NarrativeText = Regresáis juntos a la ciudad. En el invernadero de Hildegarda —un salón enorme dentro de un tronco, atravesado por luces verdes—, la líder acepta el desafío. Sus Pokémon de Planta y Veneno y, de Ace (Nv 54), uno de ellos, te agotan con estados alterados: veneno, sueño, esporas. El invernadero se llena de un terreno herboso que cura a los suyos y corroe a los tuyos.
+NarrativeText = Cuando cae, Hildegarda sonríe.
+NarrativeText = —El bosque te reconoce —dice—. No lo traiciones.
+NarrativeText = Te entrega la Medalla 6.
+NarrativeText = Al salir, Roldán aparece de forma repentina, apoyado en la barandilla de una pasarela, con la capa pesada sobre los hombros.
+NarrativeText = —Tengo noticias inquietantes —anuncia—. He descubierto indicios de un asentamiento de Morfeo cerca de la ciénaga. Pero necesito tiempo para encontrar el acceso.
+NarrativeText = Te entrega una hierba calmante.
+NarrativeText = —Con esto podrás volver a la Ruta 14 y despejar el paso. Tu amigo sigue allí.
+Milestones = Gimnasio 6 (Planta) — Hildegarda: Ace Nv 54. Medalla 6.
+Milestones = Roldán entrega la hierba calmante: desbloquea la Ruta 14/16 y alerta de la base de la ciénaga.
+WhyItMatters = Medalla 6 y entrega de la hierba calmante: sin ella la Ruta 14 seguiría cerrada y la historia no llegaría a la Villa.
+
+[CHAPTER_45]
+Title = Ruta 16
+Act = III
+LocationKey = RUTA_16
+MedalsEarned = 6
+FragmentsInPlay = F4 (Lunar) recuperado → Lucián lo lleva al Profesor. Morfeo: 4/6 (en secreto).
+WildLevels = Día 48–50 · Noche 72–75
+CharactersInScene = Tú (Protagonista);Lucián;Zenobia
+NarrativeText = Con la hierba calmante vuelves a la Ruta 14. Lucián sigue allí, sentado en el suelo, rodeado de Pokémon que ya no lo miran con hostilidad. Se levanta de un salto.
+NarrativeText = —He anotado catorce patrones —dice—. Y no sirve ninguno.
+NarrativeText = Con el aroma de la hierba, los Pokémon se aquietan y se apartan. La Ruta 16, un paso boscoso de suelos negros y musgo, de ambiente tenso y nuboso, se abre ante vosotros.
+NarrativeText = A mitad del camino os cruzáis con alguien que os mira con cierta indiferencia. Zenobia. Esta vez, sin escuadrón, sin tableta a la vista.
+NarrativeText = Lucián se adelanta, aunque se le ve el temblor en las manos.
+NarrativeText = —¿Por qué? —pregunta—. ¿Por qué apoyas el sueño eterno?
+NarrativeText = Ella no ataca. Se toma un tiempo en responder.
+NarrativeText = —No encuentro una razón racional para que sigas luchando —dice al fin—. Me inquieta no encontrarla. —Habla de su casa arruinada, del frío de aquellos años, de los hermanos que eligieron cosas distintas para sobrevivir—. Los miembros de este equipo no son villanos. Son personas heridas con ideales distorsionados.
+NarrativeText = Se va sin luchar. Lucián se queda mirando el camino, confuso.
+NarrativeText = —Creía que estaban aquí por el orbe —murmura—. Pero no… al menos, no ahora.
+Milestones = Zenobia, conversación honesta (sin combate): su visión del mundo y la grieta de su frialdad. Lucián queda confuso.
+Milestones = Camino a la Villa Adular (norte). Salvajes Nv 48–50 (día) · 72–75 (noche).
+WhyItMatters = Segunda cara de Zenobia: la grieta de su discurso y la confusión de Lucián preparan su derrota en el Monte.
+
+[CHAPTER_46]
+Title = Villa Adular
+Act = III
+LocationKey = VILLA_ADULARIA
+MedalsEarned = 6
+FragmentsInPlay = F5 (Pesadilla) recuperado → el Profesor lo toma y revela su traición. Morfeo: 5/6.
+WildLevels = Día 49–52 · Noche 74–78
+CharactersInScene = Tú (Protagonista);Ambrosio;Lucián;Guiomar;Roldán
+NarrativeText = La Villa Adular aparece de pronto, como una página arrancada de un libro triste. Niebla perpetua, casas derruidas, tejados hundidos, farolas muertas. Lo que queda de las calles huele a madera mojada. Se oyen susurros.
+NarrativeText = La niebla es tan espesa que Lucián decide esperar en el borde de la aldea, anotando lecturas de humedad. Tú sigues hacia el centro.
+NarrativeText = En el fondo, entre las ruinas de una plaza, se alza el Dominante Fantasma. Un cuerpo de bruma con ojos de linterna. El combate (Nv 58) es un duelo opresivo: cada golpe te devuelve un fragmento de imagen —una cama, una mano, un reloj— y el aire se espesa como un velo. Cuando cae, el F5 surge: un fragmento oscuro, frío, que provoca visiones.
+NarrativeText = Una voz cálida suena a tu espalda.
+NarrativeText = —¡Querido! ¡Qué alegría!
+NarrativeText = Ambrosio se acerca con los brazos extendidos, sin una mota de barro. Sonríe, aliviado.
+NarrativeText = —Lo has conseguido. Dámelo, que yo lo guardo. Es demasiado peligroso para ti.
+NarrativeText = Se lo entregas. Él lo toma con las dos manos, con una ternura casi litúrgica… y de pronto, entre la niebla, surgen reclutas del Equipo Morfeo. Ocho, diez. Rodean la plaza.
+NarrativeText = El Profesor se vuelve hacia ti. No hay crueldad en su rostro. Hay una especie de pena infinita.
+NarrativeText = —Lo siento, querido —dice—. No llores. Pronto todo será silencio, y en el silencio no hay despedidas.
+NarrativeText = El reloj de su bolsillo se detiene. Lo saca, lo mira, lo guarda. Y, mientras los reclutas te retienen, Ambrosio se pierde en la niebla con el orbe bajo el brazo.
+NarrativeText = Cuando por fin derrotas a los últimos reclutas, ya es tarde. Llegan Roldán y Guiomar, y con ellos Lucián, sin aliento, que los ha guiado a través de la niebla.
+NarrativeText = —¿Dónde…? —empieza Guiomar.
+NarrativeText = Se lo cuentas con los ojos. Nadie dice nada. Roldán se queda mirando la niebla con la mandíbula apretada.
+NarrativeText = —Me equivoqué con él —murmura—. Yo también quise creerlo.
+NarrativeText = Lucián tiembla.
+NarrativeText = —Le di el F4 —susurra—. Yo mismo. Con mis propias manos… ¡Le di el fragmento!
+NarrativeText = Roldán le pone una mano en el hombro. Luego anuncia, con un cambio de voz:
+NarrativeText = —Ya no llueve. La base de la ciénaga es accesible. Tú y yo vamos allá.
+NarrativeText = Lucián, con los ojos húmedos, asiente.
+NarrativeText = —Yo vuelvo —dice—. A investigar. Voy a revisar cada papel del laboratorio.
+Milestones = Quinto Dominante: Fantasma, Nv 58. F5 (Pesadilla) entregado al Profesor, que revela su traición y huye (Morfeo: 5/6).
+Milestones = Giro central: Ambrosio siempre perteneció a Morfeo; sus fragmentos 1, 4 y 5 estaban ya en sus manos.
+Milestones = Lucián descubre que entregó el F4 al traidor; vuelve a investigar. Salvajes Nv 49–52 (día) · 74–78 (noche).
+WhyItMatters = Giro central: la traición de Ambrosio reordena todo lo vivido y explica los robos. A partir de aquí, el protagonista y Roldán forman una pareja operativa.
+
+[CHAPTER_47]
+Title = Ciénaga Limonar y el Refugio de Turba (Base Morfeo 2)
+Act = IV
+ActTitle = Acto IV — El Cerco de la Nieve
+ActIntro = Ciénaga Limonar · Pueblo Estea · Ruta 17 · Ciudad Alabastro · Ruta 19 · Ruta 18 · Templo Moldar · Ladera Porfiral · Ruta 20 · Ruta 21 · Ciudad Rejalgar. Del barro a la nieve y de la nieve a la última base de Morfeo; luego, el regreso al sur por la ruta que estuvo cerrada desde el primer día.
+LocationKey = CIENAGA_LIMONITA
+Summary = Sub-lugar sin clave propia dentro de Ciénaga Limonar. Ubicación en el Vol. 8: Ciénaga Limonar y el Refugio de Turba (Base Morfeo 2).
+MedalsEarned = 6
+FragmentsInPlay = F5 (Pesadilla) recuperado → el Profesor lo toma y revela su traición. Morfeo: 5/6.
+WildLevels = Día 52–54 · Noche 78–81
+CharactersInScene = Tú (Protagonista);Zenobia;Roldán
+NarrativeText = La Ciénaga Limonar es el escenario más húmedo de Oniria. Lluvia fina y constante, raíces enormes que emergen como costillas, árboles descompuestos, puentes improvisados con tablones y una niebla que se pega a la ropa. Hay charcas profundas donde duermen Pokémon de Veneno, Planta y Agua. Ya no llueve con la furia de otras semanas, y el camino que antes estaba cerrado por el barro se deja recorrer.
+NarrativeText = Roldán camina delante, con la capa pesada empapada y el paso firme. No habla; mira. Os adentráis hasta lo que queda de la base de Morfeo: el Refugio de Turba, un campamento hundido a medias bajo el nivel del agua, con pasarelas de madera podrida y tiendas de lona rasgada. Parece abandonado. No lo está: algunos reclutas aún resisten, preparados.
+NarrativeText = Los vais derrotando uno a uno, salas húmedas, pasillos que huelen a musgo, hasta llegar a una explanada en la que espera Zenobia, de pie, con la tableta entre las manos y la lluvia resbalándole por el monóculo.
+NarrativeText = —Llegan tarde —dice—. La base cumplió su propósito hace semanas. —Sonríe con un solo lado de la boca—. Nunca tuvisteis opción de evitarlo. El plan ya está en marcha. Siempre lo estuvo.
+NarrativeText = El combate (Nv 60) es duro. Sus Pokémon encajan como engranajes: uno gira, otro calcula, el último remata. Cuando cae su último, ella no pierde la compostura. Pulsa un botón.
+NarrativeText = La base explota. El suelo se hunde; las pasarelas saltan por los aires. Zenobia escapa entre el humo; Roldán te agarra de la capa y te arrastra fuera justo antes de que el techo del refugio se desplome.
+NarrativeText = Os quedáis de rodillas en el barro, mirando los restos que arden bajo la lluvia.
+NarrativeText = —Cada movimiento suyo ha sido calculado —dice Roldán, casi para sí—. Y cada pérdida nuestra, también. El desequilibrio parece cada vez más irreversible.
+Milestones = Base Morfeo 2 — Refugio de Turba; jefa Zenobia: Nv 60. Explosión premeditada: base destruida, fuga de Zenobia.
+Milestones = Roldán salva al protagonista y reflexiona sobre el plan de Morfeo. Salvajes Nv 52–54 (día) · 78–81 (noche).
+WhyItMatters = Segunda base y primer golpe consciente al plan de Morfeo; la explosión muestra que cada pérdida estaba prevista.
+
+[CHAPTER_48]
+Title = Pueblo Estea
+Act = IV
+LocationKey = PUEBLO_ESTEATITA
+MedalsEarned = 6
+FragmentsInPlay = F5 (Pesadilla) recuperado → el Profesor lo toma y revela su traición. Morfeo: 5/6.
+WildLevels = Sin salvajes en esta escena
+CharactersInScene = Tú (Protagonista);Nerea
+NarrativeText = Subes hacia el norte por un camino que se estrecha y se cubre de nieve. El Pueblo Estea aparece entre montañas blancas como un grupo de ancianos reunidos al calor de una estufa. Casas de piedra gris, chimeneas humeantes, bancos junto a las estufas de esteatita. Casi todos los vecinos son mayores: los jóvenes se marcharon hace años. Hay nostalgia y una terquedad callada.
+NarrativeText = En el centro del pueblo, una cueva con inscripciones antiguas cuya entrada vigila una anciana con la mirada. Los grabados están tallados en piedra blanda: pájaros, soles, círculos. Se dice que dicen algo sobre los legendarios de Oniria.
+NarrativeText = En un banco, junto a la estufa de la plaza, se sienta Nerea. Esta vez no lleva uniforme: viste ropa civil, una chaqueta oscura y un gorro de lana. Su compañera oscura la acompaña a sus pies.
+NarrativeText = —Siéntate —dice—. No hace falta que luches. Pero luego sí.
+NarrativeText = Habla con una sinceridad nueva. De su vida. Del dolor humano.
+NarrativeText = —Cuidé a mi hermana una noche de tormenta —cuenta—. Estaba enferma. Me senté junto a su cama… y me dormí. Cuando desperté, ya no respiraba.
+NarrativeText = No lloras; tampoco ella. Pero algo cambia en el aire.
+NarrativeText = —Nunca me lo he perdonado —sigue—. Y cuando él me habló del sueño… pensé que quizá se podía dormir sin culpa. —Mira tus manos, tus Pokémon—. Pero te veo a ti. Y no sé si él tiene razón.
+NarrativeText = El combate (Nv 62) tiene un aire solemne, casi de despedida. Cuando termina, Nerea guarda la Pokéball con una lentitud nueva y se marcha por la ladera con paso ligero, aliviada.
+Milestones = Cuarto combate con Nerea: Nv 62 (propuesto; el borrador no fijaba nivel). Primera señal de que cuestiona su lealtad.
+Milestones = Se presenta la cueva con inscripciones (postgame). Pueblo sin salvajes.
+WhyItMatters = Cuarto duelo con Nerea y confesión íntima: es el punto de no retorno de su lealtad, un acto antes de su traición.
+
+[CHAPTER_49]
+Title = Ruta 17
+Act = IV
+LocationKey = RUTA_17
+MedalsEarned = 6
+FragmentsInPlay = F5 (Pesadilla) recuperado → el Profesor lo toma y revela su traición. Morfeo: 5/6.
+WildLevels = Día 54–56 · Noche 81–84
+CharactersInScene = Tú (Protagonista);Guiomar;Isolda
+NarrativeText = La Ruta 17 sube entre cuarcitas y nieve acumulada. El invierno ya no es un adorno: es una pared de aire frío. En un tramo donde el camino desaparece bajo una ventisca, ves a Guiomar con una pala improvisada, un Pokémon de Planta soltando raíces para sujetar la nieve y, a su lado, una mujer de abrigo azul glaciar con guantes blancos y un abanico de hielo en la mano: Isolda.
+NarrativeText = —Les presento —dice Guiomar, tiritando—: la señora de la mansión. Dice que no puede ayudarme, pero lleva una hora ayudando.
+NarrativeText = Isolda no sonríe. Pero su Pokémon de Hielo moldea un camino con precisión de joyero.
+NarrativeText = Os ponéis a trabajar los tres. Mientras cargáis nieve, Guiomar habla poco; trabaja con paciencia, y ya no pelea con cada copo. Cuando llega el turno de Isolda, ella inclina la cabeza.
+NarrativeText = —Los modales —murmura— son la última armadura de quien tiene miedo.
+NarrativeText = —Y una llama —responde Guiomar sin mirarla— no solo quema: también sirve para que nadie pase frío.
+NarrativeText = El silencio que sigue es de los que valen más que un discurso. Hoy Guiomar ha aprendido otra manera de ser fuerte.
+NarrativeText = Cuando despejáis el paso, los tres seguís a la siguiente ciudad.
+Milestones = Limpieza de nieve con Guiomar e Isolda (cooperativo); cierra el primer arco de maduración de Guiomar.
+Milestones = Salvajes Nv 54–56 (día) · 81–84 (noche).
+WhyItMatters = Cierra el primer arco de Guiomar y presenta a Isolda como aliada: su ayuda será decisiva en la ciudad.
+
+[CHAPTER_50]
+Title = Ciudad Alabastro (Gimnasio 7)
+Act = IV
+LocationKey = CIUDAD_ALABASTRO
+MedalsEarned = 7
+FragmentsInPlay = F5 (Pesadilla) recuperado → el Profesor lo toma y revela su traición. Morfeo: 5/6.
+WildLevels = Sin salvajes en esta escena
+CharactersInScene = Tú (Protagonista);Guiomar;Isolda
+NarrativeText = Ciudad Alabastro emerge de la ventisca como un decorado de teatro. Casas de madera oscura entre capas de hielo, lámparas de gas, y, en el centro, una mansión neoclásica de alabastro, translúcida y blanda. Nieva sin parar. Tiene el misterio de un lugar donde nadie hace ruido.
+NarrativeText = En la plaza, un grupo de reclutas del Equipo Morfeo da gritos, rompe faroles y agita pancartas. Isolda apenas levanta la mano, y su Pokémon de Hielo los hace retroceder; tú terminas el trabajo. Se marchan.
+NarrativeText = —No robaban nada —observa la líder, frunciendo el ceño—. No destruían nada de valor. Solo… llamaban la atención.
+NarrativeText = Hacia el oeste, añade, hay un templo ancestral. Hace tiempo que no se visita, pero dicen haber oído movimientos extraños en esa dirección.
+NarrativeText = Entonces te invita a pasar. La mansión por dentro es un salón de baile helado: un suelo de espejo, arañas de cristal, candelabros de hielo que gotean sin derretirse. Isolda se quita los guantes.
+NarrativeText = —Un vals se baila de a dos —dice—. ¿Sabrá seguirme?
+NarrativeText = Su combate es una danza de criaturas de Hielo y, al final, su Ace (Nv 64), letal sin tocar. Cuando cae, Isolda se vuelve un momento hacia el techo.
+NarrativeText = —Qué insolencia… tan agradable. Permítame ofrecerle un té.
+NarrativeText = Te entrega la Medalla 7.
+NarrativeText = Mientras bebes, una mujer de la mansión llega con un aviso: reclutas han sido vistos entrando por el camino del este.
+Milestones = Gimnasio 7 (Hielo) — Isolda: Ace Nv 64. Medalla 7.
+Milestones = Alboroto de Morfeo como señuelo: los reclutas llaman la atención en la plaza; se menciona el templo del oeste. El protagonista sigue primero a los reclutas por la Ruta 19.
+WhyItMatters = Medalla 7 y señuelo: la distracción de Morfeo revela que algo importante ocurre en el templo mientras el protagonista es llevado al este.
+
+[CHAPTER_51]
+Title = Ruta 19
+Act = IV
+LocationKey = RUTA_19
+MedalsEarned = 7
+FragmentsInPlay = F5 (Pesadilla) recuperado → el Profesor lo toma y revela su traición. Morfeo: 5/6.
+WildLevels = Día 54–56 · Noche 81–84
+CharactersInScene = Tú (Protagonista);Oriana
+NarrativeText = La Ruta 19 corre hacia el este, boscosa y nevada, de abetos oscuros y cuarzo blanco bajo la nieve. Su acceso estaba bloqueado por las nevadas; ahora el paso está despejado.
+NarrativeText = En mitad de la ruta te espera una mujer con un abrigo largo azul noche, un solo guante, un mechón blanco en el pelo negro.
+NarrativeText = —Has llegado lejos —dice Oriana, con una voz suave que sin embargo se oye a cien metros—. Me han hablado de ti.
+NarrativeText = Es el tercer miembro del Alto Mando que conoces. Te habla de su estilo de combate y de la cueva de hielo que se esconde justo al noreste: la Gruta Labrador, cuyo hielo, dicen, nunca se derrite.
+NarrativeText = —En la noche polar —te dice— nadie te mira. Por eso aprendes qué brilla en ti.
+NarrativeText = Pero los reclutas que causaron el alboroto, aquellos que se vieron entrando por aquí, ya no están. No hay huellas, no hay rastro. Oriana te mira con una media sonrisa.
+NarrativeText = —Te han traído hasta aquí a propósito —concluye—. Para que no estuvieras donde importa.
+NarrativeText = Te das la vuelta. El templo, al oeste, está lejísimos.
+Milestones = Tercer Alto Mando: Oriana. Presenta la Gruta Labrador (postgame).
+Milestones = Los reclutas eran un señuelo: su único propósito era alejar al protagonista del templo. Salvajes Nv 54–56 (día) · 81–84 (noche).
+WhyItMatters = Confirma el engaño y presenta a Oriana; devuelve al protagonista a la Ruta 18 con una lección: Morfeo piensa por adelantado.
+
+[CHAPTER_52]
+Title = Ruta 18
+Act = IV
+LocationKey = RUTA_18
+MedalsEarned = 7
+FragmentsInPlay = F5 (Pesadilla) recuperado → el Profesor lo toma y revela su traición. Morfeo: 5/6.
+WildLevels = Día 55–57 · Noche 83–86
+CharactersInScene = Tú (Protagonista);Guiomar;Alarico
+NarrativeText = Desandas el camino hasta Ciudad Alabastro y sales por el oeste: la Ruta 18, un camino helado de pizarra, la colina del templo al fondo, el viento aullando entre las rocas. Guiomar te acompaña.
+NarrativeText = A mitad de camino, un hombre enorme sale de detrás de un peñasco. Brazos marcados de cicatrices, uniforme roto, sonrisa de oreja a oreja. En la mano izquierda sostiene un orbe que late. Alarico.
+NarrativeText = —¡Mira a quién tenemos aquí! —ruge—. ¡Los niños de las medallas!
+NarrativeText = Estás a punto de luchar cuando un rugido descomunal cae desde el templo y hace temblar la ladera. Se oyen gritos: civiles que, atraídos por el estruendo, se han acercado demasiado al templo.
+NarrativeText = —Lo he liberado yo —explica Alarico con una carcajada—. El Dominante. Para entreteneros. Si me enfrentáis, esos civiles morirán. Si corréis a salvarlos… me llevo el orbe.
+NarrativeText = Te mira, con los ojos encendidos.
+NarrativeText = —¿Orbe o civiles? ¡Elige, chico! ¡Me encanta ver a la gente elegir!
+NarrativeText = No eres tú quien decide. Guiomar da un paso adelante.
+NarrativeText = —Los civiles —dice, con voz clara—. Y el Pokémon. Lo que sea que esté sufriendo allá arriba.
+NarrativeText = Alarico se encoge de hombros, satisfecho.
+NarrativeText = —Habéis ganado —dice—. Y habéis perdido. Pero al menos alguien hizo lo correcto.
+NarrativeText = Se retira por la nieve, silbando.
+Milestones = Dilema ético de Alarico: orbe o civiles. Guiomar elige salvar a las personas y al Dominante liberado; el general se lleva el orbe (el F6, ya extraído, ver Templo).
+Milestones = Sin combate. Salvajes Nv 55–57 (día) · 83–86 (noche).
+WhyItMatters = Dilema moral: el protagonista y Guiomar eligen a las personas antes que al orbe, lo que define quiénes son frente a Morfeo.
+
+[CHAPTER_53]
+Title = Templo Moldar
+Act = IV
+LocationKey = TEMPLO_MOLDAVITA
+MedalsEarned = 7
+FragmentsInPlay = F6 (Lunar) extraído por Alarico antes de llegar tú. Morfeo: 6/6 (ya completo, aún sin saberlo).
+WildLevels = Día 56–58 · Noche 84–87
+CharactersInScene = Tú (Protagonista);Lucián;Guiomar;Roldán
+NarrativeText = El Templo Moldar se alza sobre una colina blanca barrida por el viento. Pilares helados, murales en ruinas, símbolos dracónicos tallados en los muros. El suelo vibra y se resquebraja con cada rugido; hay un peligro real de avalancha.
+NarrativeText = En la entrada, un joven delgado con gafas torcidas sale corriendo de entre las columnas.
+NarrativeText = —¡Lo oí desde la otra punta del valle! —jadea Lucián—. He venido en cuanto he podido. ¡Está dentro!
+NarrativeText = Entráis juntos. En lo más hondo del templo, entre columnas partidas, un Dominante Dragón (Nv 66) ruge con una fuerza que amenaza con derribar el techo. Es el combate más épico hasta ahora. Lucián, con las manos firmes, ya no mira la libreta: observa a la criatura, y en un segundo comprende su ritmo.
+NarrativeText = —He calculado todas las probabilidades de perder —dice, ajustándose las gafas por última vez—… y he decidido ignorarlas todas.
+NarrativeText = Peleáis juntos. Cuando el Dominante se aquieta y recuerda que es una criatura, Lucián se arrodilla a su lado y le acaricia la frente. Es un gesto de compasión sin números.
+NarrativeText = El fragmento ya no está: Alarico lo había extraído antes. Es la pérdida del F6. Pero hay un alivio extraño en el aire.
+NarrativeText = Guiomar llega corriendo, emocionada de que todo haya salido bien. Y, tras ella, aparece Roldán, con la capa cubierta de nieve.
+NarrativeText = —Lo he seguido desde el aire —dice—. Alarico ha regresado a una antigua zona: la gran ladera conectada a la Ruta 10, por donde ya pasaste. Allí se oculta la última base. Vamos.
+Milestones = Sexto Dominante: Dragón, Nv 66 (cooperativo con Lucián). F6 (Lunar) extraído por Alarico (Morfeo: 6/6, aún sin saberlo).
+Milestones = Cierre del arco de Lucián. Roldán revela la Ladera Porfiral. Salvajes Nv 56–58 (día) · 84–87 (noche).
+WhyItMatters = Cierra el arco de Lucián y revela el último fragmento perdido; la ruta de Alarico señala la Ladera como último bastión.
+
+[CHAPTER_54]
+Title = Ladera Porfiral y el Bastión del Porfiral (Base Morfeo 3)
+Act = IV
+LocationKey = LADERA_PORFIDO
+Summary = Sub-lugar sin clave propia dentro de Ladera Porfiral. Ubicación en el Vol. 8: Ladera Porfiral y el Bastión del Porfiral (Base Morfeo 3).
+MedalsEarned = 7
+FragmentsInPlay = Alarico confirma que ya entregó F6. Los seis fragmentos están en poder de Morfeo.
+WildLevels = Día 59–61 · Noche 88–91
+CharactersInScene = Tú (Protagonista);Alarico;Roldán
+NarrativeText = Roldán te guía hasta la Ladera Porfiral, el terreno escarpado que dejaste cerrado en la Ruta 10. Ahora se abre: niebla, rocas del color de la púrpura, vegetación rala. Los pasadizos están tallados en la piedra; hay escondites naturales y cuevas a medias artificiales. El Bastión del Porfiral, la última base de Morfeo, es una fortaleza hecha de montaña.
+NarrativeText = Vais ascendiendo, nivel tras nivel, entre reclutas que ya no son caóticos ni fanáticos: son determinados y silenciosos. Se oye el eco de las botas. Todo indica que están preparados para un desenlace.
+NarrativeText = En lo alto, entre columnas de pórfido rojizo, espera Alarico.
+NarrativeText = —¡Mira lo que ha subido! —se ríe—. ¡Grita! ¡Quiero oír cómo se rompen tus esperanzas!
+NarrativeText = El combate (Nv 68) es violento y rápido: criaturas de Dragón, Fuego, Lucha y Veneno y, al final, su Ace, que rueda sobre sí mismo con la confianza encendida. Cuando por fin cae, esperas encontrar el orbe en su mano.
+NarrativeText = No está.
+NarrativeText = —¡Ay! —ríe, con la boca ensangrentada—. ¡No lo llevo conmigo! Ya lo entregué. ¡Un buen cambiazo! ¿Ahora, en qué manos crees que está?
+NarrativeText = Pulsa un detonador. La ladera tiembla; una parte del bastión se sella en una explosión de roca. Alarico desaparece en la humareda.
+NarrativeText = Roldán se queda mirando el humo. Frustrado, pero sereno.
+NarrativeText = —No hemos perdido —dice—. Si el orbe no está aquí, el plan final ya está en marcha. Y el siguiente paso es el Monte Azogue.
+NarrativeText = Se gira hacia ti.
+NarrativeText = —Antes, hay una cueva que se abrió hace poco al noreste de Pueblo Iolar. Estaba cerrada al inicio de tu viaje. Ve a verla. Allí te esperan.
+Milestones = Base Morfeo 3 — Bastión del Porfiral; jefe Alarico: Nv 68. Revela el «cambiazo»: el F6 ya está entregado.
+Milestones = Todo apunta al Monte Azogue. Roldán sugiere explorar la Ruta 20. Salvajes Nv 59–61 (día) · 88–91 (noche).
+WhyItMatters = Revela el «cambiaso» (6/6 en poder de Morfeo) y fuerza la decisión de ir al Monte; la Ruta 20 abre espacio para despedirse de Guiomar.
+
+[CHAPTER_55]
+Title = Ruta 20
+Act = IV
+LocationKey = RUTA_20
+MedalsEarned = 7
+FragmentsInPlay = Alarico confirma que ya entregó F6. Los seis fragmentos están en poder de Morfeo.
+WildLevels = Día 60–62 · Noche 90–93
+CharactersInScene = Tú (Protagonista);Guiomar
+NarrativeText = Regresas al sur, hasta el lugar donde empezó todo. La cueva al noreste de Pueblo Iolar, que estaba sellada con tablones, ahora está abierta: la Ruta 20. Es una cueva extensa y húmeda, rica en cristales y formaciones minerales; sus niveles están conectados por plataformas y saltos.
+NarrativeText = En el corazón de la cueva te espera Guiomar, con las vendas de siempre y una sonrisa que has visto mil veces, pero distinta.
+NarrativeText = —Roldán me dijo lo mismo que a ti —dice—. Vamos a pelear. No porque tenga que ganarte. —Hace girar un puño—. Porque quiero saber quién soy contigo al lado.
+NarrativeText = El combate (Nv 69) es maduro y reflexivo. Ya no pelea por orgullo ni por emoción; mide sus fuerzas con seriedad. Mientras golpea, habla de la presión que se había puesto desde que todo empezó, de cómo cada combate la ayuda a definir su identidad.
+NarrativeText = Cuando termina, Guiomar se sienta en una roca con las piernas cruzadas. Ya no necesita validación constante.
+NarrativeText = —Quiero caminar a tu lado —dice—. No detrás. No delante. A tu lado.
+NarrativeText = Es el cierre de su arco emocional.
+Milestones = Combate significativo con Guiomar: Nv 69. Cierre de su arco: de la validación constante a caminar «como igual».
+Milestones = Ruta 20 abierta (cueva NE de Pueblo Iolar). Salvajes Nv 60–62 (día) · 90–93 (noche).
+WhyItMatters = Cierre del arco de Guiomar: de la validación a la igualdad; lo que sigue es la prueba final de ambos.
+
+[CHAPTER_56]
+Title = Ruta 21
+Act = IV
+LocationKey = RUTA_21
+MedalsEarned = 7
+FragmentsInPlay = Alarico confirma que ya entregó F6. Los seis fragmentos están en poder de Morfeo.
+WildLevels = Día 60–62 · Noche 90–93
+CharactersInScene = Tú (Protagonista);Anteo
+NarrativeText = La Ruta 21 es un tramo montañoso, de arenisca y basalto, con fuertes vientos y pasarelas colgantes que oscilan sobre el vacío. Desde aquí se ven las montañas sur y el valle seco donde se esconde la última ciudad.
+NarrativeText = En un saliente, un hombre enorme, de torso de fragua y manos cuadradas, mira al suelo antes de contestarte.
+NarrativeText = —Todo lo que sube, cae —dice Anteo—. La tierra siempre gana.
+NarrativeText = Es el cuarto y último Alto Mando que conoces. Te saluda con respeto: has llegado lejos. Te señala, al sur, la entrada de una gruta volcánica: la Gruta Piral, que se cuelga de la ladera como una boca de fuego. Solo se podrá explorar tras completar las medallas.
+NarrativeText = —Cuando caigas —añade—, cae sobre piedra. Se aprende más.
+NarrativeText = Con él se cierra la mecánica de los cuatro Altos Mandos y sus grutas, y se anticipa su papel en la Liga. No hay combate. Desde aquí puedes bajar a Ciudad Rejalgar por el norte y seguir a la Ruta 22 por el este.
+Milestones = Cuarto Alto Mando: Anteo. Presenta la Gruta Piral (postgame). Sin combate (aclaración: el borrador mencionaba un duelo con un rival que no figura en la Historia).
+Milestones = Salvajes Nv 60–62 (día) · 90–93 (noche).
+WhyItMatters = Último Alto Mando y última gruta: el mundo postgame de la Liga queda planteado antes del clímax.
+
+[CHAPTER_57]
+Title = Ciudad Rejalgar (Gimnasio 8)
+Act = IV
+LocationKey = CIUDAD_REJALGAR
+MedalsEarned = 8
+FragmentsInPlay = Alarico confirma que ya entregó F6. Los seis fragmentos están en poder de Morfeo.
+WildLevels = Sin salvajes en esta escena
+CharactersInScene = Tú (Protagonista);Lucián;Guiomar;Roldán;Baltasar
+NarrativeText = Ciudad Rejalgar aparece en un valle seco y cálido, con calles polvorientas y casas de adobe rojizo. Del suelo brota vapor de las termas naturales. El aire huele a especias, a azufre y a pan. En el centro, un restaurante termal que es orgullo de los vecinos.
+NarrativeText = —¡Ya estás aquí! —Baltasar sale de la cocina con los brazos abiertos y el bigote al viento—. ¡Ven, que te voy a dar el abrazo más grande que hayas recibido!
+NarrativeText = Te aprieta contra su delantal y huele tus manos.
+NarrativeText = —A miedo y a canela —sentencia—. Perfecto. ¡La batalla es el plato principal!
+NarrativeText = El gimnasio es una cocina industrial sobre un lago de aguas termales. Sus Pokémon de Fuego y, de Ace (Nv 70), uno que intimida, te cocinan a fuego lento con Sequía, vapor y llamas. Cuando cae su último, Baltasar se queda mirando el techo y se echa a reír.
+NarrativeText = —¡Ven aquí, chico! ¡Un abrazo y un guiso! ¡Te los has ganado!
+NarrativeText = Es la Medalla 8, la última.
+NarrativeText = Luego se pone serio. Te cuenta que la ciudad estuvo meses aislada: los reclutas bloquearon los caminos sin atacar, solo con su presencia.
+NarrativeText = —Una ciudad sin mesa llena es una ciudad que se apaga —dice—. Nos han tenido a oscuras. Pero ahora todo empieza a cambiar.
+NarrativeText = Poco después llegan Roldán y Lucián; Guiomar ya estaba. Con Baltasar, a las afueras de la ciudad, los cinco os reunís por última vez antes del clímax.
+NarrativeText = —Eliseo está en la Ruta 22 —dice Roldán, mirando el este—. Han llegado noticias. Es el último tramo.
+NarrativeText = Nadie pregunta si estáis listos. Decidís avanzar juntos.
+Milestones = Gimnasio 8 (Fuego) — Baltasar: Ace Nv 70. Medalla 8 (la última): se desbloquean las cuatro grutas del postgame.
+Milestones = Reunión de los cinco (Protagonista, Lucián, Guiomar, Roldán y Baltasar); se revela el aislamiento de la ciudad.
+WhyItMatters = Medalla 8: el protagonista cumple los requisitos de la Liga; la reunión de los cinco da forma a la última línea de ataque.
+
+[CHAPTER_58]
+Title = Ruta 22
+Act = V
+ActTitle = Acto V — El Último Sueño
+ActIntro = Ruta 22 · Monte Azogue · Ruta 23 · Isla Sueño · Ruta 24 · Isla Pesadilla · Las Cuatro Grutas · Calzada Corindal · El Umbral de la Liga · Liga Pokémon · Epílogo. Las dos orbes se reúnen en el Monte Azogue; el viaje termina cuando cada una vuelve a su altar y el protagonista cruza, por fin, las puertas de la Liga.
+LocationKey = RUTA_22
+MedalsEarned = 8
+FragmentsInPlay = Alarico confirma que ya entregó F6. Los seis fragmentos están en poder de Morfeo.
+WildLevels = Día 60–62 · Noche 90–93
+CharactersInScene = Tú (Protagonista);Lucián;Guiomar;Eliseo;Nerea;Roldán
+NarrativeText = La Ruta 22 es una franja abrupta de arenisca y grava, casi sin vegetación. Recta y tensa, como si presagiara lo que está por venir. Es corta, pero cada paso tiene el peso de una frase final. Avanzáis juntos —tú, Lucián, Guiomar y Roldán—; Baltasar se ha quedado en Rejalgar para proteger su ciudad.
+NarrativeText = A mitad del camino os espera un hombre de túnica índigo y negro, con un grupo de reclutas a sus espaldas. A su derecha, callada, con las manos en los bolsillos y los ojos al suelo, está Nerea.
+NarrativeText = —Me alegro de que hayáis llegado —dice Eliseo, con la voz más amable del mundo—. Mi plan está casi completo. Descansad cuando lleguéis: os estaré esperando.
+NarrativeText = No combate. Lanza un desafío desde la distancia y se da la vuelta. Cuando se pierde rumbo al monte, la ruta se llena de reclutas (Nv 60), y por un instante crees que Nerea va a dar la orden de ataque.
+NarrativeText = No la da. Mira sus botas. Retrocede un paso. Y, sin una palabra, se aparta del camino.
+NarrativeText = —Adelante —dice Roldán, desabrochándose la capa—. Yo sostengo el paso.
+NarrativeText = Se planta en mitad de la ruta, con la espalda ancha y la mirada de acero, frente a la primera oleada. Los reclutas dudan. Tú, Lucián y Guiomar cruzáis a la carrera. Detrás se oye el estruendo de un combate que no ves.
+Milestones = Desafío de Eliseo a distancia; cameo silencioso de Nerea, que no ataca y deja pasar.
+Milestones = Oleadas de reclutas (Nv 60). Roldán contiene la primera oleada y se reincorporará al pie del monte (aclaración de auditoría). Salvajes Nv 60–62 (día) · 90–93 (noche).
+WhyItMatters = Define quién es quién antes del clímax: Roldán sostiene, Nerea duda y Eliseo se retira; la duda de Nerea es la bisagra del Monte.
+
+[CHAPTER_59]
+Title = Monte Azogue
+Act = V
+LocationKey = MONTE_AZOGUE
+MedalsEarned = 8
+FragmentsInPlay = Las dos orbes están reconstruidas en el Monte; tras el combate se desestabilizan y pasan al protagonista.
+WildLevels = Sin encuentros salvajes (mazmorra de entrenadores y jefes); los niveles Día 63–65 · Noche 94–97 son los de los reclutas
+CharactersInScene = Tú (Protagonista);Ambrosio;Lucián;Guiomar;Eliseo;Nerea;Zenobia;Alarico;Roldán
+NarrativeText = El Monte Azogue es una mole de roca y metal, vertical y amplia. Cuevas interiores, salientes expuestos al viento, túneles húmedos, puentes colgantes y máquinas que chirrían con un zumbido constante: tecnología antigua reaprovechada por Morfeo, naturaleza deformada por las orbes. Está plagado de reclutas.
+NarrativeText = Roldán os alcanza al pie del monte, sin aliento y con el brazo vendado. Juntos subís varios niveles hasta que una segunda oleada lo atrapa en un pasillo.
+NarrativeText = —Seguid —ordena—. Voy detrás.
+NarrativeText = Lucián, Guiomar y tú alcanzáis la cima: una sala circular donde dos grandes antenas se alzan sobre dos pedestales. En cada uno, una orbe completa, brillando: una de plata, otra de ceniza. Alrededor, esperan Eliseo, Zenobia, Alarico, Nerea y, de pie junto a la antena central, Ambrosio, con el reloj en la mano y los ojos húmedos.
+NarrativeText = —Mis queridos —dice—. No sabéis cuánto me ha costado.
+NarrativeText = Los generales se jactan de haber llegado tan lejos gracias a vuestra ayuda inconsciente. Ambrosio, desquiciado, clama que pronto habrá una paz perfecta, sin dolor ni sufrimiento.
+NarrativeText = —Veinte años contando los segundos del dolor ajeno —dice—. ¿Sabes qué se siente al detener el reloj? Alivio.
+NarrativeText = Os explica que la traición fue un acto de redención. Que solo el vínculo de los tres podía despertar los fragmentos. Que él os quiere. Que por eso os eligió.
+NarrativeText = Estalla el caos. Lucián se enfrenta a Zenobia, con las gafas torcidas y la libreta en el suelo; Guiomar, a Alarico, con los puños en alto y una sonrisa que no es de miedo. Roldán intenta subir, pero otro grupo de reclutas lo retiene abajo.
+NarrativeText = Cuando parece que el último obstáculo es el líder, Nerea da un paso al frente. Durante toda la escena ha permanecido en silencio. Ahora levanta la cabeza.
+NarrativeText = —Ya no creo, Eliseo —dice. Su voz no tiembla—. El dolor no se elimina. Se atraviesa. Me lo enseñó él.
+NarrativeText = Te señala con la barbilla.
+NarrativeText = —Dejadme ganar tiempo para que avance.
+NarrativeText = Eliseo, con tristeza infinita, le tiende la mano.
+NarrativeText = —Descansa, hija mía.
+NarrativeText = —No —responde ella, y llama a su Pokémon—. Ya no.
+NarrativeText = El combate entre ambos es el más intenso hasta el momento. Mientras luchan, Ambrosio, fuera de sí, se encara contigo.
+NarrativeText = —Si el líder no puede detenerte —masculla—, lo haré yo.
+NarrativeText = Es un duelo oscuro y personal (Nv 73): sus fósiles te muerden, una criatura artificial te atrapa, su Ace invierte el tiempo con un campanazo y, cuando por fin cae, el reloj de bolsillo, resquebrajado ya, termina de partirse. Ambrosio lo contempla un segundo. Una aguja, por primera vez, avanza.
+NarrativeText = Al volverte, el combate de Nerea ha terminado. Ha sido vencida. Eliseo, aún en pie, la ayuda a sentarse con una gentileza que te hiela.
+NarrativeText = —Ahora —dice—. Tú.
+NarrativeText = El combate final (Nv 75) es simbólico. Una te duerme, otra llena el aire de niebla, otra canta, otra te desgasta… y al final su Ace te impide huir. Todo tiembla: las orbes parpadean, las antenas chirrían. Cuando el Ace cae, Eliseo cierra los ojos.
+NarrativeText = —No te odio —dice—. Nunca te odié. Eso es lo que no entiendes.
+NarrativeText = Las orbes se desestabilizan. La sala brama. Roldán llega herido pero activo, con Lucián y Guiomar, que han derrotado a los generales.
+NarrativeText = —Las orbes deben volver a sus altares —ordena, con voz ronca—. A las islas. Es la única forma de restaurar el equilibrio. Mientras tú vas, nosotros contendremos a los líderes.
+NarrativeText = Se te cierra la garganta. Pero tomas las orbes.
+Milestones = Clímax: combates paralelos (Lucián–Zenobia, Guiomar–Alarico); Nerea traiciona a Eliseo y es vencida.
+Milestones = Prof. Ambrosio: Nv 73. Líder Eliseo: Nv 75. Las orbes (Sueño: F2+F4+F6; Pesadilla: F1+F3+F5) se desestabilizan y pasan al protagonista.
+Milestones = Roldán encarga restaurarlas en los altares originales de las islas. Los líderes quedan retenidos (escaparán mientras tanto). Sin encuentros salvajes: los reclutas del monte combaten a Nv 63–65 (día) · 94–97 (noche).
+WhyItMatters = Clímax del conflicto con Morfeo: la traición de Nerea y la derrota de Ambrosio y de Eliseo hacen posible el equilibrio, pero las orbes quedan inestables y hay que devolverlas.
+
+[CHAPTER_60]
+Title = Ruta 23 — Camino a la Isla Sueño
+Act = V
+LocationKey = RUTA_23
+MedalsEarned = 8
+FragmentsInPlay = Las dos orbes están reconstruidas en el Monte; tras el combate se desestabilizan y pasan al protagonista.
+WildLevels = Día 63–65 · Noche 95–98
+CharactersInScene = Tú (Protagonista)
+NarrativeText = Para llegar a la Isla Sueño ya no necesitas barco. Desde el norte de Ciudad Magno, el mar se recorre libremente: es la Ruta 23, una travesía marina de fondos de basalto, bancos de niebla y corrientes quietas. La niebla es densa; las aguas, inquietas.
+NarrativeText = Mientras avanzas empiezas a oír ecos: voces familiares que se deforman. La de Amparo diciendo «la casa no se mueve». La de Lucián recitando una cifra. La de Guiomar riendo. La de Ambrosio, murmurando que no llores. Repiten tus pensamientos más íntimos, como si el mar te leyera. Una paz tenue te envuelve, y por un momento deseas quedarte.
+NarrativeText = Sigues nadando.
+Milestones = Travesía libre a la Isla Sueño (sin barco). Ecos de los pensamientos del protagonista. Salvajes Nv 63–65 (día) · 95–98 (noche).
+WhyItMatters = Prepara emocionalmente el altar lunar: los ecos muestran que el sueño siempre habla con la voz de los que amas.
+
+[CHAPTER_61]
+Title = Isla Sueño — El Altar Lunar
+Act = V
+LocationKey = ISLA_OPALINA
+MedalsEarned = 8
+FragmentsInPlay = Orbe del Sueño (F2+F4+F6) colocada en el altar lunar.
+WildLevels = Día 64–66 · Noche 96–99
+CharactersInScene = Tú (Protagonista);Nerea
+NarrativeText = Isla Sueño es ahora aún más hermosa: flora bioluminiscente, luces suaves, un jardín sin dueño. En la orilla te espera Nerea, de civil, con su compañera oscura a los pies. Se ha unido voluntariamente.
+NarrativeText = —Necesito ver el final con mis propios ojos —dice—. Si me dejas.
+NarrativeText = Cruzáis el bosque floral, mucho más profundo que en la primera visita. Los pétalos de luz flotan alrededor. Nerea camina a tu lado sin hablar y, a mitad del bosque, dice:
+NarrativeText = —Antes de él, yo ni siquiera sabía qué era el cansancio. Después de él, ya no sabía qué era el descanso.
+NarrativeText = En lo alto de una colina, entre columnas torcidas, se alza el altar lunar. Colocas la Orbe del Sueño. El cielo se despeja de golpe. Un resplandor plateado desciende, y aparece Cresselia, majestuosa, serena, con los ojos cerrados.
+NarrativeText = El combate (Nv 75) no es por capturarla, sino por calmarla: es un baile de defensa y cura, de luz y de paciencia. Cuando por fin se aquieta, Cresselia asciende hacia el cielo, y la isla se vuelve más luminosa. Parte de la región parece respirar aliviada.
+NarrativeText = Nerea, a tu lado, tiene los ojos húmedos.
+NarrativeText = —Gracias —dice—. Por todo lo que me has enseñado. Tengo la sensación de haber estado dormida mucho tiempo.
+NarrativeText = Te desea suerte.
+Milestones = Orbe del Sueño colocada. Cresselia (Psíquico/Hada en REM), Nv 75: calmada, no capturada.
+Milestones = Nerea, redimida, te acompaña en la isla y se despide. Salvajes Nv 64–66 (día) · 96–99 (noche).
+WhyItMatters = Restaura la mitad lunar del equilibrio y cierra el acompañamiento de Nerea; es el primer paso del final.
+
+[CHAPTER_62]
+Title = Ruta 24 — Camino a la Isla Pesadilla
+Act = V
+LocationKey = RUTA_24
+MedalsEarned = 8
+FragmentsInPlay = Orbe del Sueño (F2+F4+F6) colocada en el altar lunar.
+WildLevels = Día 63–65 · Noche 95–98
+CharactersInScene = Tú (Protagonista)
+NarrativeText = La Ruta 24 parte del suroeste de la Ruta 1 y se interna en un mar distinto: más oscuro, más frío, envuelto en niebla densa y espesa. El agua es más profunda y el cielo, más nublado. No te acompaña nadie.
+NarrativeText = Las voces que oyes ahora son más turbias que las de la ruta hermana: ecos lejanos de pesadillas, risas que se rompen, nombres que no son tuyos pero te suenan. Cada paso se siente más pesado, como si el camino quisiera disuadirte.
+NarrativeText = Y sin embargo avanzas. Porque los que te esperan no están allí, sino detrás. Y porque, de algún modo, tú ya lo sabes: la vigilia siempre duele un poco.
+Milestones = Travesía en solitario a la Isla Pesadilla. Vínculo simbólico con el subconsciente del protagonista. Salvajes Nv 63–65 (día) · 95–98 (noche).
+WhyItMatters = La travesía más dura: el protagonista va solo hacia la sombra, lo que da sentido a la valentía de elegir la vigilia.
+
+[CHAPTER_63]
+Title = Isla Pesadilla — El Altar Oscuro
+Act = V
+LocationKey = ISLA_OBSIDIANA
+MedalsEarned = 8
+FragmentsInPlay = Orbe de la Pesadilla (F1+F3+F5) colocada en el altar oscuro. Ledger cerrado: 6/6 restaurados.
+WildLevels = Día 64–66 · Noche 96–99
+CharactersInScene = Tú (Protagonista);Lucián;Guiomar;Roldán
+NarrativeText = La Isla Pesadilla te recibe en silencio. Los árboles negros, retorcidos, se inclinan como si te escucharan. Te adentras por ruinas torcidas hasta el núcleo de la isla y desciendes por un sendero rocoso hasta una grieta abierta en la tierra. Allí, un altar de vidrio negro refleja tus pies.
+NarrativeText = Colocas la Orbe de la Pesadilla. El suelo tiembla. Y aparece Darkrai, retorcido, envuelto en sombras, con ojos que no son ojos.
+NarrativeText = El combate (Nv 75) es más intenso que el de Cresselia, pero igualmente simbólico: una forma de sellar la parte oscura de la región y de ti mismo. Cada sombra que lanza te devuelve una imagen —tu cama de Iolar, la sopa de Telmo, el reloj del Profesor—, y tú las atraviesas sin cerrar los ojos. Cuando Darkrai se aquieta, desaparece en el vacío, y deja tras de sí una quietud… pero no la paz.
+NarrativeText = Entonces llegan ellos: Roldán, Guiomar, Lucián. Te miran en silencio y, por una vez, nadie bromea.
+NarrativeText = —Hemos sellado el plan —dice Roldán—. Pero el Profesor, los generales y el líder escaparon, ayudados por los reclutas que quedaban. El resto del equipo está arrestado. —Respira hondo—. La amenaza ha cesado. La región está a salvo… por ahora.
+NarrativeText = Guiomar te abraza. Lucián, tras un instante, se une.
+Milestones = Orbe de la Pesadilla colocada. Darkrai (Siniestro/Fantasma en REM), Nv 75: calmado, no capturado. Libro de cuentas cerrado: 6/6 fragmentos restaurados.
+Milestones = Los líderes de Morfeo (Ambrosio, Eliseo, Zenobia, Alarico) escapan; los reclutas restantes son arrestados. Salvajes Nv 64–66 (día) · 96–99 (noche).
+WhyItMatters = Restaura la mitad oscura y cierra la amenaza inmediata; la fuga de los líderes deja espacio para una continuación.
+
+[CHAPTER_64]
+Title = Interludio — Las Cuatro Grutas
+Act = V
+LocationKey = ISLA_OBSIDIANA
+AltLocations = GRUTA_HIALINA;GRUTA_AZURITA;GRUTA_LABRADORITA;GRUTA_PIRITA
+Summary = Interludio sin lugar propio: arranca en la orilla de la Isla Pesadilla y mira a las cuatro grutas. Ubicación en el Vol. 8: Interludio — Las Cuatro Grutas.
+MedalsEarned = 8
+FragmentsInPlay = Orbe de la Pesadilla (F1+F3+F5) colocada en el altar oscuro. Ledger cerrado: 6/6 restaurados.
+WildLevels = Día 65–67 · Noche 97–100
+CharactersInScene = Tú (Protagonista)
+NarrativeText = Desde la orilla de la Isla Pesadilla, al emprender el regreso, ves cuatro marcas en el mapa que llevas en la cabeza.
+NarrativeText = Una gruta de cristales al norte de los Acantilados, de resplandor lejano. Una gruta submarina al fondo del mar occidental, azul como la noche. Una cueva helada al noreste de la Ruta 19, donde el tiempo gotea. Una gruta volcánica en la ladera de la Ruta 21, rugiendo bajo el suelo.
+NarrativeText = Tienes las ocho medallas. Ahora puedes abrirlas, una por una, y buscar a los guardianes que te hablaron en el camino: Nicodemo, Leucótea, Oriana y Anteo. Allí duermen legendarios y recompensas. Allí, quizá, se despierte alguna otra pregunta.
+NarrativeText = Pero antes hay una última prueba. Y te espera al norte.
+Milestones = Interludio de postgame: las cuatro grutas quedan abiertas a la exploración (Nv 65–67 de día · 97–100 de noche), con los Altos Mandos como guardianes. Sin evento nuevo; refuerza el objetivo a largo plazo.
+WhyItMatters = Convierte el final en un comienzo: las cuatro grutas son el contenido del postgame y el motivo para volver a los Altos Mandos.
+
+[CHAPTER_65]
+Title = Calzada Corindal (Calle Victoria)
+Act = V
+LocationKey = CALZADA_CORINDON
+MedalsEarned = 8
+FragmentsInPlay = Orbe de la Pesadilla (F1+F3+F5) colocada en el altar oscuro. Ledger cerrado: 6/6 restaurados.
+WildLevels = Día 66–68 · Noche 100
+CharactersInScene = Tú (Protagonista);Lucián;Guiomar
+NarrativeText = La Calzada Corindal (la Calle Victoria) es un sendero abrupto que sube entre rocas y precipicios. Va cambiando según se asciende: piedra, nieve, puentes colgantes, túneles iluminados por cristales. Es una mezcla simbólica de todos los biomas de Oniria. Veteranos que te miran con respeto.
+NarrativeText = A mitad de camino te espera Lucián. Sereno, sin libreta, con las manos sueltas.
+NarrativeText = —Te debo un combate —dice—. Y creo que ya sé cómo se hace.
+NarrativeText = El duelo (Nv 76) es técnico, limpio, orgulloso: su equipo respira como un solo organismo. Ya no anota lo que siente. Lo siente, y ya. Cuando termina, sonríe.
+NarrativeText = —Es curioso —dice—. Antes necesitaba predecirte. Ahora me gusta no saber qué vas a hacer.
+NarrativeText = Más arriba espera Guiomar, con las vendas intactas y una sonrisa nueva.
+NarrativeText = —¡Si caigo siete veces, me levantaré ocho! —proclama—. ¡Y la octava te va a doler!
+NarrativeText = Pelea con una determinación renovada, celebrando vuestra evolución paralela (Nv 76). Su equipo ha cambiado: equilibrado y fuerte. Al terminar se queda mirándote con los ojos brillantes.
+NarrativeText = —Pero esta vez te lo digo sonriendo.
+NarrativeText = Los dos se despiden de ti, deseándote suerte. Te esperan en las gradas de la Liga.
+Milestones = Combates finales de rivalidad: Lucián (Nv 76) y Guiomar (Nv 76). Cierre emocional de ambos arcos.
+Milestones = Auditoría: el combate de redención de Nerea se reubica en el umbral de la Liga, no en esta calzada. Salvajes Nv 66–68 (día) · 100 (noche).
+WhyItMatters = Cierre de los arcos de Lucián y Guiomar: la medida de cuánto han crecido; abre la última puerta.
+
+[CHAPTER_66]
+Title = El Umbral de la Liga
+Act = V
+LocationKey = MESETA_CELESTITA
+Summary = Sub-lugar sin clave propia dentro de Meseta Celeste (Liga Pokémon). Ubicación en el Vol. 8: El Umbral de la Liga.
+MedalsEarned = 8
+FragmentsInPlay = Orbe de la Pesadilla (F1+F3+F5) colocada en el altar oscuro. Ledger cerrado: 6/6 restaurados.
+WildLevels = Sin salvajes en esta escena
+CharactersInScene = Tú (Protagonista);Nerea
+NarrativeText = Al final de la Calzada, la montaña se abre y el aire se vuelve más delgado, más claro. La Meseta Celeste se extiende bajo un cielo siempre estrellado. Ante ti, un edificio de mármol y cristal cuyas puertas aún están cerradas.
+NarrativeText = Y en las puertas, esperándote, está Nerea, ya redimida, con ropa civil y su compañera a los pies.
+NarrativeText = —Antes de que todo acabe —dice—, quiero medirme una vez más con quien me hizo ver el valor de la verdad. —Te mira—. Tú eres mi primer amigo humano.
+NarrativeText = Es el combate más íntimo del viaje (Nv 77). Sus Pokémon son oscuros y leales… y de Ace, su compañera, que no se aparta de su lado. Cada Persecución es una pregunta; cada Golpe Bajo, un perdón.
+NarrativeText = Cuando cae, Nerea sonríe. Por primera vez.
+NarrativeText = —Olvidar duele menos —dice—, pero recordar es la única forma de saber que sigo viva.
+NarrativeText = Las puertas de la Liga empiezan a abrirse.
+Milestones = Combate de redención de Nerea: Nv 77. Cierre de su arco; reubicado del borrador (Calle Victoria) al umbral de la Liga.
+Milestones = Se abren las puertas de la Meseta Celeste.
+WhyItMatters = Cierra el arco de Nerea y evita el duplicado con la Calzada: su sonrisa final demuestra lo que ha cambiado el protagonista.
+
+[CHAPTER_67]
+Title = Liga Pokémon — Meseta Celeste
+Act = V
+LocationKey = MESETA_CELESTITA
+MedalsEarned = 8
+FragmentsInPlay = Orbe de la Pesadilla (F1+F3+F5) colocada en el altar oscuro. Ledger cerrado: 6/6 restaurados.
+WildLevels = Sin salvajes en esta escena
+CharactersInScene = Tú (Protagonista);Roldán;Nicodemo;Oriana;Anteo;Leucótea
+NarrativeText = El interior es un gran salón de mármol y cristal, con vistas al cielo estrellado de Oniria. Los pasos resuenan. En cada sala hay una puerta y un guardián.
+NarrativeText = Nicodemo, de túnica ceniza y báculo de cuarzo, abre el camino de los cristales (Nv 77): su Ace amplifica a sus aliados como un coro, y cada Pokémon de Roca o de Hada parece haber nacido de la presión. Oriana, de abrigo azul noche, te recibe en la noche polar (Nv 78): su Ace recorre el hielo como un destello. Anteo, en la fragua, te enseña lo que pesa la tierra (Nv 78): su Ace se alza como una montaña viva. Leucótea espera en el último salón con los ojos lechosos y el bastón de coral (Nv 79): su Ace te ahoga en aguas hondas y fantasmales.
+NarrativeText = Cada combate es exigente y es una prueba final de todo lo que has aprendido.
+NarrativeText = Por fin llegas a la sala del trono. Un cielo de estrellas se extiende sobre un suelo de espejo, y en el centro está Roldán, con la capa estelar abierta, de pie, sin sonreír.
+NarrativeText = —No te recibo como aliado —dice—, sino como un rival legítimo. Te agradezco todo lo que has hecho por Oniria. Pero ahora… gánate tu lugar.
+NarrativeText = El combate final (Nv 80) transcurre entre campos de estrellas y una música solemne: criaturas majestuosas y, al final, su Ace, que resiste el primer golpe con dignidad. Cuando cae, Roldán cierra los ojos y asiente.
+NarrativeText = —La realidad es fría, injusta y cruel —dice, con voz suave—. Pero es nuestra. Y mientras yo respire, nadie nos la arrebatará para encerrarnos en una jaula de oro.
+NarrativeText = Te coloca en la sien la corona de estrellas. Esta noche, tú eres el Campeón de Oniria.
+Milestones = Alto Mando (Nv 77–79): Nicodemo 77, Oriana 78, Anteo 78, Leucótea 79.
+Milestones = Campeón Roldán: Ace Nv 80. El protagonista es coronado Campeón; fin de la historia principal.
+WhyItMatters = Cierra la historia principal: el Campeón confirma el tema (la realidad es nuestra) y traspasa su título a quien eligió despertar.
+
+[CHAPTER_68]
+Title = Epílogo
+Act = V
+LocationKey = MESETA_CELESTITA
+AltLocations = PUEBLO_IOLITA
+Summary = Epílogo: terraza de la Liga (Meseta Celeste), un bosque tranquilo y, al final, la loma de Pueblo Iolar. Ubicación en el Vol. 8: Epílogo.
+MedalsEarned = 8
+FragmentsInPlay = Orbe de la Pesadilla (F1+F3+F5) colocada en el altar oscuro. Ledger cerrado: 6/6 restaurados.
+WildLevels = —
+CharactersInScene = Tú (Protagonista);Lucián;Guiomar;Nerea
+NarrativeText = Una breve escena. Es de noche, y la meseta se llena de fuegos artificiales. En la terraza de la Liga, Lucián y Guiomar miran hacia el cielo, con las manos en la barandilla. Ella ríe a carcajadas. Él, sin libreta, escucha.
+NarrativeText = Más abajo, entre los árboles de un bosque tranquilo, Nerea, con ropa civil, camina junto a su compañera y varios Pokémon que se le acercan sin miedo. Por primera vez en años, esta noche dormirá sin sobresalto.
+NarrativeText = No hay noticias de Ambrosio ni de los líderes de Morfeo. No han sido vistos desde su desaparición. Una sombra, abierta como una puerta, queda para el futuro.
+NarrativeText = Oniria entra en una era de paz. Y tú, su Campeón, quedas como símbolo del equilibrio entre el sueño, la oscuridad y la voluntad humana: no la vigilia sin dolor, sino la que se elige.
+NarrativeText = Y muy lejos, en la loma de Pueblo Iolar, la ventana del laboratorio sigue encendida. Nadie sabe quién la deja así.
+Milestones = Epílogo: los amigos ven los fuegos artificiales; Nerea, de civil, pasea con sus Pokémon; Ambrosio y los líderes de Morfeo no han sido vistos. Fin del juego principal.
+WhyItMatters = Deja abiertos el futuro de Ambrosio y de Morfeo y confirma que la paz de Oniria no es un sueño, sino una vigilia compartida.
+
+[FRAGMENT_LEDGER]
+Title = El libro de cuentas de los fragmentos
+Intro = Seis fragmentos duermen dentro de seis Dominantes. Los impares son de la Orbe de la Pesadilla; los pares, de la Orbe del Sueño (lunar).
+Result = Ambrosio recibe tres (F1, F4, F5), Alarico dos (F3, F6) y Zenobia uno (F2): 6/6 en poder de Morfeo antes del Monte Azogue. Las dos orbes reconstruidas se colocan después en sus altares: la Orbe del Sueño (F2+F4+F6) en la Isla Sueño (Cresselia, Nv 75) y la Orbe de la Pesadilla (F1+F3+F5) en la Isla Pesadilla (Darkrai, Nv 75).
+Fragment1 = Fragmento Pesadilla I,Dominante 1 (Siniestro/Volador) · Nv 13,BOSQUE_DIOPTASA,CHAPTER_05,Recuperado por el protagonista → entregado al Profesor «para custodiarlo» (Morfeo, en secreto)
+Fragment2 = Fragmento Lunar I,Dominante Eléctrico · Nv 31,CENTRAL_FULGURITA,CHAPTER_17,Recuperado por el protagonista y Lucián → robado en el acto por Zenobia
+Fragment3 = Fragmento Pesadilla II,Dominante Veneno · Nv 45,RUINAS_ATACAMITA,CHAPTER_27,Arrebatado por Alarico justo antes del combate con el Dominante enfurecido
+Fragment4 = Fragmento Lunar II,Dominante Hada · Nv 52,CASCADAS_TRAVERTINAS,CHAPTER_32,Recuperado por el protagonista y Lucián → Lucián lo lleva al Profesor «para custodiarlo» (Morfeo, en secreto)
+Fragment5 = Fragmento Pesadilla III,Dominante Fantasma · Nv 58,VILLA_ADULARIA,CHAPTER_46,Recuperado por el protagonista → entregado al Profesor, que revela su traición y se lo lleva
+Fragment6 = Fragmento Lunar III,Dominante Dragón · Nv 66,TEMPLO_MOLDAVITA,CHAPTER_53,Ya excavado por Alarico, que libera al Dominante como distracción → se lo lleva y lo entrega antes de la Ladera
+Orb1 = Pesadilla
+Orb2 = Lunar
+Orb3 = Pesadilla
+Orb4 = Lunar
+Orb5 = Pesadilla
+Orb6 = Lunar
