@@ -1,0 +1,30 @@
+# hand-written Spanish descriptions for every reworked move whose automatic text would be generic
+DESC6 = {
+ 'MUDSPORT': 'El usuario se embadurna de barro endurecido y sube su Defensa y su Defensa Especial.',
+ 'SANDATTACK': 'El usuario se cubre con una coraza de arena compacta que sube mucho su Defensa.',
+ 'MIST': 'Una niebla gélida envuelve al objetivo y lo congela (Congelación: daño residual y mitad de Ataque Especial).',
+ 'DEFENSECURL': 'El usuario se enrosca para proteger su punto débil y sube mucho su Defensa.',
+ 'FLASH': 'Un destello eléctrico agita al usuario y sube su Ataque y su Velocidad.',
+ 'HOWL': 'El usuario aúlla con fuerza para infundirse ánimo y sube su Ataque y su Ataque Especial.',
+ 'LEER': 'Una mirada amenazante quebranta la guardia del objetivo y baja mucho su Defensa.',
+ 'MINDREADER': 'El usuario lee los movimientos del rival, descubre su punto débil y aumenta su índice de golpes críticos.',
+ 'SMOKESCREEN': 'Una densa humareda cubre el campo e intimida a los rivales: baja su Ataque y su Ataque Especial.',
+ 'KINESIS': 'Con un gesto de la cuchara, el usuario descoloca al objetivo y le baja el Ataque y la Defensa.',
+ 'MEDITATE': 'El usuario medita en calma, cura sus problemas de estado y sube su Ataque Especial y su Defensa Especial.',
+ 'WATERSPORT': 'El usuario se refresca con un chapuzón y recupera la mitad de sus PS.',
+ 'WITHDRAW': 'El usuario se esconde en su caparazón y sube su Defensa y su Defensa Especial.',
+ 'AROMATICMIST': 'Una bruma aromática cura los problemas de estado y devuelve PS al usuario y a sus aliados.',
+ 'CELEBRATE': 'El usuario festeja con tanta alegría que sube su Ataque Especial y su Defensa Especial.',
+ 'MAGNETICFLUX': 'Un campo magnético carga al usuario de energía y sube mucho su Ataque Especial.',
+ 'ROTOTILLER': 'El usuario remueve la tierra y entra en calor, subiendo su Ataque y su Defensa.',
+ 'HOLDHANDS': 'El usuario comparte su calidez con quienes le rodean y recupera PS junto con sus aliados.',
+ 'GEARUP': 'El usuario engrasa sus engranajes y sube su Ataque y su Ataque Especial.',
+ 'MEGAPUNCH': 'Un puñetazo descomunal que aturde al objetivo. Puede hacerlo retroceder.',
+ 'NUZZLE': 'Frota sus mofletes cargados de electricidad contra el objetivo. Puede paralizarlo.',
+ 'RAZORWIND': 'El usuario lanza cuchillas de viento afiladas. Tiene un índice alto de golpes críticos.',
+ 'HYPERFANG': 'Muerde con unos colmillos enormes y poderosos. Puede bajar el Ataque del objetivo.',
+ 'SLAM': 'Golpea con todo el peso del cuerpo, pero el usuario queda desequilibrado y baja su Velocidad.',
+ 'CUT': 'Corta con hojas afiladas. Ignora los cambios de Defensa y Evasión del objetivo.',
+}
+for _k, _v in DESC6.items():
+    if _k in bm and not bm[_k]['sig']: bm[_k]['newdesc'] = _v

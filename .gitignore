@@ -1,0 +1,8 @@
+
+# Documentación fuera del repo
+docs/
+documents/
+*.pdf
+*.bak*
+PBS_backup_original/
+__pycache__/

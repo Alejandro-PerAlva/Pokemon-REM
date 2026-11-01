@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Codex REM — página de desarrollo</title>
+<style>
+  :root { --bg:#f6f7f9; --fg:#1d2330; --mut:#5d6677; --card:#fff; --bd:#d8dce4; --ok:#1b8a4b; --warn:#b9770e; --err:#c0392b; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#12151c; --fg:#e8ebf2; --mut:#9aa3b5; --card:#1b202b; --bd:#2c3342; } }
+  body { margin:0; font:14px/1.45 system-ui, sans-serif; background:var(--bg); color:var(--fg); }
+  header, main { max-width:1100px; margin:0 auto; padding:12px 16px; }
+  h1 { font-size:20px; margin:8px 0; }
+  .card { background:var(--card); border:1px solid var(--bd); border-radius:8px; padding:10px 14px; margin:10px 0; }
+  .pill { display:inline-block; padding:1px 8px; border-radius:99px; border:1px solid var(--bd); margin-right:6px; }
+  .ok { color:var(--ok); } .warn { color:var(--warn); } .error { color:var(--err); }
+  table { border-collapse:collapse; width:100%; } td, th { text-align:left; padding:3px 6px; border-bottom:1px solid var(--bd); vertical-align:top; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(150px,1fr)); gap:4px 12px; }
+  .ico { width:32px; height:32px; background-repeat:no-repeat; display:inline-block; vertical-align:middle; image-rendering:pixelated; }
+  button { font:inherit; padding:4px 10px; cursor:pointer; }
+  input { font:inherit; padding:4px 8px; width:240px; }
+  code { font-size:12px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Pokémon REM Master Codex — página de desarrollo del backend</h1>
+  <p>Esta página solo se sirve mientras no exista <code>pokedex_app/index.html</code>. Consume <code>/api/model</code>.</p>
+  <button id="reload" type="button">🔄 Recargar PBS en vivo</button>
+  <span id="status" class="pill">cargando…</span> <span id="ver" class="pill"></span>
+</header>
+<main>
+  <div class="card"><b>Recuentos</b><div id="counts" class="grid"></div></div>
+  <div class="card"><b>Archivos</b><table id="files"></table></div>
+  <div class="card"><b>Avisos de sintaxis PBS</b> <span id="wcount"></span><table id="warns"></table></div>
+  <div class="card"><b>Pokédex</b> <input id="q" type="search" placeholder="Filtrar por nombre o número…" aria-label="Filtrar Pokémon">
+    <table id="dex"></table></div>
+</main>
+<script>
+(function () {
+  "use strict";
+  var model = null, version = null;
+  function $(id) { return document.getElementById(id); }
+  function esc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]; }); }
+  function render() {
+    if (!model) return;
+    var h = model.meta.health;
+    $("status").className = "pill " + (h.status === "ok" ? "ok" : h.status === "warn" ? "warn" : "error");
+    $("status").textContent = "PBS: " + h.status + " (" + h.errors + " errores, " + h.warnings + " avisos) · origen " + model.meta.source;
+    $("ver").textContent = "versión " + model.meta.version;
+    $("counts").innerHTML = Object.keys(model.meta.counts).map(function (k) { return "<div>" + esc(k) + ": <b>" + model.meta.counts[k] + "</b></div>"; }).join("");
+    $("files").innerHTML = "<tr><th>Archivo</th><th>Existe</th><th>Líneas</th><th>Errores</th><th>Avisos</th></tr>" + model.files.map(function (f) {
+      return "<tr><td>" + esc(f.name) + "</td><td>" + (f.exists ? "sí" : "<span class=error>no</span>") + (f.stale ? " (en memoria)" : "") + "</td><td>" + f.lines + "</td><td>" + f.errors + "</td><td>" + f.warnings + "</td></tr>";
+    }).join("");
+    $("wcount").textContent = "(" + model.warnings.length + ")";
+    $("warns").innerHTML = model.warnings.slice(0, 200).map(function (w) {
+      return "<tr><td class=" + esc(w.severity) + ">" + esc(w.severity) + "</td><td>" + esc(w.file) + ":" + w.line + "</td><td>" + esc(w.code) + "</td><td>" + esc(w.message) +
+        (w.suggestion ? " → <b>" + esc(w.suggestion) + "</b>" : "") + "<br><code>" + esc(w.text) + "</code></td></tr>";
+    }).join("");
+    filterDex();
+  }
+  function filterDex() {
+    if (!model) return;
+    var q = $("q").value.trim().toLowerCase();
+    var rows = model.pokemon.filter(function (p) { return !q || p.name.toLowerCase().indexOf(q) >= 0 || String(p.dex) === q; }).slice(0, 80);
+    $("dex").innerHTML = rows.map(function (p) {
+      var st = p.stats;
+      return "<tr><td>#" + p.dex + "</td><td><span class=ico style=\"background-image:url(/gfx/Icons/icon" + ("00" + p.dex).slice(-3) + ".png)\"></span> " + esc(p.name) + "</td><td>" + esc(p.types.join("/")) +
+        "</td><td>" + st.hp + "/" + st.atk + "/" + st.def + "/" + st.spa + "/" + st.spd + "/" + st.spe + " (" + st.bst + ")</td><td>" + esc((p.diff && p.diff.badges || []).join(", ")) + "</td></tr>";
+    }).join("");
+  }
+  function load() {
+    return fetch("/api/model", { cache: "no-store" }).then(function (r) { return r.json(); }).then(function (m) { model = m; version = m.meta.version; render(); }).catch(function (e) { $("status").textContent = "error de red: " + e; });
+  }
+  $("reload").addEventListener("click", function () { fetch("/api/reload", { method: "POST" }).then(load); });
+  $("q").addEventListener("input", filterDex);
+  setInterval(function () {
+    fetch("/api/version", { cache: "no-store" }).then(function (r) { return r.json(); }).then(function (v) { if (version && v.version !== version) load(); }).catch(function () {});
+  }, 3000);
+  load();
+})();
+</script>
+</body>
+</html>

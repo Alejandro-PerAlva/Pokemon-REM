@@ -1,0 +1,15 @@
+STATUS_EN = {
+ '003': 'sleep', '005': 'poison', '007': 'paralysis', '00A': 'burn', '013': 'confusion', '016': 'infatuation', '018': 'cures own status', '019': 'cures team status', '01A': 'blocks status on team',
+ '01C': 'user Atk +1', '01D': 'user Def +1', '01E': 'user Def +1 (boosts Rollout)', '022': 'user Evasion +1', '023': 'crit stage +2', '024': 'user Atk/Def +1', '026': 'user Atk/Speed +1', '027': 'user Atk/SpA +1',
+ '028': 'user Atk/SpA +1 (+2 in sun)', '029': 'user Atk/Acc +1', '02A': 'user Def/SpD +1', '02B': 'user SpA/SpD/Speed +1', '02C': 'user SpA/SpD +1', '02E': 'user Atk +2', '02F': 'user Def +2', '032': 'user SpA +2',
+ '034': 'user Evasion +2', '035': 'user Atk/SpA/Speed +2, Def/SpD -1', '036': 'user Atk +1, Speed +2', '037': 'raises a random stat +2', '041': 'confuses, target Atk +2', '043': 'target Def -1', '047': 'target Accuracy -1',
+ '048': 'target Evasion -1 (spread)', '04A': 'target Atk/Def -1', '04B': 'target Atk -2', '04C': 'target Def -2', '04D': 'target Speed -2', '04E': 'target SpA -2 (opposite gender)', '04F': 'target SpD -2',
+ '055': 'copies target stat changes', '056': 'protects own stats', '05A': 'averages HP', '05E': 'changes own type', '05F': 'resists last move', '060': 'type from terrain', '062': 'copies target type', '063': 'target ability becomes Simple',
+ '066': 'shares ability with target', '09C': 'ally damage +50%', '09D': 'field: weakens Electric', '09E': 'field: weakens Fire', '0A1': 'blocks critical hits', '0A6': 'next attack always hits', '0A7': 'ignores Ghost immunity / evasion',
+ '0A8': 'ignores Dark immunity / evasion', '0B3': 'uses a move by terrain', '0B9': 'disables last move', '0BB': 'blocks healing', '0BC': 'forces repeat of last move', '0D5': 'heals 50% HP', '0D7': 'Wish (delayed heal)',
+ '0D8': 'heals by weather (50% / 66% sun)', '0DC': 'seeds target (drains HP)', '0E5': 'all faint in 3 turns', '0E8': 'survives with 1 HP', '0EB': 'forces a switch', '0EF': 'target cannot flee', '0F3': 'gives held item',
+ '0F8': 'blocks items', '112': 'Stockpile (Def/SpD +1)', '114': 'Swallow (heals by Stockpile)', '117': 'redirects attacks', '11A': 'target levitates', '11D': 'ally moves next', '133': 'no effect', '134': 'no effect',
+ '137': 'Plus/Minus Def/SpD', '138': 'ally SpD +1', '139': 'target Atk -1 (never misses)', '13A': 'target Atk/SpA -1', '13C': 'target SpA -1', '13D': 'target SpA -2', '13E': 'Grass Atk/SpA +1', '182': 'heals user and allies 25%',
+ '19A': 'next attack crits', '1A1': 'melts target item', '200': 'ally Atk/Def +1', '210': 'heals team 25% + cures status', '228': 'user Atk/Def/Speed +1', '234': 'user Def +2, Evasion +1', '237': 'cures status, SpA/SpD +1',
+ 'CF12': 'Plus/Minus Atk/SpA', 'CF13': 'saps target Atk + heals', 'CF14': 'target Atk/SpA -1', '00C': 'Frostbite (freeze)', '006': 'badly poisons', '0A5': 'never misses',
+}

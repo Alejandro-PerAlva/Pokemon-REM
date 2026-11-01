@@ -1,0 +1,322 @@
+[
+ {
+  "key": "CIUDAD_CALCEDONIA",
+  "name": "Ciudad Calcedonia",
+  "category": "CIUDAD"
+ },
+ {
+  "key": "CIUDAD_CALAITA",
+  "name": "Ciudad Calaíta",
+  "category": "CIUDAD"
+ },
+ {
+  "key": "CIUDAD_MAGNETITA",
+  "name": "Ciudad Magnetita",
+  "category": "CIUDAD"
+ },
+ {
+  "key": "CIUDAD_NEFRITA",
+  "name": "Ciudad Nefrita",
+  "category": "CIUDAD"
+ },
+ {
+  "key": "CIUDAD_REJALGAR",
+  "name": "Ciudad Rejalgar",
+  "category": "CIUDAD"
+ },
+ {
+  "key": "CIUDAD_AZABACHE",
+  "name": "Ciudad Azabache",
+  "category": "CIUDAD"
+ },
+ {
+  "key": "CIUDAD_VENTURINA",
+  "name": "Ciudad Venturina",
+  "category": "CIUDAD"
+ },
+ {
+  "key": "CIUDAD_ALABASTRO",
+  "name": "Ciudad Alabastro",
+  "category": "CIUDAD"
+ },
+ {
+  "key": "PUEBLO_IOLITA",
+  "name": "Pueblo Iolita",
+  "category": "PUEBLO"
+ },
+ {
+  "key": "PUEBLO_HELIODORO",
+  "name": "Pueblo Heliodoro",
+  "category": "PUEBLO"
+ },
+ {
+  "key": "PUEBLO_PEDERNAL",
+  "name": "Pueblo Pedernal",
+  "category": "PUEBLO"
+ },
+ {
+  "key": "PUEBLO_ESTEATITA",
+  "name": "Pueblo Esteatita",
+  "category": "PUEBLO"
+ },
+ {
+  "key": "PUEBLO_CASITERITA",
+  "name": "Pueblo Casiterita",
+  "category": "PUEBLO"
+ },
+ {
+  "key": "PUEBLO_NACAR",
+  "name": "Pueblo Nácar",
+  "category": "PUEBLO"
+ },
+ {
+  "key": "MESETA_CELESTITA",
+  "name": "Meseta Celestita (Liga Pokémon)",
+  "category": "PUEBLO"
+ },
+ {
+  "key": "MONTE_AZOGUE",
+  "name": "Monte Azogue",
+  "category": "PUEBLO"
+ },
+ {
+  "key": "BOSQUE_DIOPTASA",
+  "name": "Bosque Dioptasa",
+  "category": "ESPECIAL"
+ },
+ {
+  "key": "LAGO_AMATISTA",
+  "name": "Lago Amatista",
+  "category": "ESPECIAL"
+ },
+ {
+  "key": "CENTRAL_FULGURITA",
+  "name": "Central Fulgurita",
+  "category": "ESPECIAL"
+ },
+ {
+  "key": "RUINAS_ATACAMITA",
+  "name": "Ruinas Atacamita",
+  "category": "ESPECIAL"
+ },
+ {
+  "key": "TEMPLO_MOLDAVITA",
+  "name": "Templo Moldavita",
+  "category": "ESPECIAL"
+ },
+ {
+  "key": "VILLA_ADULARIA",
+  "name": "Villa Adularia",
+  "category": "ESPECIAL"
+ },
+ {
+  "key": "CASCADAS_TRAVERTINAS",
+  "name": "Cascadas Travertinas",
+  "category": "ESPECIAL"
+ },
+ {
+  "key": "CIENAGA_LIMONITA",
+  "name": "Ciénaga Limonita",
+  "category": "ESPECIAL"
+ },
+ {
+  "key": "DESIERTO_HALITA",
+  "name": "Desierto Halita",
+  "category": "ESPECIAL"
+ },
+ {
+  "key": "LADERA_PORFIDO",
+  "name": "Ladera Pórfido",
+  "category": "ESPECIAL"
+ },
+ {
+  "key": "GRUTA_PIRITA",
+  "name": "Gruta Pirita (Gruta Volcánica)",
+  "category": "ESPECIAL"
+ },
+ {
+  "key": "GRUTA_AZURITA",
+  "name": "Gruta Azurita (Gruta Abisal)",
+  "category": "ESPECIAL"
+ },
+ {
+  "key": "GRUTA_LABRADORITA",
+  "name": "Gruta Labradorita (Gruta Helada)",
+  "category": "ESPECIAL"
+ },
+ {
+  "key": "GRUTA_HIALINA",
+  "name": "Gruta Hialina (Gruta de Cristales)",
+  "category": "ESPECIAL"
+ },
+ {
+  "key": "ISLA_OBSIDIANA",
+  "name": "Isla Obsidiana",
+  "category": "ESPECIAL"
+ },
+ {
+  "key": "ISLA_OPALINA",
+  "name": "Isla Opalina",
+  "category": "ESPECIAL"
+ },
+ {
+  "key": "RUTA_01",
+  "name": "Ruta 1",
+  "category": "RUTA_NORMAL"
+ },
+ {
+  "key": "RUTA_02",
+  "name": "Ruta 2",
+  "category": "RUTA_NORMAL"
+ },
+ {
+  "key": "RUTA_04",
+  "name": "Ruta 4",
+  "category": "RUTA_NORMAL"
+ },
+ {
+  "key": "RUTA_05",
+  "name": "Ruta 5",
+  "category": "RUTA_NORMAL"
+ },
+ {
+  "key": "RUTA_06",
+  "name": "Ruta 6",
+  "category": "RUTA_NORMAL"
+ },
+ {
+  "key": "RUTA_07",
+  "name": "Ruta 7",
+  "category": "RUTA_NORMAL"
+ },
+ {
+  "key": "RUTA_08",
+  "name": "Ruta 8",
+  "category": "RUTA_NORMAL"
+ },
+ {
+  "key": "RUTA_09",
+  "name": "Ruta 9",
+  "category": "RUTA_NORMAL"
+ },
+ {
+  "key": "RUTA_14",
+  "name": "Ruta 14",
+  "category": "RUTA_NORMAL"
+ },
+ {
+  "key": "RUTA_15",
+  "name": "Ruta 15",
+  "category": "RUTA_NORMAL"
+ },
+ {
+  "key": "RUTA_16",
+  "name": "Ruta 16",
+  "category": "RUTA_NORMAL"
+ },
+ {
+  "key": "GRANJA_APATITA",
+  "name": "Granja Apatita",
+  "category": "RUTA_ESPECIAL"
+ },
+ {
+  "key": "PLAYA_SEPIOLITA",
+  "name": "Playa Sepiolita",
+  "category": "RUTA_ESPECIAL"
+ },
+ {
+  "key": "ESTEPA_LATERITA",
+  "name": "Estepa Laterita",
+  "category": "RUTA_ESPECIAL"
+ },
+ {
+  "key": "SENDA_SERPENTINA",
+  "name": "Senda Serpentina",
+  "category": "RUTA_ESPECIAL"
+ },
+ {
+  "key": "PUENTE_DOLOMITA",
+  "name": "Puente Dolomita",
+  "category": "RUTA_ESPECIAL"
+ },
+ {
+  "key": "ACANTILADOS_RODONITA",
+  "name": "Acantilados Rodonita",
+  "category": "RUTA_ESPECIAL"
+ },
+ {
+  "key": "RESERVA_PERIDOTO",
+  "name": "Reserva Peridoto",
+  "category": "RUTA_ESPECIAL"
+ },
+ {
+  "key": "CALZADA_CORINDON",
+  "name": "Calzada Corindón",
+  "category": "RUTA_ESPECIAL"
+ },
+ {
+  "key": "RUTA_03",
+  "name": "Ruta 3",
+  "category": "RUTA_MONTANA"
+ },
+ {
+  "key": "RUTA_10",
+  "name": "Ruta 10",
+  "category": "RUTA_MONTANA"
+ },
+ {
+  "key": "RUTA_20",
+  "name": "Ruta 20",
+  "category": "RUTA_MONTANA"
+ },
+ {
+  "key": "RUTA_21",
+  "name": "Ruta 21",
+  "category": "RUTA_MONTANA"
+ },
+ {
+  "key": "RUTA_22",
+  "name": "Ruta 22",
+  "category": "RUTA_MONTANA"
+ },
+ {
+  "key": "RUTA_12",
+  "name": "Ruta 12",
+  "category": "RUTA_MARINA"
+ },
+ {
+  "key": "RUTA_13",
+  "name": "Ruta 13",
+  "category": "RUTA_MARINA"
+ },
+ {
+  "key": "RUTA_23",
+  "name": "Ruta 23",
+  "category": "RUTA_MARINA"
+ },
+ {
+  "key": "RUTA_24",
+  "name": "Ruta 24",
+  "category": "RUTA_MARINA"
+ },
+ {
+  "key": "RUTA_11",
+  "name": "Ruta 11",
+  "category": "RUTA_NEVADA"
+ },
+ {
+  "key": "RUTA_17",
+  "name": "Ruta 17",
+  "category": "RUTA_NEVADA"
+ },
+ {
+  "key": "RUTA_18",
+  "name": "Ruta 18",
+  "category": "RUTA_NEVADA"
+ },
+ {
+  "key": "RUTA_19",
+  "name": "Ruta 19",
+  "category": "RUTA_NEVADA"
+ }
+]
