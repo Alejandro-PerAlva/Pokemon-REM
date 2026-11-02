@@ -2,7 +2,7 @@
 # Una seccion por tabla: [LOC_KEY] o [LOC_KEY:ZONA] (Lago Amatista, Ciénaga Limonar y Ladera Porfiral tienen dos mapas de 8 casillas). Type = Land|Cave|Surf (vacio si la seccion solo tiene pesca); SlotCount = especies de la tabla.
 # SlotN = RAREZA(COMMON|UNCOMMON|RARE),PCT,ESPECIE,MinDia,MaxDia,MinNoche,MaxNoche,Nota tactica (texto libre: puede llevar comas). FishCommon/FishRare = PCT,ESPECIE,MinDia,MaxDia,MinNoche,MaxNoche,Nota (70/30). Claves extra: Zone, LevelDay, LevelNight, Biome, MapID.
 # 48 ubicaciones con tabla = 408 casillas (tierra/cueva/surf) + 32 de pesca en 16 puntos de agua (12 con tabla + 4 solo pesca: Ciudad Calaire, Ciudad Magno, Ciudad Azabache, Pueblo Nacara) = 440 especies salvajes, todas distintas.
-# [SPECIAL_OBTAINABILITY]: DEX3 = METHOD,LOC_KEY,LEVEL,Detalle para las 721 especies (METHOD en WILD, FISHING, STARTER, FOSSIL, EVENT, LEGENDARY, EVOLUTION_LEVEL, EVOLUTION_ITEM, EVOLUTION_STONE, THIRD_STAGE; LOC_KEY vacio en evoluciones).
+# [SPECIAL_OBTAINABILITY]: (cerrada: las 721 especies con método definitivo; EVENT = sidequest local M_*; LEGENDARY = condición + interruptor 761-814) DEX3 = METHOD,LOC_KEY,LEVEL,Detalle para las 721 especies (METHOD en WILD, FISHING, STARTER, FOSSIL, EVENT, LEGENDARY, EVOLUTION_LEVEL, EVOLUTION_ITEM, EVOLUTION_STONE, THIRD_STAGE; LOC_KEY vacio en evoluciones).
 
 [RUTA_01]
 Type = Land
@@ -975,7 +975,7 @@ Slot8 = RARE,6,MIENSHAO,66,68,100,100,Artista marcial de los puentes, un duelist
 080 = WILD,CIENAGA_LIMONITA,52-54,Incomún (10 %) · Nv 52–54 día / 78–81 noche · Refugio de Turba (Base Morfeo 2)
 081 = WILD,CENTRAL_FULGURITA,26-28,Común (7 %) · Nv 26–28 día / 39–42 noche
 082 = WILD,RUINAS_ATACAMITA,37-39,Raro (4 %) · Nv 37–39 día / 55–58 noche
-083 = EVENT,PUEBLO_HELIODORO,5-20,Regalo NPC · Pueblo Heliar (intercambio con un granjero) (Acto I) (propuesto)
+083 = EVENT,ESTEPA_LATERITA,25,Sidequest local «El puerro perdido» · Estepa Latera (Acto II) · Variable M_ESTEPA_LATERA (213) = 99 · Regalo
 084 = WILD,RUTA_08,32-35,Común (20 %) · Nv 32–35 día / 48–52 noche
 085 = WILD,CASCADAS_TRAVERTINAS,42-45,Incomún (6 %) · Nv 42–45 día / 63–67 noche
 086 = WILD,CASCADAS_TRAVERTINAS,42-45,Común (7 %) · Nv 42–45 día / 63–67 noche
@@ -1000,7 +1000,7 @@ Slot8 = RARE,6,MIENSHAO,66,68,100,100,Artista marcial de los puentes, un duelist
 105 = WILD,DESIERTO_HALITA,30-33,Incomún (6 %) · Nv 30–33 día / 45–49 noche
 106 = EVOLUTION_LEVEL,,20,Evoluciona de Tyrogue nivel 20; línea de evento Tyrogue
 107 = EVOLUTION_LEVEL,,20,Evoluciona de Tyrogue nivel 20; línea de evento Tyrogue
-108 = EVENT,RUTA_05,5-20,Regalo NPC · Ruta 5 (intercambio con un nómada) (Acto I) (propuesto)
+108 = EVENT,PUEBLO_PEDERNAL,12,Sidequest local «El trueque del nómada» · Pueblo Pedernal (Acto I) · Variable M_PUEBLO_PEDERNAL (208) = 99 · Intercambio
 109 = WILD,RUINAS_ATACAMITA,37-39,Común (7 %) · Nv 37–39 día / 55–58 noche
 110 = WILD,RUTA_16,48-50,Raro (10 %) · Nv 48–50 día / 72–75 noche
 111 = WILD,DESIERTO_HALITA,30-33,Común (7 %) · Nv 30–33 día / 45–49 noche
@@ -1023,27 +1023,27 @@ Slot8 = RARE,6,MIENSHAO,66,68,100,100,Artista marcial de los puentes, un duelist
 128 = WILD,RESERVA_PERIDOTO,46-48,Raro (6 %) · Nv 46–48 día / 69–72 noche
 129 = FISHING,PLAYA_SEPIOLITA,17-19,Pesca con caña · Común (70 %) · Nv 17–19 día / 25–28 noche
 130 = FISHING,LAGO_AMATISTA,22-24,Pesca con caña · Raro (30 %) · Nv 22–24 día / 33–36 noche
-131 = EVENT,PUEBLO_NACAR,5-20,Regalo NPC · Pueblo Nacara (regalo de los pescadores) (Acto III) (propuesto)
+131 = EVENT,PUEBLO_NACAR,32,Sidequest local «La red de los pescadores» · Pueblo Nacara (Acto III) · Variable M_PUEBLO_NACARA (223) = 99 · Regalo
 132 = WILD,CALZADA_CORINDON,66-68,Común (16 %) · Nv 66–68 día / 100 noche
-133 = EVENT,RESERVA_PERIDOTO,5-20,Regalo NPC · Reserva Peridoto (programa de recuperación de especies) (Acto III) (propuesto)
+133 = EVENT,CIUDAD_CALCEDONIA,8,Sidequest local «El bestiario extraviado» · Ciudad Calceda (Acto I) · Variable M_CIUDAD_CALCEDA (205) = 99 · Regalo
 134 = EVOLUTION_STONE,,,Evoluciona de Eevee con Piedra Agua (línea de evento)
 135 = EVOLUTION_STONE,,,Evoluciona de Eevee con Piedra Trueno (línea de evento)
 136 = EVOLUTION_STONE,,,Evoluciona de Eevee con Piedra Fuego (línea de evento)
-137 = EVENT,CIUDAD_AZABACHE,5-20,Misión secundaria · Centro Comercial de Azabache (premio de la sala de juegos) (Acto II) (propuesto)
+137 = EVENT,CIUDAD_AZABACHE,25,Sidequest local «Récord imposible» · Ciudad Azabache (Acto II) · Variable M_CIUDAD_AZABACHE (219) = 99 · Premio
 138 = FOSSIL,PUEBLO_CASITERITA,20,Museo de Fósiles (Pueblo Casitero) · reanimar Fósil Helix (comprable en el Mercado Minero)
 139 = EVOLUTION_LEVEL,,40,Evoluciona de Omanyte nivel 40; línea de fósil
 140 = FOSSIL,PUEBLO_CASITERITA,20,Museo de Fósiles (Pueblo Casitero) · reanimar Fósil Domo (comprable en el Mercado Minero)
 141 = EVOLUTION_LEVEL,,40,Evoluciona de Kabuto nivel 40; línea de fósil
 142 = FOSSIL,PUEBLO_CASITERITA,20,Museo de Fósiles (Pueblo Casitero) · reanimar Ámbar Viejo (comprable en el Mercado Minero)
 143 = EVOLUTION_LEVEL,,32,Evoluciona de Munchlax nivel 32; línea de evento Munchlax
-144 = LEGENDARY,GRUTA_LABRADORITA,70,Encuentro fijo · Gruta Labrador (propuesto)
-145 = LEGENDARY,CENTRAL_FULGURITA,70,Encuentro fijo · Central Fulgor (sala del generador, postgame) (propuesto)
-146 = LEGENDARY,GRUTA_PIRITA,70,Encuentro fijo · Gruta Piral (propuesto)
+144 = LEGENDARY,GRUTA_LABRADORITA,70,Encuentro fijo · Gruta Labrador · Condición: requiere Sello Glacial y la sidequest M_GRUTA_LABRADOR completada · Interruptor 761 (Legendario_144_Articuno)
+145 = LEGENDARY,CENTRAL_FULGURITA,70,Encuentro fijo · Central Fulgor (sala del generador, postgame) · Condición: tras vencer al Campeón (Liga completada) y haber resuelto el altar/cámara de la ubicación · Interruptor 762 (Legendario_145_Zapdos)
+146 = LEGENDARY,GRUTA_PIRITA,70,Encuentro fijo · Gruta Piral · Condición: requiere Sello Volcánico y la sidequest M_GRUTA_PIRAL completada · Interruptor 763 (Legendario_146_Moltres)
 147 = WILD,RUTA_10,40-42,Común (20 %) · Nv 40–42 día / 60–63 noche
 148 = WILD,ACANTILADOS_RODONITA,43-45,Incomún (10 %) · Nv 43–45 día / 65–68 noche
 149 = THIRD_STAGE,,50,Evoluciona de Dragonair nivel 50 (obtenible en Acantilados Rodal)
-150 = LEGENDARY,GRUTA_HIALINA,80,Encuentro fijo · Gruta Hialina (cámara final) (propuesto)
-151 = LEGENDARY,RESERVA_PERIDOTO,50,Encuentro fijo · Reserva Peridoto (evento) (propuesto)
+150 = LEGENDARY,GRUTA_HIALINA,80,Encuentro fijo · Gruta Hialina (cámara final) · Condición: requiere Sello Cristal y la sidequest M_GRUTA_HIALINA completada · Interruptor 764 (Legendario_150_Mewtwo)
+151 = LEGENDARY,RESERVA_PERIDOTO,50,Encuentro fijo · Reserva Peridoto (evento) · Condición: tras vencer al Campeón, hablar con el investigador del Altar de la reserva de especies y llevar la Pokédex de Oniria con 400 especies registradas · Interruptor 765 (Legendario_151_Mew)
 152 = STARTER,PUEBLO_PEDERNAL,,Regalo NPC · Pueblo Pedernal (campamento nómada) (Acto I)
 153 = EVOLUTION_LEVEL,,16,Evoluciona de Chikorita nivel 16 (línea inicial: Regalo NPC · Pueblo Pedernal (campamento nómada) (Acto I))
 154 = EVOLUTION_LEVEL,,36,Evoluciona de Bayleef nivel 36 (línea inicial: Regalo NPC · Pueblo Pedernal (campamento nómada) (Acto I))
@@ -1067,7 +1067,7 @@ Slot8 = RARE,6,MIENSHAO,66,68,100,100,Artista marcial de los puentes, un duelist
 172 = WILD,GRANJA_APATITA,6-8,Incomún (10 %) · Nv 6–8 día / 9–12 noche
 173 = WILD,RUTA_03,13-15,Raro (10 %) · Nv 13–15 día / 19–22 noche
 174 = WILD,PLAYA_SEPIOLITA,17-19,Común (16 %) · Nv 17–19 día / 25–28 noche
-175 = EVENT,PUEBLO_PEDERNAL,5-20,Huevo · Pueblo Pedernal (huevo de los nómadas) (Acto I) (propuesto)
+175 = EVENT,PUEBLO_HELIODORO,5,Sidequest local «La gallina de oro» · Pueblo Heliar (Acto I) · Variable M_PUEBLO_HELIAR (202) = 99 · Huevo (eclosiona a Nv 5)
 176 = EVOLUTION_LEVEL,,15,Evoluciona de Togepi nivel 15; línea de evento Togepi
 177 = WILD,PUENTE_DOLOMITA,39-41,Común (16 %) · Nv 39–41 día / 58–61 noche
 178 = WILD,CASCADAS_TRAVERTINAS,42-45,Raro (4 %) · Nv 42–45 día / 63–67 noche
@@ -1093,7 +1093,7 @@ Slot8 = RARE,6,MIENSHAO,66,68,100,100,Artista marcial de los puentes, un duelist
 198 = WILD,BOSQUE_DIOPTASA,9-11,Raro (4 %) · Nv 9–11 día / 13–16 noche
 199 = EVOLUTION_ITEM,,,Evoluciona de Slowpoke con Roca del Rey (obtenible en Ruta 13)
 200 = WILD,VILLA_ADULARIA,49-52,Incomún (6 %) · Nv 49–52 día / 74–78 noche
-201 = EVENT,RUINAS_ATACAMITA,5-20,Encuentro fijo · Ruinas Atacama (muros con glifos) (Acto II) (propuesto)
+201 = EVENT,RUINAS_ATACAMITA,25,Sidequest local «Los glifos mudos» · Ruinas Atacama (Acto II) · Variable M_RUINAS_ATACAMA (217) = 99 · Encuentro
 202 = EVOLUTION_LEVEL,,15,Evoluciona de Wynaut nivel 15; línea de evento Wynaut
 203 = WILD,TEMPLO_MOLDAVITA,56-58,Incomún (6 %) · Nv 56–58 día / 84–87 noche
 204 = WILD,SENDA_SERPENTINA,35-37,Común (16 %) · Nv 35–37 día / 52–55 noche
@@ -1105,7 +1105,7 @@ Slot8 = RARE,6,MIENSHAO,66,68,100,100,Artista marcial de los puentes, un duelist
 210 = WILD,RUTA_07,27-29,Incomún (15 %) · Nv 27–29 día / 40–43 noche
 211 = WILD,RUTA_23,63-65,Raro (10 %) · Nv 63–65 día / 95–98 noche
 212 = EVOLUTION_ITEM,,,Evoluciona de Scyther con Revestim. Metálico (obtenible en Cascadas Travertinas)
-213 = EVENT,PUEBLO_CASITERITA,5-20,Regalo NPC · Pueblo Casitero (regalo de los mineros) (Acto III) (propuesto)
+213 = EVENT,PUEBLO_CASITERITA,30,Sidequest local «La veta de los mineros» · Pueblo Casitero (Acto III) · Variable M_PUEBLO_CASITERO (222) = 99 · Regalo
 214 = WILD,RESERVA_PERIDOTO,46-48,Incomún (10 %) · Nv 46–48 día / 69–72 noche
 215 = WILD,GRUTA_LABRADORITA,65-67,Común (12 %) · Nv 65–67 día / 97–100 noche
 216 = WILD,RUTA_09,38-40,Común (20 %) · Nv 38–40 día / 57–60 noche
@@ -1128,22 +1128,22 @@ Slot8 = RARE,6,MIENSHAO,66,68,100,100,Artista marcial de los puentes, un duelist
 233 = EVOLUTION_ITEM,,,Evoluciona de Porygon con Mejora (línea de evento)
 234 = WILD,TEMPLO_MOLDAVITA,56-58,Incomún (6 %) · Nv 56–58 día / 84–87 noche
 235 = WILD,CALZADA_CORINDON,66-68,Común (16 %) · Nv 66–68 día / 100 noche
-236 = EVENT,PUEBLO_ESTEATITA,5-20,Huevo · Pueblo Estea (dojo de montaña) (Acto IV) (propuesto)
+236 = EVENT,PUEBLO_ESTEATITA,5,Sidequest local «El entrenamiento de nieve» · Pueblo Estea (Acto IV) · Variable M_PUEBLO_ESTEA (229) = 99 · Huevo (eclosiona a Nv 5)
 237 = EVOLUTION_LEVEL,,20,Evoluciona de Tyrogue nivel 20; línea de evento Tyrogue
-238 = EVENT,CIUDAD_ALABASTRO,5-20,Huevo · Ciudad Alabastro (heladería) (Acto IV) (propuesto)
+238 = EVENT,CIUDAD_ALABASTRO,5,Sidequest local «Helado de media noche» · Ciudad Alabastro (Acto IV) · Variable M_CIUDAD_ALABASTRO (230) = 99 · Huevo (eclosiona a Nv 5)
 239 = WILD,RUINAS_ATACAMITA,37-39,Común (7 %) · Nv 37–39 día / 55–58 noche
 240 = WILD,RUTA_05,20-22,Incomún (15 %) · Nv 20–22 día / 30–33 noche
 241 = WILD,RESERVA_PERIDOTO,46-48,Incomún (10 %) · Nv 46–48 día / 69–72 noche
 242 = THIRD_STAGE,,38,Evoluciona de Chansey nivel 38 (a su vez evolución por objeto)
-243 = LEGENDARY,RUTA_21,70,Encuentro fijo · Ruta 21 (itinerante, postgame) (propuesto)
-244 = LEGENDARY,GRUTA_PIRITA,70,Encuentro fijo · Gruta Piral (cima) (propuesto)
-245 = LEGENDARY,GRUTA_AZURITA,70,Encuentro fijo · Gruta Azur (propuesto)
+243 = LEGENDARY,RUTA_21,70,Encuentro fijo · Ruta 21 (itinerante, postgame) · Condición: tras vencer al Campeón (Liga completada) y haber resuelto el altar/cámara de la ubicación · Interruptor 766 (Legendario_243_Raikou)
+244 = LEGENDARY,GRUTA_PIRITA,70,Encuentro fijo · Gruta Piral (cima) · Condición: requiere Sello Volcánico y la sidequest M_GRUTA_PIRAL completada · Interruptor 767 (Legendario_244_Entei)
+245 = LEGENDARY,GRUTA_AZURITA,70,Encuentro fijo · Gruta Azur · Condición: requiere Sello Abisal y la sidequest M_GRUTA_AZUR completada · Interruptor 768 (Legendario_245_Suicune)
 246 = WILD,GRUTA_HIALINA,65-67,Común (12 %) · Nv 65–67 día / 97–100 noche
 247 = WILD,GRUTA_PIRITA,65-67,Raro (5 %) · Nv 65–67 día / 97–100 noche
 248 = THIRD_STAGE,,50,Evoluciona de Pupitar nivel 50 (obtenible en Gruta Piral)
-249 = LEGENDARY,RUTA_24,75,Encuentro fijo · Ruta 24 (corriente profunda) (propuesto)
-250 = LEGENDARY,MESETA_CELESTITA,75,Encuentro fijo · Meseta Celeste (cima, postgame) (propuesto)
-251 = LEGENDARY,BOSQUE_DIOPTASA,50,Encuentro fijo · Bosque Dioptasa (altar oculto, evento) (propuesto)
+249 = LEGENDARY,RUTA_24,75,Encuentro fijo · Ruta 24 (corriente profunda) · Condición: tras vencer al Campeón (Liga completada) y haber resuelto el altar/cámara de la ubicación · Interruptor 769 (Legendario_249_Lugia)
+250 = LEGENDARY,MESETA_CELESTITA,75,Encuentro fijo · Meseta Celeste (cima, postgame) · Condición: tras vencer al Campeón (Liga completada) y haber resuelto el altar/cámara de la ubicación · Interruptor 770 (Legendario_250_Hooh)
+251 = LEGENDARY,BOSQUE_DIOPTASA,50,Encuentro fijo · Bosque Dioptasa (altar oculto, evento) · Condición: tras reunir los 6 Fragmentos (Fragmentos_Recuperados = 6) llevar la Pokédex al altar oculto del bosque · Interruptor 771 (Legendario_251_Celebi)
 252 = STARTER,PUEBLO_NACAR,,Regalo NPC · Pueblo Nacara (aldea de pescadores) (Acto III)
 253 = EVOLUTION_LEVEL,,16,Evoluciona de Treecko nivel 16 (línea inicial: Regalo NPC · Pueblo Nacara (aldea de pescadores) (Acto III))
 254 = EVOLUTION_LEVEL,,36,Evoluciona de Grovyle nivel 36 (línea inicial: Regalo NPC · Pueblo Nacara (aldea de pescadores) (Acto III))
@@ -1243,8 +1243,8 @@ Slot8 = RARE,6,MIENSHAO,66,68,100,100,Artista marcial de los puentes, un duelist
 348 = EVOLUTION_LEVEL,,41,Evoluciona de Anorith nivel 41; línea de fósil
 349 = WILD,RUTA_24,63-65,Común (35 %) · Nv 63–65 día / 95–98 noche
 350 = EVOLUTION_ITEM,,,Evoluciona de Feebas con Escama Bella (obtenible en Ruta 24)
-351 = EVENT,CIUDAD_CALAITA,5-20,Regalo NPC · Ciudad Calaire (estación meteorológica) (Acto I) (propuesto)
-352 = EVENT,RESERVA_PERIDOTO,5-20,Encuentro fijo · Reserva Peridoto (camaleón invisible) (Acto III) (propuesto)
+351 = EVENT,CIUDAD_CALAITA,10,Sidequest local «Barómetros del tejado» · Ciudad Calaire (Acto I) · Variable M_CIUDAD_CALAIRE (207) = 99 · Regalo
+352 = EVENT,RESERVA_PERIDOTO,38,Sidequest local «El camaleón invisible» · Reserva Peridoto (Acto III) · Variable M_RESERVA_PERIDOTO (225) = 99 · Encuentro
 353 = WILD,RUINAS_ATACAMITA,37-39,Común (7 %) · Nv 37–39 día / 55–58 noche
 354 = WILD,RUTA_16,48-50,Incomún (15 %) · Nv 48–50 día / 72–75 noche
 355 = WILD,RUINAS_ATACAMITA,37-39,Común (7 %) · Nv 37–39 día / 55–58 noche
@@ -1252,7 +1252,7 @@ Slot8 = RARE,6,MIENSHAO,66,68,100,100,Artista marcial de los puentes, un duelist
 357 = WILD,CIENAGA_LIMONITA,52-54,Incomún (10 %) · Nv 52–54 día / 78–81 noche · Ciénaga abierta
 358 = EVOLUTION_LEVEL,,25,Evoluciona de Chingling nivel 25; línea de evento Chingling
 359 = WILD,ISLA_OBSIDIANA,64-66,Incomún (20 %) · Nv 64–66 día / 96–99 noche
-360 = EVENT,LAGO_AMATISTA,5-20,Huevo · Lago Amatista (campamento) (Acto I) (propuesto)
+360 = EVENT,LAGO_AMATISTA,5,Sidequest local «El pez de la cabeza dolorida» · Lago Amatista (Acto I) · Variable M_LAGO_AMATISTA (209) = 99 · Huevo (eclosiona a Nv 5)
 361 = WILD,RUTA_11,44-46,Común (20 %) · Nv 44–46 día / 66–69 noche
 362 = WILD,RUTA_18,55-57,Raro (10 %) · Nv 55–57 día / 83–86 noche
 363 = WILD,RUTA_24,63-65,Común (35 %) · Nv 63–65 día / 95–98 noche
@@ -1266,19 +1266,19 @@ Slot8 = RARE,6,MIENSHAO,66,68,100,100,Artista marcial de los puentes, un duelist
 371 = WILD,TEMPLO_MOLDAVITA,56-58,Común (7 %) · Nv 56–58 día / 84–87 noche
 372 = WILD,RUTA_20,60-62,Raro (10 %) · Nv 60–62 día / 90–93 noche
 373 = THIRD_STAGE,,50,Evoluciona de Shelgon nivel 50 (obtenible en Ruta 20)
-374 = EVENT,CIUDAD_MAGNETITA,5-20,Regalo NPC · Ciudad Magno (regalo de Argos) (Acto II) (propuesto)
+374 = EVENT,CIUDAD_MAGNETITA,20,Sidequest local «Chatarrería imantada» · Ciudad Magno (Acto II) · Variable M_CIUDAD_MAGNO (211) = 99 · Regalo
 375 = EVOLUTION_LEVEL,,20,Evoluciona de Beldum nivel 20; línea de evento Beldum
 376 = THIRD_STAGE,,50,Evoluciona de Metang nivel 50 (línea de evento)
-377 = LEGENDARY,RUTA_20,70,Encuentro fijo · Ruta 20 (cámara de roca) (propuesto)
-378 = LEGENDARY,GRUTA_LABRADORITA,70,Encuentro fijo · Gruta Labrador (cámara de hielo) (propuesto)
-379 = LEGENDARY,LADERA_PORFIDO,70,Encuentro fijo · Ladera Porfiral (Bastión del Porfiral, postgame) (propuesto)
-380 = LEGENDARY,ISLA_OPALINA,70,Encuentro fijo · Isla Sueño (postgame) (propuesto)
-381 = LEGENDARY,ISLA_OBSIDIANA,70,Encuentro fijo · Isla Pesadilla (postgame) (propuesto)
-382 = LEGENDARY,RUTA_23,75,Encuentro fijo · Ruta 23 (aguas profundas) (propuesto)
-383 = LEGENDARY,GRUTA_PIRITA,75,Encuentro fijo · Gruta Piral (cámara de magma) (propuesto)
-384 = LEGENDARY,TEMPLO_MOLDAVITA,75,Encuentro fijo · Templo Moldar (cima, postgame) (propuesto)
-385 = LEGENDARY,ISLA_OPALINA,50,Encuentro fijo · Isla Sueño (evento estelar) (propuesto)
-386 = LEGENDARY,ACANTILADOS_RODONITA,70,Encuentro fijo · Acantilados Rodal (meteorito) (propuesto)
+377 = LEGENDARY,RUTA_20,70,Encuentro fijo · Ruta 20 (cámara de roca) · Condición: tras vencer al Campeón (Liga completada) y haber resuelto el altar/cámara de la ubicación · Interruptor 772 (Legendario_377_Regirock)
+378 = LEGENDARY,GRUTA_LABRADORITA,70,Encuentro fijo · Gruta Labrador (cámara de hielo) · Condición: requiere Sello Glacial y la sidequest M_GRUTA_LABRADOR completada · Interruptor 773 (Legendario_378_Regice)
+379 = LEGENDARY,LADERA_PORFIDO,70,Encuentro fijo · Ladera Porfiral (Bastión del Porfiral, postgame) · Condición: tras vencer al Campeón (Liga completada) y haber resuelto el altar/cámara de la ubicación · Interruptor 774 (Legendario_379_Registeel)
+380 = LEGENDARY,ISLA_OPALINA,70,Encuentro fijo · Isla Sueño (postgame) · Condición: tras vencer al Campeón (Liga completada) y haber resuelto el altar/cámara de la ubicación · Interruptor 775 (Legendario_380_Latias)
+381 = LEGENDARY,ISLA_OBSIDIANA,70,Encuentro fijo · Isla Pesadilla (postgame) · Condición: tras vencer al Campeón (Liga completada) y haber resuelto el altar/cámara de la ubicación · Interruptor 776 (Legendario_381_Latios)
+382 = LEGENDARY,RUTA_23,75,Encuentro fijo · Ruta 23 (aguas profundas) · Condición: tras vencer al Campeón (Liga completada) y haber resuelto el altar/cámara de la ubicación · Interruptor 777 (Legendario_382_Kyogre)
+383 = LEGENDARY,GRUTA_PIRITA,75,Encuentro fijo · Gruta Piral (cámara de magma) · Condición: requiere Sello Volcánico y la sidequest M_GRUTA_PIRAL completada · Interruptor 778 (Legendario_383_Groudon)
+384 = LEGENDARY,TEMPLO_MOLDAVITA,75,Encuentro fijo · Templo Moldar (cima, postgame) · Condición: tras vencer al Campeón (Liga completada) y haber resuelto el altar/cámara de la ubicación · Interruptor 779 (Legendario_384_Rayquaza)
+385 = LEGENDARY,ISLA_OPALINA,50,Encuentro fijo · Isla Sueño (evento estelar) · Condición: durante la noche del evento estelar en la Isla Sueño, con la Piedra Lunar en la mochila (Fragmentos = 6) · Interruptor 780 (Legendario_385_Jirachi)
+386 = LEGENDARY,ACANTILADOS_RODONITA,70,Encuentro fijo · Acantilados Rodal (meteorito) · Condición: tras vencer al Campeón, bajo el meteorito de los Acantilados Rodal (evento nocturno) · Interruptor 781 (Legendario_386_Deoxys)
 387 = STARTER,PUEBLO_ESTEATITA,,Regalo NPC · Pueblo Estea (pueblo de montaña) (Acto IV)
 388 = EVOLUTION_LEVEL,,18,Evoluciona de Turtwig nivel 18 (línea inicial: Regalo NPC · Pueblo Estea (pueblo de montaña) (Acto IV))
 389 = EVOLUTION_LEVEL,,32,Evoluciona de Grotle nivel 32 (línea inicial: Regalo NPC · Pueblo Estea (pueblo de montaña) (Acto IV))
@@ -1317,7 +1317,7 @@ Slot8 = RARE,6,MIENSHAO,66,68,100,100,Artista marcial de los puentes, un duelist
 422 = WILD,GRUTA_AZURITA,65-67,Común (12 %) · Nv 65–67 día / 97–100 noche
 423 = WILD,GRUTA_LABRADORITA,65-67,Incomún (10 %) · Nv 65–67 día / 97–100 noche
 424 = WILD,RUTA_14,46-48,Raro (10 %) · Nv 46–48 día / 69–72 noche
-425 = EVENT,PUENTE_DOLOMITA,5-20,Encuentro fijo · Puente Dolomar (globo atado al arco) (Acto II) (propuesto)
+425 = EVENT,PUENTE_DOLOMITA,35,Sidequest local «El globo atado al arco» · Puente Dolomar (Acto II) · Variable M_PUENTE_DOLOMAR (218) = 99 · Regalo
 426 = EVOLUTION_LEVEL,,28,Evoluciona de Drifloon nivel 28; línea de evento Drifloon
 427 = WILD,ESTEPA_LATERITA,29-31,Común (16 %) · Nv 29–31 día / 44–46 noche
 428 = WILD,RUTA_11,44-46,Raro (10 %) · Nv 44–46 día / 66–69 noche
@@ -1325,21 +1325,21 @@ Slot8 = RARE,6,MIENSHAO,66,68,100,100,Artista marcial de los puentes, un duelist
 430 = EVOLUTION_STONE,,,Evoluciona de Murkrow con Piedra Noche (obtenible en Bosque Dioptasa)
 431 = WILD,RUTA_08,32-35,Común (20 %) · Nv 32–35 día / 48–52 noche
 432 = WILD,RUTA_09,38-40,Incomún (15 %) · Nv 38–40 día / 57–60 noche
-433 = EVENT,TEMPLO_MOLDAVITA,5-20,Huevo · Templo Moldar (monjes) (Acto IV) (propuesto)
+433 = EVENT,TEMPLO_MOLDAVITA,5,Sidequest local «Las campanillas del monje» · Templo Moldar (Acto IV) · Variable M_TEMPLO_MOLDAR (231) = 99 · Huevo (eclosiona a Nv 5)
 434 = WILD,ISLA_OBSIDIANA,64-66,Común (35 %) · Nv 64–66 día / 96–99 noche
 435 = WILD,GRUTA_AZURITA,65-67,Raro (5 %) · Nv 65–67 día / 97–100 noche
 436 = WILD,VILLA_ADULARIA,49-52,Común (7 %) · Nv 49–52 día / 74–78 noche
 437 = WILD,TEMPLO_MOLDAVITA,56-58,Raro (4 %) · Nv 56–58 día / 84–87 noche
-438 = EVENT,RUTA_15,5-20,Encuentro fijo · Ruta 15 (árbol que cierra el sendero) (Acto III) (propuesto)
-439 = EVENT,CIUDAD_AZABACHE,5-20,Huevo · Ciudad Azabache (teatro) (Acto II) (propuesto)
+438 = EVENT,CIUDAD_VENTURINA,35,Sidequest local «El árbol que cierra el paso» · Ciudad Venturina (Acto III) · Variable M_CIUDAD_VENTURINA (226) = 99 · Regalo
+439 = EVENT,CIUDAD_AZABACHE,25,Sidequest local «Récord imposible» · Ciudad Azabache (Acto II) · Variable M_CIUDAD_AZABACHE (219) = 99 · Regalo
 440 = WILD,RUTA_14,46-48,Común (20 %) · Nv 46–48 día / 69–72 noche
 441 = WILD,PLAYA_SEPIOLITA,17-19,Raro (6 %) · Nv 17–19 día / 25–28 noche
-442 = EVENT,VILLA_ADULARIA,5-20,Misión secundaria · Villa Adular (las 108 piedras) (Acto III) (propuesto)
+442 = EVENT,VILLA_ADULARIA,40,Sidequest local «Las 108 piedras» · Villa Adular (Acto III) · Variable M_VILLA_ADULAR (227) = 99 · Misión
 443 = WILD,TEMPLO_MOLDAVITA,56-58,Común (7 %) · Nv 56–58 día / 84–87 noche
 444 = WILD,LADERA_PORFIDO,59-61,Raro (6 %) · Nv 59–61 día / 88–91 noche · Bastión del Porfiral (Base Morfeo 3)
 445 = THIRD_STAGE,,48,Evoluciona de Gabite nivel 48 (obtenible en Ladera Porfiral)
-446 = EVENT,PUEBLO_HELIODORO,5-20,Encuentro fijo · Pueblo Heliar (huevo de los granjeros) (Acto I) (propuesto)
-447 = EVENT,CIUDAD_NEFRITA,5-20,Huevo · Ciudad Nefral (dojo de Genzo) (Acto II) (propuesto)
+446 = EVENT,GRANJA_APATITA,10,Sidequest local «El apetito del establo» · Granja Apato (Acto I) · Variable M_GRANJA_APATO (203) = 99 · Regalo
+447 = EVENT,CIUDAD_NEFRITA,22,Sidequest local «El cuenco de aura» · Ciudad Nefral (Acto II) · Variable M_CIUDAD_NEFRAL (215) = 99 · Regalo
 448 = EVOLUTION_LEVEL,,32,Evoluciona de Riolu nivel 32; línea de evento Riolu
 449 = WILD,RUTA_15,47-49,Común (20 %) · Nv 47–49 día / 71–74 noche
 450 = WILD,CIENAGA_LIMONITA,52-54,Raro (6 %) · Nv 52–54 día / 78–81 noche · Refugio de Turba (Base Morfeo 2)
@@ -1350,7 +1350,7 @@ Slot8 = RARE,6,MIENSHAO,66,68,100,100,Artista marcial de los puentes, un duelist
 455 = WILD,ISLA_OBSIDIANA,64-66,Raro (10 %) · Nv 64–66 día / 96–99 noche
 456 = FISHING,CIENAGA_LIMONITA,52-54,Pesca con caña · Común (70 %) · Nv 52–54 día / 78–81 noche
 457 = FISHING,ISLA_OPALINA,64-66,Pesca con caña · Raro (30 %) · Nv 64–66 día / 96–99 noche
-458 = EVENT,RUTA_13,5-20,Huevo · Ruta 13 (plataforma de observación) (Acto III) (propuesto)
+458 = EVENT,PLAYA_SEPIOLITA,15,Sidequest local «La marea de las Mantyke» · Playa Sepiola (Acto I) · Variable M_PLAYA_SEPIOLA (206) = 99 · Regalo
 459 = WILD,RUTA_17,54-56,Común (20 %) · Nv 54–56 día / 81–84 noche
 460 = WILD,RUTA_19,54-56,Incomún (15 %) · Nv 54–56 día / 81–84 noche
 461 = EVOLUTION_ITEM,,,Evoluciona de Sneasel con Garra Afilada (obtenible en Gruta Labrador)
@@ -1371,22 +1371,22 @@ Slot8 = RARE,6,MIENSHAO,66,68,100,100,Artista marcial de los puentes, un duelist
 476 = EVOLUTION_STONE,,,Evoluciona de Nosepass con Piedra Trueno (obtenible en Gruta Hialina)
 477 = EVOLUTION_ITEM,,,Evoluciona de Dusclops con Tela Terrible (obtenible en Ruta 10)
 478 = EVOLUTION_STONE,,,Evoluciona de Snorunt con Piedra Alba (obtenible en Ruta 11)
-479 = EVENT,CENTRAL_FULGURITA,5-20,Misión secundaria · Central Fulgor (tras la crisis) (Acto II) (propuesto)
-480 = LEGENDARY,LAGO_AMATISTA,65,Encuentro fijo · Lago Amatista (Geoda Hundida) (propuesto)
-481 = LEGENDARY,LAGO_AMATISTA,65,Encuentro fijo · Lago Amatista (Geoda Hundida) (propuesto)
-482 = LEGENDARY,LAGO_AMATISTA,65,Encuentro fijo · Lago Amatista (Geoda Hundida) (propuesto)
-483 = LEGENDARY,MONTE_AZOGUE,75,Encuentro fijo · Monte Azogue (sala del reloj, postgame) (propuesto)
-484 = LEGENDARY,GRUTA_AZURITA,75,Encuentro fijo · Gruta Azur (cámara abisal) (propuesto)
-485 = LEGENDARY,GRUTA_PIRITA,70,Encuentro fijo · Gruta Piral (cráter) (propuesto)
-486 = LEGENDARY,RUTA_22,70,Encuentro fijo · Ruta 22 (templo oculto) (propuesto)
-487 = LEGENDARY,ISLA_OBSIDIANA,75,Encuentro fijo · Isla Pesadilla (mundo inverso, postgame) (propuesto)
-488 = LEGENDARY,ISLA_OPALINA,75,Encuentro fijo · Isla Sueño (Altar lunar; combate de la historia) (propuesto)
-489 = LEGENDARY,RUTA_12,50,Encuentro fijo · Ruta 12 (mar abierto) (propuesto)
-490 = LEGENDARY,RUTA_13,50,Encuentro fijo · Ruta 13 (evento marino) (propuesto)
-491 = LEGENDARY,ISLA_OBSIDIANA,75,Encuentro fijo · Isla Pesadilla (Altar oscuro; combate de la historia) (propuesto)
-492 = LEGENDARY,ISLA_OPALINA,60,Encuentro fijo · Isla Sueño (jardín, postgame) (propuesto)
-493 = LEGENDARY,MESETA_CELESTITA,90,Encuentro fijo · Meseta Celeste (evento final) (propuesto)
-494 = LEGENDARY,RESERVA_PERIDOTO,50,Encuentro fijo · Reserva Peridoto (evento) (propuesto)
+479 = EVENT,CENTRAL_FULGURITA,30,Sidequest local «El cortocircuito vivo» · Central Fulgor (Acto II) · Variable M_CENTRAL_FULGOR (210) = 99 · Misión
+480 = LEGENDARY,LAGO_AMATISTA,65,Encuentro fijo · Lago Amatista (Geoda Hundida) · Condición: tras vencer al Campeón (Liga completada) y haber resuelto el altar/cámara de la ubicación · Interruptor 782 (Legendario_480_Uxie)
+481 = LEGENDARY,LAGO_AMATISTA,65,Encuentro fijo · Lago Amatista (Geoda Hundida) · Condición: tras vencer al Campeón (Liga completada) y haber resuelto el altar/cámara de la ubicación · Interruptor 783 (Legendario_481_Mesprit)
+482 = LEGENDARY,LAGO_AMATISTA,65,Encuentro fijo · Lago Amatista (Geoda Hundida) · Condición: tras vencer al Campeón (Liga completada) y haber resuelto el altar/cámara de la ubicación · Interruptor 784 (Legendario_482_Azelf)
+483 = LEGENDARY,MONTE_AZOGUE,75,Encuentro fijo · Monte Azogue (sala del reloj, postgame) · Condición: tras vencer al Campeón (Liga completada) y haber resuelto el altar/cámara de la ubicación · Interruptor 785 (Legendario_483_Dialga)
+484 = LEGENDARY,GRUTA_AZURITA,75,Encuentro fijo · Gruta Azur (cámara abisal) · Condición: requiere Sello Abisal y la sidequest M_GRUTA_AZUR completada · Interruptor 786 (Legendario_484_Palkia)
+485 = LEGENDARY,GRUTA_PIRITA,70,Encuentro fijo · Gruta Piral (cráter) · Condición: requiere Sello Volcánico y la sidequest M_GRUTA_PIRAL completada · Interruptor 787 (Legendario_485_Heatran)
+486 = LEGENDARY,RUTA_22,70,Encuentro fijo · Ruta 22 (templo oculto) · Condición: tras vencer al Campeón (Liga completada) y haber resuelto el altar/cámara de la ubicación · Interruptor 788 (Legendario_486_Regigigas)
+487 = LEGENDARY,ISLA_OBSIDIANA,75,Encuentro fijo · Isla Pesadilla (mundo inverso, postgame) · Condición: tras vencer al Campeón (Liga completada) y haber resuelto el altar/cámara de la ubicación · Interruptor 789 (Legendario_487_Giratina)
+488 = LEGENDARY,ISLA_OPALINA,75,Encuentro fijo · Isla Sueño (Altar lunar; combate de la historia) · Condición: se combate durante la historia (Altar lunar); capturable al terminar la historia · Interruptor 790 (Legendario_488_Cresselia)
+489 = LEGENDARY,RUTA_12,50,Encuentro fijo · Ruta 12 (mar abierto) · Condición: tras la historia: recoger el Huevo Marino del evento de Ruta 12 y eclosionarlo en mar abierto · Interruptor 791 (Legendario_489_Phione)
+490 = LEGENDARY,RUTA_13,50,Encuentro fijo · Ruta 13 (evento marino) · Condición: tras la historia: recoger el Huevo Marino del evento de Ruta 13 y eclosionarlo en la plataforma de observación · Interruptor 792 (Legendario_490_Manaphy)
+491 = LEGENDARY,ISLA_OBSIDIANA,75,Encuentro fijo · Isla Pesadilla (Altar oscuro; combate de la historia) · Condición: se combate durante la historia (Altar oscuro); capturable al terminar la historia · Interruptor 793 (Legendario_491_Darkrai)
+492 = LEGENDARY,ISLA_OPALINA,60,Encuentro fijo · Isla Sueño (jardín, postgame) · Condición: tras la historia: con el Gracídea en la mochila, en el jardín de la Isla Sueño · Interruptor 794 (Legendario_492_Shaymin)
+493 = LEGENDARY,MESETA_CELESTITA,90,Encuentro fijo · Meseta Celeste (evento final) · Condición: evento final: tras vencer al Campeón y con las 8 Medallas, en la Meseta Celeste con todos los legendarios obtenidos de su ciclo · Interruptor 795 (Legendario_493_Arceus)
+494 = LEGENDARY,RESERVA_PERIDOTO,50,Encuentro fijo · Reserva Peridoto (evento) · Condición: tras vencer al Campeón, en la sala del evento de la Reserva Peridoto · Interruptor 796 (Legendario_494_Victini)
 495 = STARTER,PUEBLO_CASITERITA,,Regalo NPC · Pueblo Casitero (pueblo minero) (Acto III)
 496 = EVOLUTION_LEVEL,,17,Evoluciona de Snivy nivel 17 (línea inicial: Regalo NPC · Pueblo Casitero (pueblo minero) (Acto III))
 497 = EVOLUTION_LEVEL,,36,Evoluciona de Servine nivel 36 (línea inicial: Regalo NPC · Pueblo Casitero (pueblo minero) (Acto III))
@@ -1462,7 +1462,7 @@ Slot8 = RARE,6,MIENSHAO,66,68,100,100,Artista marcial de los puentes, un duelist
 567 = EVOLUTION_LEVEL,,37,Evoluciona de Archen nivel 37; línea de fósil
 568 = WILD,RUINAS_ATACAMITA,37-39,Común (7 %) · Nv 37–39 día / 55–58 noche
 569 = WILD,RUTA_15,47-49,Raro (10 %) · Nv 47–49 día / 71–74 noche
-570 = EVENT,RUTA_16,5-20,Misión secundaria · Ruta 16 (ilusión del bosque) (Acto III) (propuesto)
+570 = EVENT,BOSQUE_DIOPTASA,12,Sidequest local «La ilusión del claro» · Bosque Dioptasa (Acto I) · Variable M_BOSQUE_DIOPTASA (204) = 99 · Encuentro
 571 = EVOLUTION_LEVEL,,30,Evoluciona de Zorua nivel 30; línea de evento Zorua
 572 = WILD,RUTA_22,60-62,Común (20 %) · Nv 60–62 día / 90–93 noche
 573 = EVOLUTION_STONE,,,Evoluciona de Minccino con Piedra Día (obtenible en Ruta 22)
@@ -1528,20 +1528,20 @@ Slot8 = RARE,6,MIENSHAO,66,68,100,100,Artista marcial de los puentes, un duelist
 633 = WILD,LADERA_PORFIDO,59-61,Común (16 %) · Nv 59–61 día / 88–91 noche · Ladera exterior
 634 = WILD,GRUTA_AZURITA,65-67,Raro (5 %) · Nv 65–67 día / 97–100 noche
 635 = THIRD_STAGE,,55,Evoluciona de Zweilous nivel 55 (obtenible en Gruta Azur)
-636 = EVENT,CIUDAD_REJALGAR,5-20,Huevo · Ciudad Rejalgar (huevo de Baltasar) (Acto IV) (propuesto)
+636 = EVENT,CIUDAD_REJALGAR,5,Sidequest local «La brasa del herrero» · Ciudad Rejalgar (Acto IV) · Variable M_CIUDAD_REJALGAR (233) = 99 · Huevo (eclosiona a Nv 5)
 637 = EVOLUTION_LEVEL,,59,Evoluciona de Larvesta nivel 59; línea de evento Larvesta
-638 = LEGENDARY,LADERA_PORFIDO,70,Encuentro fijo · Ladera Porfiral (postgame) (propuesto)
-639 = LEGENDARY,RUTA_20,70,Encuentro fijo · Ruta 20 (cueva, postgame) (propuesto)
-640 = LEGENDARY,RUTA_19,70,Encuentro fijo · Ruta 19 (bosque nevado, postgame) (propuesto)
-641 = LEGENDARY,ACANTILADOS_RODONITA,70,Encuentro fijo · Acantilados Rodal (postgame) (propuesto)
-642 = LEGENDARY,PUENTE_DOLOMITA,70,Encuentro fijo · Puente Dolomar (tormenta, postgame) (propuesto)
-643 = LEGENDARY,TEMPLO_MOLDAVITA,75,Encuentro fijo · Templo Moldar (altar blanco, postgame) (propuesto)
-644 = LEGENDARY,CENTRAL_FULGURITA,75,Encuentro fijo · Central Fulgor (altar negro, postgame) (propuesto)
-645 = LEGENDARY,ESTEPA_LATERITA,70,Encuentro fijo · Estepa Latera (postgame) (propuesto)
-646 = LEGENDARY,GRUTA_LABRADORITA,75,Encuentro fijo · Gruta Labrador (fondo) (propuesto)
-647 = LEGENDARY,RUTA_12,60,Encuentro fijo · Ruta 12 (evento marino) (propuesto)
-648 = LEGENDARY,CALZADA_CORINDON,60,Encuentro fijo · Calzada Corindal (evento musical) (propuesto)
-649 = LEGENDARY,RUINAS_ATACAMITA,70,Encuentro fijo · Ruinas Atacama (laboratorio) (propuesto)
+638 = LEGENDARY,LADERA_PORFIDO,70,Encuentro fijo · Ladera Porfiral (postgame) · Condición: tras vencer al Campeón (Liga completada) y haber resuelto el altar/cámara de la ubicación · Interruptor 797 (Legendario_638_Cobalion)
+639 = LEGENDARY,RUTA_20,70,Encuentro fijo · Ruta 20 (cueva, postgame) · Condición: tras vencer al Campeón (Liga completada) y haber resuelto el altar/cámara de la ubicación · Interruptor 798 (Legendario_639_Terrakion)
+640 = LEGENDARY,RUTA_19,70,Encuentro fijo · Ruta 19 (bosque nevado, postgame) · Condición: tras vencer al Campeón (Liga completada) y haber resuelto el altar/cámara de la ubicación · Interruptor 799 (Legendario_640_Virizion)
+641 = LEGENDARY,ACANTILADOS_RODONITA,70,Encuentro fijo · Acantilados Rodal (postgame) · Condición: tras vencer al Campeón (Liga completada) y haber resuelto el altar/cámara de la ubicación · Interruptor 800 (Legendario_641_Tornadus)
+642 = LEGENDARY,PUENTE_DOLOMITA,70,Encuentro fijo · Puente Dolomar (tormenta, postgame) · Condición: tras vencer al Campeón (Liga completada) y haber resuelto el altar/cámara de la ubicación · Interruptor 801 (Legendario_642_Thundurus)
+643 = LEGENDARY,TEMPLO_MOLDAVITA,75,Encuentro fijo · Templo Moldar (altar blanco, postgame) · Condición: tras vencer al Campeón (Liga completada) y haber resuelto el altar/cámara de la ubicación · Interruptor 802 (Legendario_643_Reshiram)
+644 = LEGENDARY,CENTRAL_FULGURITA,75,Encuentro fijo · Central Fulgor (altar negro, postgame) · Condición: tras vencer al Campeón (Liga completada) y haber resuelto el altar/cámara de la ubicación · Interruptor 803 (Legendario_644_Zekrom)
+645 = LEGENDARY,ESTEPA_LATERITA,70,Encuentro fijo · Estepa Latera (postgame) · Condición: tras vencer al Campeón (Liga completada) y haber resuelto el altar/cámara de la ubicación · Interruptor 804 (Legendario_645_Landorus)
+646 = LEGENDARY,GRUTA_LABRADORITA,75,Encuentro fijo · Gruta Labrador (fondo) · Condición: requiere Sello Glacial y la sidequest M_GRUTA_LABRADOR completada · Interruptor 805 (Legendario_646_Kyurem)
+647 = LEGENDARY,RUTA_12,60,Encuentro fijo · Ruta 12 (evento marino) · Condición: evento marino: tras la historia, escuchar el eco de la Ruta 12 con los 3 sellos de gruta · Interruptor 806 (Legendario_647_Keldeo)
+648 = LEGENDARY,CALZADA_CORINDON,60,Encuentro fijo · Calzada Corindal (evento musical) · Condición: evento musical: tras la historia, tocar las 3 melodías de la Calzada Corindal · Interruptor 807 (Legendario_648_Meloetta)
+649 = LEGENDARY,RUINAS_ATACAMITA,70,Encuentro fijo · Ruinas Atacama (laboratorio) · Condición: tras vencer al Campeón, abrir el laboratorio de las Ruinas Atacama con los 4 sellos de gruta · Interruptor 808 (Legendario_649_Genesect)
 650 = STARTER,MESETA_CELESTITA,,Misión secundaria: reunir a los tres tras vencer al Campeón · Meseta Celeste (Liga Pokémon) (Postgame)
 651 = EVOLUTION_LEVEL,,16,Evoluciona de Chespin nivel 16 (línea inicial: Misión secundaria: reunir a los tres tras vencer al Campeón · Meseta Celeste (Liga Pokémon) (Postgame))
 652 = EVOLUTION_LEVEL,,36,Evoluciona de Quilladin nivel 36 (línea inicial: Misión secundaria: reunir a los tres tras vencer al Campeón · Meseta Celeste (Liga Pokémon) (Postgame))
@@ -1608,9 +1608,9 @@ Slot8 = RARE,6,MIENSHAO,66,68,100,100,Artista marcial de los puentes, un duelist
 713 = WILD,CALZADA_CORINDON,66-68,Incomún (10 %) · Nv 66–68 día / 100 noche
 714 = WILD,TEMPLO_MOLDAVITA,56-58,Común (7 %) · Nv 56–58 día / 84–87 noche
 715 = WILD,RUTA_21,60-62,Incomún (15 %) · Nv 60–62 día / 90–93 noche
-716 = LEGENDARY,ISLA_OPALINA,80,Encuentro fijo · Isla Sueño (postgame) (propuesto)
-717 = LEGENDARY,ISLA_OBSIDIANA,80,Encuentro fijo · Isla Pesadilla (postgame) (propuesto)
-718 = LEGENDARY,RUTA_10,70,Encuentro fijo · Ruta 10 (cámara profunda) (propuesto)
-719 = LEGENDARY,GRUTA_HIALINA,70,Encuentro fijo · Gruta Hialina (geoda) (propuesto)
-720 = LEGENDARY,CALZADA_CORINDON,60,Encuentro fijo · Calzada Corindal (evento) (propuesto)
-721 = LEGENDARY,GRUTA_PIRITA,70,Encuentro fijo · Gruta Piral (volcán) (propuesto)
+716 = LEGENDARY,ISLA_OPALINA,80,Encuentro fijo · Isla Sueño (postgame) · Condición: tras vencer al Campeón (Liga completada) y haber resuelto el altar/cámara de la ubicación · Interruptor 809 (Legendario_716_Xerneas)
+717 = LEGENDARY,ISLA_OBSIDIANA,80,Encuentro fijo · Isla Pesadilla (postgame) · Condición: tras vencer al Campeón (Liga completada) y haber resuelto el altar/cámara de la ubicación · Interruptor 810 (Legendario_717_Yveltal)
+718 = LEGENDARY,RUTA_10,70,Encuentro fijo · Ruta 10 (cámara profunda) · Condición: tras vencer al Campeón (Liga completada) y haber resuelto el altar/cámara de la ubicación · Interruptor 811 (Legendario_718_Zygarde)
+719 = LEGENDARY,GRUTA_HIALINA,70,Encuentro fijo · Gruta Hialina (geoda) · Condición: tras reunir los 4 sellos de gruta, en la geoda de la Gruta Hialina · Interruptor 812 (Legendario_719_Diancie)
+720 = LEGENDARY,CALZADA_CORINDON,60,Encuentro fijo · Calzada Corindal (evento) · Condición: evento: tras la historia, resolver el ritual de los 3 anillos en la Calzada Corindal · Interruptor 813 (Legendario_720_Hoopa)
+721 = LEGENDARY,GRUTA_PIRITA,70,Encuentro fijo · Gruta Piral (volcán) · Condición: tras reunir los 4 sellos de gruta, en el volcán de la Gruta Piral · Interruptor 814 (Legendario_721_Volcanion)

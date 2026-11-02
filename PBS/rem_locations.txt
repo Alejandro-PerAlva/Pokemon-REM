@@ -3,6 +3,7 @@
 # Nodos: MapCoords = centro del nodo. Rutas: MapCoords = punto medio del trazado y MapPath = polilinea «x,y;x,y;...» de sus tramos (en rutas ramificadas la polilinea retrocede por el nudo y repite sus puntos).
 # ConnN/S/E/O = «claves LOC_KEY | texto»: en nodos, la ruta (y el nodo destino) que sale por ese lado; en rutas, el vecino en esa direccion (rumbo general desde el punto medio). Un cruce sin ubicacion propia lista las rutas que confluyen (o ninguna) y su nombre en el texto.
 # Etymology: en las 24 rutas numeradas recoge el «Carácter geológico» de la ficha. Claves extra: MapID (ID de mapa de Essentials; MapIDStatus = Existing|Provisional), Zones (ubicaciones de dos mapas). BossInfo conserva los marcadores [Especie y Equipo Pendientes de Asignación].
+# StoryVar = variable H_* de temporalidad corta del mapa (0 sin iniciar, 1..N pasos, 99 completado). SidequestVar = variable M_* de la sidequest local (0,1,2,3,99); solo las 40 ubicaciones clave. Generado por build_event_architecture.py.
 
 [CIUDAD_CALCEDONIA]
 Name = Ciudad Calceda
@@ -28,6 +29,13 @@ CharactersPresent = Matilde (Líder del Gimnasio 1); Guiomar; estudiantes y bibl
 BossInfo = Gimnasio 1 — Matilde: Ace Nv 16
 MapID = 907
 MapIDStatus = Provisional
+StoryVar = 127
+StoryVarName = H_CIUDAD_CALCEDA
+SidequestVar = 205
+SidequestVarName = M_CIUDAD_CALCEDA
+SidequestTitle = El bestiario extraviado
+SidequestSteps = Una bibliotecaria de la academia echa en falta el Bestiario de la sala de lectura. | Encuentra 3 fichas escondidas (sótano del archivo, pupitre del aula 2 y tras el busto del fundador); cada una abre una estantería. | Devuelve las fichas: un Eevee anidaba entre los tomos; ofrécele una Baya (sin combate) y la academia te lo confía.
+SidequestReward = Eevee Nv 8 (Regalo)
 
 [CIUDAD_CALAITA]
 Name = Ciudad Calaire
@@ -53,6 +61,13 @@ CharactersPresent = Ismael (Líder del Gimnasio 2); Guiomar; reclutas del Equipo
 BossInfo = Gimnasio 2 — Ismael: Ace Nv 25
 MapID = 911
 MapIDStatus = Provisional
+StoryVar = 131
+StoryVarName = H_CIUDAD_CALAIRE
+SidequestVar = 207
+SidequestVarName = M_CIUDAD_CALAIRE
+SidequestTitle = Barómetros del tejado
+SidequestSteps = El meteorólogo de la estación local nota lecturas absurdas: tres instrumentos del hotel están desajustados. | Puzle de tejados: recoloca veleta, pluviómetro y anemómetro orientando cada sombra a su marca en el suelo. | Calibración final: el Castform de la estación reacciona al clima fijado y se queda contigo.
+SidequestReward = Castform Nv 10 (Regalo)
 
 [CIUDAD_MAGNETITA]
 Name = Ciudad Magno
@@ -78,6 +93,13 @@ CharactersPresent = Argos (Líder del Gimnasio 3); Ismael (cameo); Lucián
 BossInfo = Gimnasio 3 — Argos: Ace Nv 35
 MapID = 919
 MapIDStatus = Provisional
+StoryVar = 138
+StoryVarName = H_CIUDAD_MAGNO
+SidequestVar = 211
+SidequestVarName = M_CIUDAD_MAGNO
+SidequestTitle = Chatarrería imantada
+SidequestSteps = Un ingeniero del barrio industrial no logra arrancar su generador de imanes. | Puzle de raíles: guía tres piezas metálicas por vías imantadas hasta el bastidor sin cruzar los cables. | Al encender el generador despierta un Beldum atraído por el campo magnético; el ingeniero te lo cede.
+SidequestReward = Beldum Nv 20 (Regalo)
 
 [CIUDAD_NEFRITA]
 Name = Ciudad Nefral
@@ -103,6 +125,13 @@ CharactersPresent = Genzo (Líder del Gimnasio 4); Roldán; Lucián; Guiomar
 BossInfo = Gimnasio 4 — Genzo: Ace Nv 41
 MapID = 924
 MapIDStatus = Provisional
+StoryVar = 143
+StoryVarName = H_CIUDAD_NEFRAL
+SidequestVar = 215
+SidequestVarName = M_CIUDAD_NEFRAL
+SidequestTitle = El cuenco de aura
+SidequestSteps = Un aprendiz del dojo local no consigue sostener la postura del cuenco: ha perdido su concentración. | Cruza el suelo de piedras del dojo respetando la secuencia de 5 sellos (pista en el pergamino de la entrada). | Medita junto al aprendiz: un Riolu del dojo, atraído por la calma, se une a ti.
+SidequestReward = Riolu Nv 22 (Regalo)
 
 [CIUDAD_REJALGAR]
 Name = Ciudad Rejalgar
@@ -128,6 +157,13 @@ CharactersPresent = Baltasar (Líder del Gimnasio 8); Roldán; Lucián; Guiomar
 BossInfo = Gimnasio 8 — Baltasar: Ace Nv 70
 MapID = 955
 MapIDStatus = Provisional
+StoryVar = 174
+StoryVarName = H_CIUDAD_REJALGAR
+SidequestVar = 233
+SidequestVarName = M_CIUDAD_REJALGAR
+SidequestTitle = La brasa del herrero
+SidequestSteps = Un herrero del barrio volcánico guarda un huevo que no se enfría: lo encontró en la forja. | Mantén el calor: lleva el huevo por 3 braseros de la ciudad evitando los charcos fríos (puzle de ruta). | Deposita el huevo en la fragua apagada; eclosiona un Larvesta que el herrero te confía.
+SidequestReward = Larvesta Nv 5 (Huevo)
 
 [CIUDAD_AZABACHE]
 Name = Ciudad Azabache
@@ -153,6 +189,13 @@ CharactersPresent = Fausto (Líder del Gimnasio 5)
 BossInfo = Gimnasio 5 — Fausto: Ace Nv 49
 MapID = 929
 MapIDStatus = Provisional
+StoryVar = 148
+StoryVarName = H_CIUDAD_AZABACHE
+SidequestVar = 219
+SidequestVarName = M_CIUDAD_AZABACHE
+SidequestTitle = Récord imposible
+SidequestSteps = Una máquina del salón recreativo de Azabache bate récords sola: algo juega en su interior. | Supera 3 pantallas de la sala de juegos (puzle de patrones de color); la última revela un fallo de código con forma de Pokémon. | Desconecta el cable y recibe un Porygon; el teatro vecino, agradecido por el ruido que cesó, regala además un Mime Jr.
+SidequestReward = Porygon Nv 25 (Premio); Mimejr Nv 25 (Regalo)
 
 [CIUDAD_VENTURINA]
 Name = Ciudad Venturina
@@ -178,6 +221,13 @@ CharactersPresent = Hildegarda (Líder del Gimnasio 6); Guiomar; Roldán
 BossInfo = Gimnasio 6 — Hildegarda: Ace Nv 54
 MapID = 941
 MapIDStatus = Provisional
+StoryVar = 160
+StoryVarName = H_CIUDAD_VENTURINA
+SidequestVar = 226
+SidequestVarName = M_CIUDAD_VENTURINA
+SidequestTitle = El árbol que cierra el paso
+SidequestSteps = Un jardinero del invernadero urbano ve un tronco joven que se mueve y obstruye el sendero. | Riega 3 parterres con la Regadera en el orden que marca el herbario; el tronco se calma. | Era un Bonsly que imitaba un árbol: el jardinero te lo entrega.
+SidequestReward = Bonsly Nv 35 (Regalo)
 
 [CIUDAD_ALABASTRO]
 Name = Ciudad Alabastro
@@ -203,6 +253,13 @@ CharactersPresent = Isolda (Líder del Gimnasio 7); Guiomar; reclutas del Equipo
 BossInfo = Gimnasio 7 — Isolda: Ace Nv 64
 MapID = 948
 MapIDStatus = Provisional
+StoryVar = 167
+StoryVarName = H_CIUDAD_ALABASTRO
+SidequestVar = 230
+SidequestVarName = M_CIUDAD_ALABASTRO
+SidequestTitle = Helado de media noche
+SidequestSteps = La heladera de la plaza no puede servir: su congelador falla y guarda un huevo frío. | Encuentra 3 sacos de sal marina por la ciudad (nieve, tejado, almacén) y úsalos en el congelador. | El huevo eclosiona en cuanto sube la temperatura: un Smoochum que la heladera te cede.
+SidequestReward = Smoochum Nv 5 (Huevo)
 
 [PUEBLO_IOLITA]
 Name = Pueblo Iolar
@@ -228,6 +285,13 @@ CharactersPresent = Ambrosio (Profesor); Pía (ayudante); Amparo (madre); Luciá
 BossInfo = Entrega inicial del Pokémon (Nv 5)
 MapID = 2
 MapIDStatus = Existing
+StoryVar = 121
+StoryVarName = H_PUEBLO_IOLAR
+SidequestVar = 201
+SidequestVarName = M_PUEBLO_IOLAR
+SidequestTitle = Recados del pueblo
+SidequestSteps = Los vecinos de Pueblo Iolar necesitan 3 recados que tú, recién llegado, puedes hacer en el pueblo. | Reparte tres cartas a casas distintas del pueblo y recoge cada vez un sello de buzón. | La cartera del pueblo canjea los tres sellos por una pieza de Pokévial: sube a 2 cargas.
+SidequestReward = Pokévial a 2 cargas
 
 [PUEBLO_HELIODORO]
 Name = Pueblo Heliar
@@ -253,6 +317,13 @@ CharactersPresent = Reclutas del Equipo Morfeo y un predicador anónimo
 BossInfo = Discurso público del Equipo Morfeo
 MapID = 9
 MapIDStatus = Existing
+StoryVar = 123
+StoryVarName = H_PUEBLO_HELIAR
+SidequestVar = 202
+SidequestVarName = M_PUEBLO_HELIAR
+SidequestTitle = La gallina de oro
+SidequestSteps = Una granjera de Pueblo Heliar busca un huevo moteado perdido de su corral. | Sigue las plumas por los 4 huertos del pueblo (evento de rastros); en cada uno cae una pista. | Encuentras el huevo calentándose bajo un pajar; la granjera te deja criarlo: un Togepi.
+SidequestReward = Togepi Nv 5 (Huevo)
 
 [PUEBLO_PEDERNAL]
 Name = Pueblo Pedernal
@@ -278,6 +349,13 @@ CharactersPresent = Roldán (Campeón); un vendedor ambulante
 BossInfo = Encuentro con el Campeón Roldán
 MapID = 913
 MapIDStatus = Provisional
+StoryVar = 133
+StoryVarName = H_PUEBLO_PEDERNAL
+SidequestVar = 208
+SidequestVarName = M_PUEBLO_PEDERNAL
+SidequestTitle = El trueque del nómada
+SidequestSteps = Un comerciante nómada del campamento quiere cambiar su Lickitung por algo que haga reír al grupo. | Reúne 3 objetos de trueque por el campamento (cuerda, tambor, cuenco) intercambiando con otros campistas. | Entrega los tres: el comerciante ríe y cumple el trato.
+SidequestReward = Lickitung Nv 12 (Intercambio)
 
 [PUEBLO_ESTEATITA]
 Name = Pueblo Estea
@@ -303,6 +381,13 @@ CharactersPresent = Nerea (Subcapitana)
 BossInfo = Encuentro con Nerea (de civil) · combate Nv 62 (propuesto; el borrador no fijaba nivel)
 MapID = 946
 MapIDStatus = Provisional
+StoryVar = 165
+StoryVarName = H_PUEBLO_ESTEA
+SidequestVar = 229
+SidequestVarName = M_PUEBLO_ESTEA
+SidequestTitle = El entrenamiento de nieve
+SidequestSteps = Un maestro del dojo de montaña pide a un forastero que demuestre su temple en la nieve. | Supera tres pruebas del patio del dojo: cortar leña, cargar el cubo sin derramar y cruzar el tronco helado. | El maestro premia tu esfuerzo con un huevo del dojo: un Tyrogue.
+SidequestReward = Tyrogue Nv 5 (Huevo)
 
 [PUEBLO_CASITERITA]
 Name = Pueblo Casitero
@@ -328,6 +413,13 @@ CharactersPresent = Fausto; Guiomar; mineros
 BossInfo = Recompensa: fósil a elección
 MapID = 933
 MapIDStatus = Provisional
+StoryVar = 152
+StoryVarName = H_PUEBLO_CASITERO
+SidequestVar = 222
+SidequestVarName = M_PUEBLO_CASITERO
+SidequestTitle = La veta de los mineros
+SidequestSteps = Los mineros del pueblo han sellado una galería: algo dentro golpea la roca. | Con el Pico abre 3 muros frágiles de la galería local y esquiva los desprendimientos. | Dentro, un Shuckle protegía su baya fermentada; los mineros te lo regalan.
+SidequestReward = Shuckle Nv 30 (Regalo)
 
 [PUEBLO_NACAR]
 Name = Pueblo Nacara
@@ -353,6 +445,13 @@ CharactersPresent = Telmo (Viejo Pescador); Guiomar
 BossInfo = Entrega de la caña de pescar
 MapID = 936
 MapIDStatus = Provisional
+StoryVar = 155
+StoryVarName = H_PUEBLO_NACARA
+SidequestVar = 223
+SidequestVarName = M_PUEBLO_NACARA
+SidequestTitle = La red de los pescadores
+SidequestSteps = Los pescadores de Pueblo Nacara no pueden salir: una red enorme está enredada con algo vivo. | Desenreda la red en el muelle (puzle de nudos: tira de los cabos en orden) y tranquiliza a lo que hay dentro. | Es un Lapras joven; los pescadores te lo confían para que lo cuides.
+SidequestReward = Lapras Nv 32 (Regalo)
 
 [MESETA_CELESTITA]
 Name = Meseta Celeste (Liga Pokémon)
@@ -378,6 +477,13 @@ CharactersPresent = Nerea; Alto Mando (4); Roldán
 BossInfo = Alto Mando (Nv 77–79) y 🏆 Campeón Roldán: Ace Nv 80
 MapID = 968
 MapIDStatus = Provisional
+StoryVar = 184
+StoryVarName = H_MESETA_CELESTE
+SidequestVar = 240
+SidequestVarName = M_MESETA_CELESTE
+SidequestTitle = La última ofrenda
+SidequestSteps = Un guarda de la Meseta Celeste custodia 3 ofrendas rotas de los peregrinos de la Liga. | Recoge los fragmentos de ofrenda dispersos por las terrazas y monta las tres figuras (puzle de piezas). | El guarda abre la cámara de peregrinos: reciben 3 Caramelos Raros como agradecimiento.
+SidequestReward = RARECANDY x3
 
 [MONTE_AZOGUE]
 Name = Monte Azogue
@@ -403,6 +509,13 @@ CharactersPresent = Ambrosio; Eliseo; Zenobia; Alarico; Nerea; Lucián; Guiomar;
 BossInfo = ⚠ Prof. Ambrosio (Nv 73) / Líder Eliseo (Nv 75)
 MapID = 957
 MapIDStatus = Provisional
+StoryVar = 176
+StoryVarName = H_MONTE_AZOGUE
+SidequestVar = 234
+SidequestVarName = M_MONTE_AZOGUE
+SidequestTitle = Las campanas del ascenso
+SidequestSteps = Un peregrino perdido en el sendero pide ayuda para tocar las 4 campanas de piedra del Monte Azogue. | Golpea las campanas en orden de tono (grave a agudo) siguiendo el eco. | Se abre la hornacina del peregrino: dentro hay una Moneda Amuleto antigua.
+SidequestReward = AMULETCOIN x1
 
 [BOSQUE_DIOPTASA]
 Name = Bosque Dioptasa
@@ -428,6 +541,13 @@ CharactersPresent = Lucián; Ambrosio; reclutas (3)
 BossInfo = ⚠ Dominante 1 (Siniestro/Volador, Nv 13) — [Especie y Equipo Pendientes de Asignación]. Jefe de guion: se derrota para recuperar el fragmento y no se captura; no condiciona el reparto salvaje (Vol. 10, §4.7).
 MapID = 18
 MapIDStatus = Existing
+StoryVar = 125
+StoryVarName = H_BOSQUE_DIOPTASA
+SidequestVar = 204
+SidequestVarName = M_BOSQUE_DIOPTASA
+SidequestTitle = La ilusión del claro
+SidequestSteps = Unas luces engañosas confunden a los exploradores del bosque: alguien juega con el camino. | Sigue los 3 reflejos verdaderos (los falsos se desvanecen al acercarte) hasta el claro. | Un Zorua jugaba a disfrazarse; lo calmas con una Baya y se une a ti.
+SidequestReward = Zorua Nv 12 (Encuentro)
 
 [LAGO_AMATISTA]
 Name = Lago Amatista
@@ -454,6 +574,13 @@ BossInfo = Base Morfeo 1: jefe Zenobia (Eléctrico / Acero (arquetipo)) · Nv 28
 MapID = 914
 MapIDStatus = Provisional
 Zones = A:Orilla y campamento (Nv 22-24 día / 33-36 noche; mapa 914); B:Geoda Hundida (Base Morfeo 1) (Nv 24-26 día / 36-39 noche; mapa 969)
+StoryVar = 134
+StoryVarName = H_LAGO_AMATISTA
+SidequestVar = 209
+SidequestVarName = M_LAGO_AMATISTA
+SidequestTitle = El pez de la cabeza dolorida
+SidequestSteps = Los campistas del Lago Amatista huyen de un chapoteo constante en la orilla. | Encuentra 3 plumas azules en el campamento y deposítalas junto a la ribera (puzle de rastros). | Un huevo que latía entre los juncos se abre: Wynaut. Los campistas te lo confían.
+SidequestReward = Wynaut Nv 5 (Huevo)
 
 [CENTRAL_FULGURITA]
 Name = Central Fulgor
@@ -479,6 +606,13 @@ CharactersPresent = Lucián; Zenobia; Ambrosio; trabajadores
 BossInfo = ⚠ Dominante Eléctrico (Nv 31) — [Especie y Equipo Pendientes de Asignación]. Jefe de guion: se derrota para recuperar el fragmento y no se captura; no condiciona el reparto salvaje (Vol. 10, §4.7).
 MapID = 917
 MapIDStatus = Provisional
+StoryVar = 136
+StoryVarName = H_CENTRAL_FULGOR
+SidequestVar = 210
+SidequestVarName = M_CENTRAL_FULGOR
+SidequestTitle = El cortocircuito vivo
+SidequestSteps = Un técnico de la central ha visto una chispa que salta entre los paneles y los apaga uno a uno. | Reconecta 3 cuadros eléctricos (puzle de cables por colores) y sigue la chispa por el pasillo. | La chispa se cuela en un aparato de mantenimiento: un Rotom que acepta quedarse.
+SidequestReward = Rotom Nv 30 (Misión)
 
 [RUINAS_ATACAMITA]
 Name = Ruinas Atacama
@@ -504,6 +638,13 @@ CharactersPresent = Lucián; Alarico; Ambrosio; reclutas
 BossInfo = ⚠ Dominante Veneno (Nv 45) — [Especie y Equipo Pendientes de Asignación]. Jefe de guion: se derrota para recuperar el fragmento y no se captura; no condiciona el reparto salvaje (Vol. 10, §4.7).
 MapID = 926
 MapIDStatus = Provisional
+StoryVar = 145
+StoryVarName = H_RUINAS_ATACAMA
+SidequestVar = 217
+SidequestVarName = M_RUINAS_ATACAMA
+SidequestTitle = Los glifos mudos
+SidequestSteps = Un arqueólogo local copia los glifos de los muros, pero no logra leerlos. | Encaja 3 sillares con relieve en los muros de las ruinas hasta que los glifos formen una frase. | Los glifos se desprenden y flotan: son Unown; uno te sigue.
+SidequestReward = Unown Nv 25 (Encuentro)
 
 [TEMPLO_MOLDAVITA]
 Name = Templo Moldar
@@ -529,6 +670,13 @@ CharactersPresent = Lucián; Guiomar; Roldán; civiles
 BossInfo = ⚠ Dominante Dragón (Nv 66) — [Especie y Equipo Pendientes de Asignación]. Jefe de guion: se derrota para recuperar el fragmento y no se captura; no condiciona el reparto salvaje (Vol. 10, §4.7).
 MapID = 951
 MapIDStatus = Provisional
+StoryVar = 170
+StoryVarName = H_TEMPLO_MOLDAR
+SidequestVar = 231
+SidequestVarName = M_TEMPLO_MOLDAR
+SidequestTitle = Las campanillas del monje
+SidequestSteps = Un monje del Templo Moldar ha perdido el sonido de sus campanillas rituales. | Recoge las 3 campanillas dispersas por las salas del templo (pista: su tintineo se oye cerca). | Al tocarlas juntas, los monjes te confían un huevo del templo: un Chingling.
+SidequestReward = Chingling Nv 5 (Huevo)
 
 [VILLA_ADULARIA]
 Name = Villa Adular
@@ -554,6 +702,13 @@ CharactersPresent = Ambrosio; Roldán; Guiomar; Lucián; reclutas
 BossInfo = ⚠ Dominante Fantasma (Nv 58) — [Especie y Equipo Pendientes de Asignación]. Jefe de guion: se derrota para recuperar el fragmento y no se captura; no condiciona el reparto salvaje (Vol. 10, §4.7).
 MapID = 944
 MapIDStatus = Provisional
+StoryVar = 163
+StoryVarName = H_VILLA_ADULAR
+SidequestVar = 227
+SidequestVarName = M_VILLA_ADULAR
+SidequestTitle = Las 108 piedras
+SidequestSteps = Entre las ruinas de Villa Adular una pila de 108 piedras de un pozo ha sido removida. | Recoloca las piedras faltantes (puzle de 108 casillas con 3 grupos) hasta llenar el brocal. | Al sellar el pozo, un espíritu se liga a ti: Spiritomb.
+SidequestReward = Spiritomb Nv 40 (Misión)
 
 [CASCADAS_TRAVERTINAS]
 Name = Cascadas Travertinas
@@ -579,6 +734,13 @@ CharactersPresent = Lucián
 BossInfo = ⚠ Dominante Hada (Nv 52) — [Especie y Equipo Pendientes de Asignación]. Jefe de guion: se derrota para recuperar el fragmento y no se captura; no condiciona el reparto salvaje (Vol. 10, §4.7).
 MapID = 931
 MapIDStatus = Provisional
+StoryVar = 150
+StoryVarName = H_CASCADAS_TRAVERTINAS
+SidequestVar = 220
+SidequestVarName = M_CASCADAS_TRAVERTINAS
+SidequestTitle = La repisa tras la catarata
+SidequestSteps = Un guía local sabe que tras la catarata hay una repisa, inalcanzable con el caudal actual. | Abre las 3 compuertas de la presa del remanso para bajar el caudal (puzle de palancas). | En la repisa hay una Banda Focus.
+SidequestReward = FOCUSSASH x1
 
 [CIENAGA_LIMONITA]
 Name = Ciénaga Limonar
@@ -605,6 +767,13 @@ BossInfo = ⚠ General Zenobia, combate final (Nv 60) — [Especie y Equipo Pend
 MapID = 945
 MapIDStatus = Provisional
 Zones = A:Ciénaga abierta (Nv 52-54 día / 78-81 noche; mapa 945); B:Refugio de Turba (Base Morfeo 2) (Nv 52-54 día / 78-81 noche; mapa 970)
+StoryVar = 164
+StoryVarName = H_CIENAGA_LIMONAR
+SidequestVar = 228
+SidequestVarName = M_CIENAGA_LIMONAR
+SidequestTitle = El lodo que traga
+SidequestSteps = Un cazador de la ciénaga ha perdido un seguro de su equipo en el lodo. | Cruza el lodo por 3 balsas de juncos (puzle de plataformas móviles). | Rescatas el Seguro Debilidad del cazador y te lo quedas.
+SidequestReward = WEAKNESSPOLICY x1
 
 [DESIERTO_HALITA]
 Name = Desierto Halar
@@ -630,6 +799,13 @@ CharactersPresent = Alarico (a distancia); reclutas (Nv 36)
 BossInfo = Reclutas del Equipo Morfeo (Nv 36)
 MapID = 922
 MapIDStatus = Provisional
+StoryVar = 141
+StoryVarName = H_DESIERTO_HALAR
+SidequestVar = 214
+SidequestVarName = M_DESIERTO_HALAR
+SidequestTitle = El oasis de sal
+SidequestSteps = Un caravanero ha oído hablar de un oasis oculto tras una duna de sal. | Sigue 3 espejismos que se rompen al acercarte hasta el verdadero (guiado por el rastro de pisadas). | En el oasis hay unos Restos para quien beba.
+SidequestReward = LEFTOVERS x1
 
 [LADERA_PORFIDO]
 Name = Ladera Porfiral
@@ -656,6 +832,13 @@ BossInfo = ⚠ General Alarico, combate final (Nv 68) — [Especie y Equipo Pend
 MapID = 952
 MapIDStatus = Provisional
 Zones = A:Ladera exterior (Nv 59-61 día / 88-91 noche; mapa 952); B:Bastión del Porfiral (Base Morfeo 3) (Nv 59-61 día / 88-91 noche; mapa 971)
+StoryVar = 171
+StoryVarName = H_LADERA_PORFIRAL
+SidequestVar = 232
+SidequestVarName = M_LADERA_PORFIRAL
+SidequestTitle = La boquilla del Pokévial
+SidequestSteps = Un chatarrero de la ladera guarda restos de un frasco mayor. | Encuentra 3 piezas (anillo, tapa, boquilla) entre los restos de la ladera. | Monta el frasco con el chatarrero: el Pokévial sube a 3 cargas.
+SidequestReward = Pokévial a 3 cargas
 
 [GRUTA_PIRITA]
 Name = Gruta Piral (Gruta Volcánica)
@@ -681,6 +864,13 @@ CharactersPresent = Anteo (guardián)
 BossInfo = Exploración (búsqueda del Alto Mando)
 MapID = 965
 MapIDStatus = Provisional
+StoryVar = 182
+StoryVarName = H_GRUTA_PIRAL
+SidequestVar = 238
+SidequestVarName = M_GRUTA_PIRAL
+SidequestTitle = La brasa de la piedra
+SidequestSteps = Una orbe pulsa en el cráter de la Gruta Piral cuando se enciende el sello volcánico. | Coloca el Sello Volcánico y recorre 3 salas de lava por plataformas de basalto (puzle de calor). | La orbe cede: una Vidasfera.
+SidequestReward = LIFEORB x1
 
 [GRUTA_AZURITA]
 Name = Gruta Azur (Gruta Abisal)
@@ -706,6 +896,13 @@ CharactersPresent = Leucótea (guardiana)
 BossInfo = Exploración (búsqueda del Alto Mando)
 MapID = 963
 MapIDStatus = Provisional
+StoryVar = 180
+StoryVarName = H_GRUTA_AZUR
+SidequestVar = 236
+SidequestVarName = M_GRUTA_AZUR
+SidequestTitle = El pulso abisal
+SidequestSteps = El Sello Abisal reacciona al ritmo de las corrientes. | Sigue 3 corrientes en la gruta submarina y activa las columnas de coral en el orden del eco. | De la última columna salen unos PP Máximos del naufragio.
+SidequestReward = PPMAX x2
 
 [GRUTA_LABRADORITA]
 Name = Gruta Labrador (Gruta Helada)
@@ -731,6 +928,13 @@ CharactersPresent = Oriana (guardiana)
 BossInfo = Exploración (búsqueda del Alto Mando)
 MapID = 964
 MapIDStatus = Provisional
+StoryVar = 181
+StoryVarName = H_GRUTA_LABRADOR
+SidequestVar = 237
+SidequestVarName = M_GRUTA_LABRADOR
+SidequestTitle = El hielo que no se derrite
+SidequestSteps = El Sello Glacial hace brillar estalactitas que gotean sin parar. | Rompe 3 estalactitas marcadas por el reflejo y reorienta los espejos de hielo. | Al cristalizar una gota, aparece un Amuleto Puro.
+SidequestReward = CLEARAMULET x1
 
 [GRUTA_HIALINA]
 Name = Gruta Hialina (Gruta de Cristales)
@@ -756,6 +960,13 @@ CharactersPresent = Nicodemo (guardián)
 BossInfo = Exploración (búsqueda del Alto Mando)
 MapID = 962
 MapIDStatus = Provisional
+StoryVar = 179
+StoryVarName = H_GRUTA_HIALINA
+SidequestVar = 235
+SidequestVarName = M_GRUTA_HIALINA
+SidequestTitle = El prisma de la cámara
+SidequestSteps = El Sello Cristal enciende los cristales de la cueva en secuencia. | Alinea 3 prismas con los haces de luz (puzle de reflejos). | La pared de cristales se abre: Cinta Elegida.
+SidequestReward = CHOICEBAND x1
 
 [ISLA_OBSIDIANA]
 Name = Isla Pesadilla
@@ -781,6 +992,13 @@ CharactersPresent = Telmo; Lucián (primera); Roldán; Guiomar; Lucián (segunda
 BossInfo = ⚠ Darkrai (Nv 75)
 MapID = 938
 MapIDStatus = Provisional
+StoryVar = 157
+StoryVarName = H_ISLA_PESADILLA
+SidequestVar = 224
+SidequestVarName = M_ISLA_PESADILLA
+SidequestTitle = La capa de las pesadillas
+SidequestSteps = Un eco de la isla susurra «no te vean»; algo oculto invoca sombras. | Recorre 3 sombras que se deslizan por la isla y tápalas con la luz de tu linterna (puzle de luz). | La última sombra deja caer una Capa Furtiva.
+SidequestReward = COVERTCLOAK x1
 
 [ISLA_OPALINA]
 Name = Isla Sueño
@@ -806,6 +1024,13 @@ CharactersPresent = Argos; Lucián (primera); Nerea; Cresselia (segunda)
 BossInfo = ⚠ Cresselia (Nv 75)
 MapID = 920
 MapIDStatus = Provisional
+StoryVar = 139
+StoryVarName = H_ISLA_SUENO
+SidequestVar = 212
+SidequestVarName = M_ISLA_SUENO
+SidequestTitle = El jardín de los sueños
+SidequestSteps = Los habitantes del jardín de la Isla Sueño no recuerdan sus sueños. | Planta 3 semillas de sueño en los cuadros del jardín según el patrón de las flores. | Florece una Cápsula Habilidad.
+SidequestReward = ABILITYCAPSULE x1
 
 [RUTA_01]
 Name = Ruta 1
@@ -831,6 +1056,8 @@ CharactersPresent = Eliseo (silueta)
 BossInfo = Encuentro cinemático con Eliseo (silencioso)
 MapID = 6
 MapIDStatus = Existing
+StoryVar = 122
+StoryVarName = H_RUTA_1
 
 [RUTA_02]
 Name = Ruta 2
@@ -856,6 +1083,8 @@ CharactersPresent = Guiomar
 BossInfo = Rival Guiomar (Nv 14)
 MapID = 22
 MapIDStatus = Existing
+StoryVar = 126
+StoryVarName = H_RUTA_2
 
 [RUTA_04]
 Name = Ruta 4
@@ -881,6 +1110,8 @@ CharactersPresent = Nerea
 BossInfo = Subcapitana Nerea (Nv 19)
 MapID = 909
 MapIDStatus = Provisional
+StoryVar = 129
+StoryVarName = H_RUTA_4
 
 [RUTA_05]
 Name = Ruta 5
@@ -906,6 +1137,8 @@ CharactersPresent = Zenobia
 BossInfo = Encuentro con la general Zenobia (sin combate)
 MapID = 912
 MapIDStatus = Provisional
+StoryVar = 132
+StoryVarName = H_RUTA_5
 
 [RUTA_06]
 Name = Ruta 6
@@ -931,6 +1164,8 @@ CharactersPresent = Lucián
 BossInfo = Rival Lucián (Nv 26)
 MapID = 916
 MapIDStatus = Provisional
+StoryVar = 135
+StoryVarName = H_RUTA_6
 
 [RUTA_07]
 Name = Ruta 7
@@ -956,6 +1191,8 @@ CharactersPresent = Guiomar
 BossInfo = Rival Guiomar (Nv 32)
 MapID = 918
 MapIDStatus = Provisional
+StoryVar = 137
+StoryVarName = H_RUTA_7
 
 [RUTA_08]
 Name = Ruta 8
@@ -981,6 +1218,8 @@ CharactersPresent = Genzo; pupilos
 BossInfo = 
 MapID = 923
 MapIDStatus = Provisional
+StoryVar = 142
+StoryVarName = H_RUTA_8
 
 [RUTA_09]
 Name = Ruta 9
@@ -1006,6 +1245,8 @@ CharactersPresent = Eliseo
 BossInfo = Encuentro con Eliseo (gesto de bondad)
 MapID = 927
 MapIDStatus = Provisional
+StoryVar = 146
+StoryVarName = H_RUTA_9
 
 [RUTA_14]
 Name = Ruta 14
@@ -1031,6 +1272,8 @@ CharactersPresent = Lucián
 BossInfo = Rival Lucián (Nv 48)
 MapID = 939
 MapIDStatus = Provisional
+StoryVar = 158
+StoryVarName = H_RUTA_14
 
 [RUTA_15]
 Name = Ruta 15
@@ -1056,6 +1299,8 @@ CharactersPresent = Hildegarda; Guiomar; Roldán
 BossInfo = Recolección de hierbas con Hildegarda
 MapID = 942
 MapIDStatus = Provisional
+StoryVar = 161
+StoryVarName = H_RUTA_15
 
 [RUTA_16]
 Name = Ruta 16
@@ -1081,6 +1326,8 @@ CharactersPresent = Zenobia; Lucián
 BossInfo = Encuentro con la general Zenobia (conversación)
 MapID = 943
 MapIDStatus = Provisional
+StoryVar = 162
+StoryVarName = H_RUTA_16
 
 [GRANJA_APATITA]
 Name = Granja Apato
@@ -1106,6 +1353,13 @@ CharactersPresent = Lucián; Eladio; Hortensia
 BossInfo = Rival Lucián (Nv 9)
 MapID = 12
 MapIDStatus = Existing
+StoryVar = 124
+StoryVarName = H_GRANJA_APATO
+SidequestVar = 203
+SidequestVarName = M_GRANJA_APATO
+SidequestTitle = El apetito del establo
+SidequestSteps = Un peón de la granja ve cómo algo vacía los silos cada noche. | Reparte 3 raciones de grano en los comederos antes del anochecer; el último queda vacío: huellas de un pequeño Pokémon. | Espera por la noche en el pajar: un Munchlax llega; el peón te deja quedártelo.
+SidequestReward = Munchlax Nv 10 (Regalo)
 
 [PLAYA_SEPIOLITA]
 Name = Playa Sepiola
@@ -1131,6 +1385,13 @@ CharactersPresent = Ismael
 BossInfo = Encuentro con Ismael (surfista; sin combate)
 MapID = 910
 MapIDStatus = Provisional
+StoryVar = 130
+StoryVarName = H_PLAYA_SEPIOLA
+SidequestVar = 206
+SidequestVarName = M_PLAYA_SEPIOLA
+SidequestTitle = La marea de las Mantyke
+SidequestSteps = Un socorrista de la playa observa a una Mantyke varada tras la marea. | Lleva cubos de agua de la orilla hasta la poza (3 viajes) sin dejar que se seque. | La Mantyke vuelve al mar y, agradecida, regresa contigo.
+SidequestReward = Mantyke Nv 15 (Regalo)
 
 [ESTEPA_LATERITA]
 Name = Estepa Latera
@@ -1156,6 +1417,13 @@ CharactersPresent = Nerea
 BossInfo = Subcapitana Nerea (Nv 38)
 MapID = 921
 MapIDStatus = Provisional
+StoryVar = 140
+StoryVarName = H_ESTEPA_LATERA
+SidequestVar = 213
+SidequestVarName = M_ESTEPA_LATERA
+SidequestTitle = El puerro perdido
+SidequestSteps = Un pastor de la estepa busca el puerro de su Farfetch'd, arrastrado por el viento del pasado temporal. | Encuentra 3 puerros en la estepa (barranco, cairn, abrevadero) bajo ráfagas de viento que mueven las rocas. | El Farfetch'd del pastor te cede un hijo: lo entrega por tu ayuda.
+SidequestReward = Farfetchd Nv 25 (Regalo)
 
 [SENDA_SERPENTINA]
 Name = Senda Serpentina
@@ -1181,6 +1449,13 @@ CharactersPresent = Lucián
 BossInfo = Rival Lucián (Nv 42)
 MapID = 925
 MapIDStatus = Provisional
+StoryVar = 144
+StoryVarName = H_SENDA_SERPENTINA
+SidequestVar = 216
+SidequestVarName = M_SENDA_SERPENTINA
+SidequestTitle = El helecho milenario
+SidequestSteps = Una guarda forestal de la Senda Serpentina ve que un helecho sagrado no abre sus frondas. | Regálale agua de los 3 manantiales de la senda (recorre el camino serpenteante sin pisar las raíces). | Del helecho florece el Mineral Evolutivo que custodiaba.
+SidequestReward = EVIOLITE x1
 
 [PUENTE_DOLOMITA]
 Name = Puente Dolomar
@@ -1206,6 +1481,13 @@ CharactersPresent = Guiomar
 BossInfo = Rival Guiomar (Nv 46)
 MapID = 928
 MapIDStatus = Provisional
+StoryVar = 147
+StoryVarName = H_PUENTE_DOLOMAR
+SidequestVar = 218
+SidequestVarName = M_PUENTE_DOLOMAR
+SidequestTitle = El globo atado al arco
+SidequestSteps = Un obrero del puente ve un globo atado al arco que tira de la estructura con el viento. | Sube por las 3 escaleras del puente y desata los 3 amarres sin soltar el globo. | El globo era un Drifloon de ancla suelta; el obrero te lo regala.
+SidequestReward = Drifloon Nv 35 (Regalo)
 
 [ACANTILADOS_RODONITA]
 Name = Acantilados Rodal
@@ -1231,6 +1513,13 @@ CharactersPresent = Nicodemo
 BossInfo = Encuentro con el Alto Mando 1 (Nicodemo)
 MapID = 932
 MapIDStatus = Provisional
+StoryVar = 151
+StoryVarName = H_ACANTILADOS_RODAL
+SidequestVar = 221
+SidequestVarName = M_ACANTILADOS_RODAL
+SidequestTitle = La escalada del cuervo
+SidequestSteps = Un escalador de los acantilados guarda una cinta de pico que no quiere llevarse. | Supera los 3 tramos de la pared (puzle de agarres alternados) hasta el nido. | El escalador te cede la Cinta Experto de su nido, que ya no usa.
+SidequestReward = EXPERTBELT x1
 
 [RESERVA_PERIDOTO]
 Name = Reserva Peridoto
@@ -1256,6 +1545,13 @@ CharactersPresent = Eliseo; niños; cuidadores
 BossInfo = Encuentro con Eliseo (con niños)
 MapID = 940
 MapIDStatus = Provisional
+StoryVar = 159
+StoryVarName = H_RESERVA_PERIDOTO
+SidequestVar = 225
+SidequestVarName = M_RESERVA_PERIDOTO
+SidequestTitle = El camaleón invisible
+SidequestSteps = Un guarda de la Reserva Peridoto avisa: un Pokémon mimetizado rompe los carteles de las praderas. | Rastrea 3 huellas de color cambiante y rocía polvo en las plantas para revelarlo. | Calma al Kecleon (sin combate): acepta tu compañía.
+SidequestReward = Kecleon Nv 38 (Encuentro)
 
 [CALZADA_CORINDON]
 Name = Calzada Corindal
@@ -1281,6 +1577,13 @@ CharactersPresent = Lucián; Guiomar
 BossInfo = Rivales Lucián y Guiomar (Nv 76)
 MapID = 966
 MapIDStatus = Provisional
+StoryVar = 183
+StoryVarName = H_CALZADA_CORINDAL
+SidequestVar = 239
+SidequestVarName = M_CALZADA_CORINDAL
+SidequestTitle = El mirador de los veteranos
+SidequestSteps = Un veterano de la Calzada Corindal reta a quien llegue al mirador a una prueba de rapidez. | Completa la carrera de los 3 balcones en 60 segundos de juego, esquivando los obstáculos. | Al batirle, el veterano te entrega su Pañuelo Elegido.
+SidequestReward = CHOICESCARF x1
 
 [RUTA_03]
 Name = Ruta 3
@@ -1306,6 +1609,8 @@ CharactersPresent = Matilde; Guiomar; reclutas
 BossInfo = Reclutas del Equipo Morfeo (Nv 14–15)
 MapID = 908
 MapIDStatus = Provisional
+StoryVar = 128
+StoryVarName = H_RUTA_3
 
 [RUTA_10]
 Name = Ruta 10
@@ -1331,6 +1636,8 @@ CharactersPresent = Lucián; reclutas
 BossInfo = 
 MapID = 930
 MapIDStatus = Provisional
+StoryVar = 149
+StoryVarName = H_RUTA_10
 
 [RUTA_20]
 Name = Ruta 20
@@ -1356,6 +1663,8 @@ CharactersPresent = Guiomar
 BossInfo = Rival Guiomar (Nv 69)
 MapID = 953
 MapIDStatus = Provisional
+StoryVar = 172
+StoryVarName = H_RUTA_20
 
 [RUTA_21]
 Name = Ruta 21
@@ -1381,6 +1690,8 @@ CharactersPresent = Anteo
 BossInfo = Encuentro con el Alto Mando 4 (Anteo)
 MapID = 954
 MapIDStatus = Provisional
+StoryVar = 173
+StoryVarName = H_RUTA_21
 
 [RUTA_22]
 Name = Ruta 22
@@ -1406,6 +1717,8 @@ CharactersPresent = Eliseo; Nerea; Roldán; reclutas
 BossInfo = Oleadas de reclutas (Nv 60)
 MapID = 956
 MapIDStatus = Provisional
+StoryVar = 175
+StoryVarName = H_RUTA_22
 
 [RUTA_12]
 Name = Ruta 12
@@ -1431,6 +1744,8 @@ CharactersPresent = Nerea; Telmo; Guiomar
 BossInfo = Subcapitana Nerea (Nv 55)
 MapID = 935
 MapIDStatus = Provisional
+StoryVar = 154
+StoryVarName = H_RUTA_12
 
 [RUTA_13]
 Name = Ruta 13
@@ -1456,6 +1771,8 @@ CharactersPresent = Leucótea
 BossInfo = Encuentro con el Alto Mando 2 (Leucótea)
 MapID = 937
 MapIDStatus = Provisional
+StoryVar = 156
+StoryVarName = H_RUTA_13
 
 [RUTA_23]
 Name = Ruta 23
@@ -1481,6 +1798,8 @@ CharactersPresent = Nerea (en la isla)
 BossInfo = Travesía a la Isla Sueño
 MapID = 958
 MapIDStatus = Provisional
+StoryVar = 177
+StoryVarName = H_RUTA_23
 
 [RUTA_24]
 Name = Ruta 24
@@ -1506,6 +1825,8 @@ CharactersPresent =
 BossInfo = Travesía a la Isla Pesadilla
 MapID = 960
 MapIDStatus = Provisional
+StoryVar = 178
+StoryVarName = H_RUTA_24
 
 [RUTA_11]
 Name = Ruta 11
@@ -1531,6 +1852,8 @@ CharactersPresent = Guiomar
 BossInfo = 
 MapID = 934
 MapIDStatus = Provisional
+StoryVar = 153
+StoryVarName = H_RUTA_11
 
 [RUTA_17]
 Name = Ruta 17
@@ -1556,6 +1879,8 @@ CharactersPresent = Guiomar; Isolda
 BossInfo = Evento: limpieza de nieve
 MapID = 947
 MapIDStatus = Provisional
+StoryVar = 166
+StoryVarName = H_RUTA_17
 
 [RUTA_18]
 Name = Ruta 18
@@ -1581,6 +1906,8 @@ CharactersPresent = Alarico; Guiomar
 BossInfo = Dilema del general Alarico
 MapID = 950
 MapIDStatus = Provisional
+StoryVar = 169
+StoryVarName = H_RUTA_18
 
 [RUTA_19]
 Name = Ruta 19
@@ -1606,3 +1933,5 @@ CharactersPresent = Oriana
 BossInfo = Encuentro con el Alto Mando 3 (Oriana)
 MapID = 949
 MapIDStatus = Provisional
+StoryVar = 168
+StoryVarName = H_RUTA_19

@@ -1,5 +1,5 @@
 ﻿# Pokémon REM - rem_location_items.txt (generado por tools/rebalance/phase1/build_items_shops.py; no editar a mano).
-# Formato INI de SPEC.md 2.3: una sección [LOC_KEY] por ubicación (64) y una línea por fila del Vol. 9, Cap. 5 (775 filas).
+# Formato INI de SPEC.md 2.3: una sección [LOC_KEY] por ubicación (64) y una línea por fila del Vol. 9, Cap. 5 (780 filas).
 # ItemN = ITEM_ID,Qty,Method,Zone,Note   (parseo con maxsplit=4: Zone no lleva comas; Note es texto libre y puede llevarlas).
 # ITEM_ID = símbolo PBS de proposed_items.txt (las MT son TM01..TM100). Method: B Poké Ball visible, H oculto, C cofre,
 # N regalo de PNJ, E evento/misión, J botín de jefe o líder, P misión de Pía, S tienda de stock único. Note vacía = sin nota.
@@ -79,16 +79,15 @@ Item4 = TM16,1,J,Gimnasio 6 · Hildegarda,MT de gimnasio 6 (Planta): Gigadrenado
 Item5 = RELAXEDMINT,1,H,Cuadrante SO · tras el gimnasio,
 Item6 = HYPERPOTION,1,B,Cuadrante E · en el callejón trasero del Centro Pokémon,Suministro de ruta (consumible común).
 
-# Ciudad Alabastro - 8 filas
+# Ciudad Alabastro - 7 filas
 [CIUDAD_ALABASTRO]
 Item1 = TM48,1,J,Gimnasio 7 · Isolda,MT de gimnasio 7 (Hielo): Rayo Hielo (90 PB).
 Item2 = TM90,1,N,Mansión · mayordomo,Despejar: regalo del mayordomo de Isolda.
-Item3 = CLEARAMULET,1,N,Mansión · Isolda · tras la Medalla 7,Amuleto Puro: regalo de Isolda por la ayuda en la Ruta 17.
-Item4 = LIGHTCLAY,1,B,Cuadrante E · en la azotea accesible,
-Item5 = ICESTONE,1,E,Ciudad Alabastro · Misión n.º 15 de Pía «Cristales de hielo»,Registrar 3 especies de Hielo en Ciudad Alabastro. Piedra Hielo de los cristales del barrio nevado.
-Item6 = CAREFULMINT,1,H,Cuadrante S · en el parque del barrio viejo,
-Item7 = MAXREPEL,2,B,Cuadrante E · tras el gimnasio,Suministro de ruta (consumible común).
-Item8 = LUXURYBALL,1,B,Cuadrante E · en la puerta trasera del ayuntamiento,
+Item3 = LIGHTCLAY,1,B,Cuadrante E · en la azotea accesible,
+Item4 = ICESTONE,1,E,Ciudad Alabastro · Misión n.º 15 de Pía «Cristales de hielo»,Registrar 3 especies de Hielo en Ciudad Alabastro. Piedra Hielo de los cristales del barrio nevado.
+Item5 = CAREFULMINT,1,H,Cuadrante S · en el parque del barrio viejo,
+Item6 = MAXREPEL,2,B,Cuadrante E · tras el gimnasio,Suministro de ruta (consumible común).
+Item7 = LUXURYBALL,1,B,Cuadrante E · en la puerta trasera del ayuntamiento,
 
 # Pueblo Iolar - 24 filas
 [PUEBLO_IOLITA]
@@ -187,7 +186,7 @@ Item10 = MAXPOTION,1,B,Cuadrante N · en el muelle de carga,Suministro de ruta (
 Item11 = DIVEBALL,1,B,Cuadrante NO · bajo el faro,
 Item12 = AGUAVBERRY,1,H,Cuadrante NE · en el muelle de carga,
 
-# Meseta Celeste (Liga Pokémon) - 6 filas
+# Meseta Celeste (Liga Pokémon) - 7 filas
 [MESETA_CELESTITA]
 Item1 = TM76,1,S,Tienda de la Liga · mostrador,Giga Impacto (150 PB): premio de campeón; stock único.
 Item2 = TM97,1,S,Tienda de la Liga · mostrador,Trampa Rocas: premio de campeón; stock único.
@@ -195,8 +194,9 @@ Item3 = LANSATBERRY,1,B,Cuadrante NO · tras la escalinata,
 Item4 = MAXPOTION,1,H,Cuadrante O · en el recibidor de la Liga,Suministro de ruta (consumible común).
 Item5 = MAXREVIVE,1,B,Cuadrante SO · junto a la estatua del campeón,Suministro de ruta (consumible común).
 Item6 = MAXELIXIR,1,B,Cuadrante E · en el jardín de la meseta,Suministro de ruta (consumible común).
+Item7 = RARECANDY,3,E,Meseta Celeste (Liga Pokémon) · Sidequest «La última ofrenda»,Recompensa final de la sidequest local «La última ofrenda» (M_MESETA_CELESTE = 99).
 
-# Monte Azogue - 10 filas
+# Monte Azogue - 11 filas
 [MONTE_AZOGUE]
 Item1 = DREAMORB,1,E,Cima · altar de las dos orbes,Orbe del Sueño: se forma al fundir los fragmentos lunares.
 Item2 = NIGHTMAREORB,1,E,Cima · altar de las dos orbes,Orbe de la Pesadilla: se forma al fundir los fragmentos oscuros.
@@ -208,6 +208,7 @@ Item7 = MASTERBALL,1,J,Cima · botín del Prof. Ambrosio,Único ejemplar de todo
 Item8 = MICLEBERRY,1,H,Cuadrante SE · en la cima · tras el altar,
 Item9 = ELIXIR,1,H,Cuadrante E · en la cima · tras el altar,Suministro de ruta (consumible común).
 Item10 = RARECANDY,1,B,Cuadrante SO · en el puente de servicio,
+Item11 = AMULETCOIN,1,E,Monte Azogue · Sidequest «Las campanas del ascenso»,Recompensa final de la sidequest local «Las campanas del ascenso» (M_MONTE_AZOGUE = 99).
 
 # Bosque Dioptasa - 8 filas
 [BOSQUE_DIOPTASA]
@@ -264,52 +265,50 @@ Item15 = DUSKBALL,1,B,Cuadrante O · tras un muro derruido,
 Item16 = PERSIMBERRY,1,H,Cuadrante O · junto al pozo seco,
 Item17 = KEBIABERRY,1,B,Cuadrante O · en el pasadizo oeste,
 
-# Templo Moldar - 11 filas
+# Templo Moldar - 10 filas
 [TEMPLO_MOLDAVITA]
 Item1 = LUNARFRAG3,1,E,Altar del dragón · antes del Dominante Dragón,Fragmento F6: ya excavado por Alarico, que lo entrega; solo existe como evento (nunca entra en la mochila).
 Item2 = TM62,1,H,Altar del dragón · tras el combate,Garra Dragón (80 PB): botín del Dominante Dragón.
-Item3 = LIFEORB,1,H,Cripta lateral · bajo el relieve del dragón,Vidasfera: custodia del Templo Moldar (Acto IV).
-Item4 = LIGHTCLAY,1,H,Cuadrante E · bajo un relieve de dragón,
-Item5 = SACREDASH,1,H,Cuadrante NO · junto al brasero apagado,
-Item6 = HASTYMINT,1,H,Cuadrante S · bajo un relieve de dragón,
-Item7 = DRAGONFANG,1,B,Cuadrante SE · en la cripta lateral,
-Item8 = ELECTIRIZER,1,B,Cuadrante N · junto al brasero apagado,Objeto de evolución (Electabuzz → Electivire): se usa sobre el Pokémon como una piedra.
-Item9 = MAXPOTION,1,B,Cuadrante SO · tras la columna central,Suministro de ruta (consumible común).
-Item10 = FULLRESTORE,1,B,Centro · tras la columna central,Suministro de ruta (consumible común).
-Item11 = HABANBERRY,1,B,Cuadrante S · en el altar menor,
+Item3 = LIGHTCLAY,1,H,Cuadrante E · bajo un relieve de dragón,
+Item4 = SACREDASH,1,H,Cuadrante NO · junto al brasero apagado,
+Item5 = HASTYMINT,1,H,Cuadrante S · bajo un relieve de dragón,
+Item6 = DRAGONFANG,1,B,Cuadrante SE · en la cripta lateral,
+Item7 = ELECTIRIZER,1,B,Cuadrante N · junto al brasero apagado,Objeto de evolución (Electabuzz → Electivire): se usa sobre el Pokémon como una piedra.
+Item8 = MAXPOTION,1,B,Cuadrante SO · tras la columna central,Suministro de ruta (consumible común).
+Item9 = FULLRESTORE,1,B,Centro · tras la columna central,Suministro de ruta (consumible común).
+Item10 = HABANBERRY,1,B,Cuadrante S · en el altar menor,
 
-# Villa Adular - 13 filas
+# Villa Adular - 12 filas
 [VILLA_ADULARIA]
 Item1 = NIGHTMAREFRAG3,1,J,Casa derruida · Dominante Fantasma,Fragmento F5: lo recupera el protagonista; Ambrosio revela su traición y se lo lleva.
 Item2 = TM61,1,H,Casa derruida · bajo el suelo,Ayuda previa/posterior al Dominante Fantasma (Villa): Bola Sombra (80 PB).
 Item3 = TM65,1,H,Plaza · tras el pozo,Desarme: pista del Profesor; se oculta en el pozo.
 Item4 = ODDKEYSTONE,1,H,Casa derruida · bajo el suelo,Piedra Espíritu (Spiritomb).
-Item5 = COVERTCLOAK,1,H,Plaza · tras el pozo seco,Capa Furtiva: oculta en el escenario del Dominante Fantasma.
-Item6 = DUSKSTONE,1,H,Cuadrante SE · bajo el suelo del recibidor,
-Item7 = ENIGMABERRY,1,H,Cuadrante NO · bajo el suelo del recibidor,
-Item8 = SASSYMINT,1,B,Cuadrante N · en el pasadizo oeste,
-Item9 = SUPERREPEL,1,H,Cuadrante E · tras un muro derruido,Suministro de ruta (consumible común).
-Item10 = SPELLTAG,1,B,Cuadrante N · tras una estatua caída,
-Item11 = REAPERCLOTH,1,H,Cuadrante E · en una cámara sellada,Objeto de evolución (Dusclops → Dusknoir): se usa sobre el Pokémon como una piedra.
-Item12 = HYPERPOTION,1,B,Cuadrante O · bajo el suelo del recibidor,Suministro de ruta (consumible común).
-Item13 = KASIBBERRY,1,B,Centro · en una cámara sellada,
+Item5 = DUSKSTONE,1,H,Cuadrante SE · bajo el suelo del recibidor,
+Item6 = ENIGMABERRY,1,H,Cuadrante NO · bajo el suelo del recibidor,
+Item7 = SASSYMINT,1,B,Cuadrante N · en el pasadizo oeste,
+Item8 = SUPERREPEL,1,H,Cuadrante E · tras un muro derruido,Suministro de ruta (consumible común).
+Item9 = SPELLTAG,1,B,Cuadrante N · tras una estatua caída,
+Item10 = REAPERCLOTH,1,H,Cuadrante E · en una cámara sellada,Objeto de evolución (Dusclops → Dusknoir): se usa sobre el Pokémon como una piedra.
+Item11 = HYPERPOTION,1,B,Cuadrante O · bajo el suelo del recibidor,Suministro de ruta (consumible común).
+Item12 = KASIBBERRY,1,B,Centro · en una cámara sellada,
 
 # Cascadas Travertinas - 12 filas
 [CASCADAS_TRAVERTINAS]
 Item1 = LUNARFRAG2,1,J,Cueva tras la catarata · Dominante Hada,Fragmento F4: lo recupera el protagonista; Lucián lo lleva a Ambrosio.
 Item2 = TM53,1,B,Cueva tras la catarata,Bomba Lodo (90 PB): ayuda frente al Dominante Hada.
 Item3 = TM75,1,H,Cueva oculta tras el Dominante,Brillo Mágico (80 PB, Hada): botín del Dominante Hada.
-Item4 = FOCUSSASH,1,H,Repisa tras la catarata · junto al remanso,Banda Focus: único ejemplar de mapa; consumible, se repone en la Liga.
-Item5 = ABILITYCAPSULE,1,H,Cuadrante NO · tras la cortina de agua,
-Item6 = JOLLYMINT,1,H,Cuadrante O · junto al remanso,
-Item7 = CAREFULMINT,1,E,Cascadas Travertinas · Misión n.º 9 de Pía «Hierbas de la Niebla»,Capturar 2 especies Hada en las Cascadas Travertinas. Pía cataloga las hierbas de la niebla; una de ellas es una Menta.
-Item8 = POWERHERB,1,B,Centro · en la cueva oculta de la catarata,
-Item9 = DRAGONSCALE,1,H,Cuadrante NE · tras la cortina de agua,Objeto de evolución (Seadra → Kingdra): se usa sobre el Pokémon como una piedra.
-Item10 = BURNHEAL,1,H,Cuadrante N · en la repisa de travertino,Suministro de ruta (consumible común).
-Item11 = GREATBALL,2,B,Cuadrante SE · junto al remanso,Suministro de ruta (consumible común).
-Item12 = DUSKBALL,1,B,Centro · sobre una roca resbaladiza,
+Item4 = ABILITYCAPSULE,1,H,Cuadrante NO · tras la cortina de agua,
+Item5 = JOLLYMINT,1,H,Cuadrante O · junto al remanso,
+Item6 = CAREFULMINT,1,E,Cascadas Travertinas · Misión n.º 9 de Pía «Hierbas de la Niebla»,Capturar 2 especies Hada en las Cascadas Travertinas. Pía cataloga las hierbas de la niebla; una de ellas es una Menta.
+Item7 = POWERHERB,1,B,Centro · en la cueva oculta de la catarata,
+Item8 = DRAGONSCALE,1,H,Cuadrante NE · tras la cortina de agua,Objeto de evolución (Seadra → Kingdra): se usa sobre el Pokémon como una piedra.
+Item9 = BURNHEAL,1,H,Cuadrante N · en la repisa de travertino,Suministro de ruta (consumible común).
+Item10 = GREATBALL,2,B,Cuadrante SE · junto al remanso,Suministro de ruta (consumible común).
+Item11 = DUSKBALL,1,B,Centro · sobre una roca resbaladiza,
+Item12 = FOCUSSASH,1,E,Cascadas Travertinas · Sidequest «La repisa tras la catarata»,Recompensa final de la sidequest local «La repisa tras la catarata» (M_CASCADAS_TRAVERTINAS = 99). Ejemplar único (Tier 1): no se repone.
 
-# Ciénaga Limonar - 17 filas
+# Ciénaga Limonar - 18 filas
 [CIENAGA_LIMONITA]
 Item1 = TM59,1,B,Raíz gigante · pasarela este,Zumbido (90 PB): ciénaga de insectos.
 Item2 = TM81,1,H,Cámara de helechos medicinales,Síntesis: recuperación vegetal (banda tardía, excepción por tema).
@@ -328,22 +327,23 @@ Item14 = REVIVALHERB,1,H,Cuadrante E · sobre una raíz gigante,
 Item15 = PERSIMBERRY,1,B,Cuadrante NO · junto a un tronco hundido,
 Item16 = KEBIABERRY,1,H,Centro · junto a un tronco hundido,
 Item17 = TANGABERRY,1,B,Cuadrante O · sobre una raíz gigante,
+Item18 = WEAKNESSPOLICY,1,E,Ciénaga Limonar · Sidequest «El lodo que traga»,Recompensa final de la sidequest local «El lodo que traga» (M_CIENAGA_LIMONAR = 99). Ejemplar único (Tier 1): no se repone.
 
 # Desierto Halar - 13 filas
 [DESIERTO_HALITA]
 Item1 = TM04,1,H,Duna con cristales de sal,Sonámbulo: aparece junto a Descanso en un tesoro tras la tormenta de arena.
 Item2 = TM31,1,H,Cráter de arena junto al oasis,Tormenta Arena: equipos de clima de arena; oculto en el desierto.
-Item3 = LEFTOVERS,1,H,Oasis oculto tras la duna de sal,Secreto del Acto II: solo aparece con el Buscaobjetos.
-Item4 = SUNSTONE,1,B,Cuadrante NO · al pie de un cactus,
-Item5 = SAFETYGOGGLES,1,B,Cuadrante SO · al pie de un cactus,
-Item6 = SUPERREPEL,2,B,Cuadrante SE · tras una roca de arenisca,Suministro de ruta (consumible común).
-Item7 = STARDUST,1,H,Cuadrante S · al pie de un cactus,
-Item8 = RAREBONE,1,H,Cuadrante O · tras una roca de arenisca,
-Item9 = SOFTSAND,1,B,Cuadrante SE · junto al oasis oculto,
-Item10 = OVALSTONE,1,H,Cuadrante E · en un cráter de arena,Objeto de evolución (Happiny → Chansey): se usa sobre el Pokémon como una piedra.
-Item11 = ULTRABALL,2,B,Cuadrante S · tras una roca de arenisca,Suministro de ruta (consumible común).
-Item12 = LUMBERRY,1,H,Cuadrante NE · en un cráter de arena,
-Item13 = SHUCABERRY,1,B,Cuadrante NO · en una duna con cristales de sal,
+Item3 = SUNSTONE,1,B,Cuadrante NO · al pie de un cactus,
+Item4 = SAFETYGOGGLES,1,B,Cuadrante SO · al pie de un cactus,
+Item5 = SUPERREPEL,2,B,Cuadrante SE · tras una roca de arenisca,Suministro de ruta (consumible común).
+Item6 = STARDUST,1,H,Cuadrante S · al pie de un cactus,
+Item7 = RAREBONE,1,H,Cuadrante O · tras una roca de arenisca,
+Item8 = SOFTSAND,1,B,Cuadrante SE · junto al oasis oculto,
+Item9 = OVALSTONE,1,H,Cuadrante E · en un cráter de arena,Objeto de evolución (Happiny → Chansey): se usa sobre el Pokémon como una piedra.
+Item10 = ULTRABALL,2,B,Cuadrante S · tras una roca de arenisca,Suministro de ruta (consumible común).
+Item11 = LUMBERRY,1,H,Cuadrante NE · en un cráter de arena,
+Item12 = SHUCABERRY,1,B,Cuadrante NO · en una duna con cristales de sal,
+Item13 = LEFTOVERS,1,E,Desierto Halar · Sidequest «El oasis de sal»,Recompensa final de la sidequest local «El oasis de sal» (M_DESIERTO_HALAR = 99). Ejemplar único (Tier 1): no se repone.
 
 # Ladera Porfiral - 14 filas
 [LADERA_PORFIDO]
@@ -362,7 +362,7 @@ Item12 = FULLRESTORE,1,B,Cuadrante N · en una cámara con cristales,Suministro 
 Item13 = ULTRABALL,1,B,Cuadrante NE · en una galería lateral oscura,Suministro de ruta (consumible común).
 Item14 = LEVELBALL,1,B,Cuadrante SE · sobre una repisa de roca,
 
-# Gruta Piral (Gruta Volcánica) - 14 filas
+# Gruta Piral (Gruta Volcánica) - 15 filas
 [GRUTA_PIRITA]
 Item1 = SEALVOLCANO,1,J,Cámara del Alto Mando 2 · Anteo,Sello Volcánico: abre las cámaras interiores.
 Item2 = TM88,1,B,Gruta Piral · cámara de lava,Tierra Viva (90 PB): postgame.
@@ -378,8 +378,9 @@ Item11 = LIECHIBERRY,1,B,Cuadrante S · tras un pilar de mineral,
 Item12 = NAIVEMINT,1,H,Cuadrante N · sobre un altar de piedra,
 Item13 = BIGNUGGET,1,H,Cuadrante S · sobre un altar de piedra,
 Item14 = MAXREVIVE,1,B,Centro · en el pasillo interior,Suministro de ruta (consumible común).
+Item15 = LIFEORB,1,E,Gruta Piral (Gruta Volcánica) · Sidequest «La brasa de la piedra»,Recompensa final de la sidequest local «La brasa de la piedra» (M_GRUTA_PIRAL = 99). Ejemplar único (Tier 1): no se repone.
 
-# Gruta Azur (Gruta Abisal) - 13 filas
+# Gruta Azur (Gruta Abisal) - 14 filas
 [GRUTA_AZURITA]
 Item1 = SEALABYSS,1,J,Cámara del Alto Mando 4 · Leucótea,Sello Abisal: se llega a la gruta con la Tabla de Surf y el sello abre sus cámaras interiores.
 Item2 = SPLASHPLATE,1,C,Cofre de la cámara interior (abierto con el sello),Tabla de Arceus: tesoro de la gruta.
@@ -394,8 +395,9 @@ Item10 = ROWAPBERRY,1,H,Cuadrante SO · en el pasillo interior,
 Item11 = SAILFOSSIL,1,H,Cuadrante SO · junto a una estalagmita,
 Item12 = BALMMUSHROOM,1,H,Cuadrante SO · en una cámara de cristal,
 Item13 = MAXETHER,1,B,Cuadrante N · en el pasillo interior,Suministro de ruta (consumible común).
+Item14 = PPMAX,2,E,Gruta Azur (Gruta Abisal) · Sidequest «El pulso abisal»,Recompensa final de la sidequest local «El pulso abisal» (M_GRUTA_AZUR = 99).
 
-# Gruta Labrador (Gruta Helada) - 15 filas
+# Gruta Labrador (Gruta Helada) - 16 filas
 [GRUTA_LABRADORITA]
 Item1 = SEALGLACIER,1,J,Cámara del Alto Mando 3 · Oriana,Sello Glacial: abre las cámaras interiores.
 Item2 = TM89,1,B,Gruta Labrador · estalagmitas,Púas: postgame.
@@ -412,8 +414,9 @@ Item12 = JAWFOSSIL,1,H,Cuadrante SO · sobre un altar de piedra,
 Item13 = IMPISHMINT,1,H,Cuadrante SO · en el pasillo interior,
 Item14 = BIGNUGGET,1,H,Cuadrante S · junto a una estalagmita,
 Item15 = MAXELIXIR,1,B,Cuadrante SE · tras un pilar de mineral,Suministro de ruta (consumible común).
+Item16 = CLEARAMULET,1,E,Gruta Labrador (Gruta Helada) · Sidequest «El hielo que no se derrite»,Recompensa final de la sidequest local «El hielo que no se derrite» (M_GRUTA_LABRADOR = 99). Ejemplar único (Tier 1): no se repone.
 
-# Gruta Hialina (Gruta de Cristales) - 17 filas
+# Gruta Hialina (Gruta de Cristales) - 18 filas
 [GRUTA_HIALINA]
 Item1 = SEALCRYSTAL,1,J,Cámara del Alto Mando 1 · Nicodemo,Sello de Cristal: abre las cámaras interiores.
 Item2 = TM99,1,H,Gruta Hialina · cámara de cristales,Campana Cura: postgame.
@@ -432,8 +435,9 @@ Item14 = STARPIECE,1,H,Cuadrante N · en una cámara de cristal,
 Item15 = FULLRESTORE,1,B,Cuadrante E · en una cámara de cristal,Suministro de ruta (consumible común).
 Item16 = RARECANDY,1,B,Cuadrante NO · en el pasillo interior,
 Item17 = MOONBALL,1,B,Centro · sobre un altar de piedra,
+Item18 = CHOICEBAND,1,E,Gruta Hialina (Gruta de Cristales) · Sidequest «El prisma de la cámara»,Recompensa final de la sidequest local «El prisma de la cámara» (M_GRUTA_HIALINA = 99). Ejemplar único (Tier 1): no se repone.
 
-# Isla Pesadilla - 8 filas
+# Isla Pesadilla - 9 filas
 [ISLA_OBSIDIANA]
 Item1 = TM60,1,H,Playa de obsidiana (primera visita),Infortunio: tesoro en la orilla antes de que empiecen las voces.
 Item2 = TM93,1,E,Altar oscuro tras calmar a Darkrai,Teletransporte: Darkrai se desvanece en el vacío y deja la lección.
@@ -443,8 +447,9 @@ Item5 = ULTRABALL,2,B,Centro · tras una roca retorcida,Suministro de ruta (cons
 Item6 = GREATBALL,1,B,Cuadrante E · en una playa de arena oscura,Suministro de ruta (consumible común).
 Item7 = KASIBBERRY,1,H,Cuadrante O · tras una roca retorcida,
 Item8 = MARANGABERRY,1,H,Cuadrante NO · junto al altar,
+Item9 = COVERTCLOAK,1,E,Isla Pesadilla · Sidequest «La capa de las pesadillas»,Recompensa final de la sidequest local «La capa de las pesadillas» (M_ISLA_PESADILLA = 99). Ejemplar único (Tier 1): no se repone.
 
-# Isla Sueño - 11 filas
+# Isla Sueño - 12 filas
 [ISLA_OPALINA]
 Item1 = TM35,1,H,Mirador florido (primera visita),Ayuda previa al Gimnasio 4 (Lucha): Beso Drenaje (Hada) golpea a Lucha y cura.
 Item2 = TM100,1,E,Altar lunar tras calmar a Cresselia,Deseo: regalo de Cresselia.
@@ -457,6 +462,7 @@ Item8 = MOONBALL,1,B,Cuadrante E · en el mirador de la isla,
 Item9 = KEEBERRY,1,H,Cuadrante E · entre las flores del sendero,
 Item10 = ROSELIBERRY,1,B,Cuadrante E · en una playa de arena oscura,
 Item11 = FAIRYFEATHER,1,B,Cuadrante S · tras una roca retorcida,
+Item12 = ABILITYCAPSULE,1,E,Isla Sueño · Sidequest «El jardín de los sueños»,Recompensa final de la sidequest local «El jardín de los sueños» (M_ISLA_SUENO = 99).
 
 # Ruta 1 - 4 filas
 [RUTA_01]
@@ -610,28 +616,27 @@ Item19 = WIKIBERRY,1,B,Cuadrante O · junto al borde del camino,
 Item20 = RINDOBERRY,1,B,Cuadrante N · tras un arbusto aislado,
 Item21 = WHIPPEDDREAM,1,B,Cuadrante SE · al pie de un poste indicador,Objeto de evolución (Swirlix → Slurpuff): se usa sobre el Pokémon como una piedra.
 
-# Ruta 16 - 20 filas
+# Ruta 16 - 19 filas
 [RUTA_16]
 Item1 = TM68,1,B,Paso nuboso · tras un tronco caído,Ayuda previa al Dominante Fantasma (Villa): Pulso Umbrío (80 PB, Siniestro).
 Item2 = TM69,1,B,Claro musgoso,Alarido (55 PB): conversación con Zenobia.
-Item3 = WEAKNESSPOLICY,1,B,Paso nuboso · tras el tronco caído grande,Seguro Debilidad (Acto III).
-Item4 = AMULETCOIN,1,H,Cuadrante O · al pie de un poste indicador,
-Item5 = QUICKCLAW,1,B,Cuadrante S · junto al borde del camino,
-Item6 = STARFBERRY,1,H,Cuadrante N · entre las flores del margen,
-Item7 = THROATSPRAY,1,B,Cuadrante E · en un claro de hierba alta,
-Item8 = MODESTMINT,1,H,Cuadrante SO · junto al borde del camino,
-Item9 = SERIOUSMINT,1,B,Centro · sobre un tocón viejo,
-Item10 = MENTALHERB,1,B,Cuadrante NO · al pie de un poste indicador,
-Item11 = POWERBRACER,1,H,Cuadrante O · en un claro de hierba alta,
-Item12 = SPELLTAG,1,H,Cuadrante NE · sobre un tocón viejo,
-Item13 = REVIVE,1,B,Cuadrante O · junto a una roca plana,Suministro de ruta (consumible común).
-Item14 = ENERGYROOT,1,B,Cuadrante E · al pie de un poste indicador,
-Item15 = CARBOS,1,B,Cuadrante S · entre las flores del margen,
-Item16 = REPEATBALL,1,B,Cuadrante O · entre las flores del margen,
-Item17 = LEVELBALL,1,B,Cuadrante SO · tras un arbusto aislado,
-Item18 = LEPPABERRY,1,B,Centro · junto al borde del camino,
-Item19 = PAYAPABERRY,1,H,Cuadrante N · junto a una roca plana,
-Item20 = MARANGABERRY,1,B,Cuadrante E · tras un arbusto aislado,
+Item3 = AMULETCOIN,1,H,Cuadrante O · al pie de un poste indicador,
+Item4 = QUICKCLAW,1,B,Cuadrante S · junto al borde del camino,
+Item5 = STARFBERRY,1,H,Cuadrante N · entre las flores del margen,
+Item6 = THROATSPRAY,1,B,Cuadrante E · en un claro de hierba alta,
+Item7 = MODESTMINT,1,H,Cuadrante SO · junto al borde del camino,
+Item8 = SERIOUSMINT,1,B,Centro · sobre un tocón viejo,
+Item9 = MENTALHERB,1,B,Cuadrante NO · al pie de un poste indicador,
+Item10 = POWERBRACER,1,H,Cuadrante O · en un claro de hierba alta,
+Item11 = SPELLTAG,1,H,Cuadrante NE · sobre un tocón viejo,
+Item12 = REVIVE,1,B,Cuadrante O · junto a una roca plana,Suministro de ruta (consumible común).
+Item13 = ENERGYROOT,1,B,Cuadrante E · al pie de un poste indicador,
+Item14 = CARBOS,1,B,Cuadrante S · entre las flores del margen,
+Item15 = REPEATBALL,1,B,Cuadrante O · entre las flores del margen,
+Item16 = LEVELBALL,1,B,Cuadrante SO · tras un arbusto aislado,
+Item17 = LEPPABERRY,1,B,Centro · junto al borde del camino,
+Item18 = PAYAPABERRY,1,H,Cuadrante N · junto a una roca plana,
+Item19 = MARANGABERRY,1,B,Cuadrante E · tras un arbusto aislado,
 
 # Granja Apato - 8 filas
 [GRANJA_APATITA]
@@ -667,14 +672,14 @@ Item7 = SHUCABERRY,1,H,Cuadrante SE · en el barranco · junto al matorral seco,
 
 # Senda Serpentina - 8 filas
 [SENDA_SERPENTINA]
-Item1 = EVIOLITE,1,H,Bajo el puente de raíces · entre los helechos,Mineral Evol: oculto en el sendero (Acto II).
-Item2 = WIDELENS,1,B,Cuadrante SE · bajo el puente de raíces,
-Item3 = REPEL,1,B,Cuadrante SE · entre los helechos del sendero,Suministro de ruta (consumible común).
-Item4 = SUPERREPEL,2,B,Centro · entre los helechos del sendero,Suministro de ruta (consumible común).
-Item5 = SILVERPOWDER,1,H,Cuadrante NE · bajo el puente de raíces,
-Item6 = REVIVE,1,B,Cuadrante NE · en la bifurcación del camino,Suministro de ruta (consumible común).
-Item7 = HEALPOWDER,1,B,Cuadrante SO · al pie de un tronco caído,
-Item8 = TANGABERRY,1,B,Cuadrante E · junto al arroyuelo,
+Item1 = WIDELENS,1,B,Cuadrante SE · bajo el puente de raíces,
+Item2 = REPEL,1,B,Cuadrante SE · entre los helechos del sendero,Suministro de ruta (consumible común).
+Item3 = SUPERREPEL,2,B,Centro · entre los helechos del sendero,Suministro de ruta (consumible común).
+Item4 = SILVERPOWDER,1,H,Cuadrante NE · bajo el puente de raíces,
+Item5 = REVIVE,1,B,Cuadrante NE · en la bifurcación del camino,Suministro de ruta (consumible común).
+Item6 = HEALPOWDER,1,B,Cuadrante SO · al pie de un tronco caído,
+Item7 = TANGABERRY,1,B,Cuadrante E · junto al arroyuelo,
+Item8 = EVIOLITE,1,E,Senda Serpentina · Sidequest «El helecho milenario»,Recompensa final de la sidequest local «El helecho milenario» (M_SENDA_SERPENTINA = 99). Ejemplar único (Tier 1): no se repone.
 
 # Puente Dolomar - 8 filas
 [PUENTE_DOLOMITA]
@@ -687,7 +692,7 @@ Item6 = ANTIDOTE,1,B,Cuadrante NO · en el pilar central,Suministro de ruta (con
 Item7 = ETHER,1,B,Cuadrante NE · bajo el arco · en la orilla,Suministro de ruta (consumible común).
 Item8 = ASPEARBERRY,1,B,Cuadrante E · bajo el arco · en la orilla,
 
-# Acantilados Rodal - 13 filas
+# Acantilados Rodal - 14 filas
 [ACANTILADOS_RODONITA]
 Item1 = TM56,1,B,Saliente rosado · junto al abismo,Cabezazo Zen (90 PB).
 Item2 = TM58,1,H,Grieta del acantilado · tras el mojón,Psicocarga (85 PB, Psíquico): potencia del Acto III.
@@ -702,6 +707,7 @@ Item10 = HYPERPOTION,1,B,Cuadrante O · en el saliente rosado,Suministro de ruta
 Item11 = ULTRABALL,1,B,Cuadrante NE · en una grieta del acantilado,Suministro de ruta (consumible común).
 Item12 = QUICKBALL,1,B,Cuadrante SE · en una grieta del acantilado,
 Item13 = COBABERRY,1,H,Cuadrante O · en la cornisa baja,
+Item14 = EXPERTBELT,1,E,Acantilados Rodal · Sidequest «La escalada del cuervo»,Recompensa final de la sidequest local «La escalada del cuervo» (M_ACANTILADOS_RODAL = 99).
 
 # Reserva Peridoto - 12 filas
 [RESERVA_PERIDOTO]
@@ -722,18 +728,18 @@ Item12 = WHIPPEDDREAM,1,H,Cuadrante O · tras el arbolado de peridoto,Objeto de 
 [CALZADA_CORINDON]
 Item1 = TM83,1,B,Puente colgante de la Calzada,Esfera Aural (85 PB, Lucha).
 Item2 = TM84,1,B,Túnel de cristales,Onda Certera (120 PB, Lucha).
-Item3 = CHOICESCARF,1,N,Mirador de los rivales · veterano de la Calzada,Pañuelo Elegido: premio del veterano si se le gana (postgame cercano).
-Item4 = EJECTBUTTON,1,B,Cuadrante O · en el mirador de los rivales,
-Item5 = SACREDASH,1,B,Cuadrante NO · junto a la baliza de cristal,
-Item6 = PPMAX,1,H,Cuadrante NE · junto a la baliza de cristal,
-Item7 = APICOTBERRY,1,B,Cuadrante E · sobre un pilar de corindón,
-Item8 = PUNCHINGGLOVE,1,H,Cuadrante S · junto a la baliza de cristal,
-Item9 = BRAVEMINT,1,B,Cuadrante SO · en el mirador de los rivales,
-Item10 = BLACKBELT,1,H,Cuadrante NO · en el túnel de cristales,
-Item11 = PROTECTOR,1,H,Cuadrante NO · en el mirador de los rivales,Objeto de evolución (Rhydon → Rhyperior): se usa sobre el Pokémon como una piedra.
-Item12 = MAXPOTION,1,B,Cuadrante SE · en el mirador de los rivales,Suministro de ruta (consumible común).
-Item13 = MAXETHER,1,B,Cuadrante NE · sobre un pilar de corindón,Suministro de ruta (consumible común).
-Item14 = CHOPLEBERRY,1,H,Cuadrante N · sobre un pilar de corindón,
+Item3 = EJECTBUTTON,1,B,Cuadrante O · en el mirador de los rivales,
+Item4 = SACREDASH,1,B,Cuadrante NO · junto a la baliza de cristal,
+Item5 = PPMAX,1,H,Cuadrante NE · junto a la baliza de cristal,
+Item6 = APICOTBERRY,1,B,Cuadrante E · sobre un pilar de corindón,
+Item7 = PUNCHINGGLOVE,1,H,Cuadrante S · junto a la baliza de cristal,
+Item8 = BRAVEMINT,1,B,Cuadrante SO · en el mirador de los rivales,
+Item9 = BLACKBELT,1,H,Cuadrante NO · en el túnel de cristales,
+Item10 = PROTECTOR,1,H,Cuadrante NO · en el mirador de los rivales,Objeto de evolución (Rhydon → Rhyperior): se usa sobre el Pokémon como una piedra.
+Item11 = MAXPOTION,1,B,Cuadrante SE · en el mirador de los rivales,Suministro de ruta (consumible común).
+Item12 = MAXETHER,1,B,Cuadrante NE · sobre un pilar de corindón,Suministro de ruta (consumible común).
+Item13 = CHOPLEBERRY,1,H,Cuadrante N · sobre un pilar de corindón,
+Item14 = CHOICESCARF,1,E,Calzada Corindal · Sidequest «El mirador de los veteranos»,Recompensa final de la sidequest local «El mirador de los veteranos» (M_CALZADA_CORINDAL = 99). Ejemplar único (Tier 1): no se repone.
 
 # Ruta 3 - 9 filas
 [RUTA_03]
@@ -766,26 +772,25 @@ Item14 = TIMERBALL,1,B,Centro · junto a una vía de mina,
 Item15 = FIGYBERRY,1,B,Cuadrante NE · en una cámara con cristales,
 Item16 = CHARTIBERRY,1,B,Cuadrante O · tras una columna de piedra,
 
-# Ruta 20 - 18 filas
+# Ruta 20 - 17 filas
 [RUTA_20]
 Item1 = TM43,1,B,Cueva de cristales · nivel superior,Rayo (90 PB): cueva de cristales.
 Item2 = TM87,1,B,Cueva de cristales · galería profunda,Ayuda previa al Gimnasio 8 (Fuego): Terremoto (100 PB, Tierra).
-Item3 = CHOICEBAND,1,H,Cámara secreta tras la pared de cristales,Cinta Elegida (Acto IV).
-Item4 = ARMORFOSSIL,1,H,Cuadrante S · sobre una repisa de roca,
-Item5 = SMOOTHROCK,1,B,Cuadrante S · en el puente de cuerda,
-Item6 = JABOCABERRY,1,H,Cuadrante NO · en el puente de cuerda,
-Item7 = ROOMSERVICE,1,H,Cuadrante O · junto a una vía de mina,
-Item8 = ADAMANTMINT,1,B,Cuadrante SE · en el puente de cuerda,
-Item9 = IRONBALL,1,B,Cuadrante E · sobre una repisa de roca,
-Item10 = DRAGONFANG,1,H,Centro · tras un derrumbe parcial,
-Item11 = PROTECTOR,1,B,Cuadrante S · tras un derrumbe parcial,Objeto de evolución (Rhydon → Rhyperior): se usa sobre el Pokémon como una piedra.
-Item12 = MAXETHER,1,H,Cuadrante SO · en una cámara con cristales,Suministro de ruta (consumible común).
-Item13 = ELIXIR,1,B,Cuadrante NE · sobre una repisa de roca,Suministro de ruta (consumible común).
-Item14 = CALCIUM,1,H,Cuadrante S · tras una columna de piedra,
-Item15 = RARECANDY,1,H,Cuadrante E · junto a una vía de mina,
-Item16 = FASTBALL,1,B,Cuadrante SO · sobre una repisa de roca,
-Item17 = LUMBERRY,1,H,Cuadrante NO · tras una columna de piedra,
-Item18 = HABANBERRY,1,B,Cuadrante N · junto a una vía de mina,
+Item3 = ARMORFOSSIL,1,H,Cuadrante S · sobre una repisa de roca,
+Item4 = SMOOTHROCK,1,B,Cuadrante S · en el puente de cuerda,
+Item5 = JABOCABERRY,1,H,Cuadrante NO · en el puente de cuerda,
+Item6 = ROOMSERVICE,1,H,Cuadrante O · junto a una vía de mina,
+Item7 = ADAMANTMINT,1,B,Cuadrante SE · en el puente de cuerda,
+Item8 = IRONBALL,1,B,Cuadrante E · sobre una repisa de roca,
+Item9 = DRAGONFANG,1,H,Centro · tras un derrumbe parcial,
+Item10 = PROTECTOR,1,B,Cuadrante S · tras un derrumbe parcial,Objeto de evolución (Rhydon → Rhyperior): se usa sobre el Pokémon como una piedra.
+Item11 = MAXETHER,1,H,Cuadrante SO · en una cámara con cristales,Suministro de ruta (consumible común).
+Item12 = ELIXIR,1,B,Cuadrante NE · sobre una repisa de roca,Suministro de ruta (consumible común).
+Item13 = CALCIUM,1,H,Cuadrante S · tras una columna de piedra,
+Item14 = RARECANDY,1,H,Cuadrante E · junto a una vía de mina,
+Item15 = FASTBALL,1,B,Cuadrante SO · sobre una repisa de roca,
+Item16 = LUMBERRY,1,H,Cuadrante NO · tras una columna de piedra,
+Item17 = HABANBERRY,1,B,Cuadrante N · junto a una vía de mina,
 
 # Ruta 21 - 16 filas
 [RUTA_21]
