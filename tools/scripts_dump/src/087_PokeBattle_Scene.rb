@@ -405,7 +405,7 @@ class FightMenuButtons < BitmapSprite
       y=((i/2)==0) ? 6 : 48
       y+=UPPERGAP
       self.bitmap.blt(x,y,@buttonbitmap.bitmap,Rect.new(0,moves[i].type*46,192,46))
-      textpos.push([_INTL("{1}",moves[i].name),x+96,y+8,2,
+      textpos.push([_INTL("{1}",moves[i].name),x+96,y+10,2,
          PokeBattle_SceneConstants::MENUBASECOLOR,PokeBattle_SceneConstants::MENUSHADOWCOLOR])
     end
     ppcolors=[
@@ -423,7 +423,7 @@ class FightMenuButtons < BitmapSprite
       y+=UPPERGAP
       self.bitmap.blt(x,y,@buttonbitmap.bitmap,Rect.new(192,moves[i].type*46,192,46))
       self.bitmap.blt(416,8+UPPERGAP,@typebitmap.bitmap,Rect.new(0,moves[i].type*28,64,28))
-      textpos.push([_INTL("{1}",moves[i].name),x+96,y+8,2,
+      textpos.push([_INTL("{1}",moves[i].name),x+96,y+10,2,
          PokeBattle_SceneConstants::MENUBASECOLOR,PokeBattle_SceneConstants::MENUSHADOWCOLOR])
       if moves[i].totalpp>0
         ppfraction=(4.0*moves[i].pp/moves[i].totalpp).ceil

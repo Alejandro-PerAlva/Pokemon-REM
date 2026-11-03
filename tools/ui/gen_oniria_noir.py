@@ -69,7 +69,11 @@ def databox(name, side, kind):
         for x in xs: o[x, y] = BODY
         o[e, y] = SILVER                                   # canto oblicuo afilado
         if y == T:
-            for x in xs: o[x, y] = SILVER
+            for x in xs:
+                k = 1.0 if side == "foe" and x > 120 or side == "player" and x < 140 else max(0.35, 1 - abs(x - (e)) / 260.0)
+                o[x, y] = SILVER[:3] + (int(255 * min(1.0, max(0.35, k))),)       # reflejo que se desvanece
+        if y == T + 1:
+            for x in xs: o[x, y] = lerp(BODY, (255, 255, 255, 255), 0.07)       # brillo suave bajo el canto
         if y == B:
             for x in xs: o[x, y] = STEEL
     if side == "player" and kind == "S":                    # tab de EXP
@@ -84,6 +88,7 @@ def databox(name, side, kind):
         for x in rng: o[x, y] = BEVEL if STRIPE_Y0 <= y <= STRIPE_Y1 else STEEL
         xi = (e - STRIPE_W - 1) if side == "foe" else (e + STRIPE_W + 1)
         o[xi, y] = STEEL
+        o[xi + (-1 if side == "foe" else 1), y] = BEVEL    # aro oscuro del engaste de la gema
     # etiqueta PS y pista del medidor
     lx, ly = bx + 74, 36
     for dx, dy in label_pixels(): o[lx + dx, ly + dy] = hexc("F8B000")
@@ -91,6 +96,10 @@ def databox(name, side, kind):
     for y in range(y0, y1 + 1):
         for x in range(x0, x1 + 1):
             o[x, y] = STEEL if x in (x0, x1) or y in (y0, y1) else hexc("07080B")
+    for x in range(x0 - 1, x1 + 2):                          # engaste: aro oscuro, labio inferior claro, sombra interior
+        o[x, y0 - 1] = BEVEL; o[x, y1 + 1] = lerp(BEVEL, SILVER, 0.35)
+    for y in range(y0, y1 + 2): o[x0 - 1, y] = BEVEL; o[x1 + 1, y] = lerp(BEVEL, SILVER, 0.2)
+    for x in range(x0 + 1, x1): o[x, y0 + 1] = hexc("000000")
     if side == "player" and kind == "S":                    # pista de EXP
         for y in range(74, 82):
             for x in range(38, 236):
@@ -178,7 +187,10 @@ def rrect_and_shrink(mask, n, r):
 
 def label(im, text, x0, w, h, size=27):
     f = ImageFont.truetype(FONT, size); d = ImageDraw.Draw(im)
-    tw = d.textlength(text, font=f); tx = x0 + (w - tw) / 2; ty = (h - size) / 2 - 2
+    hb = d.textbbox((0, 0), "H", font=f); tb = d.textbbox((0, 0), text, font=f)
+    tx = x0 + (w - (tb[2] - tb[0])) / 2 - tb[0]
+    ty = (h - (hb[3] - hb[1])) / 2 - hb[1]                # centro vertical según altura de mayúscula
+    tx, ty = int(round(tx)), int(round(ty))
     for dx, dy in ((1, 1), (0, 1), (1, 0), (-1, 0), (0, -1), (-1, -1), (1, -1), (-1, 1)):
         d.text((tx+dx, ty+dy), text, font=f, fill=BEVEL)
     d.text((tx, ty), text, font=f, fill=(255, 255, 255, 255))
@@ -204,12 +216,14 @@ def make_fight_buttons():
 
 # ------------------------------------------------------------------ tarjeta de info
 def make_move_info():
-    w, h = 320, 140
+    w, h = 320, 132
     im = Image.new("RGBA", (w, h), (0, 0, 0, 0)); d = ImageDraw.Draw(im)
-    d.rounded_rectangle((0, 0, w-1, h-1), radius=10, fill=SILVER)                     # borde platino
-    d.rounded_rectangle((1, 1, w-2, h-2), radius=9, fill=BEVEL)                       # bisel interior
+    d.rounded_rectangle((0, 0, w-1, h-1), radius=10, fill=SILVER)
+    d.rounded_rectangle((1, 1, w-2, h-2), radius=9, fill=BEVEL)
     d.rounded_rectangle((2, 2, w-3, h-3), radius=8, fill=(16, 18, 26, 240))
-    d.line([(10, 33), (w-11, 33)], fill=hexc("3A404D")); d.line([(10, 34), (w-11, 34)], fill=BEVEL)  # separador
+    ln = hexc("3A404D")
+    for y in (28, 65): d.line([(10, y), (w-11, y)], fill=ln); d.line([(10, y+1), (w-11, y+1)], fill=BEVEL)
+    for x in (80, 160, 240): d.line([(x, 33), (x, 61)], fill=ln)       # columnas de la tabla de stats
     save(im, "battleMoveInfo")
 
 if __name__ == "__main__":
