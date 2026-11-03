@@ -126,7 +126,7 @@ end
 
 class PokeSelectionCancelSprite < PokeSelectionConfirmCancelSprite
   def initialize(viewport=nil)
-    super(_INTL("SALIR"),398,328,false,viewport)
+    super(_INTL("SALIR"),392,328,false,viewport)
   end
 end
 
@@ -134,7 +134,7 @@ end
 
 class PokeSelectionConfirmSprite < PokeSelectionConfirmCancelSprite
   def initialize(viewport=nil)
-    super(_INTL("CONFIRMAR"),398,308,true,viewport)
+    super(_INTL("CONFIRMAR"),392,308,true,viewport)
   end
 end
 
@@ -142,7 +142,7 @@ end
 
 class PokeSelectionCancelSprite2 < PokeSelectionConfirmCancelSprite
   def initialize(viewport=nil)
-    super(_INTL("SALIR"),398,346,true,viewport)
+    super(_INTL("SALIR"),392,346,true,viewport)
   end
 end
 
@@ -517,7 +517,7 @@ class PokemonScreen_Scene
     @sprites["messagebox"].letterbyletter=true
     @sprites["helpwindow"].viewport=@viewport
     @sprites["helpwindow"].visible=true
-    REM_UI.partyMessageFrame(@sprites,@viewport)
+    REM_UI.partyMessageFrame(@sprites,@viewport,@multiselect)
     pbBottomLeftLines(@sprites["messagebox"],2)
     pbBottomLeftLines(@sprites["helpwindow"],1)
     pbSetHelpText(starthelptext)

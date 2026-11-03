@@ -72,15 +72,17 @@ def blank():
     out.paste((12, 14, 18, 110), (0, 0), shrink("Rect", 1))
     return out
 
-def message_bar():
-    """512x77: barra inferior compacta (obsidiana, borde plata de 1 px, bisel oscuro, reflejo superior)."""
-    W, H = 512, 77
-    im = Image.new("RGBA", (W, H), G.hexc("14161D")); d = ImageDraw.Draw(im)
-    for y in range(H): d.line([(0, y), (W, y)], fill=lerp(hexc("1A1D26"), hexc("14161D"), y / (H - 1)))
-    d.rectangle((0, 0, W - 1, H - 1), outline=SILVER)
-    d.rectangle((1, 1, W - 2, H - 2), outline=BEVEL)
-    d.line([(2, 2), (W - 3, 2)], fill=(255, 255, 255, 40))
-    save(im, "partyMessage")
+def message_bar(H, name):
+    """512xH: pie de pantalla esbelto. Borde plata 1 px, bisel grafito #1B1E28, base obsidiana #14161D, esquinas suaves."""
+    W = 512; S = 4
+    big = Image.new("RGBA", (W * S, H * S), (0, 0, 0, 0)); d = ImageDraw.Draw(big)
+    def rr(inset, col):
+        d.rounded_rectangle((inset * S, inset * S, (W - inset) * S - 1, (H - inset) * S - 1), radius=max(5 - inset, 1) * S, fill=col)
+    rr(0, hexc("D6DBE4")); rr(1, hexc("1B1E28")); rr(3, hexc("14161D"))
+    im = big.resize((W, H), Image.LANCZOS); px = im.load()
+    for x in range(8, W - 8):                              # reflejo superior y sombra inferior del bisel
+        px[x, 2] = lerp(px[x, 2], (255, 255, 255, 255), 0.07); px[x, H - 3] = lerp(px[x, H - 3], hexc("0D0E12"), 0.7)
+    save(im, name)
 
 def background():
     W, H = 512, 384
@@ -149,7 +151,7 @@ def selarrow():
     save(im, "rem_selarrow")
 
 if __name__ == "__main__":
-    background(); message_bar()
+    background(); message_bar(64, "partyMessage"); message_bar(79, "partyMessageTall")
     for kind in ("Round", "Rect"):
         for st in STATES: save(panel(kind, st), "partyPanel" + kind + st)
     save(blank(), "partyPanelBlank")

@@ -511,9 +511,12 @@ module REM_UI
   end
 
   # Barra de mensajes inferior compacta (partyMessage.png, 512x77); las ventanas quedan transparentes con texto claro.
-  def self.partyMessageFrame(sprites,viewport)
-    bg=IconSprite.new(0,Graphics.height-77,viewport)   # borde superior 3 px bajo el último panel (y=304)
-    bg.setBitmap("Graphics/Pictures/partyMessage")
+  def self.partyMessageFrame(sprites,viewport,multi=false)
+    # Normal: 64 px (y=320), 8 px de aire sobre y bajo el botón SALIR (y=328..376) y 8 px a su derecha.
+    # Con CONFIRMAR (selección múltiple) hace falta la versión alta (y=305).
+    h=multi ? 79 : 64
+    bg=IconSprite.new(0,Graphics.height-h,viewport)
+    bg.setBitmap(multi ? "Graphics/Pictures/partyMessageTall" : "Graphics/Pictures/partyMessage")
     bg.z=0   # creado antes que paneles y botón: queda por debajo de ambos
     sprites["msgbg"]=bg
     for k in ["messagebox","helpwindow"]
