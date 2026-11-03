@@ -165,6 +165,11 @@ module PokeBattle_SceneConstants
   }
 end
 
+module PokeBattle_SceneConstants
+  remove_const(:EXPGAUGESIZE) if const_defined?(:EXPGAUGESIZE)
+  EXPGAUGESIZE=204   # la barra de EXP llega hasta el borde derecho visible de la pantalla
+end
+
 module REM_UI
   STRIPE_W=5; STRIPE_Y0=9; STRIPE_Y1=47
   TYPE_RGB=[[168,167,122],[194,46,40],[169,143,243],[163,62,161],[226,191,101],[182,161,54],
@@ -259,13 +264,13 @@ class PokemonDataBox
     end
     pbDrawTextPositions(self.bitmap,textpos)
     pbSetNarrowFont(self.bitmap)
-    self.bitmap.font.size=namesize   # nivel con el mismo tamaño que el nombre
-    textpos=[[_INTL("Nv{1}",@battler.level),bx+196,8,true,base,shadow]]
+    self.bitmap.font.size=namesize   # nivel con el mismo tamaño y línea base que el nombre
+    pbDrawTextPositions(self.bitmap,[[_INTL("Nv{1}",@battler.level),bx+196,8,true,base,shadow]])
     if @showhp
-      self.bitmap.font.size=20
-      textpos.push([_ISPRINTF("{1: 2d}/{2: 2d}",self.hp,@battler.totalhp),bx+196,47,true,base,shadow])
+      pbSetNarrowFont(self.bitmap)
+      self.bitmap.font.size=24
+      pbDrawTextPositions(self.bitmap,[[_ISPRINTF("{1: 2d}/{2: 2d}",self.hp,@battler.totalhp),bx+196,49,true,base,shadow]])
     end
-    pbDrawTextPositions(self.bitmap,textpos)
     imagepos=[]
     if @battler.isShiny?
       imagepos.push(["Graphics/Pictures/shiny.png",bx+(foe ? 200 : -6),(foe ? 22 : 36),0,0,-1,-1])
@@ -280,7 +285,7 @@ class PokemonDataBox
       end
     end
     if @battler.owned && foe
-      imagepos.push(["Graphics/Pictures/battleBoxOwned.png",bx+16+namew+(@battler.displayGender<2 ? 14 : 0),15,0,0,-1,-1])
+      imagepos.push(["Graphics/Pictures/battleBoxOwned.png",bx+74,28,0,0,-1,-1])
     end
     pbDrawImagePositions(self.bitmap,imagepos)
     if @battler.status>0
@@ -304,7 +309,7 @@ class PokemonDataBox
     self.bitmap.fill_rect(bx+hpGaugeX,hpGaugeY+2,hpgauge,4,hpcolors[hpzone*2+1])
     if @showexp
       expGaugeX=PokeBattle_SceneConstants::EXPGAUGE_X
-      expGaugeY=70   # barra acoplada al fondo de la caja (pista dibujada en el PNG)
+      expGaugeY=74   # barra exterior acoplada bajo la caja (pista dibujada en el PNG)
       self.bitmap.fill_rect(bx+expGaugeX,expGaugeY,self.exp,2,PokeBattle_SceneConstants::EXPCOLORSHADOW)
       self.bitmap.fill_rect(bx+expGaugeX,expGaugeY+2,self.exp,2,PokeBattle_SceneConstants::EXPCOLORBASE)
     end

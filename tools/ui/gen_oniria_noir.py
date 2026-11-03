@@ -60,7 +60,7 @@ def databox(name, side, kind):
     """kind: 'S' (jugador con tab de EXP), 'D' o 'F' (rival)."""
     W, H = 260, (86 if (side == "player" and kind == "S") else 62)
     out = Image.new("RGBA", (W, H), (0, 0, 0, 0)); o = out.load()
-    T, B = 6, (76 if (side == "player" and kind == "S") else 56)
+    T, B = 6, (71 if (side == "player" and kind == "S") else 56)
     bx = 16 if side == "foe" else 34
     def edge(y):
         return 236 + int((y - T) * 0.25) if side == "foe" else 28 - int((y - T) * (0.25 if B > 60 else 0.3))
@@ -96,9 +96,9 @@ def databox(name, side, kind):
     for y in range(y0, y1 + 2): o[x0 - 1, y] = BEVEL; o[x1 + 1, y] = lerp(BEVEL, SILVER, 0.2)
     for x in range(x0 + 1, x1): o[x, y0 + 1] = hexc("000000")
     if side == "player" and kind == "S":                    # pista de EXP
-        for y in range(68, 76):                                # barra de EXP acoplada al fondo de la caja
-            for x in range(38, 236):
-                o[x, y] = STEEL if x in (38, 235) or y in (68, 75) else hexc("07080B")
+        for y in range(72, 80):                                # barra de EXP exterior, acoplada bajo la caja y hasta el borde derecho
+            for x in range(38, W):
+                o[x, y] = STEEL if x == 38 or y in (72, 79) else hexc("07080B")
     save(out, name)
 
 def safari_retone():
@@ -160,7 +160,21 @@ def make_statuses():
     save(sheet, "battleStatuses")
 
 def make_owned():
-    im = src("battleBoxOwned").resize((10, 10), Image.LANCZOS); save(im, "battleBoxOwned")
+    """Poké Ball 8x8 en pixel art: arriba roja, banda negra central con botón blanco, abajo blanca."""
+    grid = ["..oooo..",
+            ".orRrro.",
+            "orrrrrro",
+            "obbwwbbo",
+            "obbwwbbo",
+            "owwwwwwo",
+            ".owwwwo.",
+            "..oooo.."]
+    pal = {"o": hexc("56606F"), "r": hexc("E2323C"), "R": hexc("FF8A8A"), "b": hexc("0D0E12"), "w": hexc("F0F3F8")}
+    im = Image.new("RGBA", (8, 8), (0, 0, 0, 0)); px = im.load()
+    for y, row in enumerate(grid):
+        for x, c in enumerate(row):
+            if c in pal: px[x, y] = pal[c]
+    save(im, "battleBoxOwned")
 
 CAT_COL = ["F0592A", "7B61D6", "8A94A6"]          # físico, especial, estado
 
