@@ -33,7 +33,10 @@ def src(name):
     return Image.open(o).convert("RGBA")
 
 def save(im, name):
-    im.save(os.path.join(PIC, name + ".png"))
+    path = os.path.join(PIC, name + ".png")
+    if not os.path.exists(path) and os.path.exists(os.path.join(PIC, name + ".PNG")):
+        path = os.path.join(PIC, name + ".PNG")          # conserva la extensión original (.PNG)
+    im.save(path, format="PNG")
     print("ok", name, im.size)
 
 def lerp(a, b, t):

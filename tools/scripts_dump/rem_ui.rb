@@ -483,3 +483,51 @@ class PokeBattle_Scene
     end
   end
 end
+
+#===============================================================================
+# PANTALLA DE EQUIPO "Oniria Noir": franja de tipo en cada panel, marco oscuro de mensajes y menú.
+# Los PNG los genera tools/ui/gen_party_noir.py (ranura de la franja: x=245..249, filas 15..88).
+#===============================================================================
+module REM_UI
+  PARTY_STRIPE_X=245; PARTY_STRIPE_Y0=15; PARTY_STRIPE_Y1=88
+
+  def self.drawPartyStripe(bmp,types)
+    types=types.select{|t| t && t>=0}.uniq
+    return if types.length==0
+    mid=(PARTY_STRIPE_Y0+PARTY_STRIPE_Y1)/2
+    for y in PARTY_STRIPE_Y0..PARTY_STRIPE_Y1
+      if types.length==1 || y<mid
+        c=typeColor(types[0])
+      elsif y==mid
+        c=INK
+      else
+        c=typeColor(types[1])
+      end
+      bmp.fill_rect(PARTY_STRIPE_X,y,STRIPE_W,1,c)
+      if c!=INK
+        bmp.fill_rect(PARTY_STRIPE_X+STRIPE_W-1,y,1,1,Color.new((c.red+255)/2,(c.green+255)/2,(c.blue+255)/2))
+      end
+    end
+  end
+
+  # Barra de mensajes inferior con el marco de battleMessage.png; las ventanas quedan transparentes con texto claro.
+  def self.partyMessageFrame(sprites,viewport)
+    bg=IconSprite.new(0,Graphics.height-96,viewport)
+    bg.setBitmap("Graphics/Pictures/battleMessage")
+    bg.z=1
+    sprites["msgbg"]=bg
+    for k in ["messagebox","helpwindow"]
+      sprites[k].opacity=0
+      sprites[k].baseColor=Color.new(255,255,255)
+      sprites[k].shadowColor=INK
+    end
+  end
+
+  # Menú contextual (Cambiar, Datos, Objeto, Salir) con marco obsidiana y cursor claro.
+  def self.partyCmdWindow(w)
+    w.setSkin("Graphics/Windowskins/rem_noir_choice")
+    w.instance_variable_set(:@selarrow,AnimatedBitmap.new("Graphics/Pictures/rem_selarrow"))
+    w.baseColor=Color.new(255,255,255)
+    w.shadowColor=INK
+  end
+end

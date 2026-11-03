@@ -68,8 +68,9 @@ class PokeSelectionConfirmCancelSprite < SpriteWrapper
     @overlaysprite=BitmapSprite.new(@bgsprite.bitmap.width,@bgsprite.bitmap.height,viewport)
     @yoffset=8
     ynarrow=narrowbox ? -6 : 0
-    pbSetSystemFont(@overlaysprite.bitmap)
-    textpos=[[text,56,8+ynarrow,2,Color.new(248,248,248),Color.new(40,40,40)]]
+    pbSetNarrowFont(@overlaysprite.bitmap)   # REM_UI: fuente única de combate
+    @overlaysprite.bitmap.font.size=27
+    textpos=[[text,56,(narrowbox ? 6 : 12),2,Color.new(255,255,255),Color.new(13,14,18)]]
     pbDrawTextPositions(@overlaysprite.bitmap,textpos)
     @overlaysprite.z=self.z+1 # For compatibility with RGSS2
     self.x=x
@@ -217,23 +218,23 @@ class PokeSelectionSprite < SpriteWrapper
     @pokeballXOffset=10
     @pokeballYOffset=0
     @pokenameX=96
-    @pokenameY=16
+    @pokenameY=12
     @levelX=20
-    @levelY=62
-    @statusX=80
+    @levelY=66
+    @statusX=96
     @statusY=68
-    @genderX=224
-    @genderY=16
-    @hpX=224
-    @hpY=60
+    @genderX=228
+    @genderY=12
+    @hpX=236
+    @hpY=66
     @hpbarX=96
-    @hpbarY=50
+    @hpbarY=44
     @gaugeX=128
-    @gaugeY=52
+    @gaugeY=46
     @itemXOffset=62
     @itemYOffset=48
     @annotX=96
-    @annotY=58
+    @annotY=66
     xvalues=[0,256,0,256,0,256]
     yvalues=[0,16,96,112,192,208]
     @text=nil
@@ -381,16 +382,16 @@ class PokeSelectionSprite < SpriteWrapper
           self.bitmap.blt(0,0,@deselbitmap.bitmap,Rect.new(0,0,@deselbitmap.width,@deselbitmap.height))
         end
       end
-      base=Color.new(248,248,248)
-      shadow=Color.new(40,40,40)
-      pbSetSystemFont(self.bitmap)
+      base=Color.new(255,255,255)   # REM_UI: blanco con sombra oscura y fuente estrecha, como en combate
+      shadow=Color.new(13,14,18)
       pokename=@pokemon.name
-      textpos=[[pokename,@pokenameX,@pokenameY,0,base,shadow]]
+      pbSetNarrowFont(self.bitmap)
+      self.bitmap.font.size=26
+      self.bitmap.font.size-=1 while self.bitmap.font.size>18 && self.bitmap.text_size(pokename).width>122
+      pbDrawTextPositions(self.bitmap,[[pokename,@pokenameX,@pokenameY,0,base,shadow]])
       if !@pokemon.isEgg?
         if !@text || @text.length==0
           tothp=@pokemon.totalhp
-          textpos.push([_ISPRINTF("{1: 3d}/{2: 3d}",@pokemon.hp,tothp),
-             @hpX,@hpY,1,base,shadow])
           barbg=(@pokemon.hp<=0) ? @hpbarfnt : @hpbar
           barbg=(self.preselected || (self.selected && @switching)) ? @hpbarswap : barbg
           self.bitmap.blt(@hpbarX,@hpbarY,barbg.bitmap,Rect.new(0,0,@hpbar.width,@hpbar.height))
@@ -404,7 +405,6 @@ class PokeSelectionSprite < SpriteWrapper
              Color.new(232,168,0),Color.new(248,216,0),   # Orange
              Color.new(248,72,56),Color.new(248,152,152)  # Red
           ]
-          # fill with HP color
           self.bitmap.fill_rect(@gaugeX,@gaugeY,hpgauge,2,hpcolors[hpzone*2])
           self.bitmap.fill_rect(@gaugeX,@gaugeY+2,hpgauge,4,hpcolors[hpzone*2+1])
           self.bitmap.fill_rect(@gaugeX,@gaugeY+6,hpgauge,2,hpcolors[hpzone*2])
@@ -413,23 +413,26 @@ class PokeSelectionSprite < SpriteWrapper
             statusrect=Rect.new(0,16*status,44,16)
             self.bitmap.blt(@statusX,@statusY,@statuses.bitmap,statusrect)
           end
+          pbSetNarrowFont(self.bitmap)
+          self.bitmap.font.size=24
+          pbDrawTextPositions(self.bitmap,[[_ISPRINTF("{1: 3d}/{2: 3d}",@pokemon.hp,tothp),
+             @hpX,@hpY,1,base,shadow]])
         end
+        pbSetNarrowFont(self.bitmap)
+        self.bitmap.font.size=26
         if @pokemon.isMale?
-          textpos.push([_INTL("♂"),@genderX,@genderY,0,Color.new(0,112,248),Color.new(120,184,232)])
+          pbDrawTextPositions(self.bitmap,[[_INTL("♂"),@genderX,@genderY,0,Color.new(110,170,255),shadow]])
         elsif @pokemon.isFemale?
-          textpos.push([_INTL("♀"),@genderX,@genderY,0,Color.new(232,32,16),Color.new(248,168,184)])
+          pbDrawTextPositions(self.bitmap,[[_INTL("♀"),@genderX,@genderY,0,Color.new(255,120,160),shadow]])
         end
-      end
-      pbDrawTextPositions(self.bitmap,textpos)
-      if !@pokemon.isEgg?
-        pbSetSmallFont(self.bitmap)
-        leveltext=[([_INTL("Nv.{1}",@pokemon.level),@levelX,@levelY,0,base,shadow])]
-        pbDrawTextPositions(self.bitmap,leveltext)
+        self.bitmap.font.size=24
+        pbDrawTextPositions(self.bitmap,[[_INTL("Nv{1}",@pokemon.level),@levelX,@levelY,0,base,shadow]])
+        REM_UI.drawPartyStripe(self.bitmap,[@pokemon.type1,@pokemon.type2])
       end
       if @text && @text.length>0
-        pbSetSystemFont(self.bitmap)
-        annotation=[[@text,@annotX,@annotY,0,base,shadow]]
-        pbDrawTextPositions(self.bitmap,annotation)
+        pbSetNarrowFont(self.bitmap)
+        self.bitmap.font.size=24
+        pbDrawTextPositions(self.bitmap,[[@text,@annotX,@annotY,0,base,shadow]])
       end
     end
     @refreshing=false
@@ -455,6 +458,7 @@ class PokemonScreen_Scene
     helpwindow=@sprites["helpwindow"]
     helpwindow.visible=true
     using(cmdwindow=Window_CommandPokemon.new(commands)) {
+       REM_UI.partyCmdWindow(cmdwindow)
        cmdwindow.z=@viewport.z+1
        cmdwindow.index=index
        pbBottomRight(cmdwindow)
@@ -495,6 +499,11 @@ class PokemonScreen_Scene
   end
 
   def pbStartScene(party,starthelptext,annotations=nil,multiselect=false)
+    if !$remBattleFontSaved   # REM_UI: misma fuente que el combate
+      $remBattleFontSaved=MessageConfig.pbGetSystemFontName
+      @remFontOwner=true
+      MessageConfig.pbSetSystemFontName(pbNarrowFontName)
+    end
     @sprites={}
     @party=party
     @viewport=Viewport.new(0,0,Graphics.width,Graphics.height)
@@ -508,6 +517,7 @@ class PokemonScreen_Scene
     @sprites["messagebox"].letterbyletter=true
     @sprites["helpwindow"].viewport=@viewport
     @sprites["helpwindow"].visible=true
+    REM_UI.partyMessageFrame(@sprites,@viewport)
     pbBottomLeftLines(@sprites["messagebox"],2)
     pbBottomLeftLines(@sprites["helpwindow"],1)
     pbSetHelpText(starthelptext)
@@ -540,6 +550,11 @@ class PokemonScreen_Scene
     pbFadeOutAndHide(@sprites) { update }
     pbDisposeSpriteHash(@sprites)
     @viewport.dispose
+    if @remFontOwner
+      MessageConfig.pbSetSystemFontName($remBattleFontSaved)
+      $remBattleFontSaved=nil
+      @remFontOwner=false
+    end
   end
 
   def pbChangeSelection(key,currentsel)
