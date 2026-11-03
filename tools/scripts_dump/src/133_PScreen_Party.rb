@@ -4,7 +4,7 @@ class PokeSelectionPlaceholderSprite < SpriteWrapper
   def initialize(pokemon,index,viewport=nil)
     super(viewport)
     xvalues=[0,256,0,256,0,256]
-    yvalues=[0,16,96,112,192,208]
+    yvalues=[4,20,100,116,196,212]   # REM_UI: rejilla centrada (12 px arriba y 12 px sobre la barra)
     @pbitmap=AnimatedBitmap.new("Graphics/Pictures/partyPanelBlank")
     self.bitmap=@pbitmap.bitmap
     self.x=xvalues[index]
@@ -82,6 +82,12 @@ class PokeSelectionConfirmCancelSprite < SpriteWrapper
     @overlaysprite.dispose
     @bgsprite.dispose
     super
+  end
+
+  def visible=(value)
+    super
+    @bgsprite.visible=value if @bgsprite && !@bgsprite.disposed?
+    @overlaysprite.visible=value if @overlaysprite && !@overlaysprite.disposed?
   end
 
   def viewport=(value)
@@ -236,7 +242,7 @@ class PokeSelectionSprite < SpriteWrapper
     @annotX=96
     @annotY=66
     xvalues=[0,256,0,256,0,256]
-    yvalues=[0,16,96,112,192,208]
+    yvalues=[4,20,100,116,196,212]   # REM_UI: rejilla centrada (12 px arriba y 12 px sobre la barra)
     @text=nil
     @statuses=AnimatedBitmap.new(_INTL("Graphics/Pictures/statuses"))
     @hpbar=AnimatedBitmap.new("Graphics/Pictures/partyHP")
@@ -453,8 +459,15 @@ end
 
 
 class PokemonScreen_Scene
+  def pbRemButtons(show)
+    for k in ["pokemon6","pokemon7"]
+      @sprites[k].visible=show if @sprites[k]
+    end
+  end
+
   def pbShowCommands(helptext,commands,index=0)
     ret=-1
+    pbRemButtons(false)
     helpwindow=@sprites["helpwindow"]
     helpwindow.visible=true
     using(cmdwindow=Window_CommandPokemon.new(commands)) {
@@ -483,6 +496,7 @@ class PokemonScreen_Scene
          end
        end
     }
+    pbRemButtons(true)
     return ret
   end
 
@@ -518,7 +532,8 @@ class PokemonScreen_Scene
     @sprites["helpwindow"].viewport=@viewport
     @sprites["helpwindow"].visible=true
     REM_UI.partyMessageFrame(@sprites,@viewport,@multiselect)
-    pbBottomLeftLines(@sprites["messagebox"],2)
+    pbBottomLeftLines(@sprites["messagebox"],1)   # REM_UI: misma línea base que helpwindow
+    @sprites["messagebox"].width=398
     pbBottomLeftLines(@sprites["helpwindow"],1)
     pbSetHelpText(starthelptext)
     # Add party Pokémon sprites
@@ -759,10 +774,12 @@ class PokemonScreen_Scene
 
   def pbDisplayConfirm(text)
     ret=-1
+    pbRemButtons(false)
     @sprites["messagebox"].text=text
     @sprites["messagebox"].visible=true
     @sprites["helpwindow"].visible=false
     using(cmdwindow=Window_CommandPokemon.new([_INTL("Sí"),_INTL("No")])){
+       REM_UI.partyCmdWindow(cmdwindow)
        cmdwindow.z=@viewport.z+1
        cmdwindow.visible=false
        pbBottomRight(cmdwindow)
@@ -785,6 +802,7 @@ class PokemonScreen_Scene
     }
     @sprites["messagebox"].visible=false
     @sprites["helpwindow"].visible=true
+    pbRemButtons(true)
     return ret
   end
 
