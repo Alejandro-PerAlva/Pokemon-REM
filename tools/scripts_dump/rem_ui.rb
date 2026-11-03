@@ -246,20 +246,20 @@ class PokemonDataBox
     base=PokeBattle_SceneConstants::BOXTEXTBASECOLOR
     shadow=PokeBattle_SceneConstants::BOXTEXTSHADOWCOLOR
     bx=@spritebaseX
-    pbSetSmallFont(self.bitmap)
+    pbSetNarrowFont(self.bitmap)
     name=@battler.name
-    self.bitmap.font.size=21 if self.bitmap.text_size(name).width>104
+    self.bitmap.font.size=26 if self.bitmap.text_size(name).width>112
     namew=self.bitmap.text_size(name).width
-    textpos=[[name,bx+10,7,false,base,shadow]]
+    textpos=[[name,bx+10,3,false,base,shadow]]
     case @battler.displayGender
-    when 0 then textpos.push([_INTL("♂"),bx+14+namew,7,false,Color.new(110,170,255),shadow])
-    when 1 then textpos.push([_INTL("♀"),bx+14+namew,7,false,Color.new(255,120,160),shadow])
+    when 0 then textpos.push([_INTL("♂"),bx+14+namew,3,false,Color.new(110,170,255),shadow])
+    when 1 then textpos.push([_INTL("♀"),bx+14+namew,3,false,Color.new(255,120,160),shadow])
     end
     pbDrawTextPositions(self.bitmap,textpos)
-    pbSetSmallFont(self.bitmap)
-    textpos=[[_INTL("Nv{1}",@battler.level),bx+196,7,true,base,shadow]]
+    pbSetNarrowFont(self.bitmap)
+    textpos=[[_INTL("Nv{1}",@battler.level),bx+196,3,true,base,shadow]]
     if @showhp
-      textpos.push([_ISPRINTF("{1: 2d}/{2: 2d}",self.hp,@battler.totalhp),bx+196,46,true,base,shadow])
+      textpos.push([_ISPRINTF("{1: 2d}/{2: 2d}",self.hp,@battler.totalhp),bx+196,43,true,base,shadow])
     end
     pbDrawTextPositions(self.bitmap,textpos)
     imagepos=[]
@@ -314,9 +314,9 @@ class FightMenuButtons
   def refresh(index,moves,megaButton,ultraButton)
     rem_orig_refresh(index,moves,megaButton,ultraButton)
     return if !moves
-    pbSetSmallFont(self.bitmap)
-    self.bitmap.font.size=16
-    pbDrawTextPositions(self.bitmap,[[_INTL("Tecla D / Z: info"),448,UPPERGAP+70,2,
+    pbSetNarrowFont(self.bitmap)
+    self.bitmap.font.size=22
+    pbDrawTextPositions(self.bitmap,[[_INTL("Tecla D: info"),448,UPPERGAP+64,2,
        REM_UI::SILVER,REM_UI::INK]])
     pbSetNarrowFont(self.bitmap)
   end
@@ -326,7 +326,7 @@ class PokeBattle_Scene
   def pbRemMoveInfo(move)
     vp=Viewport.new(0,0,Graphics.width,Graphics.height); vp.z=99999
     sp=BitmapSprite.new(320,140,vp)
-    sp.x=96; sp.y=100   # centro, bajo la caja del rival y sin tocar el borde superior
+    sp.x=96; sp.y=112   # centro-superior: bajo la caja del rival y lejos del borde superior
     bmp=sp.bitmap
     card=AnimatedBitmap.new("Graphics/Pictures/battleMoveInfo")
     bmp.blt(0,0,card.bitmap,Rect.new(0,0,320,140))
@@ -334,19 +334,20 @@ class PokeBattle_Scene
     types=AnimatedBitmap.new(_INTL("Graphics/Pictures/types"))
     bmp.stretch_blt(Rect.new(250,5,58,24),types.bitmap,Rect.new(0,move.type*28,64,28))
     types.dispose
-    pbSetSmallFont(bmp)
+    pbSetNarrowFont(bmp)
+    bmp.font.size=24
     cat=move.pbIsStatus? ? _INTL("Estado") : (move.pbIsPhysical?(move.type) ? _INTL("Físico") : _INTL("Especial"))
     pw=move.basedamage>0 ? move.basedamage.to_s : "—"
     ac=move.accuracy>0 ? move.accuracy.to_s : "—"
     base=Color.new(255,255,255); dim=REM_UI::SILVER; shadow=REM_UI::INK
     pbDrawTextPositions(bmp,[
-      [move.name,12,3,0,base,shadow],
-      [_INTL("{1}  Pot {2}  Prec {3}  PP {4}/{5}",cat,pw,ac,move.pp,move.totalpp),12,38,0,dim,shadow]])
+      [move.name,12,1,0,base,shadow],
+      [_INTL("{1}  Pot {2}  Prec {3}  PP {4}/{5}",cat,pw,ac,move.pp,move.totalpp),12,37,0,dim,shadow]])
     lines=REM_UI.wrap(bmp,pbGetMessage(MessageTypes::MoveDescriptions,move.id),296)
     lines=lines[0,3]
     textpos=[]
     for i in 0...lines.length
-      textpos.push([lines[i],12,64+i*22,0,base,shadow])
+      textpos.push([lines[i],12,63+i*24,0,base,shadow])
     end
     pbDrawTextPositions(bmp,textpos)
     loop do
@@ -387,4 +388,35 @@ def adjustBattleSpriteY(sprite,species,index,metrics=nil)
   ret=rem_orig_adjustBattleSpriteY(sprite,species,index,metrics)
   ret+=sprite.remTrimY if sprite.respond_to?(:remTrimY)
   return ret
+end
+
+# Las métricas de PBS/metrics.dat (Y del jugador/rival) estaban calibradas para los sprites estándar y
+# hundían a los sprites nuevos (p. ej. +48 px en Bulbasaur). Como ahora cada sprite se apoya por su
+# arte real, solo se conserva la altitud de los rivales voladores (acotada).
+def getBattleSpriteMetricOffset(species,index,metrics=nil)
+  return 0 if index!=1 && index!=3
+  metrics=load_data("Data/metrics.dat") if !metrics
+  alt=(metrics[2][species] || 0)*2
+  alt=32 if alt>32
+  return -alt
+end
+
+# Tipografía única en combate: la fuente estrecha de los nombres de ataque, también en mensajes y menús.
+class PokeBattle_Scene
+  alias rem_orig_pbStartBattle pbStartBattle
+  def pbStartBattle(battle)
+    if !$remBattleFontSaved
+      $remBattleFontSaved=MessageConfig.pbGetSystemFontName
+      MessageConfig.pbSetSystemFontName(pbNarrowFontName)
+    end
+    rem_orig_pbStartBattle(battle)
+  end
+  alias rem_orig_pbEndBattle pbEndBattle
+  def pbEndBattle(result)
+    rem_orig_pbEndBattle(result)
+    if $remBattleFontSaved
+      MessageConfig.pbSetSystemFontName($remBattleFontSaved)
+      $remBattleFontSaved=nil
+    end
+  end
 end

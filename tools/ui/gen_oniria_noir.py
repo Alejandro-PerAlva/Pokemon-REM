@@ -146,7 +146,7 @@ def make_fight():
     save(im, "battleFight")
 
 # ------------------------------------------------------------------ botones
-FONT = os.path.join(ROOT, "Fonts", "pkmnem.ttf")
+FONT = os.path.join(ROOT, "Fonts", "pkmnemn.ttf")
 
 def rrect_mask(w, h, r):
     m = Image.new("L", (w, h), 0); ImageDraw.Draw(m).rounded_rectangle((0, 0, w-1, h-1), radius=r, fill=255); return m
@@ -176,7 +176,7 @@ def rrect_and_shrink(mask, n, r):
     ImageDraw.Draw(m).rounded_rectangle((n, n, w-1-n, h-1-n), radius=max(r-n, 1), fill=255)
     return m
 
-def label(im, text, x0, w, h, size=16):
+def label(im, text, x0, w, h, size=27):
     f = ImageFont.truetype(FONT, size); d = ImageDraw.Draw(im)
     tw = d.textlength(text, font=f); tx = x0 + (w - tw) / 2; ty = (h - size) / 2 - 2
     for dx, dy in ((1, 1), (0, 1), (1, 0), (-1, 0), (0, -1), (-1, -1), (1, -1), (-1, 1)):
