@@ -60,7 +60,7 @@ def databox(name, side, kind):
     """kind: 'S' (jugador con tab de EXP), 'D' o 'F' (rival)."""
     W, H = 260, (86 if (side == "player" and kind == "S") else 62)
     out = Image.new("RGBA", (W, H), (0, 0, 0, 0)); o = out.load()
-    T, B = 6, (66 if (side == "player" and kind == "S") else 56)
+    T, B = 6, (76 if (side == "player" and kind == "S") else 56)
     bx = 16 if side == "foe" else 34
     def edge(y):
         return 236 + int((y - T) * 0.25) if side == "foe" else 28 - int((y - T) * (0.25 if B > 60 else 0.3))
@@ -96,11 +96,9 @@ def databox(name, side, kind):
     for y in range(y0, y1 + 2): o[x0 - 1, y] = BEVEL; o[x1 + 1, y] = lerp(BEVEL, SILVER, 0.2)
     for x in range(x0 + 1, x1): o[x, y0 + 1] = hexc("000000")
     if side == "player" and kind == "S":                    # pista de EXP
-        for y in range(71, 79):                                # barra de EXP independiente, bajo la caja
+        for y in range(68, 76):                                # barra de EXP acoplada al fondo de la caja
             for x in range(38, 236):
-                o[x, y] = STEEL if x in (38, 235) or y in (71, 78) else hexc("07080B")
-        for x in range(37, 237): o[x, 70] = BEVEL; o[x, 79] = lerp(BEVEL, SILVER, 0.3)
-        for y in range(70, 80): o[37, y] = BEVEL; o[236, y] = BEVEL
+                o[x, y] = STEEL if x in (38, 235) or y in (68, 75) else hexc("07080B")
     save(out, name)
 
 def safari_retone():
@@ -180,17 +178,17 @@ def make_category():
             def f(dr, c, o):
                 pts = []
                 for k in range(16):
-                    r = (8.5 if k % 2 == 0 else 4.2) * S; a = math.pi * k / 8 - math.pi / 2
+                    r = (7.2 if k % 2 == 0 else 3.6) * S; a = math.pi * k / 8 - math.pi / 2
                     pts.append((cx + r * math.cos(a), cy + o + r * math.sin(a)))
                 dr.polygon(pts, fill=c)
         elif i == 1:                                # ondas concéntricas
             def f(dr, c, o):
-                for r, wd in ((8.5, 1.6), (5.2, 1.6)):
+                for r, wd in ((6.6, 1.5), (3.9, 1.5)):
                     dr.ellipse((cx - r * S, cy + o - r * S, cx + r * S, cy + o + r * S), outline=c, width=int(wd * S))
-                dr.ellipse((cx - 1.8 * S, cy + o - 1.8 * S, cx + 1.8 * S, cy + o + 1.8 * S), fill=c)
+                dr.ellipse((cx - 1.4 * S, cy + o - 1.4 * S, cx + 1.4 * S, cy + o + 1.4 * S), fill=c)
         else:                                       # círculo medio relleno (estado)
             def f(dr, c, o):
-                r = 7.5 * S
+                r = 6.6 * S
                 dr.ellipse((cx - r, cy + o - r, cx + r, cy + o + r), outline=c, width=int(1.6 * S))
                 dr.pieslice((cx - r, cy + o - r, cx + r, cy + o + r), 90, 270, fill=c)
         ink(f)
@@ -238,24 +236,28 @@ FONT = os.path.join(ROOT, "Fonts", "pkmnemn.ttf")
 def rrect_mask(w, h, r):
     m = Image.new("L", (w, h), 0); ImageDraw.Draw(m).rounded_rectangle((0, 0, w-1, h-1), radius=r, fill=255); return m
 
-def glow_button(w, h, col, selected, r=9):
-    """Cuerpo grafito; borde luminoso de 1 px que se enciende (con resplandor interior) al seleccionar."""
-    mask = rrect_mask(w, h, r)
-    im = Image.new("RGBA", (w, h), (0, 0, 0, 0)); px = im.load()
+BW = 3   # grosor del borde luminoso
+
+def glow_button(w, h, col, selected, r=9, inset=2):
+    """Cuerpo grafito con borde luminoso de 3 px (más brillante y con resplandor al seleccionar).
+    El botón ocupa la celda menos `inset` px por lado: así las celdas contiguas no se solapan."""
+    cw, ch = w - 2 * inset, h - 2 * inset
+    mask = rrect_mask(cw, ch, r)
+    im = Image.new("RGBA", (cw, ch), (0, 0, 0, 0)); px = im.load()
     top, bot = (hexc("262B36"), hexc("191C24")) if selected else (hexc("1F232D"), hexc("14161D"))
-    rings = [rrect_and_shrink(mask, n, r).load() for n in range(1, 6)]
+    rings = [rrect_and_shrink(mask, n, r).load() for n in range(1, 9)]
     mp = mask.load(); glow = [0.55, 0.32, 0.17, 0.08] if selected else [0.0] * 4
-    k = 1.0 if selected else 0.5
-    for y in range(h):
-        for x in range(w):
+    k = 1.0 if selected else 0.7
+    for y in range(ch):
+        for x in range(cw):
             if mp[x, y] == 0: continue
-            body = lerp(top, bot, y / (h - 1))
-            if rings[0][x, y] == 0:
+            body = lerp(top, bot, y / (ch - 1))
+            if rings[BW - 1][x, y] == 0:
                 px[x, y] = tuple(int(col[i] * k + 13 * (1 - k)) for i in range(3)) + (255,)
             else:
-                d = next((i for i in range(1, 5) if rings[i][x, y] == 0), 5)  # profundidad 1..4
+                d = next((i - BW + 1 for i in range(BW, BW + 4) if rings[i][x, y] == 0), 5)
                 px[x, y] = lerp(body, col, glow[d - 1]) if d <= 4 else body
-    return im
+    out = Image.new("RGBA", (w, h), (0, 0, 0, 0)); out.paste(im, (inset, inset)); return out
 
 def rrect_and_shrink(mask, n, r):
     w, h = mask.size
@@ -281,7 +283,6 @@ def make_command_buttons():
     for i, n in enumerate(names):
         for s in (0, 1):
             b = glow_button(130, 46, hexc(cols[n]), bool(s))
-            label(b, n.replace("2", ""), 0, 130, 46)
             sheet.paste(b, (130 * s, 46 * i))
     save(sheet, "battleCommandButtons")
 

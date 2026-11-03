@@ -250,6 +250,7 @@ class PokemonDataBox
     name=@battler.name
     self.bitmap.font.size=27
     self.bitmap.font.size-=1 while self.bitmap.font.size>19 && self.bitmap.text_size(name).width>108
+    namesize=self.bitmap.font.size
     namew=self.bitmap.text_size(name).width
     textpos=[[name,bx+10,8,false,base,shadow]]
     case @battler.displayGender
@@ -258,8 +259,8 @@ class PokemonDataBox
     end
     pbDrawTextPositions(self.bitmap,textpos)
     pbSetNarrowFont(self.bitmap)
-    self.bitmap.font.size=25
-    textpos=[[_INTL("Nv{1}",@battler.level),bx+196,9,true,base,shadow]]
+    self.bitmap.font.size=namesize   # nivel con el mismo tamaño que el nombre
+    textpos=[[_INTL("Nv{1}",@battler.level),bx+196,8,true,base,shadow]]
     if @showhp
       self.bitmap.font.size=20
       textpos.push([_ISPRINTF("{1: 2d}/{2: 2d}",self.hp,@battler.totalhp),bx+196,47,true,base,shadow])
@@ -303,12 +304,40 @@ class PokemonDataBox
     self.bitmap.fill_rect(bx+hpGaugeX,hpGaugeY+2,hpgauge,4,hpcolors[hpzone*2+1])
     if @showexp
       expGaugeX=PokeBattle_SceneConstants::EXPGAUGE_X
-      expGaugeY=73   # barra independiente bajo la caja (pista dibujada en el PNG)
+      expGaugeY=70   # barra acoplada al fondo de la caja (pista dibujada en el PNG)
       self.bitmap.fill_rect(bx+expGaugeX,expGaugeY,self.exp,2,PokeBattle_SceneConstants::EXPCOLORSHADOW)
       self.bitmap.fill_rect(bx+expGaugeX,expGaugeY+2,self.exp,2,PokeBattle_SceneConstants::EXPCOLORBASE)
     end
     @remEdges=REM_UI.edges(@databox.bitmap,foe) if !@remEdges
     REM_UI.drawTypeStripe(self.bitmap,@remEdges,foe,[@battler.type1,@battler.type2])
+  end
+end
+
+# Botones de comando: texto dibujado con la misma fuente estrecha que los ataques (Luchar, Mochila...).
+class CommandMenuButtons
+  REM_LABELS=["Luchar","Pokémon","Mochila","Huir","Llamar","Ball","Roca","Cebo","Ball"]
+  def refresh(index,mode=0)
+    self.bitmap.clear
+    @mode=mode
+    cmdarray=[0,2,1,3]
+    case @mode
+    when 1 then cmdarray=[0,2,1,4]
+    when 2 then cmdarray=[5,7,6,3]
+    when 3 then cmdarray=[0,8,1,3]
+    end
+    pbSetNarrowFont(self.bitmap)
+    textpos=[]
+    [false,true].each{|sel|
+      for i in 0...4
+        next if (i==index)!=sel
+        x=((i%2)==0) ? 0 : 130
+        y=((i/2)==0) ? 4 : 50
+        self.bitmap.blt(x,y,@buttonbitmap.bitmap,Rect.new(sel ? 130 : 0,cmdarray[i]*46,130,46))
+        textpos.push([_INTL(REM_LABELS[cmdarray[i]]),x+65,y+10,2,
+           PokeBattle_SceneConstants::MENUBASECOLOR,PokeBattle_SceneConstants::MENUSHADOWCOLOR])
+      end
+    }
+    pbDrawTextPositions(self.bitmap,textpos)
   end
 end
 
@@ -349,7 +378,7 @@ class PokeBattle_Scene
        [_INTL("Precisión"),200,4,2,dim,shadow]])
     bmp.font.size=26
     pbDrawTextPositions(bmp,[[pw,120,19,2,base,shadow],[ac,200,19,2,base,shadow]])
-    bmp.font.size=18
+    bmp.font.size=20
     lines=REM_UI.wrap(bmp,pbGetMessage(MessageTypes::MoveDescriptions,move.id),216)
     if lines.length>4
       lines=lines[0,4]
@@ -357,7 +386,7 @@ class PokeBattle_Scene
     end
     textpos=[]
     for i in 0...lines.length
-      textpos.push([lines[i],12,60+i*19,0,base,shadow])
+      textpos.push([lines[i],12,58+i*19,0,base,shadow])
     end
     pbDrawTextPositions(bmp,textpos)
     loop do

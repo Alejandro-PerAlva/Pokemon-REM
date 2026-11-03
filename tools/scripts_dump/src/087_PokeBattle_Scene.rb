@@ -196,14 +196,14 @@ class CommandMenuButtons < BitmapSprite
     end
     for i in 0...4
       next if i==index
-      x=((i%2)==0) ? 0 : 126
-      y=((i/2)==0) ? 6 : 48
+      x=((i%2)==0) ? 0 : 130
+      y=((i/2)==0) ? 4 : 50
       self.bitmap.blt(x,y,@buttonbitmap.bitmap,Rect.new(0,cmdarray[i]*46,130,46))
     end
     for i in 0...4
       next if i!=index
-      x=((i%2)==0) ? 0 : 126
-      y=((i/2)==0) ? 6 : 48
+      x=((i%2)==0) ? 0 : 130
+      y=((i/2)==0) ? 4 : 50
       self.bitmap.blt(x,y,@buttonbitmap.bitmap,Rect.new(130,cmdarray[i]*46,130,46))
     end
   end
@@ -401,8 +401,8 @@ class FightMenuButtons < BitmapSprite
     for i in 0...4
       next if i==index
       next if moves[i].id==0
-      x=((i%2)==0) ? 4 : 192
-      y=((i/2)==0) ? 6 : 48
+      x=((i%2)==0) ? 2 : 194
+      y=((i/2)==0) ? 4 : 50
       y+=UPPERGAP
       self.bitmap.blt(x,y,@buttonbitmap.bitmap,Rect.new(0,moves[i].type*46,192,46))
       textpos.push([_INTL("{1}",moves[i].name),x+96,y+10,2,
@@ -418,8 +418,8 @@ class FightMenuButtons < BitmapSprite
     for i in 0...4
       next if i!=index
       next if moves[i].id==0
-      x=((i%2)==0) ? 4 : 192
-      y=((i/2)==0) ? 6 : 48
+      x=((i%2)==0) ? 2 : 194
+      y=((i/2)==0) ? 4 : 50
       y+=UPPERGAP
       self.bitmap.blt(x,y,@buttonbitmap.bitmap,Rect.new(192,moves[i].type*46,192,46))
       self.bitmap.blt(416,8+UPPERGAP,@typebitmap.bitmap,Rect.new(0,moves[i].type*28,64,28))
