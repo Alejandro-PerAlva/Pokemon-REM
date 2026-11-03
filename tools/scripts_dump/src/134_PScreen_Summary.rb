@@ -38,9 +38,9 @@ class MoveSelectionSprite < SpriteWrapper
     w=@movesel.width
     h=@movesel.height/2
     self.x=240
-    self.y=92+(self.index*64)
-    self.y-=76 if @fifthmove
-    self.y+=20 if @fifthmove && self.index==4
+    self.y=105+(self.index*54)   # REM_UI: huecos de una línea (44 px, paso 54)
+    self.y-=55 if @fifthmove
+    self.y+=16 if @fifthmove && self.index==4
     self.bitmap=@movesel.bitmap
     if self.preselected
       self.src_rect.set(0,h,w,h)
@@ -243,52 +243,7 @@ class PokemonSummaryScene
         memo+="<c3=FFFFFF,0D0E12>\n"
       end
     end
-    if shownature
-      bestiv=0
-      tiebreaker=pokemon.personalID%6
-      for i in 0...6
-        if pokemon.iv[i]==pokemon.iv[bestiv]
-          bestiv=i if i>=tiebreaker && bestiv<tiebreaker
-        elsif pokemon.iv[i]>pokemon.iv[bestiv]
-          bestiv=i
-        end
-      end
-      characteristic=[_INTL("Le encanta comer."),       # Loves to eat
-                      _INTL("A menudo se duerme."),     # Often dozes off
-                      _INTL("Suele perder cosas."),     # Often scatters things
-                      _INTL("A veces se enoja."),       # Scatters things often
-                      _INTL("Le gusta relajarse."),     # Likes to relax
-                      _INTL("Orgulloso de su fuerza."), # Proud of its power.
-                      _INTL("Le gusta revolverse."),    # Likes to thrash about
-                      _INTL("Un poco cabezota."),       # A little quick tempered
-                      _INTL("Le gusta luchar."),        # Likes to fight
-                      _INTL("Muy cabezota."),           # Quick tempered
-                      _INTL("Cuerpo resistente."),      # Sturdy body
-                      _INTL("Capaz de hacerlo solo."),  # Capable of taking hits
-                      _INTL("Muy persistente."),        # Highly persistent
-                      _INTL("Buen fajador."),           # Good endurance
-                      _INTL("Muy perseverante."),       # Good perseverance
-                      _INTL("Le gusta correr."),        # Likes to run
-                      _INTL("Oído siempre alerta."),    # Alert to sounds
-                      _INTL("Impetuoso y bobo."),       # Impetuous and silly
-                      _INTL("Es un poco payaso."),      # Somewhat of a clown
-                      _INTL("Huye rápido."),            # Quick to flee
-                      _INTL("Muy curioso."),            # Highly curious
-                      _INTL("Travieso."),               # Mischievous
-                      _INTL("Muy astuto."),             # Thoroughly cunning
-                      _INTL("A veces se distrae."),     # Often lost in thought
-                      _INTL("Muy quisquilloso."),       # Very finicky
-                      _INTL("Voluntarioso."),           # Strong willed
-                      _INTL("Algo orgulloso."),         # Somewhat vain
-                      _INTL("Muy insolente."),          # Strongly defiant
-                      _INTL("Odia perder."),            # Hates to lose
-                      _INTL("Tiene mal genio.")         # Somewhat stubborn
-                      ][bestiv*5+pokemon.iv[bestiv]%5]
-      memo+=sprintf("<c3=FFFFFF,0D0E12>%s\n",characteristic)
-    end
-    pbSetNarrowFont(overlay)
-    overlay.font.size=24
-    REM_UI.fmtText(overlay,248,60,240,memo,28)
+    remDrawNotes(overlay,pokemon,memo)
   end
 
   def pbChooseMoveToForget(moveToLearn)
@@ -459,17 +414,11 @@ class PokemonSummaryScene
       if Input.trigger?(Input::C)
         if @page==0
           break
-        elsif @page==2
-          @remStatMode=(@remStatMode==1) ? 0 : 1
-          dorefresh=true
         elsif @page==3
           pbMoveSelection
           dorefresh=true
           drawPageFour(@pokemon)
         end
-      end
-      if Input.trigger?(Input::A) && @page==2 && !@pokemon.isEgg?
-        remAbilityModal(@pokemon)   # REM_UI: ficha flotante de habilidad
       end
       if Input.trigger?(Input::UP) && @partyindex>0
         oldindex=@partyindex
