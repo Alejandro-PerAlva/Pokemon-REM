@@ -37,10 +37,13 @@ class MoveSelectionSprite < SpriteWrapper
   def refresh
     w=@movesel.width
     h=@movesel.height/2
-    self.x=240
-    self.y=105+(self.index*54)   # REM_UI: huecos de una línea (44 px, paso 54)
-    self.y-=55 if @fifthmove
-    self.y+=16 if @fifthmove && self.index==4
+    self.x=236
+    if @fifthmove   # REM_UI: aprender movimiento (5 huecos)
+      self.y=12+(self.index*70)
+      self.y+=8 if self.index==4
+    else
+      self.y=65+(self.index*74)   # REM_UI: huecos de una línea (64 px, paso 74)
+    end
     self.bitmap=@movesel.bitmap
     if self.preselected
       self.src_rect.set(0,h,w,h)

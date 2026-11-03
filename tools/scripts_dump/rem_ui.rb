@@ -543,8 +543,8 @@ end
 module REM_UI
   SUM_STRIPE_X=212; SUM_STRIPE_Y0=58; SUM_STRIPE_Y1=300
   SUM_ROW_Y0=75; SUM_ROW_P=40; SUM_ROW_H=34
-  SUM_S3_HEAD=87; SUM_S3_Y0=115; SUM_S3_P=38; SUM_S3_H=32
-  SUM_SLOT_Y0=109; SUM_SLOT_P=54; SUM_SLOT_H=44; SUM_LEARN_Y0=54
+  SUM_S3_HEAD=62; SUM_S3_Y0=92; SUM_S3_P=46; SUM_S3_H=40
+  SUM_SLOT_Y0=69; SUM_SLOT_P=74; SUM_SLOT_H=64; SUM_LEARN_Y0=16; SUM_LEARN_P=70
   WHITE=Color.new(255,255,255)
   LABEL=Color.new(176,184,200)
   DIM=Color.new(110,118,136)
@@ -587,9 +587,21 @@ module REM_UI
   # Dibuja una lista [texto,x,y,alineación,color,tamaño,anchoMáx] con la fuente única.
   def self.texts(bmp,list)
     for t in list
+      if t[0]==:c   # [:c,texto,x,cy,alineación,color,tamaño,anchoMáx]: centrado vertical en cy
+        fit(bmp,t[1],t[7],t[6])
+        pbDrawTextPositions(bmp,[[t[1],t[2],(t[3]-bmp.font.size*0.435).round,t[4],t[5],INK]])
+        next
+      end
       fit(bmp,t[0],t[6] || 400,t[5] || 24)
       pbDrawTextPositions(bmp,[[t[0],t[1],t[2],t[3] || 0,t[4] || WHITE,INK]])
     end
+  end
+
+  # Texto centrado en (cx,cy): horizontal por alineación y vertical por la altura de mayúscula de la fuente estrecha.
+  def self.ctext(bmp,text,cx,cy,color,size,maxw)
+    fit(bmp,text,maxw,size)
+    y=(cy-bmp.font.size*0.435).round
+    pbDrawTextPositions(bmp,[[text,cx,y,2,color,INK]])
   end
 
   def self.borderRect(bmp,x0,y0,x1,y1,c)   # rectángulo de 2 px con esquinas recortadas
@@ -666,7 +678,7 @@ class PokemonSummaryScene
       iconfile=pbItemIconFile(pokemon.item)
       icon=AnimatedBitmap.new(iconfile) rescue nil
       if icon
-        overlay.stretch_blt(Rect.new(22,338,28,28),icon.bitmap,Rect.new(0,0,icon.width,icon.height))
+        overlay.stretch_blt(Rect.new(22,335,28,28),icon.bitmap,Rect.new(0,0,icon.width,icon.height))
         icon.dispose
       end
       REM_UI.texts(overlay,[[PBItems.getName(pokemon.item),56,338,0,REM_UI::WHITE,26,152]])
@@ -752,10 +764,10 @@ class PokemonSummaryScene
         statbase[natdn]=REM_UI::DNC
       end
     end
-    REM_UI.texts(overlay,[[_INTL("Estadística"),248,REM_UI::SUM_S3_HEAD,0,REM_UI::DIM,20],
-       [_INTL("Valor"),344,REM_UI::SUM_S3_HEAD,2,REM_UI::DIM,20],
-       [_INTL("IV"),408,REM_UI::SUM_S3_HEAD,2,REM_UI::DIM,20],
-       [_INTL("EV"),466,REM_UI::SUM_S3_HEAD,2,REM_UI::DIM,20]])
+    REM_UI.texts(overlay,[[_INTL("Estadística"),248,REM_UI::SUM_S3_HEAD,0,REM_UI::DIM,22]])
+    for h in [[_INTL("Valor"),345],[_INTL("IV"),409],[_INTL("EV"),467]]
+      REM_UI.texts(overlay,[[h[0],h[1],REM_UI::SUM_S3_HEAD,2,REM_UI::DIM,22]])
+    end
     # [nombre, color, valor, índice IV/EV]
     rows=[[_INTL("PS"),REM_UI::LABEL,sprintf("%d/%d",pokemon.hp,pokemon.totalhp),0],
           [_INTL("Ataque"),statbase[0],sprintf("%d",pokemon.attack),1],
@@ -764,17 +776,19 @@ class PokemonSummaryScene
           [_INTL("Def. Esp."),statbase[4],sprintf("%d",pokemon.spdef),5],
           [_INTL("Velocidad"),statbase[2],sprintf("%d",pokemon.speed),3]]
     for i in 0...6
-      y=REM_UI::SUM_S3_Y0+REM_UI::SUM_S3_P*i+3
-      REM_UI.texts(overlay,[[rows[i][0],248,y,0,rows[i][1],22,60],[rows[i][2],344,y,2,REM_UI::WHITE,22,58],
-         [sprintf("%d",pokemon.iv[rows[i][3]]),408,y,2,REM_UI::WHITE,22,50],
-         [sprintf("%d",pokemon.ev[rows[i][3]]),466,y,2,REM_UI::WHITE,22,46]])
+      cy=REM_UI::SUM_S3_Y0+REM_UI::SUM_S3_P*i+REM_UI::SUM_S3_H/2
+      REM_UI.fit(overlay,rows[i][0],58,24)
+      pbDrawTextPositions(overlay,[[rows[i][0],248,(cy-overlay.font.size*0.435).round,0,rows[i][1],REM_UI::INK]])
+      REM_UI.ctext(overlay,rows[i][2],345,cy,REM_UI::WHITE,30,60)
+      REM_UI.ctext(overlay,sprintf("%d",pokemon.iv[rows[i][3]]),409,cy,REM_UI::WHITE,30,48)
+      REM_UI.ctext(overlay,sprintf("%d",pokemon.ev[rows[i][3]]),467,cy,REM_UI::WHITE,30,48)
     end
     if pokemon.hp>0 && pokemon.totalhp>0
       hpzone=0
       hpzone=1 if pokemon.hp<=(pokemon.totalhp/2).floor
       hpzone=2 if pokemon.hp<=(pokemon.totalhp/4).floor
       cols=[Color.new(24,192,32),Color.new(232,168,0),Color.new(248,72,56)]
-      overlay.fill_rect(244,REM_UI::SUM_S3_Y0+REM_UI::SUM_S3_H-4,pokemon.hp*248/pokemon.totalhp,2,cols[hpzone])
+      overlay.fill_rect(246,REM_UI::SUM_S3_Y0+REM_UI::SUM_S3_H-3,pokemon.hp*248/pokemon.totalhp,2,cols[hpzone])
     end
   end
 
@@ -789,13 +803,13 @@ class PokemonSummaryScene
       nlines+=(l<1 ? 1 : l)
     }
     h=nlines*28
-    y=56+[(176-h)/2,0].max
+    y=56+[(152-h)/2,0].max
     REM_UI.fmtText(overlay,248,y,240,memo.sub(/\n+\z/,""),28)
     return if pokemon.isEgg?
-    REM_UI.texts(overlay,[[_INTL("Habilidad"),252,244,0,REM_UI::LABEL,22,80],
-       [PBAbilities.getName(pokemon.ability),340,243,0,REM_UI::WHITE,26,150]])
+    REM_UI.texts(overlay,[[_INTL("Habilidad"),252,223,0,REM_UI::LABEL,24,84],
+       [PBAbilities.getName(pokemon.ability),344,223,0,REM_UI::WHITE,24,146]])
     pbSetNarrowFont(overlay)
-    overlay.font.size=20
+    overlay.font.size=24
     lines=REM_UI.wrap(overlay,pbGetMessage(MessageTypes::AbilityDescs,pokemon.ability),236)
     if lines.length>4
       lines=lines[0,4]
@@ -803,24 +817,24 @@ class PokemonSummaryScene
     end
     list=[]
     for i in 0...lines.length
-      list.push([lines[i],252,280+i*22,0,REM_UI::WHITE,20])
+      list.push([lines[i],252,260+i*26,0,REM_UI::WHITE,24])
     end
     REM_UI.texts(overlay,list)
   end
 
   # Borde de color del tipo + contenido de un hueco de ataque (compartido por la página 4 y la vista de detalle).
   def remDrawMoveSlot(overlay,move,y0,textlist)
-    REM_UI.borderRect(overlay,242,y0,494,y0+REM_UI::SUM_SLOT_H-1,move.id>0 ? REM_UI.dim(REM_UI.typeColor(move.type),0.85) : Color.new(46,52,68))
+    REM_UI.borderRect(overlay,240,y0,495,y0+REM_UI::SUM_SLOT_H-1,move.id>0 ? REM_UI.dim(REM_UI.typeColor(move.type),0.85) : Color.new(46,52,68))
     cy=y0+REM_UI::SUM_SLOT_H/2
     if move.id>0
       overlay.blt(250,cy-14,@typebitmap.bitmap,Rect.new(0,move.type*28,64,28))
-      textlist.push([PBMoves.getName(move.id),322,cy-13,0,REM_UI::WHITE,26,100])
+      textlist.push([:c,PBMoves.getName(move.id),322,cy,0,REM_UI::WHITE,30,88])
       if move.totalpp>0
         pcol=(move.pp==0) ? REM_UI::UPC : REM_UI::WHITE
-        textlist.push([sprintf("PP %d/%d",move.pp,move.totalpp),486,cy-11,1,pcol,22,66])
+        textlist.push([:c,sprintf("PP %d/%d",move.pp,move.totalpp),486,cy,1,pcol,26,74])
       end
     else
-      textlist.push(["-",322,cy-13,0,REM_UI::DIM,26])
+      textlist.push([:c,"-",322,cy,0,REM_UI::DIM,30,40])
     end
   end
 
@@ -879,16 +893,17 @@ class PokemonSummaryScene
       overlay.blt(150,78,@typebitmap.bitmap,Rect.new(0,pokemon.type2*28,64,28))
     end
     y0=(moveToLearn!=0) ? REM_UI::SUM_LEARN_Y0 : REM_UI::SUM_SLOT_Y0
+    pitch=(moveToLearn!=0) ? REM_UI::SUM_LEARN_P : REM_UI::SUM_SLOT_P
     for i in 0...5
       moveobject=nil
       if i==4
         moveobject=PBMove.new(moveToLearn) if moveToLearn!=0
-        y0+=16
+        y0+=8
       else
         moveobject=pokemon.moves[i]
       end
       remDrawMoveSlot(overlay,moveobject,y0,textlist) if moveobject
-      y0+=REM_UI::SUM_SLOT_P
+      y0+=pitch
     end
     REM_UI.texts(overlay,textlist)
     return overlay
