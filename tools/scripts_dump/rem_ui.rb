@@ -534,3 +534,369 @@ module REM_UI
     w.shadowColor=INK
   end
 end
+
+#===============================================================================
+# DATOS DEL POKÉMON "Oniria Noir": 4 páginas (sin cintas), tarjeta izquierda con franja de tipo,
+# tabla de estadísticas con IV/EV, ficha flotante de habilidad y ataques con borde del tipo.
+# Los fondos los genera tools/ui/gen_summary_noir.py (la geometría de abajo debe coincidir).
+#===============================================================================
+module REM_UI
+  SUM_STRIPE_X=212; SUM_STRIPE_Y0=58; SUM_STRIPE_Y1=300
+  SUM_ROW_Y0=56; SUM_ROW_P=34
+  SUM_S3_HEAD=56; SUM_S3_Y0=84; SUM_S3_P=32
+  SUM_AB_Y=284; SUM_KEY_Y=326
+  SUM_SLOT_Y0=96; SUM_SLOT_P=64
+  WHITE=Color.new(255,255,255)
+  LABEL=Color.new(176,184,200)
+  DIM=Color.new(110,118,136)
+  UPC=Color.new(255,122,104)     # estadística que sube con la naturaleza
+  DNC=Color.new(110,182,255)     # estadística que baja
+
+  def self.vStripe(bmp,x,y0,y1,types)
+    types=types.select{|t| t && t>=0}.uniq
+    return if types.length==0
+    mid=(y0+y1)/2
+    for y in y0..y1
+      if types.length==1 || y<mid
+        c=typeColor(types[0])
+      elsif y==mid
+        c=INK
+      else
+        c=typeColor(types[1])
+      end
+      bmp.fill_rect(x,y,STRIPE_W,1,c)
+      if c!=INK
+        bmp.fill_rect(x+STRIPE_W-1,y,1,1,Color.new((c.red+255)/2,(c.green+255)/2,(c.blue+255)/2))
+      end
+    end
+  end
+
+  # Texto con formato (<c3=...>) y altura de línea propia.
+  def self.fmtText(bmp,x,y,w,text,lineheight)
+    text="<c2="+colorToRgb16(WHITE)+colorToRgb16(INK)+">"+text
+    chars=getFormattedText(bmp,x,y,w,-1,text,lineheight)
+    drawFormattedChars(bmp,chars)
+  end
+
+  # Fuente estrecha de tamaño `size`, reducida hasta que `text` quepa en `maxw`.
+  def self.fit(bmp,text,maxw,size)
+    pbSetNarrowFont(bmp)
+    bmp.font.size=size
+    bmp.font.size-=1 while bmp.font.size>15 && bmp.text_size(text).width>maxw
+  end
+
+  # Dibuja una lista [texto,x,y,alineación,color,tamaño,anchoMáx] con la fuente única.
+  def self.texts(bmp,list)
+    for t in list
+      fit(bmp,t[0],t[6] || 400,t[5] || 24)
+      pbDrawTextPositions(bmp,[[t[0],t[1],t[2],t[3] || 0,t[4] || WHITE,INK]])
+    end
+  end
+
+  def self.borderRect(bmp,x0,y0,x1,y1,c)
+    bmp.fill_rect(x0+4,y0,x1-x0-7,2,c); bmp.fill_rect(x0+4,y1-1,x1-x0-7,2,c)
+    bmp.fill_rect(x0,y0+4,2,y1-y0-7,c); bmp.fill_rect(x1-1,y0+4,2,y1-y0-7,c)
+  end
+
+  def self.dim(c,k)
+    return Color.new((c.red*k).to_i,(c.green*k).to_i,(c.blue*k).to_i)
+  end
+end
+
+class PokemonSummaryScene
+  # Estado de fuente del sistema: la misma fuente estrecha del combate mientras la pantalla está abierta.
+  alias rem_sum_pbStartScene pbStartScene
+  def pbStartScene(party,partyindex)
+    remFontOn
+    rem_sum_pbStartScene(party,partyindex)
+  end
+  alias rem_sum_pbStartForgetScene pbStartForgetScene
+  def pbStartForgetScene(party,partyindex,moveToLearn)
+    remFontOn
+    rem_sum_pbStartForgetScene(party,partyindex,moveToLearn)
+  end
+  alias rem_sum_pbEndScene pbEndScene
+  def pbEndScene
+    rem_sum_pbEndScene
+    if @remFontOwner
+      MessageConfig.pbSetSystemFontName($remBattleFontSaved)
+      $remBattleFontSaved=nil
+      @remFontOwner=false
+    end
+  end
+  def remFontOn
+    if !$remBattleFontSaved
+      $remBattleFontSaved=MessageConfig.pbGetSystemFontName
+      @remFontOwner=true
+      MessageConfig.pbSetSystemFontName(pbNarrowFontName)
+    end
+  end
+
+  # Tarjeta izquierda común a todas las páginas: bola, nombre, género, nivel, estado, sprite, marcas, objeto y franja de tipo.
+  def remDrawCard(pokemon,title,egg=false)
+    overlay=@sprites["overlay"].bitmap
+    overlay.clear
+    imagepos=[]
+    ballimage=sprintf("Graphics/Pictures/summaryball%02d",(@pokemon.ballused ? @pokemon.ballused : 0))
+    imagepos.push([ballimage,16,56,0,0,-1,-1])
+    if !egg
+      if pbPokerus(pokemon)==1 || pokemon.hp==0 || @pokemon.status>0
+        status=6 if pbPokerus(pokemon)==1
+        status=@pokemon.status-1 if @pokemon.status>0
+        status=5 if pokemon.hp==0
+        imagepos.push(["Graphics/Pictures/statuses",112,92,0,16*status,44,16])
+      end
+      imagepos.push(["Graphics/Pictures/summaryPokerus",162,92,0,0,-1,-1]) if pbPokerus(pokemon)==2
+      imagepos.push(["Graphics/Pictures/shiny",26,130,0,0,-1,-1]) if pokemon.isShiny?
+    end
+    pbDrawImagePositions(overlay,imagepos)
+    REM_UI.texts(overlay,[[title,18,12,0,REM_UI::WHITE,28]])
+    REM_UI.fit(overlay,pokemon.name,118,26)
+    namew=overlay.text_size(pokemon.name).width
+    pbDrawTextPositions(overlay,[[pokemon.name,54,57,0,REM_UI::WHITE,REM_UI::INK]])
+    if !egg
+      if pokemon.isMale?
+        pbDrawTextPositions(overlay,[[_INTL("♂"),54+namew+6,57,0,Color.new(110,170,255),REM_UI::INK]])
+      elsif pokemon.isFemale?
+        pbDrawTextPositions(overlay,[[_INTL("♀"),54+namew+6,57,0,Color.new(255,120,160),REM_UI::INK]])
+      end
+      REM_UI.texts(overlay,[[_INTL("Nv{1}",pokemon.level),54,88,0,REM_UI::WHITE,24]])
+    end
+    drawMarkings(overlay,16,286,190,20,pokemon.markings)
+    REM_UI.texts(overlay,[[_INTL("Objeto"),24,309,0,REM_UI::LABEL,20]])
+    if pokemon.hasItem?
+      REM_UI.texts(overlay,[[PBItems.getName(pokemon.item),24,336,0,REM_UI::WHITE,26,184]])
+    else
+      REM_UI.texts(overlay,[[_INTL("Ninguno"),24,336,0,REM_UI::DIM,26]])
+    end
+    REM_UI.vStripe(overlay,REM_UI::SUM_STRIPE_X,REM_UI::SUM_STRIPE_Y0,REM_UI::SUM_STRIPE_Y1,
+       [pokemon.type1,pokemon.type2]) if !egg
+    return overlay
+  end
+
+  def drawPageOne(pokemon)
+    if pokemon.isEgg?
+      drawPageOneEgg(pokemon)
+      return
+    end
+    @sprites["background"].setBitmap("Graphics/Pictures/summary1")
+    overlay=remDrawCard(pokemon,_INTL("DATOS"))
+    growthrate=pokemon.growthrate
+    startexp=PBExperience.pbGetStartExperience(pokemon.level,growthrate)
+    endexp=PBExperience.pbGetStartExperience(pokemon.level+1,growthrate)
+    labels=[_INTL("N° Dex"),_INTL("Especie"),_INTL("Tipo"),_INTL("EO"),_INTL("N° ID")]
+    shadowpk=(pokemon.isShadow? rescue false)
+    labels.push(shadowpk ? _INTL("Corazón") : _INTL("Experiencia"))
+    labels.push(_INTL("Sig. nivel")) if !shadowpk
+    for i in 0...labels.length
+      REM_UI.texts(overlay,[[labels[i],248,REM_UI::SUM_ROW_Y0+REM_UI::SUM_ROW_P*i+3,0,REM_UI::LABEL,22,92]])
+    end
+    cx=416
+    ry=lambda{|i| REM_UI::SUM_ROW_Y0+REM_UI::SUM_ROW_P*i+3}
+    numcol=pokemon.isShiny? ? Color.new(255,110,100) : REM_UI::WHITE
+    idno=(pokemon.ot=="") ? "?????" : sprintf("%05d",pokemon.publicID)
+    ownercol=REM_UI::WHITE
+    ownercol=Color.new(110,170,255) if pokemon.ot!="" && pokemon.otgender==0
+    ownercol=Color.new(255,120,160) if pokemon.ot!="" && pokemon.otgender==1
+    REM_UI.texts(overlay,[
+       [sprintf("%03d",pokemon.species),cx,ry.call(0),2,numcol,24,140],
+       [PBSpecies.getName(pokemon.species),cx,ry.call(1),2,REM_UI::WHITE,24,140],
+       [(pokemon.ot=="") ? _INTL("PRESTADO") : pokemon.ot,cx,ry.call(3),2,ownercol,24,140],
+       [idno,cx,ry.call(4),2,REM_UI::WHITE,24,140]])
+    typebmp=@typebitmap.bitmap
+    ty=REM_UI::SUM_ROW_Y0+REM_UI::SUM_ROW_P*2+1
+    if pokemon.type1==pokemon.type2
+      overlay.blt(cx-32,ty,typebmp,Rect.new(0,pokemon.type1*28,64,28))
+    else
+      overlay.blt(cx-68,ty,typebmp,Rect.new(0,pokemon.type1*28,64,28))
+      overlay.blt(cx+4,ty,typebmp,Rect.new(0,pokemon.type2*28,64,28))
+    end
+    if shadowpk
+      heartmessage=[_INTL("¡La puerta de su corazón está abierta! ¡Hacer purificación definitiva!"),
+                    _INTL("La puerta de su corazón está casi abierta del todo."),
+                    _INTL("La puerta de su corazón está bastante abierta."),
+                    _INTL("La puerta de su corazón está un poco abierta."),
+                    _INTL("La puerta de su corazón está apenas abierta."),
+                    _INTL("La puerta está fuertemente cerrada.")
+                    ][pokemon.heartStage]
+      pbSetNarrowFont(overlay); overlay.font.size=20
+      lines=REM_UI.wrap(overlay,heartmessage,236)[0,2]
+      for i in 0...lines.length
+        REM_UI.texts(overlay,[[lines[i],248,REM_UI::SUM_ROW_Y0+REM_UI::SUM_ROW_P*5+3+i*24,0,REM_UI::WHITE,20]])
+      end
+      shadowfract=pokemon.heartgauge*1.0/PokeBattle_Pokemon::HEARTGAUGESIZE
+      pbDrawImagePositions(overlay,[["Graphics/Pictures/summaryShadowBar",246,303,0,0,(shadowfract*248).floor,-1]])
+    else
+      REM_UI.texts(overlay,[[sprintf("%d",pokemon.exp),cx,ry.call(5),2,REM_UI::WHITE,24,140],
+         [sprintf("%d",endexp-pokemon.exp),cx,ry.call(6),2,REM_UI::WHITE,24,140]])
+      if pokemon.level<PBExperience::MAXLEVEL
+        w=(pokemon.exp-startexp)*248/(endexp-startexp)
+        overlay.fill_rect(244,304,w,6,Color.new(72,144,248))
+        overlay.fill_rect(244,310,w,6,Color.new(48,96,216))
+      end
+    end
+  end
+
+  def drawPageThree(pokemon)
+    @sprites["background"].setBitmap("Graphics/Pictures/summary3")
+    overlay=remDrawCard(pokemon,_INTL("CARACTERÍSTICAS"))
+    statbase=[REM_UI::LABEL]*5
+    if !(pokemon.isShadow? rescue false) || pokemon.heartStage<=3
+      natup=(pokemon.nature/5).floor
+      natdn=(pokemon.nature%5).floor
+      if natup!=natdn
+        statbase[natup]=REM_UI::UPC
+        statbase[natdn]=REM_UI::DNC
+      end
+    end
+    modeiv=(@remStatMode==1)
+    head=[[_INTL("Estadística"),248,REM_UI::SUM_S3_HEAD,0,REM_UI::DIM,20],[_INTL("Valor"),344,REM_UI::SUM_S3_HEAD,2,REM_UI::DIM,20]]
+    if modeiv
+      head.push([_INTL("IV"),408,REM_UI::SUM_S3_HEAD,2,REM_UI::DIM,20])
+      head.push([_INTL("EV"),466,REM_UI::SUM_S3_HEAD,2,REM_UI::DIM,20])
+    end
+    REM_UI.texts(overlay,head)
+    # [nombre, color, valor, índice IV/EV]
+    rows=[[_INTL("PS"),REM_UI::LABEL,sprintf("%d/%d",pokemon.hp,pokemon.totalhp),0],
+          [_INTL("Ataque"),statbase[0],sprintf("%d",pokemon.attack),1],
+          [_INTL("Defensa"),statbase[1],sprintf("%d",pokemon.defense),2],
+          [_INTL("At. Esp."),statbase[3],sprintf("%d",pokemon.spatk),4],
+          [_INTL("Def. Esp."),statbase[4],sprintf("%d",pokemon.spdef),5],
+          [_INTL("Velocidad"),statbase[2],sprintf("%d",pokemon.speed),3]]
+    for i in 0...6
+      y=REM_UI::SUM_S3_Y0+REM_UI::SUM_S3_P*i+2
+      REM_UI.texts(overlay,[[rows[i][0],248,y,0,rows[i][1],22,60],[rows[i][2],344,y,2,REM_UI::WHITE,22,58]])
+      if modeiv
+        REM_UI.texts(overlay,[[sprintf("%d",pokemon.iv[rows[i][3]]),408,y,2,REM_UI::WHITE,22,50],
+           [sprintf("%d",pokemon.ev[rows[i][3]]),466,y,2,REM_UI::WHITE,22,46]])
+      end
+    end
+    if pokemon.hp>0 && pokemon.totalhp>0
+      hpzone=0
+      hpzone=1 if pokemon.hp<=(pokemon.totalhp/2).floor
+      hpzone=2 if pokemon.hp<=(pokemon.totalhp/4).floor
+      cols=[Color.new(24,192,32),Color.new(232,168,0),Color.new(248,72,56)]
+      overlay.fill_rect(244,REM_UI::SUM_S3_Y0+25,pokemon.hp*248/pokemon.totalhp,2,cols[hpzone])
+    end
+    REM_UI.texts(overlay,[[_INTL("Habilidad"),248,REM_UI::SUM_AB_Y+3,0,REM_UI::LABEL,22,80],
+       [PBAbilities.getName(pokemon.ability),340,REM_UI::SUM_AB_Y+3,0,REM_UI::WHITE,24,148],
+       [_INTL("C: IV/EV     Z: Habilidad"),368,REM_UI::SUM_KEY_Y+3,2,REM_UI::LABEL,20,240]])
+  end
+
+  # Borde de color del tipo + contenido de un hueco de ataque (compartido por la página 4 y la vista de detalle).
+  def remDrawMoveSlot(overlay,move,y0,textlist)
+    REM_UI.borderRect(overlay,244,y0,488,y0+56,move.id>0 ? REM_UI.dim(REM_UI.typeColor(move.type),0.8) : Color.new(46,52,68))
+    yPos=y0+2
+    if move.id>0
+      overlay.blt(250,yPos+2,@typebitmap.bitmap,Rect.new(0,move.type*28,64,28))
+      textlist.push([PBMoves.getName(move.id),322,yPos-2,0,REM_UI::WHITE,26,160])
+      if move.totalpp>0
+        pcol=(move.pp==0) ? REM_UI::UPC : REM_UI::WHITE
+        textlist.push([_INTL("PP"),322,yPos+28,0,REM_UI::LABEL,20])
+        textlist.push([sprintf("%d/%d",move.pp,move.totalpp),480,yPos+27,1,pcol,22])
+      end
+    else
+      textlist.push(["-",322,yPos-2,0,REM_UI::DIM,26])
+    end
+  end
+
+  def drawPageFour(pokemon)
+    @sprites["background"].setBitmap("Graphics/Pictures/summary4")
+    @sprites["pokemon"].visible=true
+    @sprites["pokeicon"].visible=false
+    overlay=remDrawCard(pokemon,_INTL("MOVIMIENTOS"))
+    textlist=[[_INTL("Movimientos: {1}/4",pokemon.numMoves),248,58,0,REM_UI::LABEL,22],
+              [_INTL("C: Detalles"),492,60,1,REM_UI::DIM,20]]
+    for i in 0...4
+      m=pokemon.moves[i]
+      remDrawMoveSlot(overlay,m,REM_UI::SUM_SLOT_Y0+REM_UI::SUM_SLOT_P*i,textlist) if m
+    end
+    REM_UI.texts(overlay,textlist)
+  end
+
+  def drawSelectedMove(pokemon,moveToLearn,moveid)
+    @sprites["pokemon"].visible=false if @sprites["pokemon"]
+    @sprites["pokeicon"].setBitmap(pbPokemonIconFile(pokemon))
+    @sprites["pokeicon"].src_rect=Rect.new(0,0,64,64)
+    @sprites["pokeicon"].visible=true
+    movedata=PBMoveData.new(moveid)
+    basedamage=movedata.basedamage
+    category=movedata.category
+    accuracy=movedata.accuracy
+    overlay=drawMoveSelection(pokemon,moveToLearn)
+    pw=(category==2 || basedamage<=0) ? "-" : (basedamage==1 ? "???" : sprintf("%d",basedamage))
+    ac=(accuracy==0) ? "-" : sprintf("%d%%",accuracy)
+    REM_UI.texts(overlay,[[pw,166,155,2,REM_UI::WHITE,24,84],[ac,166,187,2,REM_UI::WHITE,24,84]])
+    icons=AnimatedBitmap.new("Graphics/Pictures/category")
+    overlay.blt(134,121,icons.bitmap,Rect.new(0,category*28,64,28))
+    icons.dispose
+    pbSetNarrowFont(overlay); overlay.font.size=21
+    lines=REM_UI.wrap(overlay,pbGetMessage(MessageTypes::MoveDescriptions,moveid),186)
+    lines=lines[0,5]
+    textpos=[]
+    for i in 0...lines.length
+      textpos.push([lines[i],24,229+i*28,0,REM_UI::WHITE,21])
+    end
+    REM_UI.texts(overlay,textpos)
+  end
+
+  def drawMoveSelection(pokemon,moveToLearn)
+    overlay=@sprites["overlay"].bitmap
+    overlay.clear
+    @sprites["background"].setBitmap("Graphics/Pictures/summary4details")
+    @sprites["background"].setBitmap("Graphics/Pictures/summary4learning") if moveToLearn!=0
+    textlist=[[_INTL("MOVIMIENTOS"),18,12,0,REM_UI::WHITE,28],
+              [_INTL("Categoría"),24,122,0,REM_UI::LABEL,20,100],
+              [_INTL("Potencia"),24,154,0,REM_UI::LABEL,20,100],
+              [_INTL("Precisión"),24,186,0,REM_UI::LABEL,20,100]]
+    if pokemon.type1==pokemon.type2
+      overlay.blt(130,78,@typebitmap.bitmap,Rect.new(0,pokemon.type1*28,64,28))
+    else
+      overlay.blt(96,78,@typebitmap.bitmap,Rect.new(0,pokemon.type1*28,64,28))
+      overlay.blt(166,78,@typebitmap.bitmap,Rect.new(0,pokemon.type2*28,64,28))
+    end
+    y0=(moveToLearn!=0) ? 22 : REM_UI::SUM_SLOT_Y0
+    for i in 0...5
+      moveobject=nil
+      if i==4
+        moveobject=PBMove.new(moveToLearn) if moveToLearn!=0
+        y0+=20
+      else
+        moveobject=pokemon.moves[i]
+      end
+      remDrawMoveSlot(overlay,moveobject,y0,textlist) if moveobject
+      y0+=64
+    end
+    REM_UI.texts(overlay,textlist)
+    return overlay
+  end
+
+  # Ficha flotante de habilidad (tecla Z): nombre, etiqueta y descripción completa; se cierra con Z, B o C.
+  def remAbilityModal(pokemon)
+    vp=Viewport.new(0,0,Graphics.width,Graphics.height); vp.z=999999
+    sp=BitmapSprite.new(300,176,vp)
+    sp.x=(Graphics.width-300)/2; sp.y=104
+    bmp=sp.bitmap
+    card=AnimatedBitmap.new("Graphics/Pictures/summaryAbilityCard")
+    bmp.blt(0,0,card.bitmap,Rect.new(0,0,300,176))
+    card.dispose
+    REM_UI.texts(bmp,[[PBAbilities.getName(pokemon.ability),14,5,0,REM_UI::WHITE,30,190],
+       [_INTL("HABILIDAD"),286,11,1,Color.new(245,165,36),20]])
+    pbSetNarrowFont(bmp); bmp.font.size=22
+    lines=REM_UI.wrap(bmp,pbGetMessage(MessageTypes::AbilityDescs,pokemon.ability),272)
+    if lines.length>5
+      lines=lines[0,5]
+      lines[4]=lines[4]+"…"
+    end
+    textpos=[]
+    for i in 0...lines.length
+      textpos.push([lines[i],14,50+i*25,0,REM_UI::WHITE,22])
+    end
+    REM_UI.texts(bmp,textpos)
+    loop do
+      Graphics.update; Input.update
+      break if Input.trigger?(Input::A) || Input.trigger?(Input::B) || Input.trigger?(Input::C)
+    end
+    sp.bitmap.dispose; sp.dispose; vp.dispose
+  end
+end
