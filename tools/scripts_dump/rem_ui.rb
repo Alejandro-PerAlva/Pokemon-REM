@@ -248,18 +248,20 @@ class PokemonDataBox
     bx=@spritebaseX
     pbSetNarrowFont(self.bitmap)
     name=@battler.name
-    self.bitmap.font.size=26 if self.bitmap.text_size(name).width>112
+    self.bitmap.font.size=24
+    self.bitmap.font.size=21 if self.bitmap.text_size(name).width>110
     namew=self.bitmap.text_size(name).width
-    textpos=[[name,bx+10,3,false,base,shadow]]
+    textpos=[[name,bx+10,9,false,base,shadow]]
     case @battler.displayGender
-    when 0 then textpos.push([_INTL("♂"),bx+14+namew,3,false,Color.new(110,170,255),shadow])
-    when 1 then textpos.push([_INTL("♀"),bx+14+namew,3,false,Color.new(255,120,160),shadow])
+    when 0 then textpos.push([_INTL("♂"),bx+14+namew,9,false,Color.new(110,170,255),shadow])
+    when 1 then textpos.push([_INTL("♀"),bx+14+namew,9,false,Color.new(255,120,160),shadow])
     end
     pbDrawTextPositions(self.bitmap,textpos)
     pbSetNarrowFont(self.bitmap)
-    textpos=[[_INTL("Nv{1}",@battler.level),bx+196,3,true,base,shadow]]
+    self.bitmap.font.size=22
+    textpos=[[_INTL("Nv{1}",@battler.level),bx+196,10,true,base,shadow]]
     if @showhp
-      textpos.push([_ISPRINTF("{1: 2d}/{2: 2d}",self.hp,@battler.totalhp),bx+196,43,true,base,shadow])
+      textpos.push([_ISPRINTF("{1: 2d}/{2: 2d}",self.hp,@battler.totalhp),bx+196,48,true,base,shadow])
     end
     pbDrawTextPositions(self.bitmap,textpos)
     imagepos=[]
@@ -326,7 +328,7 @@ class PokeBattle_Scene
   def pbRemMoveInfo(move)
     vp=Viewport.new(0,0,Graphics.width,Graphics.height); vp.z=99999
     sp=BitmapSprite.new(320,140,vp)
-    sp.x=96; sp.y=112   # centro-superior: bajo la caja del rival y lejos del borde superior
+    sp.x=8; sp.y=Graphics.height-140-4   # abajo a la izquierda, sobre la zona del menú/diálogo
     bmp=sp.bitmap
     card=AnimatedBitmap.new("Graphics/Pictures/battleMoveInfo")
     bmp.blt(0,0,card.bitmap,Rect.new(0,0,320,140))
@@ -359,21 +361,9 @@ class PokeBattle_Scene
 end
 
 #===============================================================================
-# CALIBRACIÓN DE SPRITES DE COMBATE: la línea base del jugador queda sobre el menú (que empieza
-# en y=288) y cada sprite se apoya por su arte real (se descuenta el margen transparente inferior
+# CALIBRACIÓN DE SPRITES DE COMBATE: plataformas y fondos conservan sus coordenadas nativas; cada sprite se apoya por su arte real (se descuenta el margen transparente inferior
 # que mide BitmapWrapperEX), de modo que nada queda hundido ni flotando.
 #===============================================================================
-module PokeBattle_SceneConstants
-  REM_PLAYER_BASELINE=Graphics.height-96-20
-  [[:PLAYERBATTLER_Y,REM_PLAYER_BASELINE],[:PLAYERBATTLERD1_Y,REM_PLAYER_BASELINE-6],
-   [:PLAYERBATTLERD2_Y,REM_PLAYER_BASELINE+4],[:PLAYERBASEY,REM_PLAYER_BASELINE],
-   [:PLAYERTRAINER_Y,REM_PLAYER_BASELINE-16],[:PLAYERTRAINERD1_Y,REM_PLAYER_BASELINE-16],
-   [:PLAYERTRAINERD2_Y,REM_PLAYER_BASELINE-16]].each{|n,v|
-    remove_const(n) if const_defined?(n)
-    const_set(n,v)
-  }
-end
-
 class PokemonBattlerSprite
   def remTrimY
     return 0 if !@_iconbitmap || !@_iconbitmap.respond_to?(:offset_y) || !@_iconbitmap.offset_y
@@ -387,6 +377,7 @@ alias rem_orig_adjustBattleSpriteY adjustBattleSpriteY
 def adjustBattleSpriteY(sprite,species,index,metrics=nil)
   ret=rem_orig_adjustBattleSpriteY(sprite,species,index,metrics)
   ret+=sprite.remTrimY if sprite.respond_to?(:remTrimY)
+  ret-=10 if index==0 || index==2   # pies del jugador sobre la parte alta de la plataforma, visibles sobre el menú
   return ret
 end
 
