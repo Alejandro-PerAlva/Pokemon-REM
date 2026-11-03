@@ -330,13 +330,13 @@ class PokeBattle_Scene
   def pbRemMoveInfo(move)
     vp=Viewport.new(0,0,Graphics.width,Graphics.height); vp.z=99999
     sp=BitmapSprite.new(320,132,vp)
-    sp.x=8; sp.y=Graphics.height-132-3
+    sp.x=8; sp.y=Graphics.height-96-132-4   # justo sobre el panel de botones de ataque
     bmp=sp.bitmap
     card=AnimatedBitmap.new("Graphics/Pictures/battleMoveInfo")
     bmp.blt(0,0,card.bitmap,Rect.new(0,0,320,132))
     card.dispose
     types=AnimatedBitmap.new(_INTL("Graphics/Pictures/types"))
-    bmp.stretch_blt(Rect.new(252,2,58,24),types.bitmap,Rect.new(0,move.type*28,64,28))
+    bmp.blt(250,0,types.bitmap,Rect.new(0,move.type*28,64,28))
     types.dispose
     cat=move.pbIsStatus? ? _INTL("Estado") : (move.pbIsPhysical?(move.type) ? _INTL("Físico") : _INTL("Especial"))
     pw=move.basedamage>0 ? move.basedamage.to_s : "—"
@@ -346,11 +346,11 @@ class PokeBattle_Scene
     bmp.font.size=24
     pbDrawTextPositions(bmp,[[move.name,12,0,0,base,shadow]])
     vals=[cat,pw,ac,_INTL("{1}/{2}",move.pp,move.totalpp)]
-    pbDrawTextPositions(bmp,(0...4).map{|i| [vals[i],40+i*80,41,2,base,shadow]})
-    bmp.font.size=17
+    pbDrawTextPositions(bmp,(0...4).map{|i| [vals[i],40+i*80,43,2,base,shadow]})
+    bmp.font.size=15
     labels=[_INTL("Categoría"),_INTL("Potencia"),_INTL("Precisión"),_INTL("PP")]
-    pbDrawTextPositions(bmp,(0...4).map{|i| [labels[i],40+i*80,28,2,dim,shadow]})
-    bmp.font.size=20
+    pbDrawTextPositions(bmp,(0...4).map{|i| [labels[i],40+i*80,30,2,dim,shadow]})
+    bmp.font.size=18
     lines=REM_UI.wrap(bmp,pbGetMessage(MessageTypes::MoveDescriptions,move.id),296)
     if lines.length>3
       lines=lines[0,3]
@@ -358,7 +358,7 @@ class PokeBattle_Scene
     end
     textpos=[]
     for i in 0...lines.length
-      textpos.push([lines[i],12,69+i*19,0,base,shadow])
+      textpos.push([lines[i],12,70+i*19,0,base,shadow])
     end
     pbDrawTextPositions(bmp,textpos)
     loop do

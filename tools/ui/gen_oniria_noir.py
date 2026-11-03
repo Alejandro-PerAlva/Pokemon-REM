@@ -120,6 +120,45 @@ def safari_retone():
 def fill_color(v):
     t = max(0.0, min(1.0, (v - 150) / 80.0)); return lerp(OBS_BOT, OBS_TOP, t)
 
+# ------------------------------------------------------------------ insignias HD (tipos y estados)
+TYPE_LABEL = ["NORMAL","LUCHA","VOLAD.","VENENO","TIERRA","ROCA","BICHO","FANT.","ACERO","???",
+              "FUEGO","AGUA","PLANTA","ELÉCTR.","PSÍQ.","HIELO","DRAGÓN","SINIES.","HADA"]
+
+def pill(w, h, col, text, size, fx=0, fy=0, fw=None, fh=None):
+    """Píldora plana: relleno del color canónico, micro-borde más oscuro, texto blanco con sombra."""
+    S = 4                                              # supersampling para bordes suaves
+    fw = fw or w; fh = fh or h
+    big = Image.new("RGBA", (w * S, h * S), (0, 0, 0, 0)); d = ImageDraw.Draw(big)
+    dark = tuple(int(c * 0.55) for c in col[:3]) + (255,)
+    box = (fx * S, fy * S, (fx + fw) * S - 1, (fy + fh) * S - 1)
+    d.rounded_rectangle(box, radius=(fh * S) // 2 if fh <= 24 else 5 * S, fill=dark)
+    d.rounded_rectangle((box[0] + S, box[1] + S, box[2] - S, box[3] - S), radius=max(fh * S // 2 - S, 2), fill=col)
+    im = big.resize((w, h), Image.LANCZOS)
+    f = ImageFont.truetype(FONT, size); dd = ImageDraw.Draw(im)
+    while dd.textlength(text, font=f) > fw - 8 and size > 10:
+        size -= 1; f = ImageFont.truetype(FONT, size)
+    hb = dd.textbbox((0, 0), "H", font=f); tb = dd.textbbox((0, 0), text, font=f)
+    tx = fx + (fw - (tb[2] - tb[0])) / 2 - tb[0]; ty = fy + (fh - (hb[3] - hb[1])) / 2 - hb[1]
+    tx, ty = int(round(tx)), int(round(ty))
+    dd.text((tx, ty + 1), text, font=f, fill=(0, 0, 0, 150))      # sombra suave
+    dd.text((tx, ty), text, font=f, fill=(255, 255, 255, 255))
+    return im
+
+def make_types():
+    sheet = src("types").copy()                       # conserva las filas extra (19..23) del original
+    sheet.paste((0, 0, 0, 0), (0, 0, 64, 28 * 19))
+    for t in range(19):
+        sheet.paste(pill(64, 28, TYPE_COL[t], TYPE_LABEL[t], 21, 1, 3, 62, 22), (0, 28 * t))
+    save(sheet, "types")
+
+def make_statuses():
+    cols = ["7A8594", "A24BC4", "F0592A", "F2B01E", "29B6E8"]      # dormido, envenenado, quemado, paralizado, congelado
+    names = ["DOR", "ENV", "QUE", "PAR", "CON"]
+    sheet = Image.new("RGBA", (44, 80), (0, 0, 0, 0))
+    for i in range(5):
+        sheet.paste(pill(44, 16, hexc(cols[i]), names[i], 17, 1, 1, 42, 14), (0, 16 * i))
+    save(sheet, "battleStatuses")
+
 # ------------------------------------------------------------------ barras
 def bar_base(w, h, accent=SILVER):
     im = Image.new("RGBA", (w, h), (0, 0, 0, 0)); d = ImageDraw.Draw(im)
@@ -231,4 +270,4 @@ if __name__ == "__main__":
     databox("battlePlayerBoxS", "player", "S"); databox("battlePlayerBoxD", "player", "D")
     safari_retone()
     make_command(); make_message(); make_fight()
-    make_command_buttons(); make_fight_buttons(); make_move_info()
+    make_command_buttons(); make_fight_buttons(); make_move_info(); make_types(); make_statuses()
