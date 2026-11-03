@@ -72,6 +72,16 @@ def blank():
     out.paste((12, 14, 18, 110), (0, 0), shrink("Rect", 1))
     return out
 
+def message_bar():
+    """512x77: barra inferior compacta (obsidiana, borde plata de 1 px, bisel oscuro, reflejo superior)."""
+    W, H = 512, 77
+    im = Image.new("RGBA", (W, H), G.hexc("14161D")); d = ImageDraw.Draw(im)
+    for y in range(H): d.line([(0, y), (W, y)], fill=lerp(hexc("1A1D26"), hexc("14161D"), y / (H - 1)))
+    d.rectangle((0, 0, W - 1, H - 1), outline=SILVER)
+    d.rectangle((1, 1, W - 2, H - 2), outline=BEVEL)
+    d.line([(2, 2), (W - 3, 2)], fill=(255, 255, 255, 40))
+    save(im, "partyMessage")
+
 def background():
     W, H = 512, 384
     base = Image.new("RGBA", (W, H), (14, 16, 21, 255))
@@ -139,7 +149,7 @@ def selarrow():
     save(im, "rem_selarrow")
 
 if __name__ == "__main__":
-    background()
+    background(); message_bar()
     for kind in ("Round", "Rect"):
         for st in STATES: save(panel(kind, st), "partyPanel" + kind + st)
     save(blank(), "partyPanelBlank")
