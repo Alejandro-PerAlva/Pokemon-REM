@@ -160,20 +160,20 @@ def make_statuses():
     save(sheet, "battleStatuses")
 
 def make_owned():
-    """Poké Ball 8x8 en pixel art: arriba roja, banda negra central con botón blanco, abajo blanca."""
-    grid = ["..oooo..",
-            ".orRrro.",
-            "orrrrrro",
-            "obbwwbbo",
-            "obbwwbbo",
-            "owwwwwwo",
-            ".owwwwo.",
-            "..oooo.."]
-    pal = {"o": hexc("56606F"), "r": hexc("E2323C"), "R": hexc("FF8A8A"), "b": hexc("0D0E12"), "w": hexc("F0F3F8")}
-    im = Image.new("RGBA", (8, 8), (0, 0, 0, 0)); px = im.load()
-    for y, row in enumerate(grid):
-        for x, c in enumerate(row):
-            if c in pal: px[x, y] = pal[c]
+    """Poké Ball 14x14 en pixel art: arriba roja, banda negra con botón blanco, abajo blanca."""
+    N = 14; c = (N - 1) / 2.0
+    steel, red, hi = hexc("56606F"), hexc("E2323C"), hexc("FF8A8A")
+    dark, white = hexc("0D0E12"), hexc("F0F3F8")
+    im = Image.new("RGBA", (N, N), (0, 0, 0, 0)); px = im.load()
+    for y in range(N):
+        for x in range(N):
+            d = ((x - c) ** 2 + (y - c) ** 2) ** 0.5
+            if d > 6.9: continue
+            if d > 5.8: px[x, y] = steel; continue
+            px[x, y] = red if y < 6 else (dark if y < 8 else white)
+            if d <= 3.1: px[x, y] = dark                      # aro del botón
+            if d <= 2.0: px[x, y] = white                     # botón
+    for (x, y) in ((3, 3), (4, 2), (3, 4)): px[x, y] = hi     # brillo
     save(im, "battleBoxOwned")
 
 CAT_COL = ["F0592A", "7B61D6", "8A94A6"]          # físico, especial, estado
@@ -309,7 +309,7 @@ def make_fight_buttons():
 
 # ------------------------------------------------------------------ tarjeta de info
 def make_move_info():
-    w, h = 240, 138
+    w, h = 240, 152
     im = Image.new("RGBA", (w, h), (0, 0, 0, 0)); d = ImageDraw.Draw(im)
     d.rounded_rectangle((0, 0, w-1, h-1), radius=10, fill=SILVER)
     d.rounded_rectangle((1, 1, w-2, h-2), radius=9, fill=BEVEL)

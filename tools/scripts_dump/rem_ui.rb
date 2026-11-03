@@ -285,7 +285,7 @@ class PokemonDataBox
       end
     end
     if @battler.owned && foe
-      imagepos.push(["Graphics/Pictures/battleBoxOwned.png",bx+74,28,0,0,-1,-1])
+      imagepos.push(["Graphics/Pictures/battleBoxOwned.png",bx+10,35,0,0,-1,-1])
     end
     pbDrawImagePositions(self.bitmap,imagepos)
     if @battler.status>0
@@ -364,11 +364,11 @@ class PokeBattle_Scene
   # Anclada abajo a la izquierda, justo sobre el panel de botones de ataque.
   def pbRemMoveInfo(move)
     vp=Viewport.new(0,0,Graphics.width,Graphics.height); vp.z=99999
-    sp=BitmapSprite.new(240,138,vp)
-    sp.x=8; sp.y=Graphics.height-96-138-4
+    sp=BitmapSprite.new(240,152,vp)
+    sp.x=8; sp.y=Graphics.height-96-152-4
     bmp=sp.bitmap
     card=AnimatedBitmap.new("Graphics/Pictures/battleMoveInfo")
-    bmp.blt(0,0,card.bitmap,Rect.new(0,0,240,138))
+    bmp.blt(0,0,card.bitmap,Rect.new(0,0,240,152))
     card.dispose
     cat=move.pbIsStatus? ? 2 : (move.pbIsPhysical?(move.type) ? 0 : 1)
     icons=AnimatedBitmap.new("Graphics/Pictures/category")
@@ -383,7 +383,7 @@ class PokeBattle_Scene
        [_INTL("Precisión"),200,4,2,dim,shadow]])
     bmp.font.size=26
     pbDrawTextPositions(bmp,[[pw,120,19,2,base,shadow],[ac,200,19,2,base,shadow]])
-    bmp.font.size=20
+    bmp.font.size=23
     lines=REM_UI.wrap(bmp,pbGetMessage(MessageTypes::MoveDescriptions,move.id),216)
     if lines.length>4
       lines=lines[0,4]
@@ -391,7 +391,7 @@ class PokeBattle_Scene
     end
     textpos=[]
     for i in 0...lines.length
-      textpos.push([lines[i],12,58+i*19,0,base,shadow])
+      textpos.push([lines[i],12,58+i*22,0,base,shadow])
     end
     pbDrawTextPositions(bmp,textpos)
     loop do
