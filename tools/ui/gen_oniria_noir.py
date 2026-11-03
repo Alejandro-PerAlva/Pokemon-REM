@@ -60,7 +60,7 @@ def databox(name, side, kind):
     """kind: 'S' (jugador con tab de EXP), 'D' o 'F' (rival)."""
     W, H = 260, (86 if (side == "player" and kind == "S") else 62)
     out = Image.new("RGBA", (W, H), (0, 0, 0, 0)); o = out.load()
-    T, B = 6, (75 if (side == "player" and kind == "S") else 53)
+    T, B = 6, (66 if (side == "player" and kind == "S") else 56)
     bx = 16 if side == "foe" else 34
     def edge(y):
         return 236 + int((y - T) * 0.25) if side == "foe" else 28 - int((y - T) * (0.25 if B > 60 else 0.3))
@@ -96,9 +96,11 @@ def databox(name, side, kind):
     for y in range(y0, y1 + 2): o[x0 - 1, y] = BEVEL; o[x1 + 1, y] = lerp(BEVEL, SILVER, 0.2)
     for x in range(x0 + 1, x1): o[x, y0 + 1] = hexc("000000")
     if side == "player" and kind == "S":                    # pista de EXP
-        for y in range(65, 73):                                # única barra de EXP pegada al fondo de la caja
+        for y in range(71, 79):                                # barra de EXP independiente, bajo la caja
             for x in range(38, 236):
-                o[x, y] = STEEL if x in (38, 235) or y in (65, 72) else hexc("07080B")
+                o[x, y] = STEEL if x in (38, 235) or y in (71, 78) else hexc("07080B")
+        for x in range(37, 237): o[x, 70] = BEVEL; o[x, 79] = lerp(BEVEL, SILVER, 0.3)
+        for y in range(70, 80): o[37, y] = BEVEL; o[236, y] = BEVEL
     save(out, name)
 
 def safari_retone():
@@ -158,6 +160,43 @@ def make_statuses():
     for i in range(5):
         sheet.paste(pill(44, 16, hexc(cols[i]), names[i], z, 1, 1, 42, 14), (0, 16 * i))
     save(sheet, "battleStatuses")
+
+def make_owned():
+    im = src("battleBoxOwned").resize((10, 10), Image.LANCZOS); save(im, "battleBoxOwned")
+
+CAT_COL = ["F0592A", "7B61D6", "8A94A6"]          # físico, especial, estado
+
+def make_category():
+    sheet = Image.new("RGBA", (64, 84), (0, 0, 0, 0)); S = 8
+    for i in range(3):
+        base = pill(64, 28, hexc(CAT_COL[i]), "", 21, 1, 3, 62, 22)
+        big = Image.new("RGBA", (64 * S, 28 * S), (0, 0, 0, 0)); d = ImageDraw.Draw(big)
+        cx, cy = 32 * S, 14 * S
+        def ink(fn):
+            sh = Image.new("RGBA", big.size, (0, 0, 0, 0)); fn(ImageDraw.Draw(sh), (0, 0, 0, 110), 1.0 * S)
+            big.alpha_composite(sh); fn(d, (255, 255, 255, 255), 0)
+        if i == 0:                                  # estrella de impacto
+            import math
+            def f(dr, c, o):
+                pts = []
+                for k in range(16):
+                    r = (8.5 if k % 2 == 0 else 4.2) * S; a = math.pi * k / 8 - math.pi / 2
+                    pts.append((cx + r * math.cos(a), cy + o + r * math.sin(a)))
+                dr.polygon(pts, fill=c)
+        elif i == 1:                                # ondas concéntricas
+            def f(dr, c, o):
+                for r, wd in ((8.5, 1.6), (5.2, 1.6)):
+                    dr.ellipse((cx - r * S, cy + o - r * S, cx + r * S, cy + o + r * S), outline=c, width=int(wd * S))
+                dr.ellipse((cx - 1.8 * S, cy + o - 1.8 * S, cx + 1.8 * S, cy + o + 1.8 * S), fill=c)
+        else:                                       # círculo medio relleno (estado)
+            def f(dr, c, o):
+                r = 7.5 * S
+                dr.ellipse((cx - r, cy + o - r, cx + r, cy + o + r), outline=c, width=int(1.6 * S))
+                dr.pieslice((cx - r, cy + o - r, cx + r, cy + o + r), 90, 270, fill=c)
+        ink(f)
+        icon = big.resize((64, 28), Image.LANCZOS); base.alpha_composite(icon)
+        sheet.paste(base, (0, 28 * i))
+    save(sheet, "category")
 
 # ------------------------------------------------------------------ barras
 def bar_base(w, h, accent=SILVER):
@@ -255,14 +294,14 @@ def make_fight_buttons():
 
 # ------------------------------------------------------------------ tarjeta de info
 def make_move_info():
-    w, h = 320, 120
+    w, h = 240, 138
     im = Image.new("RGBA", (w, h), (0, 0, 0, 0)); d = ImageDraw.Draw(im)
     d.rounded_rectangle((0, 0, w-1, h-1), radius=10, fill=SILVER)
     d.rounded_rectangle((1, 1, w-2, h-2), radius=9, fill=BEVEL)
     d.rounded_rectangle((2, 2, w-3, h-3), radius=8, fill=(16, 18, 26, 240))
     ln = hexc("3A404D")
     d.line([(10, 53), (w-11, 53)], fill=ln); d.line([(10, 54), (w-11, 54)], fill=BEVEL)
-    for x in (107, 213): d.line([(x, 8), (x, 47)], fill=ln)            # 3 celdas
+    for x in (80, 160): d.line([(x, 8), (x, 47)], fill=ln)             # 3 celdas de 80 px
     save(im, "battleMoveInfo")
 
 if __name__ == "__main__":
@@ -270,4 +309,4 @@ if __name__ == "__main__":
     databox("battlePlayerBoxS", "player", "S"); databox("battlePlayerBoxD", "player", "D")
     safari_retone()
     make_command(); make_message(); make_fight()
-    make_command_buttons(); make_fight_buttons(); make_move_info(); make_types(); make_statuses()
+    make_command_buttons(); make_fight_buttons(); make_move_info(); make_types(); make_statuses(); make_owned(); make_category()

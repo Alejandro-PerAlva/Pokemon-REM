@@ -248,18 +248,18 @@ class PokemonDataBox
     bx=@spritebaseX
     pbSetNarrowFont(self.bitmap)
     name=@battler.name
-    self.bitmap.font.size=24
-    self.bitmap.font.size=21 if self.bitmap.text_size(name).width>110
+    self.bitmap.font.size=27
+    self.bitmap.font.size-=1 while self.bitmap.font.size>19 && self.bitmap.text_size(name).width>108
     namew=self.bitmap.text_size(name).width
-    textpos=[[name,bx+10,9,false,base,shadow]]
+    textpos=[[name,bx+10,8,false,base,shadow]]
     case @battler.displayGender
-    when 0 then textpos.push([_INTL("♂"),bx+14+namew,9,false,Color.new(110,170,255),shadow])
-    when 1 then textpos.push([_INTL("♀"),bx+14+namew,9,false,Color.new(255,120,160),shadow])
+    when 0 then textpos.push([_INTL("♂"),bx+14+namew,8,false,Color.new(110,170,255),shadow])
+    when 1 then textpos.push([_INTL("♀"),bx+14+namew,8,false,Color.new(255,120,160),shadow])
     end
     pbDrawTextPositions(self.bitmap,textpos)
     pbSetNarrowFont(self.bitmap)
-    self.bitmap.font.size=22
-    textpos=[[_INTL("Nv{1}",@battler.level),bx+196,10,true,base,shadow]]
+    self.bitmap.font.size=25
+    textpos=[[_INTL("Nv{1}",@battler.level),bx+196,9,true,base,shadow]]
     if @showhp
       self.bitmap.font.size=20
       textpos.push([_ISPRINTF("{1: 2d}/{2: 2d}",self.hp,@battler.totalhp),bx+196,47,true,base,shadow])
@@ -279,7 +279,7 @@ class PokemonDataBox
       end
     end
     if @battler.owned && foe
-      imagepos.push(["Graphics/Pictures/battleBoxOwned.png",bx+8,30,0,0,-1,-1])
+      imagepos.push(["Graphics/Pictures/battleBoxOwned.png",bx+16+namew+(@battler.displayGender<2 ? 14 : 0),15,0,0,-1,-1])
     end
     pbDrawImagePositions(self.bitmap,imagepos)
     if @battler.status>0
@@ -303,7 +303,7 @@ class PokemonDataBox
     self.bitmap.fill_rect(bx+hpGaugeX,hpGaugeY+2,hpgauge,4,hpcolors[hpzone*2+1])
     if @showexp
       expGaugeX=PokeBattle_SceneConstants::EXPGAUGE_X
-      expGaugeY=67   # una sola barra, pegada al fondo de la caja (pista dibujada en el PNG)
+      expGaugeY=73   # barra independiente bajo la caja (pista dibujada en el PNG)
       self.bitmap.fill_rect(bx+expGaugeX,expGaugeY,self.exp,2,PokeBattle_SceneConstants::EXPCOLORSHADOW)
       self.bitmap.fill_rect(bx+expGaugeX,expGaugeY+2,self.exp,2,PokeBattle_SceneConstants::EXPCOLORBASE)
     end
@@ -330,30 +330,30 @@ class PokeBattle_Scene
   # Anclada abajo a la izquierda, justo sobre el panel de botones de ataque.
   def pbRemMoveInfo(move)
     vp=Viewport.new(0,0,Graphics.width,Graphics.height); vp.z=99999
-    sp=BitmapSprite.new(320,120,vp)
-    sp.x=8; sp.y=Graphics.height-96-120-4
+    sp=BitmapSprite.new(240,138,vp)
+    sp.x=8; sp.y=Graphics.height-96-138-4
     bmp=sp.bitmap
     card=AnimatedBitmap.new("Graphics/Pictures/battleMoveInfo")
-    bmp.blt(0,0,card.bitmap,Rect.new(0,0,320,120))
+    bmp.blt(0,0,card.bitmap,Rect.new(0,0,240,138))
     card.dispose
     cat=move.pbIsStatus? ? 2 : (move.pbIsPhysical?(move.type) ? 0 : 1)
     icons=AnimatedBitmap.new("Graphics/Pictures/category")
-    bmp.blt(53-32,20,icons.bitmap,Rect.new(0,cat*28,64,28))
+    bmp.blt(40-32,20,icons.bitmap,Rect.new(0,cat*28,64,28))
     icons.dispose
     pw=(!move.pbIsStatus? && move.basedamage>0) ? move.basedamage.to_s : "-"
     ac=move.accuracy>0 ? _INTL("{1}%",move.accuracy) : "-"
     base=Color.new(255,255,255); dim=REM_UI::SILVER; shadow=REM_UI::INK
     pbSetNarrowFont(bmp)
     bmp.font.size=15
-    pbDrawTextPositions(bmp,[[_INTL("Categoría"),53,4,2,dim,shadow],[_INTL("Potencia"),160,4,2,dim,shadow],
-       [_INTL("Precisión"),267,4,2,dim,shadow]])
+    pbDrawTextPositions(bmp,[[_INTL("Categoría"),40,4,2,dim,shadow],[_INTL("Potencia"),120,4,2,dim,shadow],
+       [_INTL("Precisión"),200,4,2,dim,shadow]])
     bmp.font.size=26
-    pbDrawTextPositions(bmp,[[pw,160,19,2,base,shadow],[ac,267,19,2,base,shadow]])
+    pbDrawTextPositions(bmp,[[pw,120,19,2,base,shadow],[ac,200,19,2,base,shadow]])
     bmp.font.size=18
-    lines=REM_UI.wrap(bmp,pbGetMessage(MessageTypes::MoveDescriptions,move.id),296)
-    if lines.length>3
-      lines=lines[0,3]
-      lines[2]=lines[2]+"…"
+    lines=REM_UI.wrap(bmp,pbGetMessage(MessageTypes::MoveDescriptions,move.id),216)
+    if lines.length>4
+      lines=lines[0,4]
+      lines[3]=lines[3]+"…"
     end
     textpos=[]
     for i in 0...lines.length
@@ -415,7 +415,7 @@ def adjustBattleSpriteY(sprite,species,index,metrics=nil)
     top=base+ret+sprite.remTopTrim
     ret+=[4-top,24].min if top<4   # arte más alto que el hueco: se baja hasta 24 px, el resto queda recortado
   end
-  ret-=10 if index==0 || index==2   # pies del jugador sobre la parte alta de la plataforma, visibles sobre el menú
+  ret-=3 if index==0 || index==2   # pies del jugador casi sobre el centro de la plataforma
   return ret
 end
 
