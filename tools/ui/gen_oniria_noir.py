@@ -60,10 +60,10 @@ def databox(name, side, kind):
     """kind: 'S' (jugador con tab de EXP), 'D' o 'F' (rival)."""
     W, H = 260, (86 if (side == "player" and kind == "S") else 62)
     out = Image.new("RGBA", (W, H), (0, 0, 0, 0)); o = out.load()
-    T, B = 6, (66 if (side == "player" and kind == "S") else 50)
+    T, B = 6, (75 if (side == "player" and kind == "S") else 53)
     bx = 16 if side == "foe" else 34
     def edge(y):
-        return 236 + int((y - T) * 0.25) if side == "foe" else 28 - int((y - T) * (0.25 if B > 50 else 0.3))
+        return 236 + int((y - T) * 0.25) if side == "foe" else 28 - int((y - T) * (0.25 if B > 60 else 0.3))
     for y in range(T, B + 1):
         e = edge(y); xs = range(0, e + 1) if side == "foe" else range(e, W)
         for x in xs: o[x, y] = BODY
@@ -76,11 +76,6 @@ def databox(name, side, kind):
             for x in xs: o[x, y] = lerp(BODY, (255, 255, 255, 255), 0.07)       # brillo suave bajo el canto
         if y == B:
             for x in xs: o[x, y] = STEEL
-    if side == "player" and kind == "S":                    # tab de EXP
-        for y in range(B + 1, 85):
-            for x in range(36, 237): o[x, y] = BODY
-            o[36, y] = STEEL; o[236, y] = STEEL
-        for x in range(36, 237): o[x, 84] = STEEL
     # ranura de la franja de tipo (gema): tapas y filo interior en acero, fondo bisel
     for y in range(STRIPE_Y0 - 1, STRIPE_Y1 + 2):
         e = edge(y)
@@ -101,9 +96,9 @@ def databox(name, side, kind):
     for y in range(y0, y1 + 2): o[x0 - 1, y] = BEVEL; o[x1 + 1, y] = lerp(BEVEL, SILVER, 0.2)
     for x in range(x0 + 1, x1): o[x, y0 + 1] = hexc("000000")
     if side == "player" and kind == "S":                    # pista de EXP
-        for y in range(74, 82):
+        for y in range(65, 73):                                # única barra de EXP pegada al fondo de la caja
             for x in range(38, 236):
-                o[x, y] = STEEL if x in (38, 235) or y in (74, 81) else hexc("07080B")
+                o[x, y] = STEEL if x in (38, 235) or y in (65, 72) else hexc("07080B")
     save(out, name)
 
 def safari_retone():
@@ -124,6 +119,11 @@ def fill_color(v):
 TYPE_LABEL = ["NORMAL","LUCHA","VOLAD.","VENENO","TIERRA","ROCA","BICHO","FANT.","ACERO","???",
               "FUEGO","AGUA","PLANTA","ELÉCTR.","PSÍQ.","HIELO","DRAGÓN","SINIES.","HADA"]
 
+def fit_size(texts, size, width):
+    f = lambda t, z: ImageDraw.Draw(Image.new('RGBA', (1, 1))).textlength(t, font=ImageFont.truetype(FONT, z))
+    while size > 10 and any(f(t, size) > width for t in texts): size -= 1
+    return size
+
 def pill(w, h, col, text, size, fx=0, fy=0, fw=None, fh=None):
     """Píldora plana: relleno del color canónico, micro-borde más oscuro, texto blanco con sombra."""
     S = 4                                              # supersampling para bordes suaves
@@ -135,8 +135,6 @@ def pill(w, h, col, text, size, fx=0, fy=0, fw=None, fh=None):
     d.rounded_rectangle((box[0] + S, box[1] + S, box[2] - S, box[3] - S), radius=max(fh * S // 2 - S, 2), fill=col)
     im = big.resize((w, h), Image.LANCZOS)
     f = ImageFont.truetype(FONT, size); dd = ImageDraw.Draw(im)
-    while dd.textlength(text, font=f) > fw - 8 and size > 10:
-        size -= 1; f = ImageFont.truetype(FONT, size)
     hb = dd.textbbox((0, 0), "H", font=f); tb = dd.textbbox((0, 0), text, font=f)
     tx = fx + (fw - (tb[2] - tb[0])) / 2 - tb[0]; ty = fy + (fh - (hb[3] - hb[1])) / 2 - hb[1]
     tx, ty = int(round(tx)), int(round(ty))
@@ -147,16 +145,18 @@ def pill(w, h, col, text, size, fx=0, fy=0, fw=None, fh=None):
 def make_types():
     sheet = src("types").copy()                       # conserva las filas extra (19..23) del original
     sheet.paste((0, 0, 0, 0), (0, 0, 64, 28 * 19))
+    z = fit_size(TYPE_LABEL, 21, 54)                        # un único tamaño para todas
     for t in range(19):
-        sheet.paste(pill(64, 28, TYPE_COL[t], TYPE_LABEL[t], 21, 1, 3, 62, 22), (0, 28 * t))
+        sheet.paste(pill(64, 28, TYPE_COL[t], TYPE_LABEL[t], z, 1, 3, 62, 22), (0, 28 * t))
     save(sheet, "types")
 
 def make_statuses():
     cols = ["7A8594", "A24BC4", "F0592A", "F2B01E", "29B6E8"]      # dormido, envenenado, quemado, paralizado, congelado
     names = ["DOR", "ENV", "QUE", "PAR", "CON"]
     sheet = Image.new("RGBA", (44, 80), (0, 0, 0, 0))
+    z = fit_size(names, 17, 36)
     for i in range(5):
-        sheet.paste(pill(44, 16, hexc(cols[i]), names[i], 17, 1, 1, 42, 14), (0, 16 * i))
+        sheet.paste(pill(44, 16, hexc(cols[i]), names[i], z, 1, 1, 42, 14), (0, 16 * i))
     save(sheet, "battleStatuses")
 
 # ------------------------------------------------------------------ barras
@@ -255,14 +255,14 @@ def make_fight_buttons():
 
 # ------------------------------------------------------------------ tarjeta de info
 def make_move_info():
-    w, h = 320, 132
+    w, h = 320, 120
     im = Image.new("RGBA", (w, h), (0, 0, 0, 0)); d = ImageDraw.Draw(im)
     d.rounded_rectangle((0, 0, w-1, h-1), radius=10, fill=SILVER)
     d.rounded_rectangle((1, 1, w-2, h-2), radius=9, fill=BEVEL)
     d.rounded_rectangle((2, 2, w-3, h-3), radius=8, fill=(16, 18, 26, 240))
     ln = hexc("3A404D")
-    for y in (28, 65): d.line([(10, y), (w-11, y)], fill=ln); d.line([(10, y+1), (w-11, y+1)], fill=BEVEL)
-    for x in (80, 160, 240): d.line([(x, 33), (x, 61)], fill=ln)       # columnas de la tabla de stats
+    d.line([(10, 53), (w-11, 53)], fill=ln); d.line([(10, 54), (w-11, 54)], fill=BEVEL)
+    for x in (107, 213): d.line([(x, 8), (x, 47)], fill=ln)            # 3 celdas
     save(im, "battleMoveInfo")
 
 if __name__ == "__main__":

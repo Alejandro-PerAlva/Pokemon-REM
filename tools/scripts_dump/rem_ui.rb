@@ -261,7 +261,8 @@ class PokemonDataBox
     self.bitmap.font.size=22
     textpos=[[_INTL("Nv{1}",@battler.level),bx+196,10,true,base,shadow]]
     if @showhp
-      textpos.push([_ISPRINTF("{1: 2d}/{2: 2d}",self.hp,@battler.totalhp),bx+196,48,true,base,shadow])
+      self.bitmap.font.size=20
+      textpos.push([_ISPRINTF("{1: 2d}/{2: 2d}",self.hp,@battler.totalhp),bx+196,47,true,base,shadow])
     end
     pbDrawTextPositions(self.bitmap,textpos)
     imagepos=[]
@@ -302,7 +303,7 @@ class PokemonDataBox
     self.bitmap.fill_rect(bx+hpGaugeX,hpGaugeY+2,hpgauge,4,hpcolors[hpzone*2+1])
     if @showexp
       expGaugeX=PokeBattle_SceneConstants::EXPGAUGE_X
-      expGaugeY=PokeBattle_SceneConstants::EXPGAUGE_Y
+      expGaugeY=67   # una sola barra, pegada al fondo de la caja (pista dibujada en el PNG)
       self.bitmap.fill_rect(bx+expGaugeX,expGaugeY,self.exp,2,PokeBattle_SceneConstants::EXPCOLORSHADOW)
       self.bitmap.fill_rect(bx+expGaugeX,expGaugeY+2,self.exp,2,PokeBattle_SceneConstants::EXPCOLORBASE)
     end
@@ -325,31 +326,29 @@ class FightMenuButtons
 end
 
 class PokeBattle_Scene
-  # Ficha de ataque: cabecera (nombre | tipo), tabla de 4 columnas (categoría, potencia, precisión, PP)
-  # y descripción. Anclada abajo a la izquierda, sobre la zona del menú.
+  # Ficha de ataque: 3 celdas (icono de categoría, potencia, precisión) y descripción debajo.
+  # Anclada abajo a la izquierda, justo sobre el panel de botones de ataque.
   def pbRemMoveInfo(move)
     vp=Viewport.new(0,0,Graphics.width,Graphics.height); vp.z=99999
-    sp=BitmapSprite.new(320,132,vp)
-    sp.x=8; sp.y=Graphics.height-96-132-4   # justo sobre el panel de botones de ataque
+    sp=BitmapSprite.new(320,120,vp)
+    sp.x=8; sp.y=Graphics.height-96-120-4
     bmp=sp.bitmap
     card=AnimatedBitmap.new("Graphics/Pictures/battleMoveInfo")
-    bmp.blt(0,0,card.bitmap,Rect.new(0,0,320,132))
+    bmp.blt(0,0,card.bitmap,Rect.new(0,0,320,120))
     card.dispose
-    types=AnimatedBitmap.new(_INTL("Graphics/Pictures/types"))
-    bmp.blt(250,0,types.bitmap,Rect.new(0,move.type*28,64,28))
-    types.dispose
-    cat=move.pbIsStatus? ? _INTL("Estado") : (move.pbIsPhysical?(move.type) ? _INTL("Físico") : _INTL("Especial"))
-    pw=move.basedamage>0 ? move.basedamage.to_s : "—"
-    ac=move.accuracy>0 ? move.accuracy.to_s : "—"
+    cat=move.pbIsStatus? ? 2 : (move.pbIsPhysical?(move.type) ? 0 : 1)
+    icons=AnimatedBitmap.new("Graphics/Pictures/category")
+    bmp.blt(53-32,20,icons.bitmap,Rect.new(0,cat*28,64,28))
+    icons.dispose
+    pw=(!move.pbIsStatus? && move.basedamage>0) ? move.basedamage.to_s : "-"
+    ac=move.accuracy>0 ? _INTL("{1}%",move.accuracy) : "-"
     base=Color.new(255,255,255); dim=REM_UI::SILVER; shadow=REM_UI::INK
     pbSetNarrowFont(bmp)
-    bmp.font.size=24
-    pbDrawTextPositions(bmp,[[move.name,12,0,0,base,shadow]])
-    vals=[cat,pw,ac,_INTL("{1}/{2}",move.pp,move.totalpp)]
-    pbDrawTextPositions(bmp,(0...4).map{|i| [vals[i],40+i*80,43,2,base,shadow]})
     bmp.font.size=15
-    labels=[_INTL("Categoría"),_INTL("Potencia"),_INTL("Precisión"),_INTL("PP")]
-    pbDrawTextPositions(bmp,(0...4).map{|i| [labels[i],40+i*80,30,2,dim,shadow]})
+    pbDrawTextPositions(bmp,[[_INTL("Categoría"),53,4,2,dim,shadow],[_INTL("Potencia"),160,4,2,dim,shadow],
+       [_INTL("Precisión"),267,4,2,dim,shadow]])
+    bmp.font.size=26
+    pbDrawTextPositions(bmp,[[pw,160,19,2,base,shadow],[ac,267,19,2,base,shadow]])
     bmp.font.size=18
     lines=REM_UI.wrap(bmp,pbGetMessage(MessageTypes::MoveDescriptions,move.id),296)
     if lines.length>3
@@ -358,7 +357,7 @@ class PokeBattle_Scene
     end
     textpos=[]
     for i in 0...lines.length
-      textpos.push([lines[i],12,70+i*19,0,base,shadow])
+      textpos.push([lines[i],12,60+i*19,0,base,shadow])
     end
     pbDrawTextPositions(bmp,textpos)
     loop do
@@ -374,6 +373,31 @@ end
 # que mide BitmapWrapperEX), de modo que nada queda hundido ni flotando.
 #===============================================================================
 class PokemonBattlerSprite
+  # Filas vacías por encima del arte (en píxeles de pantalla), para no sacar por arriba a los rivales enormes.
+  def remTopTrim
+    return @remTopTrim if @remTopTrim
+    t=0
+    f=@_iconbitmap ? (@_iconbitmap.instance_variable_get(:@bitmapFile) rescue nil) : nil
+    if f && !f.disposed?
+      h=f.height
+      for y in 0...h
+        empty=true
+        x=0
+        while x<h
+          if f.get_pixel(x,y).alpha>10
+            empty=false; break
+          end
+          x+=2
+        end
+        break if !empty
+        t+=1
+      end
+      t*=@_iconbitmap.scale
+    end
+    @remTopTrim=t
+    return t
+  end
+
   def remTrimY
     return 0 if !@_iconbitmap || !@_iconbitmap.respond_to?(:offset_y) || !@_iconbitmap.offset_y
     t=@_iconbitmap.offset_y
@@ -386,6 +410,11 @@ alias rem_orig_adjustBattleSpriteY adjustBattleSpriteY
 def adjustBattleSpriteY(sprite,species,index,metrics=nil)
   ret=rem_orig_adjustBattleSpriteY(sprite,species,index,metrics)
   ret+=sprite.remTrimY if sprite.respond_to?(:remTrimY)
+  if (index==1 || index==3) && sprite.respond_to?(:remTopTrim) && sprite.bitmap
+    base=(index==3) ? PokeBattle_SceneConstants::FOEBATTLERD2_Y : PokeBattle_SceneConstants::FOEBATTLER_Y
+    top=base+ret+sprite.remTopTrim
+    ret+=[4-top,24].min if top<4   # arte más alto que el hueco: se baja hasta 24 px, el resto queda recortado
+  end
   ret-=10 if index==0 || index==2   # pies del jugador sobre la parte alta de la plataforma, visibles sobre el menú
   return ret
 end
