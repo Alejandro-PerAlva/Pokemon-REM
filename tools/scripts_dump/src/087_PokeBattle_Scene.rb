@@ -431,7 +431,6 @@ class FightMenuButtons < BitmapSprite
            448,50+UPPERGAP,2,ppcolors[(4-ppfraction)*2],ppcolors[(4-ppfraction)*2+1]])
       end
     end
-    textpos.push([_INTL("Tecla D: info del movimiento"),8,16,0,Color.new(248,248,248),Color.new(64,64,80)])
     pbDrawTextPositions(self.bitmap,textpos)
     if megaButton>0
       self.bitmap.blt(200,0,@megaevobitmap.bitmap,Rect.new(0,(megaButton-1)*46,96,46))

@@ -150,50 +150,143 @@ def pbRemDexData(species)
 end
 
 #===============================================================================
-# COMBATE: iconos de tipo en las cajas de datos + info completa del movimiento
+# COMBATE "Oniria Noir": franja lateral de tipo en las cajas de datos, paleta de texto
+# clara sobre obsidiana y tarjeta compacta de info del movimiento (tecla D / Z).
+# Los PNG (Graphics/Pictures/battle*.png) los genera tools/ui/gen_oniria_noir.py; la ranura de
+# 5 px de las cajas (filas STRIPE_Y0..STRIPE_Y1, pegada al borde oblicuo) se rellena aquí.
 #===============================================================================
+module PokeBattle_SceneConstants
+  [[:BOXTEXTBASECOLOR,Color.new(255,255,255)],[:BOXTEXTSHADOWCOLOR,Color.new(13,14,18)],
+   [:MESSAGEBASECOLOR,Color.new(240,243,248)],[:MESSAGESHADOWCOLOR,Color.new(13,14,18)],
+   [:MENUBASECOLOR,Color.new(240,243,248)],[:MENUSHADOWCOLOR,Color.new(13,14,18)],
+   [:PPTEXTBASECOLOR,Color.new(240,243,248)],[:PPTEXTSHADOWCOLOR,Color.new(13,14,18)]].each{|n,c|
+    remove_const(n) if const_defined?(n)
+    const_set(n,c)
+  }
+end
+
+module REM_UI
+  STRIPE_W=5; STRIPE_Y0=2; STRIPE_Y1=52
+  TYPE_RGB=[[168,167,122],[194,46,40],[169,143,243],[163,62,161],[226,191,101],[182,161,54],
+            [166,185,26],[115,87,151],[183,183,206],[104,160,144],[238,129,48],[99,144,240],
+            [122,199,76],[247,208,44],[249,85,135],[150,217,214],[111,53,252],[112,87,70],[214,133,173]]
+  INK=Color.new(13,14,18)
+  SILVER=Color.new(214,219,228)
+
+  def self.typeColor(t)
+    c=TYPE_RGB[t] || TYPE_RGB[0]
+    return Color.new(c[0],c[1],c[2])
+  end
+
+  # Borde oblicuo de cada fila (x del primer píxel opaco desde el lado del borde), calculado una vez por caja.
+  def self.edges(src,foe)
+    e=[]
+    for y in 0...src.height
+      if foe
+        x=src.width-1
+        x-=1 while x>=0 && src.get_pixel(x,y).alpha==0
+      else
+        x=0
+        x+=1 while x<src.width && src.get_pixel(x,y).alpha==0
+      end
+      e.push(x)
+    end
+    return e
+  end
+
+  def self.drawTypeStripe(bmp,edges,foe,types)
+    types=types.select{|t| t && t>=0}.uniq
+    return if types.length==0
+    mid=(STRIPE_Y0+STRIPE_Y1)/2
+    for y in STRIPE_Y0..STRIPE_Y1
+      x=foe ? edges[y]-STRIPE_W : edges[y]+1
+      if types.length==1
+        c=typeColor(types[0])
+      elsif y<mid
+        c=typeColor(types[0])
+      elsif y==mid
+        c=INK
+      else
+        c=typeColor(types[1])
+      end
+      bmp.fill_rect(x,y,STRIPE_W,1,c)
+    end
+  end
+
+  # Ajusta el texto a un ancho dado (palabras) usando la fuente actual del bitmap.
+  def self.wrap(bmp,text,width)
+    lines=[]
+    text.to_s.split("\n").each{|para|
+      cur=""
+      para.split(" ").each{|w|
+        t=(cur=="") ? w : cur+" "+w
+        if cur!="" && bmp.text_size(t).width>width
+          lines.push(cur); cur=w
+        else
+          cur=t
+        end
+      }
+      lines.push(cur) if cur!=""
+    }
+    return lines
+  end
+end
+
 class PokemonDataBox
   alias rem_orig_refresh refresh
   def refresh
     rem_orig_refresh
     return if !@battler || !@battler.pokemon
-    @@remTypeBmp=AnimatedBitmap.new(_INTL("Graphics/Pictures/types")) if !defined?(@@remTypeBmp)
-    types=[@battler.type1,@battler.type2].uniq
-    x=@spritebaseX+102
-    for t in types
-      next if !t || t<0
-      self.bitmap.stretch_blt(Rect.new(x,24,30,13),@@remTypeBmp.bitmap,Rect.new(0,t*28,64,28))
-      x+=33
-    end
+    foe=((@battler.index&1)==1)
+    @remEdges=REM_UI.edges(@databox.bitmap,foe) if !@remEdges
+    REM_UI.drawTypeStripe(self.bitmap,@remEdges,foe,[@battler.type1,@battler.type2])
+  end
+end
+
+class FightMenuButtons
+  alias rem_orig_refresh refresh
+  def refresh(index,moves,megaButton,ultraButton)
+    rem_orig_refresh(index,moves,megaButton,ultraButton)
+    return if !moves
+    pbSetSmallFont(self.bitmap)
+    self.bitmap.font.size=18
+    pbDrawTextPositions(self.bitmap,[[_INTL("Tecla D / Z: info"),448,UPPERGAP+72,2,
+       REM_UI::SILVER,REM_UI::INK]])
+    pbSetNarrowFont(self.bitmap)
   end
 end
 
 class PokeBattle_Scene
   def pbRemMoveInfo(move)
     vp=Viewport.new(0,0,Graphics.width,Graphics.height); vp.z=99999
-    sp=BitmapSprite.new(Graphics.width-32,230,vp)
-    sp.x=16; sp.y=Graphics.height-96-46-230+40
+    sp=BitmapSprite.new(320,140,vp)
+    sp.x=40; sp.y=0   # arriba, desplazada a la izquierda para no tapar al rival
     bmp=sp.bitmap
-    bmp.fill_rect(0,0,sp.bitmap.width,230,Color.new(16,20,36))
-    bmp.fill_rect(3,3,sp.bitmap.width-6,224,Color.new(44,52,84))
-    pbSetSystemFont(bmp)
+    card=AnimatedBitmap.new("Graphics/Pictures/battleMoveInfo")
+    bmp.blt(0,0,card.bitmap,Rect.new(0,0,320,140))
+    card.dispose
+    types=AnimatedBitmap.new(_INTL("Graphics/Pictures/types"))
+    bmp.stretch_blt(Rect.new(250,5,58,24),types.bitmap,Rect.new(0,move.type*28,64,28))
+    types.dispose
+    pbSetSmallFont(bmp)
     cat=move.pbIsStatus? ? _INTL("Estado") : (move.pbIsPhysical?(move.type) ? _INTL("Físico") : _INTL("Especial"))
     pw=move.basedamage>0 ? move.basedamage.to_s : "—"
     ac=move.accuracy>0 ? move.accuracy.to_s : "—"
-    base=Color.new(248,248,248); shadow=Color.new(64,64,80)
+    base=Color.new(255,255,255); dim=REM_UI::SILVER; shadow=REM_UI::INK
     pbDrawTextPositions(bmp,[
-      [move.name,14,8,0,base,shadow],
-      [_INTL("Categoría: {1}",cat),14,40,0,base,shadow],
-      [_INTL("Potencia: {1}",pw),14,66,0,base,shadow],
-      [_INTL("Precisión: {1}",ac),200,66,0,base,shadow],
-      [_INTL("PP: {1}/{2}",move.pp,move.totalpp),360,66,0,base,shadow],
-      [_INTL("D / B: cerrar"),sp.bitmap.width-12,8,1,Color.new(200,200,216),shadow]])
-    bmp.blt(sp.bitmap.width-90,36,AnimatedBitmap.new(_INTL("Graphics/Pictures/types")).bitmap,Rect.new(0,move.type*28,64,28))
-    drawTextEx(bmp,14,100,sp.bitmap.width-28,5,pbGetMessage(MessageTypes::MoveDescriptions,move.id),base,shadow)
+      [move.name,12,3,0,base,shadow],
+      [_INTL("{1}  Pot {2}  Prec {3}  PP {4}/{5}",cat,pw,ac,move.pp,move.totalpp),12,38,0,dim,shadow]])
+    lines=REM_UI.wrap(bmp,pbGetMessage(MessageTypes::MoveDescriptions,move.id),296)
+    lines=lines[0,3]
+    textpos=[]
+    for i in 0...lines.length
+      textpos.push([lines[i],12,64+i*22,0,base,shadow])
+    end
+    pbDrawTextPositions(bmp,textpos)
     loop do
       Graphics.update; Input.update
       break if Input.trigger?(Input::Z) || Input.trigger?(Input::B) || Input.trigger?(Input::C)
     end
-    sp.dispose; vp.dispose
+    sp.bitmap.dispose; sp.dispose; vp.dispose
   end
 end
