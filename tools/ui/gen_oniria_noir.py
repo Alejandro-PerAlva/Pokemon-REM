@@ -20,7 +20,7 @@ def hexc(h, a=255):
 
 OBS_TOP, OBS_BOT = hexc("1D212A"), hexc("14161D")
 SILVER, BEVEL = hexc("D6DBE4"), hexc("0D0E12")
-STRIPE_Y0, STRIPE_Y1, STRIPE_W = 2, 52, 5   # debe coincidir con rem_ui.rb
+STRIPE_Y0, STRIPE_Y1, STRIPE_W = 9, 47, 5   # debe coincidir con rem_ui.rb
 
 TYPE_COL = ["A8A77A","C22E28","A98FF3","A33EA1","E2BF65","B6A136","A6B91A","735797","B7B7CE",
             "68A090","EE8130","6390F0","7AC74C","F7D02C","F95587","96D9D6","6F35FC","705746","D685AD"]
@@ -43,36 +43,73 @@ def fill_color(v):
     t = max(0.0, min(1.0, (v - 150) / 80.0))
     return lerp(OBS_BOT, OBS_TOP, t)
 
-# ------------------------------------------------------------------ databoxes
-def databox(name, side, stripe=True):
-    im = src(name); w, h = im.size; px = im.load(); out = Image.new("RGBA", im.size, (0, 0, 0, 0)); o = out.load()
-    opaque = lambda x, y: 0 <= x < w and 0 <= y < h and px[x, y][3] > 0
+# ------------------------------------------------------------------ databoxes (estilo Gen 5, finas)
+STEEL = hexc("56606F")
+BODY = (19, 21, 28, 236)
+
+def label_pixels():
+    """Pixeles naranjas de 'PS' tomados del original (relativos a x=90,y=36)."""
+    im = src("battleFoeBoxS").load(); pts = []
+    for y in range(36, 49):
+        for x in range(88, 113):
+            r, g, b, a = im[x, y]
+            if a and r > 200 and 120 < g < 200 and b < 80: pts.append((x - 88, y - 36))
+    return pts
+
+def databox(name, side, kind):
+    """kind: 'S' (jugador con tab de EXP), 'D' o 'F' (rival)."""
+    W, H = 260, (86 if (side == "player" and kind == "S") else 62)
+    out = Image.new("RGBA", (W, H), (0, 0, 0, 0)); o = out.load()
+    T, B = 6, (66 if (side == "player" and kind == "S") else 50)
+    bx = 16 if side == "foe" else 34
+    def edge(y):
+        return 236 + int((y - T) * 0.25) if side == "foe" else 28 - int((y - T) * (0.25 if B > 50 else 0.3))
+    for y in range(T, B + 1):
+        e = edge(y); xs = range(0, e + 1) if side == "foe" else range(e, W)
+        for x in xs: o[x, y] = BODY
+        o[e, y] = SILVER                                   # canto oblicuo afilado
+        if y == T:
+            for x in xs: o[x, y] = SILVER
+        if y == B:
+            for x in xs: o[x, y] = STEEL
+    if side == "player" and kind == "S":                    # tab de EXP
+        for y in range(B + 1, 85):
+            for x in range(36, 237): o[x, y] = BODY
+            o[36, y] = STEEL; o[236, y] = STEEL
+        for x in range(36, 237): o[x, 84] = STEEL
+    # ranura de la franja de tipo (gema): tapas y filo interior en acero, fondo bisel
+    for y in range(STRIPE_Y0 - 1, STRIPE_Y1 + 2):
+        e = edge(y)
+        rng = list(range(e - STRIPE_W, e)) if side == "foe" else list(range(e + 1, e + 1 + STRIPE_W))
+        for x in rng: o[x, y] = BEVEL if STRIPE_Y0 <= y <= STRIPE_Y1 else STEEL
+        xi = (e - STRIPE_W - 1) if side == "foe" else (e + STRIPE_W + 1)
+        o[xi, y] = STEEL
+    # etiqueta PS y pista del medidor
+    lx, ly = bx + 74, 36
+    for dx, dy in label_pixels(): o[lx + dx, ly + dy] = hexc("F8B000")
+    x0, x1, y0, y1 = bx + 99, bx + 200, 38, 47
+    for y in range(y0, y1 + 1):
+        for x in range(x0, x1 + 1):
+            o[x, y] = STEEL if x in (x0, x1) or y in (y0, y1) else hexc("07080B")
+    if side == "player" and kind == "S":                    # pista de EXP
+        for y in range(74, 82):
+            for x in range(38, 236):
+                o[x, y] = STEEL if x in (38, 235) or y in (74, 81) else hexc("07080B")
+    save(out, name)
+
+def safari_retone():
+    im = src("battlePlayerSafari"); w, h = im.size; px = im.load(); out = Image.new("RGBA", im.size, (0, 0, 0, 0)); o = out.load()
     for y in range(h):
         for x in range(w):
             r, g, b, a = px[x, y]
             if a == 0: continue
-            edge = not (opaque(x-1, y) and opaque(x+1, y) and opaque(x, y-1) and opaque(x, y+1))
-            if r > 235 and g > 235 and b > 235 and edge: o[x, y] = SILVER       # halo exterior
-            elif r > 235 and g > 235 and b > 235: o[x, y] = hexc("07080B")        # interior blanco = pista del medidor
-            elif abs(r-g) < 12 and abs(g-b) < 12:
-                v = r
-                if v < 110: o[x, y] = BEVEL if not (36 <= y <= 48) else hexc("56606F")
-                else: o[x, y] = fill_color(v)
-            else: o[x, y] = (r, g, b, a)                                       # naranja de "PS"
-    # contorno oscuro de la etiqueta PS: se mantiene bevel (no acero)
-    for y in range(36, 49):
-        for x in range(0, 114 if side == "foe" else 132):
-            if o[x, y][:3] == (0x56, 0x60, 0x6F): o[x, y] = BEVEL
-    # ranura de la franja de tipo
-    for y in (range(STRIPE_Y0, STRIPE_Y1 + 1) if stripe else []):
-        xs = [x for x in range(w) if o[x, y][3] > 0]
-        if side == "foe":
-            xe = max(xs); rng = range(xe - STRIPE_W, xe)
-        else:
-            xe = min(xs); rng = range(xe + 1, xe + 1 + STRIPE_W)
-        for x in rng: o[x, y] = BEVEL
-    # el borde plateado exterior siempre presente en la ranura
-    save(out, name)
+            if abs(r-g) < 12 and abs(g-b) < 12:
+                o[x, y] = SILVER if r > 235 else (BEVEL if r < 110 else fill_color(r))
+            else: o[x, y] = (r, g, b, a)
+    save(out, "battlePlayerSafari")
+
+def fill_color(v):
+    t = max(0.0, min(1.0, (v - 150) / 80.0)); return lerp(OBS_BOT, OBS_TOP, t)
 
 # ------------------------------------------------------------------ barras
 def bar_base(w, h, accent=SILVER):
@@ -115,27 +152,22 @@ def rrect_mask(w, h, r):
     m = Image.new("L", (w, h), 0); ImageDraw.Draw(m).rounded_rectangle((0, 0, w-1, h-1), radius=r, fill=255); return m
 
 def glow_button(w, h, col, selected, r=9):
-    """Cuerpo grafito sólido; el color vive solo en el bisel (más intenso al seleccionar)."""
+    """Cuerpo grafito; borde luminoso de 1 px que se enciende (con resplandor interior) al seleccionar."""
     mask = rrect_mask(w, h, r)
     im = Image.new("RGBA", (w, h), (0, 0, 0, 0)); px = im.load()
-    body_top, body_bot = (hexc("2A2F3B"), hexc("1B1E27")) if selected else (hexc("1F232D"), hexc("14161D"))
-    inner = mask.copy(); inner = Image.eval(rrect_and_shrink(mask, 2, r), lambda v: v)
-    ring2 = rrect_and_shrink(mask, 3, r)
-    mp, ip, rp = mask.load(), inner.load(), ring2.load()
-    k = 1.0 if selected else 0.62
+    top, bot = (hexc("262B36"), hexc("191C24")) if selected else (hexc("1F232D"), hexc("14161D"))
+    rings = [rrect_and_shrink(mask, n, r).load() for n in range(1, 6)]
+    mp = mask.load(); glow = [0.55, 0.32, 0.17, 0.08] if selected else [0.0] * 4
+    k = 1.0 if selected else 0.5
     for y in range(h):
         for x in range(w):
             if mp[x, y] == 0: continue
-            if ip[x, y] == 0:                      # borde exterior 2 px: color de acción
-                c = tuple(int(col[i] * k + 13 * (1 - k)) for i in range(3)) if not selected else col[:3]
-                px[x, y] = c + (255,)
-            elif rp[x, y] == 0:                    # halo interior (resplandor)
-                a = 0.55 if selected else 0.22
-                bc = lerp(body_top, col, a); px[x, y] = bc
+            body = lerp(top, bot, y / (h - 1))
+            if rings[0][x, y] == 0:
+                px[x, y] = tuple(int(col[i] * k + 13 * (1 - k)) for i in range(3)) + (255,)
             else:
-                px[x, y] = lerp(body_top, body_bot, y / (h - 1))
-    if selected:                                    # destello superior
-        for x in range(r, w - r): px[x, 3] = lerp(px[x, 3], SILVER, 0.35)
+                d = next((i for i in range(1, 5) if rings[i][x, y] == 0), 5)  # profundidad 1..4
+                px[x, y] = lerp(body, col, glow[d - 1]) if d <= 4 else body
     return im
 
 def rrect_and_shrink(mask, n, r):
@@ -181,8 +213,8 @@ def make_move_info():
     save(im, "battleMoveInfo")
 
 if __name__ == "__main__":
-    for n, s in (("battleFoeBoxS", "foe"), ("battleFoeBoxD", "foe"), ("battlePlayerBoxS", "player"), ("battlePlayerBoxD", "player")):
-        databox(n, s)
-    databox("battlePlayerSafari", "player", stripe=False)
+    databox("battleFoeBoxS", "foe", "F"); databox("battleFoeBoxD", "foe", "F")
+    databox("battlePlayerBoxS", "player", "S"); databox("battlePlayerBoxD", "player", "D")
+    safari_retone()
     make_command(); make_message(); make_fight()
     make_command_buttons(); make_fight_buttons(); make_move_info()

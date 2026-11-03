@@ -166,7 +166,7 @@ module PokeBattle_SceneConstants
 end
 
 module REM_UI
-  STRIPE_W=5; STRIPE_Y0=2; STRIPE_Y1=52
+  STRIPE_W=5; STRIPE_Y0=9; STRIPE_Y1=47
   TYPE_RGB=[[168,167,122],[194,46,40],[169,143,243],[163,62,161],[226,191,101],[182,161,54],
             [166,185,26],[115,87,151],[183,183,206],[104,160,144],[238,129,48],[99,144,240],
             [122,199,76],[247,208,44],[249,85,135],[150,217,214],[111,53,252],[112,87,70],[214,133,173]]
@@ -210,6 +210,10 @@ module REM_UI
         c=typeColor(types[1])
       end
       bmp.fill_rect(x,y,STRIPE_W,1,c)
+      if c!=INK
+        hx=foe ? x+STRIPE_W-1 : x
+        bmp.fill_rect(hx,y,1,1,Color.new((c.red+255)/2,(c.green+255)/2,(c.blue+255)/2))
+      end
     end
   end
 
@@ -233,11 +237,73 @@ module REM_UI
 end
 
 class PokemonDataBox
-  alias rem_orig_refresh refresh
+  # Reemplaza refresh: caja fina estilo Gen 5, tipografía única (fuente pequeña), franja lateral de tipo.
   def refresh
-    rem_orig_refresh
-    return if !@battler || !@battler.pokemon
+    self.bitmap.clear
+    return if !@battler.pokemon
+    self.bitmap.blt(0,0,@databox.bitmap,Rect.new(0,0,@databox.width,@databox.height))
     foe=((@battler.index&1)==1)
+    base=PokeBattle_SceneConstants::BOXTEXTBASECOLOR
+    shadow=PokeBattle_SceneConstants::BOXTEXTSHADOWCOLOR
+    bx=@spritebaseX
+    pbSetSmallFont(self.bitmap)
+    name=@battler.name
+    self.bitmap.font.size=21 if self.bitmap.text_size(name).width>104
+    namew=self.bitmap.text_size(name).width
+    textpos=[[name,bx+10,7,false,base,shadow]]
+    case @battler.displayGender
+    when 0 then textpos.push([_INTL("♂"),bx+14+namew,7,false,Color.new(110,170,255),shadow])
+    when 1 then textpos.push([_INTL("♀"),bx+14+namew,7,false,Color.new(255,120,160),shadow])
+    end
+    pbDrawTextPositions(self.bitmap,textpos)
+    pbSetSmallFont(self.bitmap)
+    textpos=[[_INTL("Nv{1}",@battler.level),bx+196,7,true,base,shadow]]
+    if @showhp
+      textpos.push([_ISPRINTF("{1: 2d}/{2: 2d}",self.hp,@battler.totalhp),bx+196,46,true,base,shadow])
+    end
+    pbDrawTextPositions(self.bitmap,textpos)
+    imagepos=[]
+    if @battler.isShiny?
+      imagepos.push(["Graphics/Pictures/shiny.png",bx+(foe ? 200 : -6),(foe ? 22 : 36),0,0,-1,-1])
+    end
+    if @battler.isMega?
+      imagepos.push(["Graphics/Pictures/battleMegaEvoBox.png",bx+8,30,0,0,-1,-1])
+    elsif @battler.isPrimal?
+      if isConst?(@battler.pokemon.species,PBSpecies,:KYOGRE)
+        imagepos.push(["Graphics/Pictures/battlePrimalKyogreBox.png",bx+140,4,0,0,-1,-1])
+      elsif isConst?(@battler.pokemon.species,PBSpecies,:GROUDON)
+        imagepos.push(["Graphics/Pictures/battlePrimalGroudonBox.png",bx+140,4,0,0,-1,-1])
+      end
+    end
+    if @battler.owned && foe
+      imagepos.push(["Graphics/Pictures/battleBoxOwned.png",bx+8,30,0,0,-1,-1])
+    end
+    pbDrawImagePositions(self.bitmap,imagepos)
+    if @battler.status>0
+      self.bitmap.blt(bx+24,30,@statuses.bitmap,Rect.new(0,(@battler.status-1)*16,44,16))
+    end
+    hpGaugeSize=PokeBattle_SceneConstants::HPGAUGESIZE
+    hpgauge=@battler.totalhp==0 ? 0 : (self.hp*hpGaugeSize/@battler.totalhp)
+    hpgauge=2 if hpgauge==0 && self.hp>0
+    hpzone=0
+    hpzone=1 if self.hp<=(@battler.totalhp/2).floor
+    hpzone=2 if self.hp<=(@battler.totalhp/4).floor
+    hpcolors=[PokeBattle_SceneConstants::HPCOLORGREENDARK,PokeBattle_SceneConstants::HPCOLORGREEN,
+       PokeBattle_SceneConstants::HPCOLORYELLOWDARK,PokeBattle_SceneConstants::HPCOLORYELLOW,
+       PokeBattle_SceneConstants::HPCOLORREDDARK,PokeBattle_SceneConstants::HPCOLORRED]
+    hpGaugeX=PokeBattle_SceneConstants::HPGAUGE_X
+    hpGaugeY=PokeBattle_SceneConstants::HPGAUGE_Y
+    if @animatingHP && self.hp>0
+      self.bitmap.fill_rect(bx+hpGaugeX,hpGaugeY,@starthp*hpGaugeSize/@battler.totalhp,6,Color.new(60,60,70))
+    end
+    self.bitmap.fill_rect(bx+hpGaugeX,hpGaugeY,hpgauge,2,hpcolors[hpzone*2])
+    self.bitmap.fill_rect(bx+hpGaugeX,hpGaugeY+2,hpgauge,4,hpcolors[hpzone*2+1])
+    if @showexp
+      expGaugeX=PokeBattle_SceneConstants::EXPGAUGE_X
+      expGaugeY=PokeBattle_SceneConstants::EXPGAUGE_Y
+      self.bitmap.fill_rect(bx+expGaugeX,expGaugeY,self.exp,2,PokeBattle_SceneConstants::EXPCOLORSHADOW)
+      self.bitmap.fill_rect(bx+expGaugeX,expGaugeY+2,self.exp,2,PokeBattle_SceneConstants::EXPCOLORBASE)
+    end
     @remEdges=REM_UI.edges(@databox.bitmap,foe) if !@remEdges
     REM_UI.drawTypeStripe(self.bitmap,@remEdges,foe,[@battler.type1,@battler.type2])
   end
@@ -249,8 +315,8 @@ class FightMenuButtons
     rem_orig_refresh(index,moves,megaButton,ultraButton)
     return if !moves
     pbSetSmallFont(self.bitmap)
-    self.bitmap.font.size=18
-    pbDrawTextPositions(self.bitmap,[[_INTL("Tecla D / Z: info"),448,UPPERGAP+72,2,
+    self.bitmap.font.size=16
+    pbDrawTextPositions(self.bitmap,[[_INTL("Tecla D / Z: info"),448,UPPERGAP+70,2,
        REM_UI::SILVER,REM_UI::INK]])
     pbSetNarrowFont(self.bitmap)
   end
@@ -260,7 +326,7 @@ class PokeBattle_Scene
   def pbRemMoveInfo(move)
     vp=Viewport.new(0,0,Graphics.width,Graphics.height); vp.z=99999
     sp=BitmapSprite.new(320,140,vp)
-    sp.x=40; sp.y=0   # arriba, desplazada a la izquierda para no tapar al rival
+    sp.x=96; sp.y=100   # centro, bajo la caja del rival y sin tocar el borde superior
     bmp=sp.bitmap
     card=AnimatedBitmap.new("Graphics/Pictures/battleMoveInfo")
     bmp.blt(0,0,card.bitmap,Rect.new(0,0,320,140))
@@ -289,4 +355,36 @@ class PokeBattle_Scene
     end
     sp.bitmap.dispose; sp.dispose; vp.dispose
   end
+end
+
+#===============================================================================
+# CALIBRACIÓN DE SPRITES DE COMBATE: la línea base del jugador queda sobre el menú (que empieza
+# en y=288) y cada sprite se apoya por su arte real (se descuenta el margen transparente inferior
+# que mide BitmapWrapperEX), de modo que nada queda hundido ni flotando.
+#===============================================================================
+module PokeBattle_SceneConstants
+  REM_PLAYER_BASELINE=Graphics.height-96-20
+  [[:PLAYERBATTLER_Y,REM_PLAYER_BASELINE],[:PLAYERBATTLERD1_Y,REM_PLAYER_BASELINE-6],
+   [:PLAYERBATTLERD2_Y,REM_PLAYER_BASELINE+4],[:PLAYERBASEY,REM_PLAYER_BASELINE],
+   [:PLAYERTRAINER_Y,REM_PLAYER_BASELINE-16],[:PLAYERTRAINERD1_Y,REM_PLAYER_BASELINE-16],
+   [:PLAYERTRAINERD2_Y,REM_PLAYER_BASELINE-16]].each{|n,v|
+    remove_const(n) if const_defined?(n)
+    const_set(n,v)
+  }
+end
+
+class PokemonBattlerSprite
+  def remTrimY
+    return 0 if !@_iconbitmap || !@_iconbitmap.respond_to?(:offset_y) || !@_iconbitmap.offset_y
+    t=@_iconbitmap.offset_y
+    h=self.bitmap ? self.bitmap.height : 0
+    return [t,h*2/3].min
+  end
+end
+
+alias rem_orig_adjustBattleSpriteY adjustBattleSpriteY
+def adjustBattleSpriteY(sprite,species,index,metrics=nil)
+  ret=rem_orig_adjustBattleSpriteY(sprite,species,index,metrics)
+  ret+=sprite.remTrimY if sprite.respond_to?(:remTrimY)
+  return ret
 end
