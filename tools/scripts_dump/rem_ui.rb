@@ -466,22 +466,10 @@ end
 
 # Tipografía única en combate: la fuente estrecha de los nombres de ataque, también en mensajes y menús.
 class PokeBattle_Scene
-  alias rem_orig_pbStartBattle pbStartBattle
-  def pbStartBattle(battle)
-    if !$remBattleFontSaved
-      $remBattleFontSaved=MessageConfig.pbGetSystemFontName
-      MessageConfig.pbSetSystemFontName(pbNarrowFontName)
-    end
-    rem_orig_pbStartBattle(battle)
-  end
   alias rem_orig_pbEndBattle pbEndBattle
   def pbEndBattle(result)
     rem_orig_pbEndBattle(result)
     $remBagBattle=false
-    if $remBattleFontSaved
-      MessageConfig.pbSetSystemFontName($remBattleFontSaved)
-      $remBattleFontSaved=nil
-    end
   end
 end
 
@@ -616,33 +604,6 @@ module REM_UI
 end
 
 class PokemonSummaryScene
-  # Estado de fuente del sistema: la misma fuente estrecha del combate mientras la pantalla está abierta.
-  alias rem_sum_pbStartScene pbStartScene
-  def pbStartScene(party,partyindex)
-    remFontOn
-    rem_sum_pbStartScene(party,partyindex)
-  end
-  alias rem_sum_pbStartForgetScene pbStartForgetScene
-  def pbStartForgetScene(party,partyindex,moveToLearn)
-    remFontOn
-    rem_sum_pbStartForgetScene(party,partyindex,moveToLearn)
-  end
-  alias rem_sum_pbEndScene pbEndScene
-  def pbEndScene
-    rem_sum_pbEndScene
-    if @remFontOwner
-      MessageConfig.pbSetSystemFontName($remBattleFontSaved)
-      $remBattleFontSaved=nil
-      @remFontOwner=false
-    end
-  end
-  def remFontOn
-    if !$remBattleFontSaved
-      $remBattleFontSaved=MessageConfig.pbGetSystemFontName
-      @remFontOwner=true
-      MessageConfig.pbSetSystemFontName(pbNarrowFontName)
-    end
-  end
 
   # Tarjeta izquierda común a todas las páginas: bola, nombre, género, nivel, estado, sprite, marcas, objeto y franja de tipo.
   def remDrawCard(pokemon,title,egg=false)
@@ -1541,11 +1502,6 @@ class PokemonBag_Scene
   ITEMSVISIBLE=7
 
   def pbStartScene(bag)
-    if !$remBattleFontSaved
-      $remBattleFontSaved=MessageConfig.pbGetSystemFontName
-      @remFontOwner=true
-      MessageConfig.pbSetSystemFontName(pbNarrowFontName)
-    end
     $remBagFooter=true
     @viewport=Viewport.new(0,0,Graphics.width,Graphics.height)
     @viewport.z=99999
@@ -1588,11 +1544,6 @@ class PokemonBag_Scene
   def pbEndScene
     rem_bag_pbEndScene
     $remBagFooter=false
-    if @remFontOwner
-      MessageConfig.pbSetSystemFontName($remBattleFontSaved)
-      $remBattleFontSaved=nil
-      @remFontOwner=false
-    end
   end
 
   def pbRefresh
@@ -2165,3 +2116,27 @@ class SpriteWindow_Base
 end
 MessageConfig.pbSetSystemFrame(nil)
 MessageConfig.pbSetSpeechFrame(nil)
+
+#===============================================================================
+# FUENTES: se registran en privado desde Fonts/ (AddFontResourceEx con FR_PRIVATE) al cargar los scripts,
+# así el motor las detecta sin instalarlas en Windows y no aparece el aviso de "fuentes que no existen".
+#===============================================================================
+module FontInstaller
+  def self.registerPrivate
+    begin
+      api=Win32API.new('gdi32','AddFontResourceEx',['P','L','L'],'L')
+      for f in Filenames
+        path=pbResolveFont(f)
+        full=File.expand_path(path)
+        api.call(full,0x10,0) if File.exist?(full)
+      end
+    rescue
+    end
+  end
+
+  def self.install
+    # el registro privado de fuentes ya se hizo al cargar rem_ui.rb
+  end
+end
+FontInstaller.registerPrivate
+MessageConfig.pbSetSystemFontName(nil)

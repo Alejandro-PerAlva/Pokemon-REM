@@ -513,11 +513,6 @@ class PokemonScreen_Scene
   end
 
   def pbStartScene(party,starthelptext,annotations=nil,multiselect=false)
-    if !$remBattleFontSaved   # REM_UI: misma fuente que el combate
-      $remBattleFontSaved=MessageConfig.pbGetSystemFontName
-      @remFontOwner=true
-      MessageConfig.pbSetSystemFontName(pbNarrowFontName)
-    end
     @sprites={}
     @party=party
     @viewport=Viewport.new(0,0,Graphics.width,Graphics.height)
@@ -565,11 +560,6 @@ class PokemonScreen_Scene
     pbFadeOutAndHide(@sprites) { update }
     pbDisposeSpriteHash(@sprites)
     @viewport.dispose
-    if @remFontOwner
-      MessageConfig.pbSetSystemFontName($remBattleFontSaved)
-      $remBattleFontSaved=nil
-      @remFontOwner=false
-    end
   end
 
   def pbChangeSelection(key,currentsel)

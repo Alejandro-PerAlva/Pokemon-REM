@@ -45,30 +45,15 @@ def options():
     D.silver_box(im, (8, 304, 504, 376))
     save_to(im, "Graphics/Pictures/optionsNoir.png")
 
-# ---------- botones en cápsula (menú principal y título) ----------
-def pill_button(w, h, selected, box=None):
-    """Cápsula obsidiana con bisel: borde, aro grafito, cuerpo en degradado y reflejo superior.
-    box=(x0,y0,x1,y1) dentro de un lienzo (w,h); la selección añade halo platino-cian."""
-    S4 = 4
-    x0, y0, x1, y1 = box or (0, 0, w - 1, h - 1)
-    big = Image.new("RGBA", (w * S4, h * S4), (0, 0, 0, 0)); d = ImageDraw.Draw(big)
-    def rr(i, col, grow=0):
-        d.rounded_rectangle(((x0 + i - grow) * S4, (y0 + i - grow) * S4, (x1 + 1 - i + grow) * S4 - 1, (y1 + 1 - i + grow) * S4 - 1),
-                            radius=((y1 - y0 + 1) // 2 + grow) * S4, fill=col)
+# ---------- botones del menú (esquinas idénticas a las de la tarjeta de partida) ----------
+def menu_button(w, h, selected, box):
+    im = Image.new("RGBA", (w, h), (0, 0, 0, 0))
+    x0, y0, x1, y1 = box
+    S.card(im, box, hexc("181B24"))
+    d = ImageDraw.Draw(im, "RGBA")
+    d.rounded_rectangle((x0 + 3, y0 + 3, x1 - 3, y1 - 3), radius=6, outline=(30, 34, 45, 255), width=1)
     if selected:
-        rr(0, (130, 215, 255, 55), 3); rr(0, (130, 215, 255, 120), 1.5)
-    rr(0, (235, 247, 255, 255) if selected else (110, 118, 138, 255))
-    rr(2, (30, 34, 45, 255))
-    rr(3, (21, 23, 30, 255))
-    im = big.resize((w, h), Image.LANCZOS); px = im.load()
-    bh = y1 - y0
-    for y in range(y0 + 3, y1 - 2):                       # degradado del cuerpo
-        t = (y - y0 - 3) / max(1, bh - 6)
-        col = lerp((36, 41, 54, 255), (21, 23, 30, 255), t)
-        for x in range(x0, x1 + 1):
-            if px[x, y][3] > 200 and px[x, y][:3] == (21, 23, 30): px[x, y] = col
-    for x in range(x0 + bh // 2, x1 - bh // 2):           # reflejo de 1 px
-        px[x, y0 + 4] = lerp(px[x, y0 + 4], (255, 255, 255, 255), 0.16)
+        d.rounded_rectangle((x0, y0, x1, y1), radius=8, outline=(235, 247, 255, 255), width=2)
     return im
 
 # ---------- carga ----------
@@ -94,8 +79,8 @@ def loadscreen():
                 S.box(p, (122 + 46 * i, 154, 163 + 46 * i, 204), hexc("1B1F2A"), None, 8)  # píldoras
         return p
     sheet.paste(panel(222, False), (0, 0)); sheet.paste(panel(222, True), (0, 222))
-    for k, sel in ((444, False), (490, True)):             # opciones del menú: cápsulas más estrechas
-        sheet.paste(pill_button(W, 46, sel, (56, 5, 351, 40)), (0, k))
+    for k, sel in ((444, False), (490, True)):             # opciones del menú: mismas esquinas que la tarjeta, más estrechas
+        sheet.paste(menu_button(W, 46, sel, (56, 4, 351, 41)), (0, k))
     save_to(sheet, "Graphics/Pictures/loadPanels.png")
 
 # ---------- título ----------
@@ -103,7 +88,7 @@ def title():
     save_to(S.base_bg(), "Graphics/Titles/custom_background.png")
     save_to(Image.new("RGBA", (512, 384), (0, 0, 0, 0)), "Graphics/Titles/custom_plane.png")
     w, h = 250, 34
-    im = pill_button(w, h, True, (3, 3, w - 4, h - 4))
+    im = menu_button(w, h, True, (0, 0, w - 1, h - 1))
     d = ImageDraw.Draw(im); f = S.font(22)
     t = "PULSA ENTER PARA EMPEZAR"
     hb = d.textbbox((0, 0), "H", font=f); tb = d.textbbox((0, 0), t, font=f)
