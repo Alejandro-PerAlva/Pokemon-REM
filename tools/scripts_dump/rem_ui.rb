@@ -3114,6 +3114,12 @@ end
 #   Pictures/intro_trainer_m / intro_trainer_f 160x320 (alfa)
 # Sintaxis compatible con Ruby 1.8 (RGSS1).
 #===============================================================================
+# ¿existe el audio (ogg/wav/mp3/mid)? evita errores si falta el placeholder
+def pbResolveAudio_REM(base)
+  ['.ogg','.wav','.mp3','.mid','.wma'].each{|e| return true if FileTest.exist?(base+e)}
+  return false
+end
+
 module REM_Intro
   SILVER=Color.new(214,219,228)
   OBSIDIAN=Color.new(20,22,29)
@@ -3234,7 +3240,7 @@ module REM_Intro
     for k in 0...passes
       out=Bitmap.new(src.width,src.height)
       offs=[[0,0]]
-      [5,10].each{|r| 8.times{|j| a=j*Math::PI/4; offs.push([(r*Math.cos(a)).round,(r*Math.sin(a)).round])}}
+      [3,6].each{|r| 8.times{|j| a=j*Math::PI/4; offs.push([(r*Math.cos(a)).round,(r*Math.sin(a)).round])}}
       offs.each_with_index{|o,n|
         out.blt(o[0],o[1],cur,Rect.new(0,0,src.width,src.height),255/(n+1))
       }
@@ -3345,6 +3351,7 @@ module REM_Intro
       sp["hint"].bitmap=hintBitmap; own.push(sp["hint"].bitmap)
       sp["hint"].x=(w-21)/2; sp["hint"].y=h-34
       Graphics.update
+      pbBGMPlay("Intro",60,100) if pbResolveAudio_REM("Audio/BGM/Intro")
 
       # --- Fase 1: prólogo a pantalla completa (sin caja de diálogo) ---
       for i in 1..110
@@ -3408,6 +3415,7 @@ module REM_Intro
       Kernel.pbMessage(_INTL("«¡Nos vemos muy pronto en el laboratorio!»"))
 
       # --- Fase 5: traslado a la habitación ---
+      pbBGMFade(1.5)
       fadeViewport(vp,0,255,30)
       transfer(mapId(CASA_PLAYER),CASA_X,CASA_Y,CASA_DIR)   # congela el negro; después se libera todo
       transferred=true
