@@ -271,9 +271,9 @@ class Window_PokemonMart < Window_DrawableCommand
     @stock=stock
     @adapter=adapter
     super(x,y,width,height,viewport)
-    @selarrow=AnimatedBitmap.new("Graphics/Pictures/martSel")
-    @baseColor=Color.new(88,88,80)
-    @shadowColor=Color.new(168,184,184)
+    @selarrow=AnimatedBitmap.new("Graphics/Pictures/rem_selarrow")
+    @baseColor=Color.new(255,255,255)
+    @shadowColor=Color.new(13,14,18)
     self.windowskin=nil
   end
 
@@ -366,8 +366,8 @@ class PokemonMartScene
     @sprites["moneywindow"].y=0
     @sprites["moneywindow"].width=190
     @sprites["moneywindow"].height=96
-    @sprites["moneywindow"].baseColor=Color.new(88,88,80)
-    @sprites["moneywindow"].shadowColor=Color.new(168,184,184)
+    @sprites["moneywindow"].baseColor=Color.new(255,255,255)
+    @sprites["moneywindow"].shadowColor=Color.new(13,14,18)
     pbDeactivateWindows(@sprites)
     @buying=buying
     pbRefresh
@@ -415,8 +415,8 @@ class PokemonMartScene
     @sprites["moneywindow"].y=0
     @sprites["moneywindow"].width=186
     @sprites["moneywindow"].height=96
-    @sprites["moneywindow"].baseColor=Color.new(88,88,80)
-    @sprites["moneywindow"].shadowColor=Color.new(168,184,184)
+    @sprites["moneywindow"].baseColor=Color.new(255,255,255)
+    @sprites["moneywindow"].shadowColor=Color.new(13,14,18)
     pbDeactivateWindows(@sprites)
     @buying=false
     pbRefresh
@@ -562,14 +562,14 @@ class PokemonMartScene
           numwindow.viewport=@viewport
           numwindow.width=224
           numwindow.height=64
-          numwindow.baseColor=Color.new(88,88,80)
-          numwindow.shadowColor=Color.new(168,184,184)
+          numwindow.baseColor=Color.new(255,255,255)
+          numwindow.shadowColor=Color.new(13,14,18)
           inbagwindow.visible=@buying
           inbagwindow.viewport=@viewport
           inbagwindow.width=190
           inbagwindow.height=64
-          inbagwindow.baseColor=Color.new(88,88,80)
-          inbagwindow.shadowColor=Color.new(168,184,184)
+          inbagwindow.baseColor=Color.new(255,255,255)
+          inbagwindow.shadowColor=Color.new(13,14,18)
           inbagwindow.text=_ISPRINTF("Llevas:<r>{1:d}  ",qty)
           numwindow.text=_ISPRINTF("x{1:d}<r>$ {2:d}",curnumber,curnumber*itemprice)
           pbBottomRight(numwindow)

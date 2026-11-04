@@ -955,20 +955,27 @@ class PokeBattle_Pokemon
     @obtainMode=4 if $game_switches && $game_switches[FATEFUL_ENCOUNTER_SWITCH]
     @hatchedMap=0
     if withMoves
-      atkdata=pbRgssOpen("Data/attacksRS.dat","rb")
-      offset=atkdata.getOffset(species-1)
-      length=atkdata.getLength(species-1)>>1
-      atkdata.pos=offset
-      # Genera lista de movimientos
+      # Genera lista de movimientos (PBS/pokemon.txt si existe; si no, Data/attacksRS.dat)
       movelist=[]
-      for i in 0..length-1
-        alevel=atkdata.fgetw
-        move=atkdata.fgetw
-        if alevel<=level
-          movelist[movelist.length]=move
+      pbsl=(REM_UI.pbsMoves(species) rescue nil)
+      if pbsl
+        for m in pbsl
+          movelist[movelist.length]=m[1] if m[0]<=level
         end
+      else
+        atkdata=pbRgssOpen("Data/attacksRS.dat","rb")
+        offset=atkdata.getOffset(species-1)
+        length=atkdata.getLength(species-1)>>1
+        atkdata.pos=offset
+        for i in 0..length-1
+          alevel=atkdata.fgetw
+          move=atkdata.fgetw
+          if alevel<=level
+            movelist[movelist.length]=move
+          end
+        end
+        atkdata.close
       end
-      atkdata.close
       movelist|=[] # Elimina duplicados
       # Se usan los últimos 4 elementos en la lista de movimientos
       listend=movelist.length-4

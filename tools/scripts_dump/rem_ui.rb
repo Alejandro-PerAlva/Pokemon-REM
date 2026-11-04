@@ -2673,3 +2673,164 @@ class PokemonMenu_Scene
     return ret
   end
 end
+
+
+#===============================================================================
+# MOVIMIENTOS POR NIVEL desde PBS/pokemon.txt: Data/attacksRS.dat solo se recompila en modo debug y
+# quedaba desfasado, así que los Pokémon aprendían los movimientos antiguos al subir de nivel.
+#===============================================================================
+module REM_UI
+  @@pbsMoveCache={}
+  # [[nivel, movimiento], ...] de la línea Moves= (nil si no hay entrada o falla)
+  def self.pbsMoves(species)
+    pbsLoad
+    return @@pbsMoveCache[species] if @@pbsMoveCache.has_key?(species) && @@pbsMoveTime==@@pbsTime
+    if @@pbsMoveTime!=@@pbsTime
+      @@pbsMoveCache={}; @@pbsMoveTime=@@pbsTime
+    end
+    e=pbsEntry(species)
+    ret=nil
+    if e && e["Moves"]
+      ret=[]
+      t=e["Moves"].split(",")
+      i=0
+      while i+1<t.length
+        mv=getConst(PBMoves,t[i+1].strip)
+        ret.push([t[i].strip.to_i,mv]) if mv && mv>0
+        i+=2
+      end
+      ret=nil if ret.length==0
+    end
+    @@pbsMoveCache[species]=ret
+    return ret
+  end
+  @@pbsMoveTime=nil
+end
+
+class PokeBattle_Pokemon
+  def __mf_getMoveList
+    movelist=REM_UI.pbsMoves(@species) rescue nil
+    return movelist.map{|m| [m[0],m[1]]} if movelist
+    atkdata=pbRgssOpen("Data/attacksRS.dat","rb")
+    offset=atkdata.getOffset(@species-1)
+    length=atkdata.getLength(@species-1)>>1
+    atkdata.pos=offset
+    ret=[]
+    for k in 0..length-1
+      level=atkdata.fgetw
+      move=atkdata.fgetw
+      ret.push([level,move])
+    end
+    atkdata.close
+    return ret
+  end
+end
+
+#===============================================================================
+# EVOLUCIÓN: la animación llamaba a sprite.pbHasType? sobre un SpriteMetafile (ese método es global
+# y privado) y provocaba NoMethodError al evolucionar. Se reescribe con un destello plateado y fondo noir.
+#===============================================================================
+class REM_NoirPlane < Plane      # fondo obsidiana con rejilla tenue (mosaico de 16 px)
+  def initialize(viewport=nil)
+    super(viewport)
+    bmp=Bitmap.new(16,16)
+    bmp.fill_rect(0,0,16,16,Color.new(14,16,21))
+    bmp.fill_rect(0,0,16,1,Color.new(19,22,29)); bmp.fill_rect(0,0,1,16,Color.new(19,22,29))
+    self.bitmap=bmp
+    self.z=0
+  end
+  def dispose
+    self.bitmap.dispose if self.bitmap && !self.bitmap.disposed?
+    super
+  end
+  def update; end
+end
+
+class PokemonEvolutionScene
+  def pbGenerateMetafiles(s1x,s1y,s2x,s2y)
+    sprite=SpriteMetafile.new
+    sprite2=SpriteMetafile.new
+    sprite.opacity=255
+    sprite2.opacity=255
+    sprite2.zoom=0.0
+    sprite.ox=s1x
+    sprite.oy=s1y
+    sprite2.ox=s2x
+    sprite2.oy=s2y
+    alpha=0
+    glow=Color.new(230,234,241,0)
+    for j in 0...26
+      glow.alpha=[alpha,255].min
+      sprite.color=Color.new(glow.red,glow.green,glow.blue,glow.alpha)
+      sprite2.color=Color.new(glow.red,glow.green,glow.blue,255)
+      sprite.update
+      sprite2.update
+      alpha+=10
+    end
+    totaltempo=0
+    currenttempo=25
+    maxtempo=7*Graphics.frame_rate
+    while totaltempo<maxtempo
+      for j in 0...currenttempo
+        sprite.zoom=[1.1*(currenttempo-j-1)/currenttempo,1.0].min
+        sprite2.zoom=[1.1*(j+1)/currenttempo,1.0].min
+        sprite.update
+        sprite2.update
+      end
+      totaltempo+=currenttempo
+      if totaltempo+currenttempo<maxtempo
+        for j in 0...currenttempo
+          sprite.zoom=[1.1*(j+1)/currenttempo,1.0].min
+          sprite2.zoom=[1.1*(currenttempo-j-1)/currenttempo,1.0].min
+          sprite.update
+          sprite2.update
+        end
+      end
+      totaltempo+=currenttempo
+      currenttempo=[(currenttempo/1.5).floor,5].max
+    end
+    @metafile1=sprite
+    @metafile2=sprite2
+  end
+
+  def pbStartScreen(pokemon,newspecies)
+    @sprites={}
+    @bgviewport=Viewport.new(0,0,Graphics.width,Graphics.height)
+    @bgviewport.z=99999
+    @viewport=Viewport.new(0,0,Graphics.width,Graphics.height)
+    @viewport.z=99999
+    @msgviewport=Viewport.new(0,0,Graphics.width,Graphics.height)
+    @msgviewport.z=99999
+    @pokemon=pokemon
+    @newspecies=newspecies
+    @sprites["background"]=REM_NoirPlane.new(@bgviewport)
+    rsprite1=PokemonSprite.new(@viewport)
+    rsprite2=PokemonSprite.new(@viewport)
+    begin
+      rsprite1.setPokemonBitmap(@pokemon,false)
+    rescue
+      rsprite1.bitmap=nil
+    end
+    begin
+      rsprite2.setPokemonBitmapSpecies(@pokemon,@newspecies,false)
+    rescue
+      rsprite2.bitmap=nil
+    end
+    rsprite1.bitmap=Bitmap.new(2,2) if !rsprite1.bitmap || rsprite1.bitmap.disposed?
+    rsprite2.bitmap=Bitmap.new(2,2) if !rsprite2.bitmap || rsprite2.bitmap.disposed?
+    rsprite1.ox=rsprite1.bitmap.width/2
+    rsprite1.oy=rsprite1.bitmap.height/2
+    rsprite2.ox=rsprite2.bitmap.width/2
+    rsprite2.oy=rsprite2.bitmap.height/2
+    rsprite1.x=Graphics.width/2
+    rsprite1.y=(Graphics.height-64)/2
+    rsprite2.x=rsprite1.x
+    rsprite2.y=rsprite1.y
+    rsprite2.opacity=0
+    @sprites["rsprite1"]=rsprite1
+    @sprites["rsprite2"]=rsprite2
+    pbGenerateMetafiles(rsprite1.ox,rsprite1.oy,rsprite2.ox,rsprite2.oy)
+    @sprites["msgwindow"]=Kernel.pbCreateMessageWindow(@msgviewport)
+    pbFadeInAndShow(@sprites) { pbUpdate }
+  end
+end
