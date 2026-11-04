@@ -2834,3 +2834,130 @@ class PokemonEvolutionScene
     pbFadeInAndShow(@sprites) { pbUpdate }
   end
 end
+
+#===============================================================================
+# RECORDADOR DE MOVIMIENTOS — lista de ranuras Oniria Noir + panel de detalle (diseño procedural)
+#===============================================================================
+module REM_UI
+  NOIR_PANEL=Color.new(20,22,29)
+  NOIR_ROW=Color.new(24,27,36)
+  NOIR_SEL=Color.new(30,34,45)
+  NOIR_WELL=Color.new(15,17,23)
+  NOIR_WELLB=Color.new(38,43,56)
+end
+
+class MoveRelearnerScene
+  def pbStartScene(pokemon,moves)
+    @pokemon=pokemon
+    @moves=moves
+    moveCommands=[]
+    moves.each{|i| moveCommands.push(PBMoves.getName(i)) }
+    @viewport=Viewport.new(0,0,Graphics.width,Graphics.height)
+    @viewport.z=99999
+    @sprites={}
+    @sprites["bg"]=REM_NoirPlane.new(@viewport)
+    @sprites["overlay"]=BitmapSprite.new(Graphics.width,Graphics.height,@viewport)
+    @sprites["pokeicon"]=PokemonIconSprite.new(@pokemon,@viewport)
+    @sprites["pokeicon"].x=300
+    @sprites["pokeicon"].y=4
+    @sprites["pokeicon"].z=5
+    @sprites["commands"]=Window_CommandPokemon.new(moveCommands,32)
+    @sprites["commands"].x=Graphics.width
+    @sprites["commands"].height=32*(VISIBLEMOVES+1)
+    @sprites["msgwindow"]=Window_AdvancedTextPokemon.new("")
+    @sprites["msgwindow"].visible=false
+    @sprites["msgwindow"].viewport=@viewport
+    @typebitmap=AnimatedBitmap.new(_INTL("Graphics/Pictures/types"))
+    @catbitmap=AnimatedBitmap.new("Graphics/Pictures/category")
+    pbDrawMoveList
+    pbDeactivateWindows(@sprites)
+    pbFadeInAndShow(@sprites) { pbUpdate }
+  end
+
+  def remBox(bmp,x,y,w,h,fill,border)
+    REM_UI.slotBox(bmp,x,y,w,h,fill,border,1)
+  end
+
+  def pbDrawMoveList
+    bmp=@sprites["overlay"].bitmap
+    bmp.clear
+    wh=REM_UI::WHITE; dm=REM_UI::DIM
+    cmds=@sprites["commands"]
+    # cabecera
+    REM_UI.texts(bmp,[[:c,_INTL("¿Qué movimiento quieres que enseñe?"),16,24,0,wh,24,270]])
+    t1=@pokemon.type1; t2=@pokemon.type2
+    if t1==t2
+      bmp.stretch_blt(Rect.new(440,12,52,23),@typebitmap.bitmap,Rect.new(0,t1*28,64,28))
+    else
+      bmp.stretch_blt(Rect.new(384,12,52,23),@typebitmap.bitmap,Rect.new(0,t1*28,64,28))
+      bmp.stretch_blt(Rect.new(440,12,52,23),@typebitmap.bitmap,Rect.new(0,t2*28,64,28))
+    end
+    bmp.fill_rect(12,46,488,1,REM_UI::NOIR_WELLB)
+    # lista
+    remBox(bmp,12,54,244,318,REM_UI::NOIR_PANEL,REM_UI::SILVER)
+    for i in 0...VISIBLEMOVES
+      idx=cmds.top_item+i
+      mv=@moves[idx]
+      break if !mv
+      y=62+i*76
+      sel=(idx==cmds.index)
+      remBox(bmp,20,y,228,70,sel ? REM_UI::NOIR_SEL : REM_UI::NOIR_ROW,sel ? REM_UI::SILVER : REM_UI::NOIR_WELLB)
+      md=PBMoveData.new(mv)
+      bmp.stretch_blt(Rect.new(28,y+8,56,24),@typebitmap.bitmap,Rect.new(0,md.type*28,64,28))
+      REM_UI.texts(bmp,[[:c,PBMoves.getName(mv),94,y+20,0,wh,21,148]])
+      bmp.stretch_blt(Rect.new(28,y+42,44,18),@catbitmap.bitmap,Rect.new(0,md.category*28,64,28))
+      pw=md.basedamage<=1 ? (md.basedamage==1 ? "???" : "---") : sprintf("%d",md.basedamage)
+      ac=md.accuracy==0 ? "---" : sprintf("%d",md.accuracy)
+      REM_UI.texts(bmp,[[:c,_INTL("Pot. {1}",pw),82,y+51,0,sel ? W : dm,16,70],
+                        [:c,_INTL("Prec. {1}",ac),150,y+51,0,sel ? W : dm,16,70],
+                        [:c,_INTL("PP {1}",md.totalpp),240,y+20,1,sel ? W : dm,16,60]])
+    end
+    REM_UI.vArrow(bmp,134,48,-1,REM_UI::SILVER) if cmds.top_item>0
+    REM_UI.vArrow(bmp,134,372,1,REM_UI::SILVER) if cmds.top_item+VISIBLEMOVES<@moves.length
+    # panel de detalle
+    cur=@moves[cmds.index]
+    md=PBMoveData.new(cur)
+    remBox(bmp,264,54,236,318,REM_UI::NOIR_PANEL,REM_UI::SILVER)
+    REM_UI.texts(bmp,[[:c,PBMoves.getName(cur),276,76,0,wh,24,212]])
+    bmp.stretch_blt(Rect.new(276,94,60,26),@typebitmap.bitmap,Rect.new(0,md.type*28,64,28))
+    bmp.stretch_blt(Rect.new(344,94,60,26),@catbitmap.bitmap,Rect.new(0,md.category*28,64,28))
+    stats=[[_INTL("POTENCIA"),md.basedamage<=1 ? (md.basedamage==1 ? "???" : "---") : sprintf("%d",md.basedamage)],
+           [_INTL("PRECISIÓN"),md.accuracy==0 ? "---" : sprintf("%d",md.accuracy)],
+           [_INTL("PP"),sprintf("%d",md.totalpp)]]
+    for k in 0...3
+      y=130+k*28
+      remBox(bmp,276,y,212,24,REM_UI::NOIR_WELL,REM_UI::NOIR_WELLB)
+      REM_UI.texts(bmp,[[:c,stats[k][0],284,y+12,0,dm,17,110],[:c,stats[k][1],480,y+12,1,wh,19,80]])
+    end
+    remBox(bmp,276,222,212,140,REM_UI::NOIR_WELL,REM_UI::NOIR_WELLB)
+    desc=pbGetMessage(MessageTypes::MoveDescriptions,cur)
+    REM_UI.fit(bmp,"x",999,18)
+    lines=REM_UI.wrap(bmp,desc.to_s,196)
+    for k in 0...[lines.length,6].min
+      REM_UI.texts(bmp,[[:c,lines[k],284,236+k*20,0,wh,18,200]])
+    end
+  end
+
+  def pbChooseMove
+    oldcmd=-1
+    pbActivateWindow(@sprites,"commands"){
+       loop do
+         oldcmd=@sprites["commands"].index
+         Graphics.update
+         Input.update
+         pbUpdate
+         pbDrawMoveList if @sprites["commands"].index!=oldcmd
+         return 0 if Input.trigger?(Input::B)
+         return @moves[@sprites["commands"].index] if Input.trigger?(Input::C)
+       end
+    }
+  end
+
+  def pbEndScene
+    pbFadeOutAndHide(@sprites) { pbUpdate }
+    pbDisposeSpriteHash(@sprites)
+    @typebitmap.dispose
+    @catbitmap.dispose
+    @viewport.dispose
+  end
+end

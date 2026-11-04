@@ -2298,10 +2298,10 @@ class PokemonStorageScene
       return
     end
     @sprites["pokemon"].visible=true
-    base=Color.new(88,88,80)
-    shadow=Color.new(168,184,184)
-    nonbase=Color.new(208,200,184)
-    nonshadow=Color.new(224,216,200)
+    base=Color.new(255,255,255)
+    shadow=Color.new(13,14,18)
+    nonbase=Color.new(110,118,136)
+    nonshadow=Color.new(30,33,42)
     pokename=pokemon.name
     textstrings=[
        [pokename,10,8,false,base,shadow]
@@ -2585,7 +2585,7 @@ class PokemonStorageScene
     i=0
     PokemonStorage::MARKINGCHARS.each{|item|
        marked=(markings&(1<<i))!=0
-       bitmap.font.color=(marked) ? Color.new(80,80,80) : Color.new(208,200,184)
+       bitmap.font.color=(marked) ? Color.new(255,255,255) : Color.new(80,86,102)
        itemwidth=bitmap.text_size(item).width
        bitmap.draw_text(realX,realY,itemwidth+2,totalsize.height,item)
        realX+=itemwidth

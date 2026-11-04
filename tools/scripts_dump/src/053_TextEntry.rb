@@ -165,8 +165,8 @@ class Window_TextEntry < SpriteWindow_Base
     @baseColor=colors[0]
     @shadowColor=colors[1]
     if usedarkercolor
-      @baseColor=Color.new(16,24,32)
-      @shadowColor=Color.new(168,184,184)
+      @baseColor=Color.new(255,255,255)
+      @shadowColor=Color.new(13,14,18)
     end
     @helper=CharacterEntryHelper.new(text)
     @heading=heading
@@ -943,8 +943,10 @@ class PokemonEntryScene
     @sprites["helpwindow"].letterbyletter=false
     @sprites["helpwindow"].viewport=@viewport
     @sprites["helpwindow"].visible=USEKEYBOARD
-    @sprites["helpwindow"].baseColor=Color.new(16,24,32)
-    @sprites["helpwindow"].shadowColor=Color.new(168,184,184)
+    @sprites["helpwindow"].baseColor=Color.new(255,255,255)
+    @sprites["helpwindow"].shadowColor=Color.new(13,14,18)
+    @sprites["helpwindow"].windowskin=nil
+    @sprites["entry"].windowskin=nil
     addBackgroundPlane(@sprites,"background","naming2bg",@viewport)
     case subject
     when 1   # Player
