@@ -2727,9 +2727,9 @@ class PokemonMenu_Scene
   end
 
   def remUseVial
-    @sprites["vial"].visible=false
+    pbHideMenu            # todo el menú se oculta, igual que al guardar
     ItemHandlers.triggerUseFromBag(getConst(PBItems,:POKEVIAL))
-    remDrawVial
+    pbShowMenu            # y reaparece con las cargas actualizadas
   end
 
   def pbShowCommands(commands)
