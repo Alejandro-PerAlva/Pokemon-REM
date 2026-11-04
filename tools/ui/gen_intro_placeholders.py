@@ -67,8 +67,8 @@ d.rectangle([0,0,512,30],fill=OBS2); d.line([(0,30),(512,30)],fill=(70,78,98),wi
 d.rectangle([0,356,512,384],fill=OBS2); d.line([(0,356),(512,356)],fill=(70,78,98),width=1)
 frame(s,m=3); tag(s,"Pictures/intro_select_bg.png"); s.save("Graphics/Pictures/intro_select_bg.png")
 
-# 5) Entrenadores (placeholder = sprites introBoy/introGirl ampliados x2 sin suavizar -> 160x320)
+# 5) Entrenadores (placeholder = sprites introBoy/introGirl ampliados x1.5 -> 120x240)
 for src,dst in (("introBoy","intro_trainer_m"),("introGirl","intro_trainer_f")):
-    im=Image.open(f"Graphics/Pictures/{src}.png").convert("RGBA").resize((160,320),Image.NEAREST)
+    im=Image.open(f"Graphics/Pictures/{src}.png").convert("RGBA").resize((120,240),Image.NEAREST)
     im.save(f"Graphics/Pictures/{dst}.png")
 print("OK")

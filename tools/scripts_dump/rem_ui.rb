@@ -3120,7 +3120,7 @@ module REM_Intro
   CASA_PLAYER="Casa Player"
   CASA_PLAYER_FALLBACK=3          # id real (Data/MapInfos): Casa Player = 3
   CASA_X=33
-  CASA_Y=7
+  CASA_Y=8
   CASA_DIR=2
   LETTER_Y=18                     # carta centrada en la mitad superior
 
@@ -3198,9 +3198,9 @@ module REM_Intro
     bmp=sprite.bitmap
     bmp.clear
     pbSetSystemFont(bmp)
-    bmp.font.size=27
-    maxw=Graphics.width-96
-    lh=30
+    bmp.font.size=34
+    maxw=Graphics.width-80
+    lh=38
     lines=[]
     text.split("\n").each_with_index{|para,pi|
       lines.push(nil) if pi>0
@@ -3220,12 +3220,28 @@ module REM_Intro
     y=(Graphics.height-total)/2-6
     lines.each{|l|
       if l
-        pbDrawShadowText(bmp,24,y,Graphics.width-48,lh,l,Color.new(255,255,255),Color.new(8,9,13),1)
+        pbDrawShadowText(bmp,16,y,Graphics.width-32,lh,l,Color.new(255,255,255),Color.new(8,9,13),1)
         y+=lh
       else
         y+=lh/2
       end
     }
+  end
+
+  # Desenfoque simple: promedio de copias desplazadas (RGSS1 no tiene filtros)
+  def self.blurred(src,passes=2)
+    cur=src
+    for k in 0...passes
+      out=Bitmap.new(src.width,src.height)
+      offs=[[0,0]]
+      [5,10].each{|r| 8.times{|j| a=j*Math::PI/4; offs.push([(r*Math.cos(a)).round,(r*Math.sin(a)).round])}}
+      offs.each_with_index{|o,n|
+        out.blt(o[0],o[1],cur,Rect.new(0,0,src.width,src.height),255/(n+1))
+      }
+      cur.dispose if k>0
+      cur=out
+    end
+    return cur
   end
 
   def self.fillEllipse(bmp,cx,cy,rx,ry,color)
@@ -3255,72 +3271,40 @@ module REM_Intro
     vp=Viewport.new(0,0,Graphics.width,Graphics.height)
     vp.z=99010
     vp.color=Color.new(0,0,0,255)
-    sp={}; own=[]
-    cw=184; ch=322; cy=32
-    cx=[52,276]
+    sp={}
     trainer=["intro_trainer_m","intro_trainer_f"]
     begin
       sp["bg"]=Sprite.new(vp)
       sp["bg"].bitmap=pbBitmap("Graphics/Pictures/intro_select_bg")
+      baseY=0
+      xs=[0,0]
       for i in 0...2
-        sp["card#{i}"]=Sprite.new(vp)
-        sp["card#{i}"].bitmap=blank(cw,ch); own.push(sp["card#{i}"].bitmap)
-        sp["card#{i}"].x=cx[i]; sp["card#{i}"].y=cy; sp["card#{i}"].z=2
         sp["tr#{i}"]=Sprite.new(vp)
         sp["tr#{i}"].bitmap=pbBitmap("Graphics/Pictures/"+trainer[i])
-        sp["tr#{i}"].x=cx[i]+(cw-160)/2; sp["tr#{i}"].y=cy; sp["tr#{i}"].z=3
+        sp["tr#{i}"].z=3
       end
-      sp["ui"]=Sprite.new(vp)
-      sp["ui"].bitmap=blank(Graphics.width,Graphics.height); own.push(sp["ui"].bitmap)
-      sp["ui"].z=5
-      idx=0; dirty=true; t=0
+      gap=80
+      tw=sp["tr0"].bitmap.width; th=sp["tr0"].bitmap.height
+      xs[0]=(Graphics.width-gap)/2-tw
+      xs[1]=(Graphics.width+gap)/2
+      baseY=(Graphics.height-th)/2
+      idx=0; t=0
       loop do
-        if dirty
-          dirty=false
-          for i in 0...2
-            bmp=sp["card#{i}"].bitmap
-            bmp.clear
-            on=(i==idx)
-            bmp.fill_rect(0,0,cw,ch,Color.new(24,27,36,on ? 235 : 200))
-            edge=on ? SILVER : Color.new(58,64,82)
-            bmp.fill_rect(0,0,cw,2,edge); bmp.fill_rect(0,ch-2,cw,2,edge)
-            bmp.fill_rect(0,0,2,ch,edge); bmp.fill_rect(cw-2,0,2,ch,edge)
-            if on   # segundo filete interior
-              bmp.fill_rect(5,5,cw-10,1,Color.new(120,128,146)); bmp.fill_rect(5,ch-6,cw-10,1,Color.new(120,128,146))
-            end
-            fillEllipse(bmp,cw/2,ch-14,66,9,Color.new(on ? 74 : 40,on ? 82 : 45,on ? 104 : 58))
-            fillEllipse(bmp,cw/2,ch-17,56,6,Color.new(on ? 120 : 56,on ? 128 : 62,on ? 146 : 76))
-            sp["tr#{i}"].tone=(on ? Tone.new(0,0,0,0) : Tone.new(-90,-90,-90,60))
-            sp["tr#{i}"].opacity=(on ? 255 : 160)
-          end
-          ui=sp["ui"].bitmap
-          ui.clear
-          ui.fill_rect(0,0,Graphics.width,30,Color.new(27,30,40))
-          ui.fill_rect(0,30,Graphics.width,1,Color.new(70,78,98))
-          ui.fill_rect(0,356,Graphics.width,28,Color.new(27,30,40))
-          ui.fill_rect(0,356,Graphics.width,1,Color.new(70,78,98))
-          pbSetSystemFont(ui)
-          ui.font.size=24
-          pbDrawShadowText(ui,0,0,Graphics.width,30,_INTL("FICHA DE INSCRIPCIÓN  ·  IZQ / DER: elegir  ·  C: confirmar"),SILVER,Color.new(8,9,13),1)
-          names=[_INTL("CHICO"),_INTL("CHICA")]
-          for i in 0...2
-            col=(i==idx) ? SILVER : Color.new(110,118,136)
-            pbDrawShadowText(ui,cx[i],356,cw,28,names[i],col,Color.new(8,9,13),1)
-          end
-        end
         Graphics.update
         Input.update
         t+=1
-        if t<=20
-          vp.color=Color.new(0,0,0,255-255*t/20)
-        end
+        vp.color=Color.new(0,0,0,255-255*t/20) if t<=20
         if Input.trigger?(Input::LEFT) && idx!=0
-          idx=0; dirty=true; pbPlayCursorSE
+          idx=0; pbPlayCursorSE
         elsif Input.trigger?(Input::RIGHT) && idx!=1
-          idx=1; dirty=true; pbPlayCursorSE
+          idx=1; pbPlayCursorSE
         end
-        for i in 0...2   # el seleccionado "flota" suavemente
-          sp["tr#{i}"].y=cy-((i==idx) ? (1.5+1.5*Math.sin(t/9.0)).to_i : 0)
+        for i in 0...2   # activo: brillo completo y flota; inactivo: oscurecido
+          on=(i==idx)
+          sp["tr#{i}"].tone=(on ? Tone.new(0,0,0,0) : Tone.new(-90,-90,-90,60))
+          sp["tr#{i}"].opacity=(on ? 255 : 160)
+          sp["tr#{i}"].x=xs[i]
+          sp["tr#{i}"].y=baseY-(on ? (2.0+2.0*Math.sin(t/9.0)).to_i : 0)
         end
         if t>20 && Input.trigger?(Input::C)
           pbPlayDecisionSE
@@ -3329,12 +3313,10 @@ module REM_Intro
         end
       end
       pbChangePlayer(idx)
-      vp.color=Color.new(0,0,0,0)
       fadeViewport(vp,0,255,20)
       return idx
     ensure
       sp.each_value{|s| s.dispose if s && !s.disposed?}
-      own.each{|b| b.dispose if b && !b.disposed?}
       vp.dispose
     end
   end
@@ -3365,15 +3347,28 @@ module REM_Intro
       Graphics.update
 
       # --- Fase 1: prólogo a pantalla completa (sin caja de diálogo) ---
-      for i in 1..40
-        sp["map"].opacity=255*i/40
-        sp["dim"].opacity=255*i/40
+      for i in 1..110
+        sp["map"].opacity=255*i/110
         Graphics.update
         Input.update
       end
+      20.times{ Graphics.update; Input.update }
+      sp["mapblur"]=Sprite.new(vp); sp["mapblur"].z=1; sp["mapblur"].opacity=0
+      sp["mapblur"].bitmap=blurred(sp["map"].bitmap); own.push(sp["mapblur"].bitmap)
+      first=true
       SLIDES.each{|txt|
         drawSlide(sp["text"],txt)
-        fadeSprite(sp["text"],0,255,20)
+        if first   # al aparecer el texto el mapa se desenfoca y se oscurece
+          first=false
+          for i in 1..40
+            sp["mapblur"].opacity=255*i/40
+            sp["dim"].opacity=255*i/40
+            sp["text"].opacity=255*i/40
+            Graphics.update
+            Input.update
+          end
+        end
+        fadeSprite(sp["text"],0,255,20) if sp["text"].opacity<255
         waitForC(sp["hint"])
         fadeSprite(sp["text"],255,0,20)
       }
@@ -3392,6 +3387,8 @@ module REM_Intro
       Kernel.pbMessage(_INTL("«Como sabrás, en Oniria convivimos estrechamente con los Pokémon: estudiamos sus hábitats, combatimos codo con codo y aprendemos de los lazos que nos unen a ellos.»"))
       Kernel.pbMessage(_INTL("«Antes de que acudas al laboratorio para formalizar tu registro y recibir a tu primer compañero, necesito que completes los datos de tu ficha de inscripción.»"))
 
+      Kernel.pbMessage(_INTL("«En primer lugar, marca en la ficha si eres chico o chica.»"))
+
       # --- Fase 3: selector de entrenador ---
       sp["letter"].visible=false
       fadeViewport(vp,0,255,20)
@@ -3400,13 +3397,13 @@ module REM_Intro
 
       # --- Fase 4: vuelta a la carta, nombre y cita ---
       fadeViewport(vp,255,0,20)
-      Kernel.pbMessage(_INTL("«Perfecto. Por último, indica tu nombre en la casilla superior de la ficha.»"))
+      Kernel.pbMessage(_INTL("«Por último, indica tu nombre en la casilla superior de la ficha.»"))
       loop do
         pbTrainerName
-        break if Kernel.pbConfirmMessage(_INTL("«¿Tu nombre es \\PN?»"))
-        Kernel.pbMessage(_INTL("«Entiendo. Indícalo de nuevo, por favor.»"))
+        break if Kernel.pbConfirmMessage(_INTL("¿Tu nombre es \\PN?"))
+        Kernel.pbMessage(_INTL("Vuelves a rellenar la casilla del nombre."))
       end
-      Kernel.pbMessage(_INTL("«¡Excelente! Tu ficha de inscripción ha quedado registrada oficialmente.»"))
+      Kernel.pbMessage(_INTL("«Tu ficha de inscripción ha quedado registrada oficialmente.»"))
       Kernel.pbMessage(_INTL("«Todo está listo. Te espero hoy mismo en el Laboratorio Pokémon para finalizar el procedimiento y comenzar tu aventura.»"))
       Kernel.pbMessage(_INTL("«¡Nos vemos muy pronto en el laboratorio!»"))
 
@@ -3446,8 +3443,8 @@ end
 #===============================================================================
 # Destinos de aparición: [etiqueta, mapa (id o nombre), x, y, dirección]. Añade o edita filas aquí.
 REM_DEBUG_DESTINATIONS=[
-  ["Ubicación por defecto del evento",  3,             33, 7, 2],   # = traslado original del evento (Casa Player)
-  ["Casa Player - Habitación",          "Casa Player", 33, 7, 2]
+  ["Ubicación por defecto del evento",  3,             33, 8, 2],   # = traslado original del evento (Casa Player)
+  ["Casa Player - Habitación",          "Casa Player", 33, 8, 2]
 ]
 
 def pbRemDebugIntro
