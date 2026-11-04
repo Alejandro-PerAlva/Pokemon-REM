@@ -90,13 +90,9 @@ def page_base(active, title_tabs=True):
 def page1():
     im = page_base(0); showcase(im)
     for i in range(6): row_box(im, 240, ROW_Y0 + ROW_P * i, 496, ROW_H, ROW_LABEL_W)
+    box(im, DEX_BTN, hexc("1B1F2A"), DIV, 4)                           # misma caja que las filas de datos
     x0, y0, x1, y1 = DEX_BTN
-    box(im, DEX_BTN, hexc("1B1F2A"), hexc("8A94A8"), 8)
-    box(im, (x0 + 1, y0 + 1, x1 - 1, y1 - 1), hexc("1B1F2A"), None, 7)
-    box(im, (x0 + 10, y0 + 5, x0 + 34, y1 - 5), WELL, SILVER, 5)          # tecla D
-    d = ImageDraw.Draw(im); f = font(22); hb = d.textbbox((0, 0), "D", font=f); tb = d.textbbox((0, 0), "D", font=f)
-    tx = x0 + 22 - (tb[2] - tb[0]) / 2 - tb[0]; ty = (y0 + y1) / 2 - (hb[3] - hb[1]) / 2 - hb[1]
-    d.text((int(tx), int(ty)), "D", font=f, fill=(255, 255, 255, 255))
+    box(im, (x0 + 4, y0 + 3, x1 - 4, y1 - 3), WELL, DIV, 3)
     save(im, "summary1")
 
 def page2():

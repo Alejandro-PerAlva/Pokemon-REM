@@ -387,7 +387,7 @@ class PokeBattle_Scene
     lines=REM_UI.wrap(bmp,pbGetMessage(MessageTypes::MoveDescriptions,move.id),216)
     if lines.length>4
       lines=lines[0,4]
-      lines[3]=lines[3]+"…"
+      lines[3]=lines[3]+"..."
     end
     textpos=[]
     for i in 0...lines.length
@@ -747,8 +747,7 @@ class PokemonSummaryScene
         overlay.fill_rect(246,by,w,3,Color.new(72,144,248))
       end
     end
-    pbSetNarrowFont(overlay); overlay.font.size=26
-    pbDrawTextPositions(overlay,[[_INTL("Ver en Pokédex"),284,(335-26*0.435).round,0,REM_UI::WHITE,REM_UI::INK]])
+    REM_UI.ctext(overlay,_INTL("Tecla D: ver en Pokédex"),368,335,Color.new(214,219,228),22,226)
   end
 
   # Abre la ficha de la Pokédex de la especie y vuelve a Datos sin reiniciar la pantalla.
@@ -822,7 +821,7 @@ class PokemonSummaryScene
     lines=REM_UI.wrap(overlay,pbGetMessage(MessageTypes::AbilityDescs,pokemon.ability),236)
     if lines.length>4
       lines=lines[0,4]
-      lines[3]=lines[3]+"…"
+      lines[3]=lines[3]+"..."
     end
     list=[]
     for i in 0...lines.length
@@ -916,5 +915,360 @@ class PokemonSummaryScene
     end
     REM_UI.texts(overlay,textlist)
     return overlay
+  end
+end
+
+#===============================================================================
+# POKÉDEX "Oniria Noir": lista con panel de presentación + ficha única con descripción,
+# estadísticas base con barras y método de evolución. Sin pisadas, grito, medidas, zonas ni formas.
+# Fondos: tools/ui/gen_pokedex_noir.py (pokedexbg / pokedexEntry).
+#===============================================================================
+module REM_UI
+  STAT_ORDER=[[0,"PS"],[1,"Ataque"],[2,"Defensa"],[4,"At. Esp."],[5,"Def. Esp."],[3,"Velocidad"]]
+
+  def self.statColor(v)
+    return Color.new(226,70,70) if v<50
+    return Color.new(245,165,36) if v<80
+    return Color.new(40,200,130) if v<110
+    return Color.new(60,200,235)
+  end
+
+  # Rectángulo de esquinas recortadas relleno (borde de grosor bw).
+  def self.slotBox(bmp,x,y,w,h,fill,border,bw)
+    bmp.fill_rect(x+2,y,w-4,h,border); bmp.fill_rect(x,y+2,w,h-4,border); bmp.fill_rect(x+1,y+1,w-2,h-2,border)
+    x+=bw; y+=bw; w-=2*bw; h-=2*bw
+    bmp.fill_rect(x+1,y,w-2,h,fill); bmp.fill_rect(x,y+1,w,h-2,fill)
+  end
+
+  def self.evoText(e)
+    t=e[0]; l=e[1]
+    name=PBSpecies.getName(e[2])
+    item=(l.is_a?(Integer) && l>0 && l<=PBItems.maxValue) ? PBItems.getName(l) : "?"
+    how=case t
+      when PBEvolution::Happiness,PBEvolution::HappinessDay,PBEvolution::HappinessNight then _INTL("Felicidad")
+      when PBEvolution::Level,PBEvolution::LevelMale,PBEvolution::LevelFemale,PBEvolution::LevelDay,
+           PBEvolution::LevelNight,PBEvolution::LevelRain,PBEvolution::LevelDarkInParty then _INTL("Nv. {1}",l)
+      when PBEvolution::Trade then _INTL("Intercambio")
+      when PBEvolution::TradeItem then _INTL("Intercambio + {1}",item)
+      when PBEvolution::Item,PBEvolution::ItemMale,PBEvolution::ItemFemale then item
+      when PBEvolution::DayHoldItem,PBEvolution::NightHoldItem then _INTL("{1} (sube nivel)",item)
+      else _INTL("Especial")
+    end
+    return _INTL("{1} > {2}",how,name)
+  end
+end
+
+# Los sprites de especie del Pokédex usaban AnimatedBitmap (muestra la tira de animación entera);
+# ahora usan el mismo BitmapWrapperEX animado que el combate.
+class PokemonSprite
+  def setSpeciesBitmap(species,female=false,form=0,shiny=false,shadow=false,back=false,egg=false)
+    @_iconbitmap.dispose if @_iconbitmap
+    @_iconbitmap=nil
+    if egg
+      @_iconbitmap=pbLoadSpeciesBitmap(species,female,form,shiny,shadow,back,egg)
+    else
+      file=pbCheckPokemonBitmapFiles([species,back,female,shiny,form,shadow])
+      @_iconbitmap=BitmapWrapperEX.new(file,(back ? BACKSPRITE_SCALE : FRONTSPRITE_SCALE)) if file
+    end
+    self.bitmap=@_iconbitmap ? @_iconbitmap.bitmap : nil
+  end
+end
+
+class Window_Pokedex
+  def initialize(x,y,width,height)
+    @ballOwned=AnimatedBitmap.new("Graphics/Pictures/battleBoxOwned")
+    @commands=[]
+    super(x,y,width,height)
+    self.windowskin=nil
+    self.rowHeight=38
+    refresh
+  end
+
+  def dispose
+    @ballOwned.dispose
+    super
+  end
+
+  def drawCursor(index,rect)
+    return rect
+  end
+
+  def drawItem(index,count,rect)
+    return if index >= self.top_row + self.page_item_max
+    sel=(self.index==index)
+    species=@commands[index][0]
+    number=@commands[index][4]
+    number-=1 if @commands[index][5]
+    x=rect.x; y=rect.y+2; w=rect.width; h=self.rowHeight-4
+    REM_UI.slotBox(self.contents,x,y,w,h,
+       sel ? Color.new(34,40,54) : Color.new(24,27,36),
+       sel ? Color.new(226,244,255) : Color.new(38,43,56),sel ? 2 : 1)
+    pbSetNarrowFont(self.contents)
+    self.contents.font.size=24
+    seen=$Trainer.seen[species]
+    pbDrawShadowText(self.contents,x+10,y,48,h,sprintf("%03d",number),
+       seen ? REM_UI::LABEL : REM_UI::DIM,REM_UI::INK)
+    if seen
+      op=$Trainer.owned[species] ? 255 : 80
+      self.contents.blt(x+62,y+10,@ballOwned.bitmap,Rect.new(0,0,14,14),op)
+      REM_UI.fit(self.contents,@commands[index][1],158,26)
+      pbDrawShadowText(self.contents,x+84,y,160,h,@commands[index][1],REM_UI::WHITE,REM_UI::INK)
+    else
+      pbDrawShadowText(self.contents,x+84,y,160,h,"-----",REM_UI::DIM,REM_UI::INK)
+    end
+  end
+end
+
+class PokemonPokedexScene
+  def pbStartScene
+    @dummypokemon=PokeBattle_Pokemon.new(1,1)
+    @sprites={}
+    @viewport=Viewport.new(0,0,Graphics.width,Graphics.height)
+    @viewport.z=99999
+    addBackgroundPlane(@sprites,"background",_INTL("pokedexbg"),@viewport)
+    @sprites["pokedex"]=Window_Pokedex.new(224,5,288,374)
+    @sprites["pokedex"].viewport=@viewport
+    @sprites["dexentry"]=IconSprite.new(0,0,@viewport)
+    @sprites["dexentry"].setBitmap(_INTL("Graphics/Pictures/pokedexEntry"))
+    @sprites["dexentry"].visible=false
+    @sprites["remlist"]=BitmapSprite.new(Graphics.width,Graphics.height,@viewport)
+    @sprites["overlay"]=BitmapSprite.new(Graphics.width,Graphics.height,@viewport)
+    @sprites["overlay"].visible=false
+    @sprites["searchtitle"]=Window_AdvancedTextPokemon.newWithSize("",2,-18,Graphics.width,64,@viewport)
+    @sprites["searchtitle"].windowskin=nil
+    @sprites["searchtitle"].baseColor=Color.new(248,248,248)
+    @sprites["searchtitle"].shadowColor=Color.new(0,0,0)
+    @sprites["searchtitle"].text=_ISPRINTF("<ac>Modo de Búsqueda</ac>")
+    @sprites["searchtitle"].visible=false
+    @sprites["searchlist"]=Window_ComplexCommandPokemon.newEmpty(-6,32,284,352,@viewport)
+    @sprites["searchlist"].baseColor=Color.new(248,248,248)
+    @sprites["searchlist"].shadowColor=Color.new(0,0,0)
+    @sprites["searchlist"].visible=false
+    @sprites["auxlist"]=Window_CommandPokemonWhiteArrow.newEmpty(256,32,284,224,@viewport)
+    @sprites["auxlist"].baseColor=Color.new(248,248,248)
+    @sprites["auxlist"].shadowColor=Color.new(0,0,0)
+    @sprites["auxlist"].visible=false
+    @sprites["messagebox"]=Window_UnformattedTextPokemon.newWithSize("",254,256,264,128,@viewport)
+    @sprites["messagebox"].baseColor=Color.new(248,248,248)
+    @sprites["messagebox"].shadowColor=Color.new(0,0,0)
+    @sprites["messagebox"].visible=false
+    @sprites["messagebox"].letterbyletter=false
+    # Ventanas de texto del diseño antiguo: se conservan ocultas porque pbRefreshDexList les asigna texto.
+    for k in ["dexname","species","seen","owned"]
+      @sprites[k]=Window_AdvancedTextPokemon.newWithSize("",0,0,64,64,@viewport)
+      @sprites[k].windowskin=nil
+      @sprites[k].visible=false
+    end
+    addBackgroundPlane(@sprites,"searchbg",_INTL("pokedexSearchbg"),@viewport)
+    @sprites["searchbg"].visible=false
+    @sprites["slider"]=IconSprite.new(Graphics.width-44,62,@viewport)
+    @sprites["slider"].setBitmap(sprintf("Graphics/Pictures/pokedexSlider"))
+    @sprites["slider"].visible=false
+    @sprites["icon"]=PokemonSprite.new(@viewport)
+    @sprites["entryicon"]=PokemonSprite.new(@viewport)
+    @sprites["remlist"].z=1
+    @sprites["overlay"].z=1
+    @sprites["icon"].z=2
+    @sprites["entryicon"].z=2
+    @searchResults=false
+    pbRefreshDexList($PokemonGlobal.pokedexIndex[pbGetSavePositionIndex])
+    pbDeactivateWindows(@sprites)
+    pbFadeInAndShow(@sprites)
+  end
+
+  # Sprite animado centrado en el pozo + panel de presentación (nombre, tipos y contadores).
+  def setIconBitmap(species)
+    gender=($Trainer.formlastseen[species][0] rescue 0)
+    form=($Trainer.formlastseen[species][1] rescue 0)
+    @sprites["icon"].setSpeciesBitmap(species,(gender==1),form)
+    pbPositionPokemonSprite(@sprites["icon"],115-64,128-64)
+    remDrawShowcase(species,gender,form)
+  end
+
+  def remDrawShowcase(species,gender,form)
+    bmp=@sprites["remlist"].bitmap
+    bmp.clear
+    if species>0
+      @dummypokemon.species=species
+      @dummypokemon.setGender(gender)
+      @dummypokemon.forceForm(form)
+      REM_UI.texts(bmp,[[PBSpecies.getName(species),115,246,2,REM_UI::WHITE,30,190]])
+      typebmp=AnimatedBitmap.new(_INTL("Graphics/Pictures/types"))
+      t1=@dummypokemon.type1; t2=@dummypokemon.type2
+      if t1==t2
+        bmp.blt(115-32,282,typebmp.bitmap,Rect.new(0,t1*28,64,28))
+      else
+        bmp.blt(115-68,282,typebmp.bitmap,Rect.new(0,t1*28,64,28))
+        bmp.blt(115+4,282,typebmp.bitmap,Rect.new(0,t2*28,64,28))
+      end
+      typebmp.dispose
+    else
+      REM_UI.texts(bmp,[["-----",115,246,2,REM_UI::DIM,30,190]])
+    end
+    if @searchResults
+      seenno=0; ownedno=0
+      for i in @dexlist
+        seenno+=1 if $Trainer.seen[i[0]]
+        ownedno+=1 if $Trainer.owned[i[0]]
+      end
+    else
+      seenno=$Trainer.pokedexSeen(pbGetPokedexRegion)
+      ownedno=$Trainer.pokedexOwned(pbGetPokedexRegion)
+    end
+    REM_UI.texts(bmp,[[_INTL("Vistos"),67,323,2,REM_UI::LABEL,18,90],[sprintf("%d",seenno),67,340,2,REM_UI::WHITE,26,90],
+       [_INTL("Capturados"),163,323,2,REM_UI::LABEL,18,90],[sprintf("%d",ownedno),163,340,2,REM_UI::WHITE,26,90]])
+  end
+
+  # Ficha única: identidad y descripción a la izquierda; estadísticas base y evolución a la derecha.
+  def pbChangeToDexEntry(species)
+    @sprites["entryicon"].visible=true
+    @sprites["dexentry"].visible=true
+    @sprites["overlay"].visible=true
+    overlay=@sprites["overlay"].bitmap
+    overlay.clear
+    indexNumber=pbGetRegionalNumber(pbGetPokedexRegion(),species)
+    indexNumber=species if indexNumber==0
+    indexNumber-=1 if DEXINDEXOFFSETS.include?(pbGetPokedexRegion)
+    gender=($Trainer.formlastseen[species][0] rescue 0)
+    form=($Trainer.formlastseen[species][1] rescue 0)
+    @dummypokemon.species=species
+    @dummypokemon.setGender(gender)
+    @dummypokemon.forceForm(form)
+    owned=$Trainer.owned[species]
+    REM_UI.texts(overlay,[[sprintf("N° %03d",indexNumber),20,17,0,REM_UI::LABEL,24,70],
+       [PBSpecies.getName(species),212,13,1,REM_UI::WHITE,28,124]])
+    typebmp=AnimatedBitmap.new(_INTL("Graphics/Pictures/types"))
+    t1=@dummypokemon.type1; t2=@dummypokemon.type2
+    if t1==t2
+      overlay.blt(115-32,66,typebmp.bitmap,Rect.new(0,t1*28,64,28))
+    else
+      overlay.blt(115-68,66,typebmp.bitmap,Rect.new(0,t1*28,64,28))
+      overlay.blt(115+4,66,typebmp.bitmap,Rect.new(0,t2*28,64,28))
+    end
+    typebmp.dispose
+    # estadísticas base
+    base=@dummypokemon.baseStats
+    bst=0
+    for v in base; bst+=v; end
+    REM_UI.texts(overlay,[[_INTL("Estadísticas Base"),244,10,0,REM_UI::LABEL,22,150],
+       [_INTL("Total {1}",bst),492,10,1,REM_UI::WHITE,22,100]])
+    for i in 0...6
+      idx=REM_UI::STAT_ORDER[i][0]
+      v=base[idx]
+      y=40+30*i
+      REM_UI.texts(overlay,[[:c,_INTL(REM_UI::STAT_ORDER[i][1]),244,y+14,0,REM_UI::LABEL,22,84],
+         [:c,sprintf("%d",v),330,y+14,1,REM_UI::WHITE,26,38]])
+      w=[v,200].min*150/200
+      w=1 if w<1
+      overlay.fill_rect(340,y+10,w,8,REM_UI.statColor(v))
+    end
+    # evolución
+    REM_UI.texts(overlay,[[_INTL("Evolución"),244,234,0,REM_UI::LABEL,22,150]])
+    evos=pbGetEvolvedFormData(species).select{|e| e[2]<=PBSpecies.maxValue}
+    prev=pbGetPreviousForm(species)
+    lines=[]
+    lines.push([_INTL("Evoluciona de {1}",PBSpecies.getName(prev)),REM_UI::DIM]) if prev!=species
+    for e in evos; lines.push([REM_UI.evoText(e),REM_UI::WHITE]); end
+    if evos.length==0
+      lines.push([prev!=species ? _INTL("Etapa final") : _INTL("No evoluciona"),REM_UI::WHITE])
+    end
+    if lines.length>4
+      extra=lines.length-3
+      lines=lines[0,3]
+      lines.push([_INTL("+{1} más",extra),REM_UI::DIM])
+    end
+    for i in 0...lines.length
+      REM_UI.texts(overlay,[[lines[i][0],244,268+i*24,0,lines[i][1],24,244]])
+    end
+    # descripción
+    pbSetNarrowFont(overlay)
+    overlay.font.size=19
+    text=owned ? @dummypokemon.dexEntry : _INTL("Aún no has capturado a este Pokémon, así que su descripción sigue sin registrarse.")
+    dlines=REM_UI.wrap(overlay,text,192)
+    if dlines.length>6
+      dlines=dlines[0,6]
+      dlines[5]=dlines[5]+"..."
+    end
+    list=[]
+    for i in 0...dlines.length
+      list.push([dlines[i],18,248+i*21,0,owned ? REM_UI::WHITE : REM_UI::DIM,19])
+    end
+    REM_UI.texts(overlay,list)
+    @sprites["entryicon"].setSpeciesBitmap(species,(gender==1),form)
+    pbPositionPokemonSprite(@sprites["entryicon"],115-64,168-64)
+    pbPlayCry(@dummypokemon)
+  end
+
+  def pbStartDexEntryScene(species)     # al capturar una especie nueva
+    @dummypokemon=PokeBattle_Pokemon.new(species,1)
+    @sprites={}
+    @viewport=Viewport.new(0,0,Graphics.width,Graphics.height)
+    @viewport.z=99999
+    @sprites["dexentry"]=IconSprite.new(0,0,@viewport)
+    @sprites["dexentry"].setBitmap(_INTL("Graphics/Pictures/pokedexentry"))
+    @sprites["dexentry"].visible=false
+    @sprites["overlay"]=BitmapSprite.new(Graphics.width,Graphics.height,@viewport)
+    @sprites["overlay"].visible=false
+    @sprites["entryicon"]=PokemonSprite.new(@viewport)
+    @sprites["overlay"].z=1
+    @sprites["entryicon"].z=2
+    pbChangeToDexEntry(species)
+    pbFadeInAndShow(@sprites)
+  end
+
+  def pbDexEntry(index)
+    oldsprites=pbFadeOutAndHide(@sprites)
+    pbChangeToDexEntry(@dexlist[index][0])
+    pbFadeInAndShow(@sprites)
+    curindex=index
+    pbActivateWindow(@sprites,nil){
+       loop do
+         Graphics.update
+         Input.update
+         pbUpdate
+         if Input.trigger?(Input::B)
+           pbPlayCancelSE()
+           pbFadeOutAndHide(@sprites)
+           @sprites["entryicon"].clearBitmap
+           break
+         elsif Input.trigger?(Input::UP)
+           nextindex=-1
+           i=curindex-1; loop do break unless i>=0
+             if $Trainer.seen[@dexlist[i][0]]
+               nextindex=i
+               break
+             end
+             i-=1
+           end
+           if nextindex>=0
+             curindex=nextindex
+             pbPlayCursorSE()
+             pbChangeToDexEntry(@dexlist[curindex][0])
+           end
+         elsif Input.trigger?(Input::DOWN)
+           nextindex=-1
+           for i in curindex+1...@dexlist.length
+             if $Trainer.seen[@dexlist[i][0]]
+               nextindex=i
+               break
+             end
+           end
+           if nextindex>=0
+             curindex=nextindex
+             pbPlayCursorSE()
+             pbChangeToDexEntry(@dexlist[curindex][0])
+           end
+         elsif Input.trigger?(Input::A)
+           pbPlayCry(@dexlist[curindex][0])
+         end
+       end
+    }
+    $PokemonGlobal.pokedexIndex[pbGetSavePositionIndex]=curindex if !@searchResults
+    @sprites["pokedex"].index=curindex
+    @sprites["pokedex"].refresh
+    iconspecies=@sprites["pokedex"].species
+    iconspecies=0 if !$Trainer.seen[iconspecies]
+    setIconBitmap(iconspecies)
+    pbFadeInAndShow(@sprites,oldsprites)
   end
 end
