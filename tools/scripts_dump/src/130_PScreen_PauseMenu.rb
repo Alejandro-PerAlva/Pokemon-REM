@@ -116,7 +116,7 @@ class PokemonMenu
     commands[cmdPokedex=commands.length]=_INTL("Pokédex") if $Trainer.pokedex && $PokemonGlobal.pokedexViable.length>0
     commands[cmdPokemon=commands.length]=_INTL("Pokémon") if $Trainer.party.length>0
     commands[cmdBag=commands.length]=_INTL("Mochila") if !pbInBugContest?
-    commands[cmdQuests=commands.length]=_INTL("Misiones")   # REM_UI: PokemonQuests_Scene (encargos del Ayudante)
+    commands[cmdQuests=commands.length]=_INTL("Misiones") if defined?(REM_PIA_QUESTS_SWITCH) && $game_switches[REM_PIA_QUESTS_SWITCH]   # REM_UI: PokemonQuests_Scene (encargos del Ayudante)
     commands[cmdPokegear=commands.length]=_INTL("Pokégear") if $Trainer.pokegear
     commands[cmdTrainer=commands.length]=$Trainer.name
     if pbInSafari?

@@ -2173,14 +2173,8 @@ module REM_Quests
     return pbPiaSpeciesList(list).map{|x| PBSpecies.getName(x)}.join(" / ")
   end
 
-  # Tipos del Pokémon final de la línea (PBS/pokemon.txt, primera rama de evolución)
+  # Tipos del Pokémon mostrado, leídos de PBS/pokemon.txt (Type1/Type2 de esa especie)
   def self.finalTypes(sp)
-    n=0
-    while n<4
-      ev=REM_UI.pbsEvos(sp)
-      break if !ev || ev.length==0
-      sp=ev[0][2]; n+=1
-    end
     return REM_UI.pbsTypes(sp) || [PBTypes::NORMAL,PBTypes::NORMAL]
   end
 
@@ -2329,7 +2323,6 @@ class PokemonQuests_Scene
     elsif q[:state]==:active
       pbPiaSelect(nil); reload; refresh
     elsif q[:state]==:locked
-      $game_switches[REM_PIA_QUESTS_SWITCH]=true   # elegir un encargo lo pone en marcha
       pbPiaSelect(q[:sym]); reload; refresh
     else
       pbPlayBuzzerSE() if defined?(pbPlayBuzzerSE)
@@ -2449,7 +2442,7 @@ class PokemonQuests_Scene
       sp.y=(100-(h*z)/2).round
     end
     REM_UI.texts(bmp,[[:c,q[:title],352,56,0,REM_UI::WHITE,20,140]])
-    # fila de tipos (del Pokémon final de la línea, leídos del PBS)
+    # fila de tipos (de la especie mostrada, leídos de PBS/pokemon.txt)
     box(bmp,352,70,140,36,WELL,WELLB)
     types=REM_Quests.finalTypes(q[:species])
     tb=AnimatedBitmap.new(_INTL("Graphics/Pictures/types"))
