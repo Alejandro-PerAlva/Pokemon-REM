@@ -55,7 +55,7 @@ ENC_LEN = {'Land': 12, 'Cave': 12, 'Water': 5, 'RockSmash': 5, 'OldRod': 2, 'Goo
            'HeadbuttLow': 8, 'HeadbuttHigh': 8, 'LandMorning': 12, 'LandDay': 12, 'LandNight': 12, 'BugContest': 12}
 ENC_WEIGHTS = {'Land': LAND_W, 'Cave': LAND_W, 'Water': WATER_W, 'OldRod': ROD_W['OldRod'], 'GoodRod': ROD_W['GoodRod'],
                'SuperRod': ROD_W['SuperRod'], 'LandNight': LAND_W, 'LandDay': LAND_W, 'LandMorning': LAND_W}
-ENC_WRITE_ORDER = ['Land', 'LandNight', 'Cave', 'Water', 'OldRod', 'GoodRod', 'SuperRod']
+ENC_WRITE_ORDER = ['Land', 'Cave', 'Water', 'OldRod', 'GoodRod', 'SuperRod']
 DENSITY_LINE = '25,10,10'          # Land/Cave/Water: valores por defecto de EnctypeDensities (EnctypeCompileDens = [1,2,3,...])
 MAXLEVEL = 100
 
@@ -65,9 +65,13 @@ CATEGORY_MAP = {'CIUDAD': 'Ciudad', 'PUEBLO': 'Pueblo', 'ESPECIAL': 'Lugar espec
 ROUTE_LABELS = {'GRANJA_APATITA': 'E1', 'PLAYA_SEPIOLITA': 'E2', 'ESTEPA_LATERITA': 'E3', 'SENDA_SERPENTINA': 'E4',
                 'PUENTE_DOLOMITA': 'E5', 'ACANTILADOS_RODONITA': 'E6', 'RESERVA_PERIDOTO': 'E7', 'CALZADA_CORINDON': 'E8'}
 ZONES = {   # ubicaciones con dos mapas de 8 casillas (SPEC 1): clave -> letras de zona
-    'LAGO_AMATISTA': ['A', 'B'], 'CIENAGA_LIMONITA': ['A', 'B'], 'LADERA_PORFIDO': ['A', 'B']}
-ZONE_B_MAP_IDS = {'LAGO_AMATISTA': 969, 'CIENAGA_LIMONITA': 970, 'LADERA_PORFIDO': 971}
-PROVISIONAL_BASE = 900              # mapID provisional = 900 + ProgressionOrder (zonas B: 969, 970, 971)
+    'LAGO_AMATISTA': ['A', 'B'], 'CIENAGA_LIMONITA': ['A', 'B'], 'LADERA_PORFIDO': ['A', 'B'],
+    'BOSQUE_DIOPTASA': ['A', 'B'], 'CENTRAL_FULGURITA': ['A', 'B'], 'DESIERTO_HALITA': ['A', 'B'], 'RUINAS_ATACAMITA': ['A', 'B'],
+    'CASCADAS_TRAVERTINAS': ['A', 'B'], 'VILLA_ADULARIA': ['A', 'B'], 'TEMPLO_MOLDAVITA': ['A', 'B']}
+ZONE_B_MAP_IDS = {'LAGO_AMATISTA': 969, 'CIENAGA_LIMONITA': 970, 'LADERA_PORFIDO': 971,
+                  'BOSQUE_DIOPTASA': 972, 'CENTRAL_FULGURITA': 973, 'DESIERTO_HALITA': 974, 'RUINAS_ATACAMITA': 975,
+                  'CASCADAS_TRAVERTINAS': 976, 'VILLA_ADULARIA': 977, 'TEMPLO_MOLDAVITA': 978}
+PROVISIONAL_BASE = 900              # mapID provisional = 900 + ProgressionOrder (zonas B: 969-978)
 NO_WILD_BUT_SECTIONS = []           # (reservado)
 
 # Mapas del prototipo (Data/MapInfos.rxdata, lectura): id -> (nombre, id del padre). Solo para documentar la correspondencia.
@@ -623,33 +627,6 @@ def slots_to_rows(assign, weights):
     return rows
 
 
-NIGHT_TYPES = {'DARK', 'GHOST'}
-NIGHT_SOFT = {'PSYCHIC', 'POISON'}
-DAY_TYPES = {'GRASS', 'FIRE', 'NORMAL', 'FLYING', 'FAIRY', 'WATER', 'ELECTRIC'}
-
-
-def choose_time_split(rows, types):
-    """Para una tabla de 16 especies (no caben en las 12 casillas): devuelve (solo_noche, solo_dia): 4 y 4 especies que se
-    excluyen de la tabla de dia (Land) y de la de noche (LandNight) respectivamente, para que las 16 sean obtenibles. Las Raras
-    estan siempre en ambas. Criterio: nocturnas = tipo Siniestro/Fantasma (o Psiquico/Veneno); diurnas = Planta/Fuego/Normal/Volador/..."""
-    cand = [r for r in rows if r['rar'] != 'Raro']
-
-    def nscore(r):
-        t = set(types[r['dex']])
-        return 3 * len(t & NIGHT_TYPES) + len(t & NIGHT_SOFT)
-
-    def dscore(r):
-        t = set(types[r['dex']])
-        return 2 * len(t & DAY_TYPES) - 3 * len(t & NIGHT_TYPES) - len(t & NIGHT_SOFT)
-    night = sorted(cand, key=lambda r: (-nscore(r), r['slot']))[:4]
-    left = [r for r in cand if r not in night]
-    day = sorted(left, key=lambda r: (-dscore(r), r['slot']))[:4]
-    return [r['dex'] for r in night], [r['dex'] for r in day]
-
-
-# ----------------------------------------------------------------------------------------------------------------------
-# Construccion del modelo: ubicaciones
-# ----------------------------------------------------------------------------------------------------------------------
 def level_pair_ficha(text):
     ms = re.findall(r'\*\*(\d+(?:–\d+)?)\*\*', text)
     if len(ms) >= 2:
@@ -867,30 +844,12 @@ def make_pbs_tables(sec, mons):
             tgt = [r['pct'] * 100 for r in rows]
             a = fit_slots(tgt, [w * 100 for w in LAND_W])
             if et == 'Land':
-                tables['Land'] = _expand(rows, a, LAND_W, sec['day'])
-                tables['LandNight'] = _expand(rows, a, LAND_W, sec['night'])
+                tables['Land'] = _expand(rows, a, LAND_W, sec['day'])   # la noche NO tiene tabla propia: REM_Mechanics sube el nivel x1.5
             else:
                 tables['Cave'] = _expand(rows, a, LAND_W, sec['day'])
             info['ach'] = _achieved(rows, a, LAND_W)
-        else:                                  # 16 especies: no caben en 12 casillas
-            if et == 'Land':
-                night_only, day_only = SPLIT_OVERRIDE.get(sec['key']) or choose_time_split(rows, {r['dex']: mons[r['dex']]['types'] for r in rows})
-                info['split'] = (night_only, day_only)
-                for tname, excl, lv in (('Land', night_only, sec['day']), ('LandNight', day_only, sec['night'])):
-                    sub = [r for r in rows if r['dex'] not in excl]
-                    tot = sum(r['pct'] for r in sub)
-                    tgt = [round(r['pct'] * 10000.0 / tot) for r in sub]
-                    a = fit_slots(tgt, [w * 100 for w in LAND_W])
-                    tables[tname] = _expand(sub, a, LAND_W, lv)
-                    info['ach_' + tname] = (sub, _achieved(sub, a, LAND_W), tot)
-            else:
-                tgt = [r['pct'] * 100 for r in rows]
-                evolved = evolved_dexes(mons)
-                bias = [0.3 if r['dex'] in evolved else 3.0 for r in rows]       # se descartan primero las especies que evolucionan de otra (siguen siendo obtenibles)
-                a = fit_slots(tgt, [w * 100 for w in LAND_W], allow_drop=True, drop_bias=bias)
-                tables['Cave'] = _expand(rows, a, LAND_W, sec['day'])
-                info['dropped'] = [r['dex'] for r, idxs in zip(rows, a) if not idxs]
-                info['ach'] = _achieved(rows, a, LAND_W)
+        else:
+            raise ValueError('%s: %d especies no caben en las 12 casillas del motor; hay que partir la tabla en mapas de 8' % (sec['key'], n))
     if sec['fish']:
         fl = sec['fish']
         lv = fl['day']
@@ -917,13 +876,6 @@ def _achieved(rows, assign, weights):
 
 # Reparto de dia/noche para las tablas de 16 especies de tipo hierba (si hace falta forzarlo: clave de seccion -> (dex_solo_noche, dex_solo_dia)).
 # Criterio tematico (nocturnas: aves nocturnas, murcielagos, fantasmas, arañas...; diurnas: plantas, insectos de dia, aves de presa...).
-SPLIT_OVERRIDE = {
-    'BOSQUE_DIOPTASA':      ([163, 167, 509, 261], [406, 540, 664, 209]),   # Hoothoot, Spinarak, Purrloin, Poochyena | Budew, Sewaddle, Scatterbug, Snubbull
-    'DESIERTO_HALITA':      ([92, 96, 510, 262], [27, 231, 111, 660]),      # Gastly, Drowzee, Liepard, Mightyena | Sandshrew, Phanpy, Rhyhorn, Diggersby
-    'CASCADAS_TRAVERTINAS': ([528, 281, 54, 558], [188, 193, 580, 421]),    # Swoobat, Kirlia, Psyduck, Crustle | Skiploom, Yanma, Ducklett, Cherrim
-    'VILLA_ADULARIA':       ([562, 607, 708, 200], [191, 78, 436, 597]),    # Yamask, Litwick, Phantump, Misdreavus | Sunkern, Rapidash, Bronzor, Ferroseed
-    'TEMPLO_MOLDAVITA':     ([714, 343, 578, 203], [627, 334, 234, 304]),   # Noibat, Baltoy, Duosion, Girafarig | Rufflet, Altaria, Stantler, Aron
-}
 
 
 # ----------------------------------------------------------------------------------------------------------------------
@@ -1118,11 +1070,18 @@ def _err_stats(sec, info):
     if 'ach' in info:
         tg = [r['pct'] for r in sec['rows']]
         stats.append(('', [abs(a - t) for a, t in zip(info['ach'], tg)]))
-    for tn in ('Land', 'LandNight'):
-        if 'ach_' + tn in info:
-            sub, ach, tot = info['ach_' + tn]
-            stats.append((tn, [abs(a - r['pct'] * 100.0 / tot) for a, r in zip(ach, sub)]))
     return stats
+
+
+def strip_landnight(lines):
+    """Quita la seccion LandNight de un bloque del prototipo (la noche ya no tiene tabla propia)."""
+    out, skip = [], False
+    for l in lines:
+        if re.match(r'^[A-Za-z]+$', l.strip()):
+            skip = (l.strip() == 'LandNight')
+        if not skip:
+            out.append(l)
+    return out
 
 
 def write_pbs_encounters(sections, pbs, locs, mons):
@@ -1131,59 +1090,38 @@ def write_pbs_encounters(sections, pbs, locs, mons):
     kept = sorted(m for m in legacy if m not in replaced)
     # estadisticas de aproximacion por tipo/tamano de tabla
     groups, order_g = {}, []
-    notes_drop, notes_split = [], []
     sym2dex = {m['sym']: d for d, m in mons.items()}
     for sec in sections:
         tables, info = pbs[sec['key']]
         n = len(sec['rows'])
         if sec['etype'] == 'Surf':
             label = 'Water (surf) %d especies' % n
-        elif n == 16 and sec['etype'] == 'Land':
-            label = 'Land 16 especies -> Land + LandNight (12 + 12)'
-        elif n == 16:
-            label = 'Cave 16 especies -> 12 casillas (4 descartadas)'
         elif sec['etype']:
-            label = '%s %d especies' % ('Land+LandNight' if sec['etype'] == 'Land' else 'Cave', n)
+            label = '%s %d especies' % (sec['etype'], n)
         else:
             continue
         for tn, errs in _err_stats(sec, info):
-            if tn == 'LandNight':
-                continue            # mismas especies/casillas que Land en la tabla partida; se cuenta una vez por tabla horaria
-            ach = info['ach'] if 'ach' in info else info['ach_' + tn][1]
-            tgt = [r['pct'] for r in sec['rows']] if 'ach' in info else [round(r['pct'] * 100.0 / info['ach_' + tn][2]) for r in info['ach_' + tn][0]]
+            ach = info['ach']
+            tgt = [r['pct'] for r in sec['rows']]
             if label not in groups:
                 groups[label] = {'n': 0, 'errs': [], 'ex': '%s -> %s' % ('/'.join(str(t) for t in tgt), '/'.join(str(a) for a in ach))}
                 order_g.append(label)
             groups[label]['n'] += 1
             groups[label]['errs'].append(sum(errs))
-        if 'dropped' in info:
-            par = {sym2dex[c]: d for d, pm in mons.items() for c, _, _ in pm['evo']}
-            notes_drop.append('%s: %s' % (sec['key'], ', '.join('%s (desde %s)' % (mons[d]['name'], mons[par[d]]['name']) if d in par else '%s (SIN RUTA ALTERNATIVA)' % mons[d]['name'] for d in info['dropped'])))
-        if 'split' in info:
-            no, do = info['split']
-            notes_split.append('%s: solo de noche = %s; solo de dia = %s' % (sec['key'], ', '.join(mons[d]['name'] for d in no), ', '.join(mons[d]['name'] for d in do)))
     out = []
     A = out.append
     A('# encounters.txt - Pokemon REM (Essentials v16). GENERADO por tools/rebalance/phase1/build_world.py; no editar a mano: se regenera con ese script.')
-    A('# LOS PORCENTAJES EXACTOS del Vol. 10 (6 casillas 20/15/10; 4 -> 35/20/10; 8 -> 16/10/6; 10 -> 12/10/5; 16 -> 7/6/4; pesca 70/30) estan en PBS/rem_encounters.txt.')
-    A('# Aqui cada tabla se ajusta a las casillas FIJAS del motor: Land/Cave/LandNight = 12 casillas [20,20,10,10,10,10,5,5,4,4,1,1]; Water = 5 [60,30,5,4,1]; OldRod = [70,30]; GoodRod = [60,20,20]; SuperRod = [40,40,15,4,1].')
+    A('# LOS PORCENTAJES EXACTOS del Vol. 10 (6 casillas 20/15/10; 4 -> 35/20/10; 8 -> 16/10/6; 10 -> 12/10/5; las 10 mazmorras tienen 2 mapas de 8; pesca 70/30) estan en PBS/rem_encounters.txt.')
+    A('# Aqui cada tabla se ajusta a las casillas FIJAS del motor: Land/Cave = 12 casillas [20,20,10,10,10,10,5,5,4,4,1,1]; Water = 5 [60,30,5,4,1]; OldRod = [70,30]; GoodRod = [60,20,20]; SuperRod = [40,40,15,4,1].')
     A('# Metodo: cada casilla del motor se asigna a una especie de modo que el error absoluto total respecto al porcentaje del Vol. 10 sea minimo (cada especie conserva >= 1 casilla). Tablas de 6 especies: EXACTAS (20/20/10+10/10+5/10+5/4+4+1+1).')
     A('# Aproximacion por tipo de tabla (error = suma de |logrado - objetivo| en puntos porcentuales; «objetivo -> logrado» de la primera tabla del grupo, en orden de casilla):')
     for label in order_g:
         g = groups[label]
         mean = sum(g['errs']) / len(g['errs'])
         A('#   %s (%d tablas): %s %s' % (label, g['n'], 'EXACTA' if max(g['errs']) < 0.5 else 'error medio %.1f, maximo %.1f;' % (mean, max(g['errs'])), g['ex']))
-    A('# Tierra: Land = niveles de DIA y LandNight = niveles de NOCHE con las mismas especies. Cave/Water/OldRod/GoodRod/SuperRod no tienen variante nocturna en Essentials v16: se emiten los niveles de DIA (los de noche estan en rem_encounters.txt).')
+    A('# Sin variantes nocturnas: NO hay LandNight en ningun mapa. Todas las tablas emiten los niveles de DIA y REM_Mechanics (Events.onWildPokemonCreate) multiplica x1.5 (redondeo hacia abajo, tope 100) el nivel de cualquier salvaje de noche (hierba, cueva, surf, pesca); las especies son las mismas de dia y de noche.')
     A('# Pesca: OldRod = 70/30 EXACTO (Comun/Rara); GoodRod = [C,R,R] y SuperRod = [C,R,C,C,C] = 60/40 (con [60,20,20] y [40,40,15,4,1] el 70/30 es imposible); asi las tres canas funcionan. Surf = Water (4 rutas marinas). Densidad 25,10,10 = valores por defecto.')
     A('# Calzada Corindon (hierba y cueva en el Vol. 10) = Land: Essentials no admite Land y Cave en el mismo mapa. Monte Azogue y las ciudades/pueblos sin agua no tienen tabla.')
-    if notes_split:
-        A('# 16 especies > 12 casillas (tablas de hierba): se reparten entre Land (dia) y LandNight (noche) para que las 16 sean obtenibles; las Raras estan en ambas, 4 especies son solo nocturnas y 4 solo diurnas:')
-        for n in notes_split:
-            A('#     ' + n)
-    if notes_drop:
-        A('# 16 especies en tablas de CUEVA (Cave no tiene variante horaria): solo caben 12. Se descartan 4 especies que evolucionan de otra especie salvaje (siguen obtenibles por evolucion; estan en rem_encounters.txt). DECISION PENDIENTE del diseno (p. ej. pasar la mazmorra a Land con terreno de hierba):')
-        for n in notes_drop:
-            A('#     ' + n)
     A('# CORRESPONDENCIA CON LOS MAPAS DEL PROTOTIPO (Data/MapInfos.rxdata + PBS/metadata.txt, solo lectura):')
     for mid, key in sorted(PROTOTYPE_TO_LOC.items()):
         nm = PROTOTYPE_MAPS[mid][0]
@@ -1192,10 +1130,10 @@ def write_pbs_encounters(sections, pbs, locs, mons):
         A('#   mapa %03d «%s» = %s%s' % (mid, nm, key, ' -> tablas del Vol. 10 (sustituyen a las del prototipo)' if has else
                                         (' -> sin salvajes ni pesca en el diseno: se retira su tabla del prototipo' if legacy_has else ' -> sin salvajes ni pesca en el diseno (el prototipo no tenia tabla)')))
     A('#   Mapas hijos/interiores del prototipo (1, 3, 4, 5, 7, 8, 10, 11, 13-17, 19, 20, 21, 23, 24) no son ubicaciones: sus entradas (005 «Casas», 021 «Cueva») y los restos del encounters.txt vanilla sin Map###.rxdata (028-075) se conservan TAL CUAL.')
-    A('# MAPAS PROVISIONALES para el resto: ID = 900 + ProgressionOrder (p. ej. RUTA_03 = 908) y 969/970/971 para la 2.a zona de Lago Amatista (Geoda Hundida), Ciénaga Limonita (Refugio de Turba) y Ladera Pórfido (Bastión del Pórfido). Sustituir por el ID real al crear cada mapa.')
+    A('# MAPAS PROVISIONALES para el resto: ID = 900 + ProgressionOrder (p. ej. RUTA_03 = 908) y 969-978 para el 2.o mapa (zona B) de las 10 mazmorras con dos mapas de 8 casillas (969 Lago Amatista, 970 Ciénaga Limonita, 971 Ladera Pórfido, 972 Bosque Dioptasa, 973 Central Fulgurita, 974 Desierto Halita, 975 Ruinas Atacamita, 976 Cascadas Travertinas, 977 Villa Adularia, 978 Templo Moldavita). Sustituir por el ID real al crear cada mapa.')
     entries = {}
     for m in kept:
-        entries[m] = legacy[m]
+        entries[m] = strip_landnight(legacy[m])
     for sec in sections:
         tables, info = pbs[sec['key']]
         lines = []
@@ -1534,22 +1472,18 @@ def check_files(keys, mons):
                 got.add(sym)
         if got - spec_syms - fs:
             E('mapa %d: especies en encounters.txt que no estan en rem_encounters.txt: %s' % (mid, sorted(got - spec_syms - fs)))
-        # niveles: Land/Cave/Water/rods = dia; LandNight = noche
+        # niveles: Land/Cave/Water/rods = dia (la noche la calcula REM_Mechanics); no puede haber LandNight
         ld = parse_range(s.get('LevelDay') or '')
-        ln = parse_range(s.get('LevelNight') or '')
+        if 'LandNight' in tables:
+            E('mapa %d: LandNight no permitido (la noche se calcula por script)' % mid)
         for t, rows in tables.items():
             for sym, a, b in rows:
-                if t == 'LandNight':
-                    if (a, b) != ln:
-                        E('mapa %d LandNight: niveles %s != noche %s' % (mid, (a, b), ln))
-                elif t in ('Land', 'Cave', 'Water') and (a, b) != ld:
+                if t in ('Land', 'Cave', 'Water') and (a, b) != ld:
                     E('mapa %d %s: niveles %s != dia %s' % (mid, t, (a, b), ld))
         # cobertura: sin tablas partidas, todas las especies de la tabla estan en el motor
         missing = spec_syms - got
         if missing:
             info.setdefault('not_in_engine', {})[s['key']] = sorted(missing)
-        if s.get('Type') == 'Land' and 'Land' in tables and 'LandNight' not in tables:
-            E('mapa %d: Land sin LandNight' % mid)
         for t in ('OldRod', 'GoodRod', 'SuperRod'):
             if fs and t not in tables:
                 E('mapa %d: pesca sin %s' % (mid, t))

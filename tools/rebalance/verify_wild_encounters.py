@@ -255,7 +255,7 @@ tabs = collections.defaultdict(list)
 for x in land: tabs[x['tbl']].append(x)
 for tb, rows in tabs.items():
     cls = cls_of(tb[0])
-    if tb[0] in ('Lago Amatista', 'Ciénaga Limonita', 'Ladera Pórfido'): cls = 'zona8'
+    if tb[0] in ('Lago Amatista', 'Ciénaga Limonita', 'Ladera Pórfido', 'Bosque Dioptasa', 'Central Fulgurita', 'Desierto Halita', 'Ruinas Atacamita', 'Cascadas Travertinas', 'Villa Adularia', 'Templo Moldavita'): cls = 'zona8'
     p = PCT[cls]; exp = {'Común': p[0], 'Incomún': p[1], 'Raro': p[2]}
     if any(x['pct'] != exp[x['rar']] for x in rows) or sum(x['pct'] for x in rows) != 100: bad_pct.append(tb)
 check('cada tabla de encuentros suma 100 %% con los porcentajes por rareza definidos en §1.4 (%d tablas)' % len(tabs), not bad_pct, bad_pct[:3])
