@@ -2375,6 +2375,24 @@ class PokemonQuests_Scene
     return [_INTL("PENDIENTE"),GREY,false,_INTL("SIN INICIAR")]
   end
 
+  # [x,y,ancho,alto] del área no transparente del fotograma (se calcula una vez por especie)
+  def boundsFor(species,bitmap)
+    @bounds={} if !@bounds
+    return @bounds[species] if @bounds[species]
+    w=bitmap.width; h=bitmap.height
+    x0=w; y0=h; x1=-1; y1=-1
+    for y in 0...h
+      for x in 0...w
+        if bitmap.get_pixel(x,y).alpha>16
+          x0=x if x<x0; x1=x if x>x1
+          y0=y if y<y0; y1=y if y>y1
+        end
+      end
+    end
+    @bounds[species]=(x1<0) ? [0,0,w,h] : [x0,y0,x1-x0+1,y1-y0+1]
+    return @bounds[species]
+  end
+
   def iconFor(q)
     return @icons[q[:species]] if @icons[q[:species]]
     file=pbCheckPokemonIconFiles([q[:species],false,false,0,false])
@@ -2435,11 +2453,11 @@ class PokemonQuests_Scene
     sp.visible=true
     sp.zoom_x=1.0; sp.zoom_y=1.0
     if sp.bitmap && !sp.bitmap.disposed?
-      w=sp.bitmap.width; h=sp.bitmap.height
-      z=[1.0,84.0/w,84.0/h].min
+      bb=boundsFor(q[:species],sp.bitmap)     # caja del dibujo opaco: todos se ajustan al marco por igual
+      z=[88.0/bb[2],88.0/bb[3]].min
       sp.zoom_x=z; sp.zoom_y=z
-      sp.x=(292-(w*z)/2).round
-      sp.y=(100-(h*z)/2).round
+      sp.x=(292-(bb[0]+bb[2]/2.0)*z).round
+      sp.y=(100-(bb[1]+bb[3]/2.0)*z).round
     end
     REM_UI.texts(bmp,[[:c,q[:title],352,56,0,REM_UI::WHITE,20,140]])
     # fila de tipos (de la especie mostrada, leídos de PBS/pokemon.txt)
