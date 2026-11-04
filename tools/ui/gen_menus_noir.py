@@ -45,6 +45,32 @@ def options():
     D.silver_box(im, (8, 304, 504, 376))
     save_to(im, "Graphics/Pictures/optionsNoir.png")
 
+# ---------- botones en cápsula (menú principal y título) ----------
+def pill_button(w, h, selected, box=None):
+    """Cápsula obsidiana con bisel: borde, aro grafito, cuerpo en degradado y reflejo superior.
+    box=(x0,y0,x1,y1) dentro de un lienzo (w,h); la selección añade halo platino-cian."""
+    S4 = 4
+    x0, y0, x1, y1 = box or (0, 0, w - 1, h - 1)
+    big = Image.new("RGBA", (w * S4, h * S4), (0, 0, 0, 0)); d = ImageDraw.Draw(big)
+    def rr(i, col, grow=0):
+        d.rounded_rectangle(((x0 + i - grow) * S4, (y0 + i - grow) * S4, (x1 + 1 - i + grow) * S4 - 1, (y1 + 1 - i + grow) * S4 - 1),
+                            radius=((y1 - y0 + 1) // 2 + grow) * S4, fill=col)
+    if selected:
+        rr(0, (130, 215, 255, 55), 3); rr(0, (130, 215, 255, 120), 1.5)
+    rr(0, (235, 247, 255, 255) if selected else (110, 118, 138, 255))
+    rr(2, (30, 34, 45, 255))
+    rr(3, (21, 23, 30, 255))
+    im = big.resize((w, h), Image.LANCZOS); px = im.load()
+    bh = y1 - y0
+    for y in range(y0 + 3, y1 - 2):                       # degradado del cuerpo
+        t = (y - y0 - 3) / max(1, bh - 6)
+        col = lerp((36, 41, 54, 255), (21, 23, 30, 255), t)
+        for x in range(x0, x1 + 1):
+            if px[x, y][3] > 200 and px[x, y][:3] == (21, 23, 30): px[x, y] = col
+    for x in range(x0 + bh // 2, x1 - bh // 2):           # reflejo de 1 px
+        px[x, y0 + 4] = lerp(px[x, y0 + 4], (255, 255, 255, 255), 0.16)
+    return im
+
 # ---------- carga ----------
 def loadscreen():
     save_to(S.base_bg(), "Graphics/Pictures/loadbg.png")
@@ -68,7 +94,8 @@ def loadscreen():
                 S.box(p, (122 + 46 * i, 154, 163 + 46 * i, 204), hexc("1B1F2A"), None, 8)  # píldoras
         return p
     sheet.paste(panel(222, False), (0, 0)); sheet.paste(panel(222, True), (0, 222))
-    sheet.paste(panel(46, False), (0, 444)); sheet.paste(panel(46, True), (0, 490))
+    for k, sel in ((444, False), (490, True)):             # opciones del menú: cápsulas más estrechas
+        sheet.paste(pill_button(W, 46, sel, (56, 5, 351, 40)), (0, k))
     save_to(sheet, "Graphics/Pictures/loadPanels.png")
 
 # ---------- título ----------
@@ -76,8 +103,7 @@ def title():
     save_to(S.base_bg(), "Graphics/Titles/custom_background.png")
     save_to(Image.new("RGBA", (512, 384), (0, 0, 0, 0)), "Graphics/Titles/custom_plane.png")
     w, h = 250, 34
-    im = Image.new("RGBA", (w, h), (0, 0, 0, 0))
-    S.card(im, (0, 0, w - 1, h - 1), hexc("14161D"))
+    im = pill_button(w, h, True, (3, 3, w - 4, h - 4))
     d = ImageDraw.Draw(im); f = S.font(22)
     t = "PULSA ENTER PARA EMPEZAR"
     hb = d.textbbox((0, 0), "H", font=f); tb = d.textbbox((0, 0), t, font=f)

@@ -2142,11 +2142,26 @@ class PokemonSaveScene
       cw=@sprites["player"].bitmap.width
       ch=@sprites["player"].bitmap.height
       @sprites["player"].src_rect=Rect.new(0,0,cw/4,ch/4)
-      @sprites["player"].zoom_x=2.0
-      @sprites["player"].zoom_y=2.0
-      @sprites["player"].x=6+46-cw/4
-      @sprites["player"].y=6+94-ch/4
+      @sprites["player"].x=6+46-cw/8
+      @sprites["player"].y=6+94-ch/8
       @sprites["player"].z=2
     end
   end
 end
+
+# Todas las ventanas (diálogos, elecciones, menús, monedero...) usan los marcos obsidiana: cualquier setSkin
+# se redirige, así ni \w[...] de un evento ni código antiguo pueden recuperar un marco por defecto.
+class SpriteWindow_Base
+  alias rem_orig_setSkin setSkin
+  def setSkin(skin)
+    name=skin.to_s
+    if name=~/speech|sign|message|text/i
+      skin="Graphics/Windowskins/rem_noir_speech"
+    elsif name!="" && !(name=~/rem_noir/)
+      skin="Graphics/Windowskins/rem_noir_choice"
+    end
+    rem_orig_setSkin(skin)
+  end
+end
+MessageConfig.pbSetSystemFrame(nil)
+MessageConfig.pbSetSpeechFrame(nil)

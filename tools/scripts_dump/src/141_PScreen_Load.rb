@@ -165,10 +165,8 @@ class PokemonLoadScene
       charwidth=@sprites["player"].bitmap.width
       charheight=@sprites["player"].bitmap.height
       @sprites["player"].src_rect = Rect.new(0,0,charwidth/4,charheight/4)
-      @sprites["player"].zoom_x=2.0   # REM_UI: sprite del mapa ampliado, centrado en el marco del retrato
-      @sprites["player"].zoom_y=2.0
-      @sprites["player"].x = 48+62 - charwidth/4
-      @sprites["player"].y = 32+103 - charheight/4
+      @sprites["player"].x = 48+62 - charwidth/8   # REM_UI: tamaño nativo, centrado en el marco del retrato
+      @sprites["player"].y = 32+103 - charheight/8
     end
     for i in 0...trainer.party.length
       @sprites["party#{i}"]=PokemonIconSprite.new(trainer.party[i],@viewport)
