@@ -2572,6 +2572,11 @@ class PokemonMenu_Scene
     @sprites["vial"].x=10
     @sprites["vial"].y=10
     @sprites["vial"].visible=false
+    @sprites["save"]=BitmapSprite.new(190,44,@viewport)
+    @sprites["save"].x=10
+    @sprites["save"].y=10
+    @sprites["save"].visible=false
+    @saveIndex=-1
     @sprites["infowindow"]=Window_UnformattedTextPokemon.newWithSize("",0,0,32,32,@viewport)
     @sprites["infowindow"].visible=false
     @sprites["helpwindow"]=Window_UnformattedTextPokemon.newWithSize("",0,0,32,32,@viewport)
@@ -2583,6 +2588,7 @@ class PokemonMenu_Scene
   end
 
   def pbHideMenu
+    @sprites["save"].visible=false
     @sprites["vial"].visible=false
     @sprites["cards"].visible=false
     @sprites["infowindow"].visible=false
@@ -2659,37 +2665,59 @@ class PokemonMenu_Scene
     return false
   end
 
+  # Columna de cajitas informativas arriba a la izquierda: Guardar (siempre que se pueda) y Pokévial (si lo tienes)
   def remDrawVial
-    spr=@sprites["vial"]
-    if !remHasVial?
-      spr.visible=false
-      return
-    end
-    bmp=spr.bitmap
-    bmp.clear
-    cur=pbRemVialCharges; mx=pbRemVialMax
+    vspr=@sprites["vial"]; sspr=@sprites["save"]
+    hasSave=(@saveIndex && @saveIndex>=0)
+    hasVial=remHasVial?
+    cur=hasVial ? pbRemVialCharges : 0
+    mx=hasVial ? pbRemVialMax : 1
     empty=(cur<=0)
-    white=empty ? Color.new(150,158,176) : REM_UI::WHITE
+    ctext=_INTL("Cargas: {1}/{2}",cur,mx)
+    vhint=empty ? _INTL("Vacío") : _INTL("Z: usar")
+    shint=_INTL("S: usar")
+    probe=sspr.bitmap
+    pbSetSystemFont(probe)
+    probe.font.size=20
+    l1=[probe.text_size(_INTL("Guardar")).width]
+    l1.push(probe.text_size(ctext).width) if hasVial
+    probe.font.size=17
+    l2=[probe.text_size(shint).width,probe.text_size(vhint).width]
+    w=46+[l1.max,l2.max].max+14
+    sspr.visible=false; vspr.visible=false
+    y=10
+    if hasSave
+      bmp=sspr.bitmap; bmp.clear
+      remInfoBox(bmp,w,nil,:save,_INTL("Guardar"),REM_UI::WHITE,shint)
+      sspr.y=y; sspr.visible=true
+      y+=50
+    end
+    if hasVial
+      bmp=vspr.bitmap; bmp.clear
+      remInfoBox(bmp,w,getConst(PBItems,:POKEVIAL),nil,ctext,empty ? Color.new(150,158,176) : Color.new(74,200,255),vhint)
+      vspr.y=y; vspr.visible=true
+    end
+  end
+
+  # Cajita de 44 px: hueco de icono (32 px), línea 1 (20 px) y pista (17 px)
+  def remInfoBox(bmp,w,item,iconkey,line1,color1,line2)
     pbSetSystemFont(bmp)
-    bmp.font.size=20
-    cw=bmp.text_size(sprintf("%d/%d",cur,mx)).width
-    bmp.font.size=17
-    hint=empty ? _INTL("Vacío") : _INTL("Z: usar")
-    hw=bmp.text_size(hint).width
-    w=46+[cw,hw].max+12
     REM_UI.slotBox(bmp,0,0,w,44,Color.new(20,22,29),REM_UI::SILVER,1)
     REM_UI.slotBox(bmp,6,6,32,32,Color.new(15,17,23),Color.new(38,43,56),1)
-    file=pbItemIconFile(getConst(PBItems,:POKEVIAL))
-    if file && pbResolveBitmap(file)
-      ico=AnimatedBitmap.new(file)
-      bmp.stretch_blt(Rect.new(8,8,28,28),ico.bitmap,Rect.new(0,0,ico.bitmap.width,ico.bitmap.height))
-      ico.dispose
+    if iconkey
+      REM_UI.drawMenuIcon(bmp,iconkey,22,22,1.0)
+    elsif item
+      file=pbItemIconFile(item)
+      if file && pbResolveBitmap(file)
+        ico=AnimatedBitmap.new(file)
+        bmp.stretch_blt(Rect.new(8,8,28,28),ico.bitmap,Rect.new(0,0,ico.bitmap.width,ico.bitmap.height))
+        ico.dispose
+      end
     end
     bmp.font.size=20
-    pbDrawShadowText(bmp,46,2,cw+4,22,sprintf("%d/%d",cur,mx),empty ? white : Color.new(74,200,255),Color.new(40,44,55))
+    pbDrawShadowText(bmp,46,2,w-50,22,line1,color1,Color.new(40,44,55))
     bmp.font.size=17
-    pbDrawShadowText(bmp,46,22,hw+4,18,hint,Color.new(122,130,148),Color.new(30,33,42))
-    spr.visible=true
+    pbDrawShadowText(bmp,46,22,w-50,18,line2,Color.new(122,130,148),Color.new(30,33,42))
   end
 
   def remUseVial
@@ -2700,30 +2728,39 @@ class PokemonMenu_Scene
 
   def pbShowCommands(commands)
     ret=-1
-    n=commands.length
-    index=[[$PokemonTemp.menuLastChoice,n-1].min,0].max
+    @saveIndex=commands.index(_INTL("Guardar")) || -1
+    visible=[]
+    for i in 0...commands.length
+      visible.push(i) if i!=@saveIndex
+    end
+    labels=visible.map{|i| commands[i]}
+    n=labels.length
+    index=visible.index($PokemonTemp.menuLastChoice) || 0
     @sprites["cards"].visible=true
-    remDrawCards(commands,index)
+    remDrawCards(labels,index)
     remDrawVial
     loop do
       Graphics.update
       Input.update
       pbUpdateSceneMap
-      if Input.trigger?(Input::A) && remHasVial?
+      if Input.trigger?(Input::Y) && @saveIndex>=0
+        ret=@saveIndex
+        break
+      elsif Input.trigger?(Input::A) && remHasVial?
         remUseVial
       elsif Input.trigger?(Input::UP)
         index=(index+n-1)%n
         pbPlayCursorSE()
-        remDrawCards(commands,index)
+        remDrawCards(labels,index)
       elsif Input.trigger?(Input::DOWN)
         index=(index+1)%n
         pbPlayCursorSE()
-        remDrawCards(commands,index)
+        remDrawCards(labels,index)
       elsif Input.trigger?(Input::B)
         ret=-1
         break
       elsif Input.trigger?(Input::C)
-        ret=index
+        ret=visible[index]
         $PokemonTemp.menuLastChoice=ret
         break
       end
