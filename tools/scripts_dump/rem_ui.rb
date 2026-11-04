@@ -3481,6 +3481,13 @@ def pbRemDebugIntro
     ok=($PokemonBag.pbStoreItem(i,qty) rescue false)
     stored+=1 if ok
   end
+  # 4b) Pokévial al máximo (3 cargas) y lleno
+  begin
+    pbRemVialSetMin(3)
+    $PokemonGlobal.remVialCharges=pbRemVialMax
+    pbRemEnsureVialVars
+  rescue
+  end
   # 5) Destino
   labels=REM_DEBUG_DESTINATIONS.map{|d| d[0]}
   c=Kernel.pbMessage(_INTL("Modo debug: {1} objetos en la mochila. ¿Dónde quieres aparecer?",stored),labels,0)
