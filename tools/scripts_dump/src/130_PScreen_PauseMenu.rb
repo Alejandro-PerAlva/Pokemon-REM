@@ -141,7 +141,7 @@ class PokemonMenu
     end
     commands[cmdOption=commands.length]=_INTL("Opciones")
     commands[cmdDebug=commands.length]=_INTL("Depurador") if $DEBUG
-    commands[cmdEndGame=commands.length]=_INTL("Salir del Juego")
+    commands[cmdEndGame=commands.length]=_INTL("Salir")
     loop do
       command=@scene.pbShowCommands(commands)
       if cmdPokedex>=0 && command==cmdPokedex

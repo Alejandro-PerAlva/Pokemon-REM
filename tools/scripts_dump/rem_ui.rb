@@ -2597,7 +2597,7 @@ class PokemonMenu_Scene
     pbSetSystemFont(bmp)
     mw=0
     for c in commands; mw=[mw,bmp.text_size(c).width].max; end
-    uw=[[mw+56,156].max,214].min          # ancho de la tarjeta sin seleccionar (más ancha solo si el texto lo pide)
+    uw=[[mw+56,110].max,214].min          # ancho de la tarjeta sin seleccionar: se ajusta a la etiqueta más larga
     sw=uw+14
     fs=bmp.font.size
     while fs>16 && mw>uw-56
