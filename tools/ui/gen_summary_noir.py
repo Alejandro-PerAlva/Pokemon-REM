@@ -127,8 +127,8 @@ def details(learning):
     im = base_bg(); card(im, CARD)
     panel(im, (232, 8 if learning else 48, 504, 376))
     d = ImageDraw.Draw(im, "RGBA")
-    for i in range(3): row_box(im, 16, 120 + 32 * i, 214, 30, 104)
-    box(im, (16, 222, 214, 372), WELL, DIV, 6)
+    for i in range(4): row_box(im, 16, 114 + 30 * i, 214, 28, 104)       # Tipo, Categoría, Potencia, Precisión
+    box(im, (16, 244, 214, 372), WELL, DIV, 6)
     ys = ([LEARN_Y0 + LEARN_P * i for i in range(4)] + [LEARN_Y5]) if learning else [SLOT_Y0 + SLOT_P * i for i in range(4)]
     slots(im, ys)
     save(im, "summary4learning" if learning else "summary4details")

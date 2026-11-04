@@ -836,14 +836,13 @@ class PokemonSummaryScene
     REM_UI.borderRect(overlay,240,y0,495,y0+REM_UI::SUM_SLOT_H-1,move.id>0 ? REM_UI.dim(REM_UI.typeColor(move.type),0.85) : Color.new(46,52,68))
     cy=y0+REM_UI::SUM_SLOT_H/2
     if move.id>0
-      overlay.blt(250,cy-14,@typebitmap.bitmap,Rect.new(0,move.type*28,64,28))
-      textlist.push([:c,PBMoves.getName(move.id),322,cy,0,REM_UI::WHITE,30,88])
+      textlist.push([:c,PBMoves.getName(move.id),258,cy,0,REM_UI::WHITE,30,190])
       if move.totalpp>0
         pcol=(move.pp==0) ? REM_UI::UPC : REM_UI::WHITE
         textlist.push([:c,sprintf("PP %d/%d",move.pp,move.totalpp),486,cy,1,pcol,26,74])
       end
     else
-      textlist.push([:c,"-",322,cy,0,REM_UI::DIM,30,40])
+      textlist.push([:c,"-",258,cy,0,REM_UI::DIM,30,40])
     end
   end
 
@@ -872,16 +871,18 @@ class PokemonSummaryScene
     overlay=drawMoveSelection(pokemon,moveToLearn)
     pw=(category==2 || basedamage<=0) ? "-" : (basedamage==1 ? "???" : sprintf("%d",basedamage))
     ac=(accuracy==0) ? "-" : sprintf("%d%%",accuracy)
-    REM_UI.texts(overlay,[[pw,166,155,2,REM_UI::WHITE,24,84],[ac,166,187,2,REM_UI::WHITE,24,84]])
+    # filas 114,144,174,204 (28 px): Tipo, Categoría, Potencia, Precisión
+    overlay.blt(134,114,@typebitmap.bitmap,Rect.new(0,movedata.type*28,64,28))
     icons=AnimatedBitmap.new("Graphics/Pictures/category")
-    overlay.blt(134,121,icons.bitmap,Rect.new(0,category*28,64,28))
+    overlay.blt(134,144,icons.bitmap,Rect.new(0,category*28,64,28))
     icons.dispose
+    REM_UI.texts(overlay,[[:c,pw,166,188,2,REM_UI::WHITE,24,84],[:c,ac,166,218,2,REM_UI::WHITE,24,84]])
     pbSetNarrowFont(overlay); overlay.font.size=21
     lines=REM_UI.wrap(overlay,pbGetMessage(MessageTypes::MoveDescriptions,moveid),186)
     lines=lines[0,5]
     textpos=[]
     for i in 0...lines.length
-      textpos.push([lines[i],24,229+i*28,0,REM_UI::WHITE,21])
+      textpos.push([lines[i],24,252+i*23,0,REM_UI::WHITE,21])
     end
     REM_UI.texts(overlay,textpos)
   end
@@ -892,9 +893,10 @@ class PokemonSummaryScene
     @sprites["background"].setBitmap("Graphics/Pictures/summary4details")
     @sprites["background"].setBitmap("Graphics/Pictures/summary4learning") if moveToLearn!=0
     textlist=[[_INTL("MOVIMIENTOS"),18,12,0,REM_UI::WHITE,28],
-              [_INTL("Categoría"),24,122,0,REM_UI::LABEL,20,100],
-              [_INTL("Potencia"),24,154,0,REM_UI::LABEL,20,100],
-              [_INTL("Precisión"),24,186,0,REM_UI::LABEL,20,100]]
+              [:c,_INTL("Tipo"),24,128,0,REM_UI::LABEL,20,90],
+              [:c,_INTL("Categoría"),24,158,0,REM_UI::LABEL,20,90],
+              [:c,_INTL("Potencia"),24,188,0,REM_UI::LABEL,20,90],
+              [:c,_INTL("Precisión"),24,218,0,REM_UI::LABEL,20,90]]
     if pokemon.type1==pokemon.type2
       overlay.blt(117,78,@typebitmap.bitmap,Rect.new(0,pokemon.type1*28,64,28))
     else
@@ -1783,7 +1785,11 @@ class PokemonSystem
   alias rem_orig_initialize initialize
   def initialize
     rem_orig_initialize
-    @battlestyle=1   # Fijo por defecto
+    @textspeed=2     # Rápida
+    @battlescene=0   # Animación de combate: Sí
+    @battlestyle=1   # Fijo
+    @bgmvolume=100
+    @sevolume=100
   end
 end
 
@@ -2074,35 +2080,73 @@ class PokemonLoadPanel
         for sp in 1..REM_UI::DEX_MAX
           owned+=1 if @trainer.owned[sp]
         end
-        # retrato del entrenador centrado en su marco (14,46)-(110,160)
-        file=(pbPlayerSpriteFile(@trainer.trainertype) rescue nil)
-        img=(file ? (pbBitmap(file) rescue nil) : nil)
-        if img
-          z=[1.0,88.0/img.width,104.0/img.height].min
-          dw=(img.width*z).round; dh=(img.height*z).round
-          bmp.stretch_blt(Rect.new(62-dw/2,103-dh/2,dw,dh),img,Rect.new(0,0,img.width,img.height))
-        end
         REM_UI.texts(bmp,[
            [:c,_INTL("Partida Guardada"),16,21,0,wh,26,200],
            [:c,mapname,392,21,1,Color.new(214,219,228),22,180],
            [:c,@trainer.name,62,178,2,wh,26,100],
-           [:c,_INTL("Tiempo"),128,52,0,lb,18,110],
-           [:c,_ISPRINTF("{1:02d}:{2:02d}",hour,min),187,76,2,wh,26,116],
-           [:c,_INTL("Medallas"),128,106,0,lb,18,110],
-           [:c,@trainer.numbadges.to_s,134,130,0,wh,26,24],
-           [:c,_INTL("Dinero"),266,52,0,lb,18,110],
-           [:c,_INTL("${1}",@trainer.money),328,76,2,wh,26,122],
-           [:c,_INTL("Pokédex"),266,106,0,lb,18,110],
-           [:c,_ISPRINTF("{1}/{2}",owned,REM_UI::DEX_MAX),328,130,2,wh,26,122]])
-        for i in 0...8   # 8 casillas de medalla: llenas las ganadas
-          on=(i<@trainer.numbadges)
-          REM_UI.slotBox(bmp,164+i*11,126,8,8,on ? Color.new(226,244,255) : Color.new(54,60,78),on ? REM_UI::SILVER : Color.new(54,60,78),1)
-        end
+           [:c,_INTL("Tiempo"),132,76,0,lb,20,52],
+           [:c,sprintf("%02d:%02d",hour,min),244,76,1,wh,26,66],
+           [:c,_INTL("Medallas"),132,130,0,lb,20,56],
+           [:c,sprintf("%d/8",@trainer.numbadges),244,130,1,wh,26,52],
+           [:c,_INTL("Dinero"),270,76,0,lb,20,46],
+           [:c,_INTL("${1}",@trainer.money),388,76,1,wh,26,70],
+           [:c,_INTL("Pokédex"),270,130,0,lb,20,52],
+           [:c,sprintf("%d/%d",owned,REM_UI::DEX_MAX),388,130,1,wh,26,64]])
       else
         bmp.blt(0,0,@bgbitmap.bitmap,Rect.new(0,111*2*2+(@selected ? 23*2 : 0),@bgbitmap.width,23*2))
         REM_UI.texts(bmp,[[:c,@title,204,23,2,wh,28,360]])
       end
     end
     @refreshing=false
+  end
+end
+
+#-------------------------------------------------------------------------------
+# PANTALLA DE GUARDADO EN EL MUNDO: misma tarjeta obsidiana que la de carga, con el sprite del mapa
+#-------------------------------------------------------------------------------
+class PokemonSaveScene
+  def pbStartScreen
+    @viewport=Viewport.new(0,0,Graphics.width,Graphics.height)
+    @viewport.z=99999
+    @sprites={}
+    totalsec=Graphics.frame_count/Graphics.frame_rate
+    hour=totalsec/60/60
+    min=totalsec/60%60
+    owned=0
+    if $Trainer.pokedex
+      for sp in 1..REM_UI::DEX_MAX
+        owned+=1 if $Trainer.owned[sp]
+      end
+    end
+    @sprites["card"]=BitmapSprite.new(262,156,@viewport)
+    @sprites["card"].x=6; @sprites["card"].y=6
+    bmp=@sprites["card"].bitmap
+    REM_UI.slotBox(bmp,0,0,262,156,Color.new(20,22,29),REM_UI::SILVER,1)
+    REM_UI.slotBox(bmp,3,3,256,150,Color.new(20,22,29),Color.new(30,34,45),1)
+    REM_UI.slotBox(bmp,6,6,250,28,Color.new(24,27,36),Color.new(24,27,36),1)
+    REM_UI.slotBox(bmp,12,40,68,108,Color.new(15,17,23),Color.new(38,43,56),1)
+    for i in 0...4
+      REM_UI.slotBox(bmp,88,40+i*28,164,26,Color.new(27,31,42),Color.new(38,43,56),1)
+    end
+    wh=REM_UI::WHITE; lb=REM_UI::LABEL
+    REM_UI.texts(bmp,[
+       [:c,$game_map.name,131,20,2,Color.new(214,219,228),24,236],
+       [:c,_INTL("Jugador"),96,53,0,lb,20,56],[:c,$Trainer.name,244,53,1,wh,24,90],
+       [:c,_INTL("Tiempo"),96,81,0,lb,20,56],[:c,sprintf("%02d:%02d",hour,min),244,81,1,wh,24,90],
+       [:c,_INTL("Medallas"),96,109,0,lb,20,60],[:c,sprintf("%d/8",$Trainer.numbadges),244,109,1,wh,24,80],
+       [:c,_INTL("Pokédex"),96,137,0,lb,20,60],[:c,sprintf("%d/%d",owned,REM_UI::DEX_MAX),244,137,1,wh,24,80]])
+    meta=pbGetMetadata(0,MetadataPlayerA+$Trainer.metaID)
+    if meta
+      filename=pbGetPlayerCharset(meta,1,$Trainer)
+      @sprites["player"]=TrainerWalkingCharSprite.new(filename,@viewport)
+      cw=@sprites["player"].bitmap.width
+      ch=@sprites["player"].bitmap.height
+      @sprites["player"].src_rect=Rect.new(0,0,cw/4,ch/4)
+      @sprites["player"].zoom_x=2.0
+      @sprites["player"].zoom_y=2.0
+      @sprites["player"].x=6+46-cw/4
+      @sprites["player"].y=6+94-ch/4
+      @sprites["player"].z=2
+    end
   end
 end

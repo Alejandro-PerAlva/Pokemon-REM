@@ -62,7 +62,7 @@ def loadscreen():
             S.box(p, (6, 6, W - 7, 36), hexc("181B24"), None, 5)                        # tira superior
             S.box(p, (14, 46, 110, 160), S.WELL, S.DIV, 6)                              # retrato
             for (x0, y0, x1, y1) in ((124, 62, 250, 90), (124, 116, 250, 144), (262, 62, 394, 90), (262, 116, 394, 144)):
-                S.box(p, (x0, y0, x1, y1), S.WELL, S.DIV, 5)                            # valores
+                S.box(p, (x0, y0, x1, y1), S.WELL, S.DIV, 5)                            # celdas: etiqueta + valor
             S.box(p, (118, 150, 394, 208), hexc("12141B"), S.DIV, 6)                    # fila del equipo
             for i in range(6):
                 S.box(p, (122 + 46 * i, 154, 163 + 46 * i, 204), hexc("1B1F2A"), None, 8)  # píldoras
