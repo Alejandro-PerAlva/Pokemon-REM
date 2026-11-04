@@ -296,9 +296,29 @@ REM_PIA_STARTERS=[
   [:SNIVY,:GRASS],[:TEPIG,:FIRE],[:OSHAWOTT,:WATER],
   [:CHESPIN,:GRASS],[:FENNEKIN,:FIRE],[:FROAKIE,:WATER]
 ]
-REM_PIA_KINDS=["Derrotar Pokémon salvajes de tipo %s","Capturar Pokémon de tipo %s",
-               "Evolucionar Pokémon de tipo %s","Ganar combates usando movimientos %s"]
-REM_PIA_TYPENAMES={:GRASS=>"Planta",:FIRE=>"Fuego",:WATER=>"Agua"}
+# Matriz de objetivos por inicial (todos cuentan a la vez):
+#  [sym, [especies a derrotar x5], [especies a evolucionar x1], tipo a derrotar x10, tipo a capturar x3]
+REM_PIA_QUESTS={
+  :BULBASAUR=>[[:PIDGEY,:PIDGEOTTO],[:ODDISH],:PSYCHIC,:POISON],
+  :CHARMANDER=>[[:GEODUDE,:GRAVELER],[:GROWLITHE],:ROCK,:DRAGON],
+  :SQUIRTLE=>[[:MAGNEMITE,:MAGNETON],[:HORSEA],:ELECTRIC,:ICE],
+  :CHIKORITA=>[[:ZUBAT,:GOLBAT],[:ROSELIA,:BUDEW],:POISON,:FAIRY],
+  :CYNDAQUIL=>[[:DIGLETT,:DUGTRIO],[:SLUGMA],:WATER,:GROUND],
+  :TOTODILE=>[[:ODDISH,:GLOOM],[:CARVANHA],:GRASS,:BUG],
+  :TREECKO=>[[:SCYTHER,:BEEDRILL],[:NINCADA],:ICE,:FLYING],
+  :TORCHIC=>[[:WINGULL,:PELIPPER],[:MACHOP],:FLYING,:FIGHTING],
+  :MUDKIP=>[[:LOTAD,:LOMBRE],[:WOOPER],:BUG,:ROCK],
+  :TURTWIG=>[[:SWINUB,:PILOSWINE],[:PHANPY],:FIRE,:GRASS],
+  :CHIMCHAR=>[[:ABRA,:KADABRA],[:MANKEY],:GROUND,:FIRE],
+  :PIPLUP=>[[:SHINX,:LUXIO],[:ARON],:FIGHTING,:STEEL],
+  :SNIVY=>[[:VENIPEDE,:WHIRLIPEDE],[:EKANS],:STEEL,:NORMAL],
+  :TEPIG=>[[:ROGGENROLA,:BOLDORE],[:HOUNDOUR],:DRAGON,:ELECTRIC],
+  :OSHAWOTT=>[[:FOONGUS,:AMOONGUSS],[:PAWNIARD],:NORMAL,:WATER],
+  :CHESPIN=>[[:MURKROW,:STARAVIA],[:PINECO],:FAIRY,:GHOST],
+  :FENNEKIN=>[[:GASTLY,:HAUNTER],[:VULPIX],:GHOST,:PSYCHIC],
+  :FROAKIE=>[[:SHROOMISH,:BRELOOM],[:ZORUA],:DARK,:DARK]
+}
+REM_PIA_GOALS=[5,1,10,3]
 
 class PokemonGlobalMetadata
   attr_accessor :remPia
@@ -306,14 +326,16 @@ end
 
 def pbRemPia
   if !$PokemonGlobal.remPia
-    $PokemonGlobal.remPia={:first=>nil,:active=>nil,:ready=>{},:claimed=>{},:prog=>{}}
+    $PokemonGlobal.remPia={:first=>nil,:active=>nil,:ready=>{},:claimed=>{},:prog=>{},:v=>2}
+  end
+  if $PokemonGlobal.remPia[:v]!=2    # versión antigua de los objetivos: contadores nuevos
+    $PokemonGlobal.remPia[:prog]={}; $PokemonGlobal.remPia[:v]=2
   end
   return $PokemonGlobal.remPia
 end
 
-def pbPiaGoals(sym)            # metas crecen con la generación del trío
-  k=pbPiaIndex(sym)/3
-  return [10+3*k,3+k,1+k/2,5+k]
+def pbPiaGoals(sym)            # metas fijas: 5 / 1 / 10 / 3
+  return REM_PIA_GOALS.clone
 end
 
 def pbPiaIndex(sym)
@@ -363,43 +385,56 @@ def pbPiaSelect(sym)
   return true
 end
 
-# kind: 0 derrotar, 1 capturar, 2 evolucionar, 3 victoria con movimientos del tipo
-def pbPiaCount(kind,types)     # types = array de símbolos de tipo del Pokémon/movimiento
-  d=pbRemPia
-  a=d[:active]
-  return if !a || !$game_switches[REM_PIA_QUESTS_SWITCH]
-  return if d[:ready][a] || d[:claimed][a]
-  t=REM_PIA_STARTERS[pbPiaIndex(a)][1]
-  return if !types.include?(t)
-  goals=pbPiaGoals(a)
-  pr=pbPiaProg(a)
-  return if pr[kind]>=goals[kind]
-  pr[kind]+=1
-  if pr[kind]>=goals[kind]
-    if (0...4).all?{|i| pr[i]>=goals[i]}
-      d[:ready][a]=true; d[:active]=nil
-      Kernel.pbMessage(_INTL("¡Misiones de {1} completadas! Pía puede entregártelo.",PBSpecies.getName(getConst(PBSpecies,a))))
-    else
-      Kernel.pbMessage(_INTL("Misión de Pía cumplida: {1}.",sprintf(REM_PIA_KINDS[kind],REM_PIA_TYPENAMES[t])))
-    end
-  end
-end
-
-def pbRemTypeSyms(*ids)
+def pbPiaSpeciesList(list)
   ret=[]
-  for id in ids
-    next if !id || id<0
-    for t in [:GRASS,:FIRE,:WATER]
-      ret.push(t) if hasConst?(PBTypes,t) && getConst(PBTypes,t)==id
-    end
+  for s in list
+    ret.push(getConst(PBSpecies,s)) if hasConst?(PBSpecies,s)
   end
   return ret
 end
 
-def pbPiaCountWin
-  return if !$PokemonTemp.remMoveTypes
-  pbPiaCount(3,$PokemonTemp.remMoveTypes.keys)
+def pbPiaInFamily?(species,list)
+  r=REM_Prodigio.root(species)
+  for sp in pbPiaSpeciesList(list)
+    return true if REM_Prodigio.root(sp)==r
+  end
+  return false
 end
+
+# kind: :defeat (derrotado) / :capture (capturado) / :evolve (evolucionado). Cuenta en paralelo los
+# 4 objetivos del inicial en foco; el progreso de cada inicial se conserva al cambiar de foco.
+def pbPiaEvent(kind,species,type1,type2)
+  d=pbRemPia
+  a=d[:active]
+  return if !a || !$game_switches[REM_PIA_QUESTS_SWITCH]
+  return if d[:ready][a] || d[:claimed][a]
+  q=REM_PIA_QUESTS[a]
+  return if !q
+  hit=[]
+  tys=[type1,type2]
+  case kind
+  when :defeat
+    hit.push(0) if pbPiaInFamily?(species,q[0])
+    hit.push(2) if hasConst?(PBTypes,q[2]) && tys.include?(getConst(PBTypes,q[2]))
+  when :evolve
+    hit.push(1) if pbPiaInFamily?(species,q[1])
+  when :capture
+    hit.push(3) if hasConst?(PBTypes,q[3]) && tys.include?(getConst(PBTypes,q[3]))
+  end
+  return if hit.length==0
+  goals=pbPiaGoals(a)
+  pr=pbPiaProg(a)
+  for k in hit
+    next if pr[k]>=goals[k]
+    pr[k]+=1
+  end
+  if (0...4).all?{|i| pr[i]>=goals[i]}
+    d[:ready][a]=true; d[:active]=nil
+    Kernel.pbMessage(_INTL("¡Investigación de {1} completada! Ya puedes reclamarlo en Misiones.",PBSpecies.getName(getConst(PBSpecies,a))))
+  end
+end
+
+def pbPiaCountWin; end   # (sin uso: el objetivo de victorias con movimientos ya no existe)
 
 def pbClaimPiaStarter(sym=nil)
   d=pbRemPia
@@ -426,8 +461,8 @@ class PokeBattle_Battler
   alias rem_orig_pbFaint pbFaint
   def pbFaint(showMessage=true)
     ret=rem_orig_pbFaint(showMessage)
-    if (@index&1)==1 && @battle && !@battle.opponent && @battle.internalbattle
-      pbPiaCount(0,pbRemTypeSyms(@type1,@type2))     # misión 1: derrotar salvajes
+    if (@index&1)==1 && @battle && @battle.internalbattle
+      pbPiaEvent(:defeat,@species,@type1,@type2)     # objetivos 1 y 3: derrotar
     end
     return ret
   end
@@ -446,7 +481,7 @@ end
 class PokeBattle_Battle
   alias rem_orig_pbStorePokemon pbStorePokemon
   def pbStorePokemon(pokemon)
-    pbPiaCount(1,pbRemTypeSyms(pokemon.type1,pokemon.type2))   # misión 2: capturar
+    pbPiaEvent(:capture,pokemon.species,pokemon.type1,pokemon.type2)   # objetivo 4: capturar
     return rem_orig_pbStorePokemon(pokemon)
   end
 end
@@ -457,7 +492,7 @@ class PokemonEvolutionScene
     before=@pokemon.species
     ret=rem_orig_pbEvolution(cancancel)
     if @pokemon.species!=before
-      pbPiaCount(2,pbRemTypeSyms(@pokemon.type1,@pokemon.type2))   # misión 3: evolucionar
+      pbPiaEvent(:evolve,@pokemon.species,@pokemon.type1,@pokemon.type2)   # objetivo 2: evolucionar
     end
     return ret
   end
