@@ -2728,6 +2728,17 @@ class PokemonMenu_Scene
 
   def remUseVial
     pbHideMenu            # todo el menú se oculta, igual que al guardar
+    hurt=false
+    for p in $Trainer.party
+      hurt=true if p && !p.isEgg? && (p.hp<p.totalhp || p.status!=0)
+    end
+    # solo se pide confirmación si de verdad se puede curar (si no, salen los mensajes de siempre)
+    if pbRemVialCharges>0 && hurt
+      if !Kernel.pbConfirmMessage(_INTL("¿Quieres curar a tu equipo?"))
+        pbShowMenu
+        return
+      end
+    end
     ItemHandlers.triggerUseFromBag(getConst(PBItems,:POKEVIAL))
     pbShowMenu            # y reaparece con las cargas actualizadas
   end
