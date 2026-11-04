@@ -1613,17 +1613,17 @@ class PokemonBag_Scene
     end
     list=REM_UI.bagPockets
     n=list.length
-    x0=103-(n-1)*8
+    x0=103-(n*24-8)/2          # iconos de 16 px separados 8 px y centrados bajo la mochila
+    icons=AnimatedBitmap.new("Graphics/Pictures/bagPockets")
     for k in 0...n
-      cx=x0+k*16
-      if list[k]==pocket
-        REM_UI.slotBox(bmp,cx-5,258-5,10,10,Color.new(226,244,255),REM_UI::SILVER,1)
-      else
-        REM_UI.slotBox(bmp,cx-3,258-3,6,6,Color.new(54,60,78),Color.new(54,60,78),1)
-      end
+      ix=x0+k*24
+      on=(list[k]==pocket)
+      bmp.blt(ix,250,icons.bitmap,Rect.new((list[k]-1)*16,on ? 16 : 0,16,16))
+      bmp.fill_rect(ix+1,270,14,2,REM_UI::SILVER) if on
     end
-    REM_UI.arrow(bmp,x0-26,258,-1,REM_UI::LABEL)
-    REM_UI.arrow(bmp,x0+(n-1)*16+20,258,1,REM_UI::LABEL)
+    icons.dispose
+    REM_UI.arrow(bmp,14,258,-1,REM_UI::LABEL)
+    REM_UI.arrow(bmp,180,258,1,REM_UI::LABEL)
   end
 
   # Pie: icono del objeto + descripción completa (y datos del movimiento en el bolsillo de MT/MO).

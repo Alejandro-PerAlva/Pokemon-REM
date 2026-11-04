@@ -39,3 +39,45 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+def pocket_icons():
+    """bagPockets.png (128x32): 8 siluetas de 16x16; fila 0 = inactivas (grafito, ~60 %), fila 1 = activas (plata)."""
+    from PIL import ImageDraw
+    def mk():
+        return Image.new("L", (16, 16), 0)
+    icons = []
+    m = mk(); d = ImageDraw.Draw(m)                                    # 1 Objetos: bolsita
+    d.ellipse((2, 5, 13, 15), fill=255); d.rectangle((6, 2, 9, 6), fill=255); d.rectangle((5, 1, 10, 2), fill=255)
+    d.line([(4, 6), (11, 6)], fill=0); icons.append(m)
+    m = mk(); d = ImageDraw.Draw(m)                                    # 2 Medicinas: frasco
+    d.rectangle((6, 1, 9, 5), fill=255); d.rectangle((5, 1, 10, 2), fill=255)
+    d.rounded_rectangle((3, 5, 12, 15), radius=3, fill=255)
+    d.rectangle((7, 8, 8, 12), fill=0); d.rectangle((5, 10, 10, 10), fill=0); icons.append(m)
+    m = mk(); d = ImageDraw.Draw(m)                                    # 3 Poké Ball
+    d.ellipse((1, 1, 14, 14), fill=255); d.rectangle((1, 7, 14, 8), fill=0)
+    d.ellipse((5, 5, 10, 10), fill=0); d.ellipse((6, 6, 9, 9), fill=255); icons.append(m)
+    m = mk(); d = ImageDraw.Draw(m)                                    # 4 MT/MO: disco
+    d.ellipse((1, 1, 14, 14), fill=255); d.ellipse((5, 5, 10, 10), fill=0); d.arc((3, 3, 12, 12), 200, 290, fill=0); icons.append(m)
+    m = mk(); d = ImageDraw.Draw(m)                                    # 5 Bayas
+    d.ellipse((2, 5, 13, 15), fill=255); d.polygon([(8, 5), (13, 1), (14, 5), (10, 7)], fill=255)
+    d.line([(8, 5), (8, 2)], fill=255); d.point((5, 8), fill=0); icons.append(m)
+    m = mk(); d = ImageDraw.Draw(m)                                    # 6 Cartas
+    d.rectangle((1, 3, 14, 12), fill=255); d.line([(1, 3), (7, 8), (14, 3)], fill=0); icons.append(m)
+    m = mk(); d = ImageDraw.Draw(m)                                    # 7 Combate
+    d.line([(2, 2), (13, 13)], fill=255, width=3); d.line([(13, 2), (2, 13)], fill=255, width=3); icons.append(m)
+    m = mk(); d = ImageDraw.Draw(m)                                    # 8 Objetos Clave: llave
+    d.ellipse((1, 4, 8, 11), fill=255); d.ellipse((3, 6, 6, 9), fill=0)
+    d.rectangle((8, 6, 14, 8), fill=255); d.rectangle((11, 9, 12, 12), fill=255); d.rectangle((14, 9, 14, 11), fill=255)
+    icons.append(m)
+    sheet = Image.new("RGBA", (128, 32), (0, 0, 0, 0))
+    for i, m in enumerate(icons):
+        for row, (col, a) in enumerate((((80, 86, 102), 150), ((214, 219, 228), 255))):
+            layer = Image.new("RGBA", (16, 16), col + (255,))
+            layer.putalpha(m.point(lambda v, a=a: a if v > 0 else 0))
+            sheet.paste(layer, (16 * i, 16 * row))
+    G.save(sheet, "bagPockets")
+
+
+if __name__ == "__main__":
+    pocket_icons()
