@@ -958,6 +958,126 @@ module REM_UI
   end
 end
 
+# Lectura directa de PBS/pokemon.txt: los datos compilados (Data/*.dat) solo se regeneran al arrancar en
+# modo debug, así que la Pokédex lee el texto fuente (se recarga si cambia la fecha del archivo).
+module REM_UI
+  @@pbsCache=nil
+  @@pbsTime=nil
+  @@pbsPrev={}
+
+  def self.pbsLoad
+    t=(File.mtime("PBS/pokemon.txt") rescue nil)
+    return @@pbsCache if @@pbsCache && t && @@pbsTime==t
+    data={}
+    cur=nil
+    begin
+      File.open("PBS/pokemon.txt","rb"){|f|
+        f.each_line{|line|
+          line=line.chomp
+          line.force_encoding("UTF-8") if line.respond_to?(:force_encoding)
+          line=line.sub("\xEF\xBB\xBF","")
+          if line=~/\A\[(\d+)\]/
+            cur=$1.to_i
+            data[cur]={}
+          elsif cur && line=~/\A(\w+)=(.*)\z/
+            data[cur][$1]=$2
+          end
+        }
+      }
+    rescue
+      return @@pbsCache
+    end
+    @@pbsCache=data
+    @@pbsTime=t
+    @@pbsPrev={}
+    for sp in data.keys.sort
+      for e in pbsEvosOf(data[sp])
+        @@pbsPrev[e[2]]=sp if !@@pbsPrev[e[2]]
+      end
+    end
+    return data
+  end
+
+  # [nombre del método, parámetro, especie destino] leídos de la línea Evolutions=
+  def self.pbsEvosOf(entry)
+    ret=[]
+    return ret if !entry || !entry["Evolutions"]
+    tokens=entry["Evolutions"].split(",")
+    i=0
+    while i+1<tokens.length
+      target=getConst(PBSpecies,tokens[i].strip)
+      ret.push([tokens[i+1].strip,tokens[i+2].to_s.strip,target]) if target && target>0 && target<=PBSpecies.maxValue
+      i+=3
+    end
+    return ret
+  end
+
+  def self.pbsEntry(species)
+    d=pbsLoad
+    return d ? d[species] : nil
+  end
+
+  def self.pbsStats(species)
+    e=pbsEntry(species)
+    return nil if !e || !e["BaseStats"]
+    a=e["BaseStats"].split(",").map{|x| x.to_i}
+    return a.length==6 ? a : nil
+  end
+
+  def self.pbsTypes(species)
+    e=pbsEntry(species)
+    return nil if !e || !e["Type1"]
+    t1=getConst(PBTypes,e["Type1"].strip)
+    return nil if !t1
+    t2=e["Type2"] ? getConst(PBTypes,e["Type2"].strip) : nil
+    return [t1,t2 || t1]
+  end
+
+  def self.pbsDex(species)
+    e=pbsEntry(species)
+    return (e && e["Pokedex"] && e["Pokedex"]!="") ? e["Pokedex"] : nil
+  end
+
+  def self.pbsEvos(species)
+    return pbsEvosOf(pbsEntry(species))
+  end
+
+  def self.pbsPrevOf(species)
+    pbsLoad
+    return @@pbsPrev[species] || species
+  end
+
+  # Texto "método > especie" a partir del nombre del método del PBS (sin tablas por especie).
+  def self.pbsEvoText(name,param,target)
+    tname=PBSpecies.getName(target)
+    lvl=param.to_i
+    itemid=getConst(PBItems,param)
+    item=itemid ? PBItems.getName(itemid) : param
+    moveid=getConst(PBMoves,param)
+    move=moveid ? PBMoves.getName(moveid) : param
+    how=case name
+      when "Level" then _INTL("Nv. {1}",lvl)
+      when "LevelMale" then _INTL("Nv. {1} ♂",lvl)
+      when "LevelFemale" then _INTL("Nv. {1} ♀",lvl)
+      when "LevelDay","LevelDayTime" then _INTL("Nv. {1} (día)",lvl)
+      when "LevelNight" then _INTL("Nv. {1} (noche)",lvl)
+      when "AttackGreater" then _INTL("Nv. {1} (Atq>Def)",lvl)
+      when "DefenseGreater" then _INTL("Nv. {1} (Def>Atq)",lvl)
+      when "AtkDefEqual" then _INTL("Nv. {1} (Atq=Def)",lvl)
+      when "Silcoon","Cascoon" then _INTL("Nv. {1} (azar)",lvl)
+      when "Happiness" then _INTL("Felicidad")
+      when "HappinessDay" then _INTL("Felicidad (día)")
+      when "HappinessNight" then _INTL("Felicidad (noche)")
+      when "Trade" then _INTL("Intercambio")
+      when "TradeItem" then _INTL("Intercambio + {1}",item)
+      when "Item","ItemMale","ItemFemale" then item
+      when "HasMove" then _INTL("Con {1}",move)
+      else name=~/\ALevel/ ? _INTL("Nv. {1}",lvl) : _INTL("Especial")
+    end
+    return _INTL("{1} > {2}",how,tname)
+  end
+end
+
 # Los sprites de especie del Pokédex usaban AnimatedBitmap (muestra la tira de animación entera);
 # ahora usan el mismo BitmapWrapperEX animado que el combate.
 class PokemonSprite
@@ -1105,7 +1225,8 @@ class PokemonPokedexScene
       @dummypokemon.forceForm(form)
       REM_UI.texts(bmp,[[PBSpecies.getName(species),115,246,2,REM_UI::WHITE,30,190]])
       typebmp=AnimatedBitmap.new(_INTL("Graphics/Pictures/types"))
-      t1=@dummypokemon.type1; t2=@dummypokemon.type2
+      pt=REM_UI.pbsTypes(species) || [@dummypokemon.type1,@dummypokemon.type2]
+      t1=pt[0]; t2=pt[1]
       if t1==t2
         bmp.blt(115-32,282,typebmp.bitmap,Rect.new(0,t1*28,64,28))
       else
@@ -1149,7 +1270,8 @@ class PokemonPokedexScene
     REM_UI.texts(overlay,[[sprintf("N° %03d",indexNumber),20,17,0,REM_UI::LABEL,24,70],
        [PBSpecies.getName(species),212,13,1,REM_UI::WHITE,28,124]])
     typebmp=AnimatedBitmap.new(_INTL("Graphics/Pictures/types"))
-    t1=@dummypokemon.type1; t2=@dummypokemon.type2
+    pt=REM_UI.pbsTypes(species) || [@dummypokemon.type1,@dummypokemon.type2]
+    t1=pt[0]; t2=pt[1]
     if t1==t2
       overlay.blt(115-32,66,typebmp.bitmap,Rect.new(0,t1*28,64,28))
     else
@@ -1158,7 +1280,7 @@ class PokemonPokedexScene
     end
     typebmp.dispose
     # estadísticas base
-    base=@dummypokemon.baseStats
+    base=REM_UI.pbsStats(species) || @dummypokemon.baseStats
     bst=0
     for v in base; bst+=v; end
     REM_UI.texts(overlay,[[_INTL("Estadísticas Base"),244,10,0,REM_UI::LABEL,22,150],
@@ -1174,11 +1296,13 @@ class PokemonPokedexScene
       overlay.fill_rect(340,y+10,w,8,REM_UI.statColor(v))
     end
     # evolución (datos de evolutions.dat, compilado desde el PBS) en una caja compacta de 2 líneas
-    evos=pbGetEvolvedFormData(species).select{|e| e[2]<=PBSpecies.maxValue}
-    prev=pbGetPreviousForm(species)
+    evos=REM_UI.pbsEntry(species) ? REM_UI.pbsEvos(species) : pbGetEvolvedFormData(species).select{|e| e[2]<=PBSpecies.maxValue}
+    prev=REM_UI.pbsEntry(species) ? REM_UI.pbsPrevOf(species) : pbGetPreviousForm(species)
     lines=[]
     lines.push([_INTL("Evoluciona de {1}",PBSpecies.getName(prev)),REM_UI::LABEL]) if prev!=species
-    for e in evos; lines.push([REM_UI.evoText(e),REM_UI::WHITE]); end
+    for e in evos
+      lines.push([(e.length==3 && e[0].is_a?(String)) ? REM_UI.pbsEvoText(e[0],e[1],e[2]) : REM_UI.evoText(e),REM_UI::WHITE])
+    end
     if evos.length==0
       lines.push([prev!=species ? _INTL("Fase final") : _INTL("No evoluciona"),REM_UI::WHITE])
     end
@@ -1193,7 +1317,7 @@ class PokemonPokedexScene
     # descripción (PBS) en el cuadro inferior derecho
     pbSetNarrowFont(overlay)
     overlay.font.size=22
-    text=owned ? @dummypokemon.dexEntry : _INTL("Aún no has capturado a este Pokémon, así que su descripción sigue sin registrarse.")
+    text=owned ? (REM_UI.pbsDex(species) || @dummypokemon.dexEntry) : _INTL("Aún no has capturado a este Pokémon, así que su descripción sigue sin registrarse.")
     dlines=REM_UI.wrap(overlay,text,246)
     if dlines.length>6
       dlines=dlines[0,6]
