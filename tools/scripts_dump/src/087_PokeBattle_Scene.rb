@@ -2431,6 +2431,8 @@ class PokeBattle_Scene
 # Use this method to display the inventory
 # The return value is the item chosen, or 0 if the choice was canceled.
   def pbItemMenu(index)
+    $remBagBattle=true   # REM_UI: en combate la mochila solo muestra Medicinas, Poké Balls y Bayas
+    remOldPocket=$PokemonBag.lastpocket
     ret=0
     retindex=-1
     pkmnid=-1
@@ -2485,6 +2487,8 @@ class PokeBattle_Scene
     pbConsumeItemInBattle($PokemonBag,ret) if ret>0
     itemscene.pbEndScene if endscene
     pbFadeInAndShow(@sprites,oldsprites)
+    $remBagBattle=false
+    $PokemonBag.lastpocket=remOldPocket
     return [ret,retindex]
   end
 

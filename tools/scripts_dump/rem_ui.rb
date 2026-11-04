@@ -477,6 +477,7 @@ class PokeBattle_Scene
   alias rem_orig_pbEndBattle pbEndBattle
   def pbEndBattle(result)
     rem_orig_pbEndBattle(result)
+    $remBagBattle=false
     if $remBattleFontSaved
       MessageConfig.pbSetSystemFontName($remBattleFontSaved)
       $remBattleFontSaved=nil
@@ -1499,7 +1500,7 @@ module REM_UI
 
   # Bolsillos navegables: en combate solo Medicinas, Poké Balls y Bayas.
   def self.bagPockets
-    return [2,3,5] if $game_temp && $game_temp.in_battle
+    return [2,3,5] if $remBagBattle   # lo activa PokeBattle_Scene#pbItemMenu
     ret=[]
     for i in 1..PokemonBag.numPockets
       ret.push(i) if !BAG_HIDDEN.include?(i)
@@ -1585,7 +1586,6 @@ class PokemonBag_Scene
   def pbEndScene
     rem_bag_pbEndScene
     $remBagFooter=false
-    @bag.lastpocket=@remOldPocket if @remOldPocket && $game_temp && $game_temp.in_battle && !REM_UI.bagPockets.include?(@remOldPocket)
     if @remFontOwner
       MessageConfig.pbSetSystemFontName($remBattleFontSaved)
       $remBattleFontSaved=nil
