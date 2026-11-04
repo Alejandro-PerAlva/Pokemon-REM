@@ -281,6 +281,14 @@ class Window_PokemonMart < Window_DrawableCommand
     return @stock.length+1
   end
 
+  def dispose
+    if @iconCache
+      for k in @iconCache.values; k.dispose if k; end
+      @iconCache=nil
+    end
+    super
+  end
+
   def item
     return self.index>=@stock.length ? 0 : @stock[self.index]
   end
@@ -290,7 +298,7 @@ class Window_PokemonMart < Window_DrawableCommand
     rect=drawCursor(index,rect)
     ypos=rect.y
     if index==count-1
-      textpos.push([_INTL("SALIR"),rect.x,ypos+2,false,
+      textpos.push([_INTL("SALIR"),rect.x+32,ypos+2,false,
          self.baseColor,self.shadowColor])
     else
       item=@stock[index]
@@ -298,7 +306,18 @@ class Window_PokemonMart < Window_DrawableCommand
       qty=@adapter.getDisplayPrice(item)
       sizeQty=self.contents.text_size(qty).width
       xQty=rect.x+rect.width-sizeQty-2-16
-      textpos.push([itemname,rect.x,ypos+2,false,self.baseColor,self.shadowColor])
+      # icono pequeño del artículo (28x28) a la izquierda, alineado con la fila
+      @iconCache={} if !@iconCache
+      if !@iconCache[item]
+        file=pbItemIconFile(item)
+        @iconCache[item]=(file && pbResolveBitmap(file)) ? AnimatedBitmap.new(file) : false
+      end
+      ico=@iconCache[item]
+      if ico
+        self.contents.stretch_blt(Rect.new(rect.x,ypos+(rect.height-28)/2,28,28),ico.bitmap,
+           Rect.new(0,0,ico.bitmap.width,ico.bitmap.height))
+      end
+      textpos.push([itemname,rect.x+32,ypos+2,false,self.baseColor,self.shadowColor])
       textpos.push([qty,xQty,ypos+2,false,self.baseColor,self.shadowColor])
     end
     pbDrawTextPositions(self.contents,textpos)

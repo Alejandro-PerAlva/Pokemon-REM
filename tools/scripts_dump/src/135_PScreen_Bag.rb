@@ -881,8 +881,8 @@ end
 
 class ItemStorageScene
 ## Configuration
-  ITEMLISTBASECOLOR   = Color.new(88,88,80)
-  ITEMLISTSHADOWCOLOR = Color.new(168,184,184)
+  ITEMLISTBASECOLOR   = Color.new(255,255,255)
+  ITEMLISTSHADOWCOLOR = Color.new(13,14,18)
   ITEMTEXTBASECOLOR   = Color.new(248,248,248)
   ITEMTEXTSHADOWCOLOR = Color.new(0,0,0)
   TITLEBASECOLOR      = Color.new(248,248,248)

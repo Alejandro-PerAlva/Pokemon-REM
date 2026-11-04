@@ -16,8 +16,7 @@ class PokemonEggHatchScene
     @nicknamed=false
     @viewport=Viewport.new(0,0,Graphics.width,Graphics.height)
     @viewport.z=99999
-    addBackgroundOrColoredPlane(@sprites,"background","hatchbg",
-       Color.new(248,248,248),@viewport)
+    @sprites["background"]=REM_NoirPlane.new(@viewport)   # fondo obsidiana (Oniria Noir)
     @sprites["pokemon"]=PokemonSprite.new(@viewport)
     @sprites["pokemon"].setSpeciesBitmap(@pokemon.species,@pokemon.isFemale?,
                                          (@pokemon.form rescue 0),@pokemon.isShiny?,
@@ -74,10 +73,7 @@ class PokemonEggHatchScene
     end
     updateScene(30)
     @sprites["pokemon"].setPokemonBitmap(@pokemon) # Pokémon sprite
-    @sprites["pokemon"].x=Graphics.width/2-@sprites["pokemon"].bitmap.width/2
-    @sprites["pokemon"].y=-8+(Graphics.height-@sprites["pokemon"].bitmap.height)/2
-    metrics=load_data("Data/metrics.dat")
-    @sprites["pokemon"].y+=(metrics[1][@pokemon.species] || 0)*2 - (metrics[2][@pokemon.species] || 0)*2
+    REM_UI.centerSprite(@sprites["pokemon"],Graphics.width/2,184,220,220)   # centrado por su dibujo real
     @sprites["hatch"].visible=false
     for i in 1..(255/fadeSpeed)
       @sprites["pokemon"].tone=Tone.new(255-i*fadeSpeed,255-i*fadeSpeed,255-i*fadeSpeed)

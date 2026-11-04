@@ -2963,3 +2963,32 @@ class MoveRelearnerScene
     @viewport.dispose
   end
 end
+
+
+# Centra un sprite por el rectángulo de su dibujo opaco (no por el fotograma) y lo reduce si excede maxw x maxh.
+module REM_UI
+  def self.spriteBounds(bitmap)
+    w=bitmap.width; h=bitmap.height
+    x0=w; y0=h; x1=-1; y1=-1
+    for y in 0...h
+      for x in 0...w
+        if bitmap.get_pixel(x,y).alpha>16
+          x0=x if x<x0; x1=x if x>x1
+          y0=y if y<y0; y1=y if y>y1
+        end
+      end
+    end
+    return [0,0,w,h] if x1<0
+    return [x0,y0,x1-x0+1,y1-y0+1]
+  end
+
+  def self.centerSprite(sprite,cx,cy,maxw,maxh)
+    sprite.zoom_x=1.0; sprite.zoom_y=1.0
+    return if !sprite.bitmap || sprite.bitmap.disposed?
+    bb=spriteBounds(sprite.bitmap)
+    z=[1.0,maxw*1.0/bb[2],maxh*1.0/bb[3]].min
+    sprite.zoom_x=z; sprite.zoom_y=z
+    sprite.x=(cx-(bb[0]+bb[2]/2.0)*z).round
+    sprite.y=(cy-(bb[1]+bb[3]/2.0)*z).round
+  end
+end
