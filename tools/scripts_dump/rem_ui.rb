@@ -542,7 +542,7 @@ end
 #===============================================================================
 module REM_UI
   SUM_STRIPE_X=212; SUM_STRIPE_Y0=58; SUM_STRIPE_Y1=300
-  SUM_ROW_Y0=75; SUM_ROW_P=40; SUM_ROW_H=34
+  SUM_ROW_Y0=72; SUM_ROW_P=40; SUM_ROW_H=34
   SUM_S3_HEAD=62; SUM_S3_Y0=92; SUM_S3_P=46; SUM_S3_H=40
   SUM_SLOT_Y0=69; SUM_SLOT_P=74; SUM_SLOT_H=64; SUM_LEARN_Y0=16; SUM_LEARN_P=70
   WHITE=Color.new(255,255,255)
@@ -701,24 +701,22 @@ class PokemonSummaryScene
     startexp=PBExperience.pbGetStartExperience(pokemon.level,growthrate)
     endexp=PBExperience.pbGetStartExperience(pokemon.level+1,growthrate)
     shadowpk=(pokemon.isShadow? rescue false)
-    labels=[_INTL("N° Dex"),_INTL("Especie"),_INTL("Tipo"),_INTL("EO"),_INTL("N° ID"),
+    labels=[_INTL("N° Dex"),_INTL("Especie"),_INTL("Tipo"),_INTL("EO"),
             shadowpk ? _INTL("Corazón") : _INTL("Experiencia"),
             shadowpk ? _INTL("Estado") : _INTL("Sig. nivel")]
     ry=lambda{|i| REM_UI::SUM_ROW_Y0+REM_UI::SUM_ROW_P*i+5}
-    for i in 0...7
+    for i in 0...6
       REM_UI.texts(overlay,[[labels[i],248,ry.call(i),0,REM_UI::LABEL,22,92]])
     end
     cx=416
     numcol=pokemon.isShiny? ? Color.new(255,110,100) : REM_UI::WHITE
-    idno=(pokemon.ot=="") ? "?????" : sprintf("%05d",pokemon.publicID)
     ownercol=REM_UI::WHITE
     ownercol=Color.new(110,170,255) if pokemon.ot!="" && pokemon.otgender==0
     ownercol=Color.new(255,120,160) if pokemon.ot!="" && pokemon.otgender==1
     REM_UI.texts(overlay,[
        [sprintf("%03d",pokemon.species),cx,ry.call(0),2,numcol,24,140],
        [PBSpecies.getName(pokemon.species),cx,ry.call(1),2,REM_UI::WHITE,24,140],
-       [(pokemon.ot=="") ? _INTL("PRESTADO") : pokemon.ot,cx,ry.call(3),2,ownercol,24,140],
-       [idno,cx,ry.call(4),2,REM_UI::WHITE,24,140]])
+       [(pokemon.ot=="") ? _INTL("PRESTADO") : pokemon.ot,cx,ry.call(3),2,ownercol,24,140]])
     ty=REM_UI::SUM_ROW_Y0+REM_UI::SUM_ROW_P*2+3
     if pokemon.type1==pokemon.type2
       overlay.blt(cx-32,ty,@typebitmap.bitmap,Rect.new(0,pokemon.type1*28,64,28))
@@ -728,8 +726,8 @@ class PokemonSummaryScene
     end
     if shadowpk
       shadowfract=pokemon.heartgauge*1.0/PokeBattle_Pokemon::HEARTGAUGESIZE
-      REM_UI.texts(overlay,[[sprintf("%d/5",5-pokemon.heartStage),cx,ry.call(5),2,REM_UI::WHITE,24,140]])
-      pbDrawImagePositions(overlay,[["Graphics/Pictures/summaryShadowBar",246,REM_UI::SUM_ROW_Y0+REM_UI::SUM_ROW_P*5+REM_UI::SUM_ROW_H-6,0,0,(shadowfract*248).floor,-1]])
+      REM_UI.texts(overlay,[[sprintf("%d/5",5-pokemon.heartStage),cx,ry.call(4),2,REM_UI::WHITE,24,140]])
+      pbDrawImagePositions(overlay,[["Graphics/Pictures/summaryShadowBar",246,REM_UI::SUM_ROW_Y0+REM_UI::SUM_ROW_P*4+REM_UI::SUM_ROW_H-6,0,0,(shadowfract*248).floor,-1]])
       heartmessage=[_INTL("¡La puerta de su corazón está abierta! ¡Hacer purificación definitiva!"),
                     _INTL("La puerta de su corazón está casi abierta del todo."),
                     _INTL("La puerta de su corazón está bastante abierta."),
@@ -737,19 +735,30 @@ class PokemonSummaryScene
                     _INTL("La puerta de su corazón está apenas abierta."),
                     _INTL("La puerta está fuertemente cerrada.")
                     ][pokemon.heartStage]
-      REM_UI.fit(overlay,heartmessage,140,22)
-      REM_UI.texts(overlay,[[heartmessage,cx,ry.call(6),2,REM_UI::WHITE,22,140]])
+      REM_UI.texts(overlay,[[heartmessage,cx,ry.call(5),2,REM_UI::WHITE,22,140]])
     else
-      REM_UI.texts(overlay,[[sprintf("%d",pokemon.exp),cx,ry.call(5),2,REM_UI::WHITE,24,140],
-         [sprintf("%d",endexp-pokemon.exp),cx,ry.call(6),2,REM_UI::WHITE,24,140]])
+      REM_UI.texts(overlay,[[sprintf("%d",pokemon.exp),cx,ry.call(4),2,REM_UI::WHITE,24,140],
+         [sprintf("%d",endexp-pokemon.exp),cx,ry.call(5),2,REM_UI::WHITE,24,140]])
       if pokemon.level<PBExperience::MAXLEVEL
         # barra de EXP fina en el borde inferior de la fila "Experiencia"
-        by=REM_UI::SUM_ROW_Y0+REM_UI::SUM_ROW_P*5+REM_UI::SUM_ROW_H-5
+        by=REM_UI::SUM_ROW_Y0+REM_UI::SUM_ROW_P*4+REM_UI::SUM_ROW_H-5
         overlay.fill_rect(246,by,244,3,Color.new(30,34,44))
         w=(pokemon.exp-startexp)*244/(endexp-startexp)
         overlay.fill_rect(246,by,w,3,Color.new(72,144,248))
       end
     end
+    pbSetNarrowFont(overlay); overlay.font.size=26
+    pbDrawTextPositions(overlay,[[_INTL("Ver en Pokédex"),284,(335-26*0.435).round,0,REM_UI::WHITE,REM_UI::INK]])
+  end
+
+  # Abre la ficha de la Pokédex de la especie y vuelve a Datos sin reiniciar la pantalla.
+  def remOpenDex(species)
+    pbPlayDecisionSE()
+    pbFadeOutIn(99999){
+       scene=PokemonPokedexScene.new
+       screen=PokemonPokedex.new(scene)
+       screen.pbDexEntry(species)
+    }
   end
 
   def drawPageThree(pokemon)

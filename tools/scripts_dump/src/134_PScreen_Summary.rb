@@ -423,6 +423,9 @@ class PokemonSummaryScene
           drawPageFour(@pokemon)
         end
       end
+      if Input.trigger?(Input::Z) && @page==0 && !@pokemon.isEgg?
+        remOpenDex(@pokemon.species)   # REM_UI: ficha de la Pokédex
+      end
       if Input.trigger?(Input::UP) && @partyindex>0
         oldindex=@partyindex
         pbGoToPrevious

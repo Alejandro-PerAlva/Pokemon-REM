@@ -16,7 +16,8 @@ PANEL_BOX = (232, 48, 504, 376)     # panel de datos derecho
 STRIPE = (212, 58, 300, 5)          # x, y0, y1, ancho (franja de tipo en la tarjeta)
 TABS = [("DATOS"), ("NOTAS"), ("STATS"), ("ATAQUES")]
 TAB_X0, TAB_W, TAB_GAP, TAB_Y, TAB_H = 240, 62, 6, 8, 24
-ROW_Y0, ROW_P, ROW_H, ROW_LABEL_W = 75, 40, 34, 100          # página 1
+ROW_Y0, ROW_P, ROW_H, ROW_LABEL_W = 72, 40, 34, 100
+DEX_BTN = (240, 318, 496, 351)          # acceso directo a la Pokédex (página 1)          # página 1
 S3_HEAD_Y, S3_Y0, S3_P, S3_H = 62, 92, 46, 40                 # página 3
 NOTES_BOX, ABIL_BOX = (240, 56, 496, 208), (240, 216, 496, 368)
 SLOT_X0, SLOT_X1, SLOT_Y0, SLOT_P, SLOT_H = 240, 495, 69, 74, 64   # página 4 (una línea por hueco)
@@ -88,7 +89,14 @@ def page_base(active, title_tabs=True):
 
 def page1():
     im = page_base(0); showcase(im)
-    for i in range(7): row_box(im, 240, ROW_Y0 + ROW_P * i, 496, ROW_H, ROW_LABEL_W)
+    for i in range(6): row_box(im, 240, ROW_Y0 + ROW_P * i, 496, ROW_H, ROW_LABEL_W)
+    x0, y0, x1, y1 = DEX_BTN
+    box(im, DEX_BTN, hexc("1B1F2A"), hexc("8A94A8"), 8)
+    box(im, (x0 + 1, y0 + 1, x1 - 1, y1 - 1), hexc("1B1F2A"), None, 7)
+    box(im, (x0 + 10, y0 + 5, x0 + 34, y1 - 5), WELL, SILVER, 5)          # tecla D
+    d = ImageDraw.Draw(im); f = font(22); hb = d.textbbox((0, 0), "D", font=f); tb = d.textbbox((0, 0), "D", font=f)
+    tx = x0 + 22 - (tb[2] - tb[0]) / 2 - tb[0]; ty = (y0 + y1) / 2 - (hb[3] - hb[1]) / 2 - hb[1]
+    d.text((int(tx), int(ty)), "D", font=f, fill=(255, 255, 255, 255))
     save(im, "summary1")
 
 def page2():
