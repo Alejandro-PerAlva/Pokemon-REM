@@ -106,9 +106,7 @@ class PokeBattle_Battle
       @doublebattle=true                  # 1 + aliado vs 1 Dominante
       @cantescape=true                    # prohibido huir
     end
-    $PokemonTemp.remMoveTypes={} if $PokemonTemp
     ret=rem_orig_pbStartBattle(canlose)
-    pbPiaCountWin if ret==1 && $PokemonTemp   # misión 4 de Pía: victoria usando movimientos del tipo
     return ret
   end
 end
@@ -434,7 +432,41 @@ def pbPiaEvent(kind,species,type1,type2)
   end
 end
 
-def pbPiaCountWin; end   # (sin uso: el objetivo de victorias con movimientos ya no existe)
+# Tipos (ids) de un Battler o de un Pokémon, sin fallar nunca.
+def pbRemTypeIds(obj)
+  ret=[]
+  begin
+    obj=obj.pokemon if obj.respond_to?(:pokemon) && !obj.respond_to?(:type1) && obj.pokemon
+    ret.push(obj.type1) if obj.respond_to?(:type1)
+    ret.push(obj.type2) if obj.respond_to?(:type2)
+  rescue
+  end
+  return ret
+end
+def pbRemTypeSyms(*ids)   # (compat) ids de tipo -> símbolos
+  ret=[]
+  begin
+    for id in ids.flatten
+      next if !id || id.is_a?(Symbol)
+      for t in [:GRASS,:FIRE,:WATER]
+        ret.push(t) if hasConst?(PBTypes,t) && getConst(PBTypes,t)==id
+      end
+    end
+  rescue
+  end
+  return ret
+end
+
+# Entrada segura para los hooks de combate: una comprobación de misión nunca rompe un combate.
+def pbPiaHook(kind,obj)
+  begin
+    sp=obj.species
+    t=pbRemTypeIds(obj)
+    pbPiaEvent(kind,sp,t[0],t[1])
+  rescue
+  end
+  return nil
+end
 
 def pbClaimPiaStarter(sym=nil)
   d=pbRemPia
@@ -462,26 +494,16 @@ class PokeBattle_Battler
   def pbFaint(showMessage=true)
     ret=rem_orig_pbFaint(showMessage)
     if (@index&1)==1 && @battle && @battle.internalbattle
-      pbPiaEvent(:defeat,@species,@type1,@type2)     # objetivos 1 y 3: derrotar
+      pbPiaHook(:defeat,self)     # objetivos 1 y 3: derrotar
     end
     return ret
-  end
-
-  alias rem_orig_pbUseMove pbUseMove
-  def pbUseMove(choice,specialusage=false)
-    if (@index&1)==0 && choice && choice[2] && $PokemonTemp && $PokemonTemp.remMoveTypes
-      for t in pbRemTypeSyms(choice[2].type)
-        $PokemonTemp.remMoveTypes[t]=true
-      end
-    end
-    return rem_orig_pbUseMove(choice,specialusage)
   end
 end
 
 class PokeBattle_Battle
   alias rem_orig_pbStorePokemon pbStorePokemon
   def pbStorePokemon(pokemon)
-    pbPiaEvent(:capture,pokemon.species,pokemon.type1,pokemon.type2)   # objetivo 4: capturar
+    pbPiaHook(:capture,pokemon)   # objetivo 4: capturar
     return rem_orig_pbStorePokemon(pokemon)
   end
 end
@@ -492,7 +514,7 @@ class PokemonEvolutionScene
     before=@pokemon.species
     ret=rem_orig_pbEvolution(cancancel)
     if @pokemon.species!=before
-      pbPiaEvent(:evolve,@pokemon.species,@pokemon.type1,@pokemon.type2)   # objetivo 2: evolucionar
+      pbPiaHook(:evolve,@pokemon)   # objetivo 2: evolucionar
     end
     return ret
   end
