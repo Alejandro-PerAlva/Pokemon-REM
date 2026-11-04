@@ -2502,19 +2502,20 @@ end
 module REM_UI
   # Iconos de 2x escala (rejilla de hasta 12x12). '#' = trazo.
   MENU_ICONS={
-    :dex=>[".##########.","#..........#","#.########.#","#.#......#.#","#.#.####.#.#","#.#......#.#","#.########.#","#..........#","#..##...#..#","#..##...#..#","#..........#",".##########."],
-    :ball=>["...######...",".##......##.",".#........#.","#..........#","############","#....##....#","#...#..#...#","#....##....#","#..........#",".#........#.",".##......##.","...######..."],
-    :bag=>["....####....","...#....#...","..########..",".#........#.",".#........#.",".#.######.#.",".#.#....#.#.",".#.######.#.",".#........#.",".#........#.",".##########."],
-    :quest=>["...####...",".########.",".#......#.",".#.####.#.",".#......#.",".#.####.#.",".#......#.",".#.###..#.",".#......#.",".########."],
-    :card=>["############","#..........#","#.###.####.#","#.#.#......#","#.###.####.#","#..#.......#","#.###.####.#","#..........#","############"],
-    :save=>["############","#.#######..#","#.#######..#","#.#######..#","#..........#","#..........#","#.########.#","#.#......#.#","#.#......#.#","#.#......#.#","############"],
-    :gear=>["....####....",".##.####.##.",".##########.","..###..###..","####....####","####....####","..###..###..",".##########.",".##.####.##.","....####...."],
-    :bug=>["..#......#..","...#....#...","....####....","...######...","###.####.###","...######...","###.####.###","...######...","....####...."],
-    :exit=>[".########.",".#......#.",".#......#.",".#......#.",".#....#.#.",".#......#.",".#......#.",".#......#.","##########"],
-    :phone=>[".######.",".#....#.",".#.##.#.",".#.##.#.",".#....#.",".#.##.#.",".######."]
+    :dex=>[".rrrrrrrrrr.","rrrrrrrrrrrr","rrbbbbbbbbrr","rrbbbbbbbbrr","rrbbbbbbbbrr","rrbbbbbbbbrr","rrrrrrrrrrrr","rryyrrrgrrrr","rryyrrrgrrrr","rrrrrrrrrrrr",".rrrrrrrrrr."],
+    :ball=>["...RRRRRR...",".RRRRRRRRRR.","RRRRRRRRRRRR","RRRRRRRRRRRR","kkkkkwwkkkkk","kkkkwwwwkkkk","WWWWWwwWWWWW","WWWWWWWWWWWW",".WWWWWWWWWW.","...WWWWWW..."],
+    :bag=>["....gggg....","...g....g...","..dddddddd..",".dddddddddd.",".oooooooooo.",".ooyyyyyyoo.",".ooyyyyyyoo.",".ooyyyyyyoo.",".oooooooooo.",".oooooooooo.",".dddddddddd."],
+    :quest=>["...gggg...",".nnnnnnnn.",".nppppppn.",".npbbbbpn.",".nppppppn.",".npbbbbpn.",".nppppppn.",".npbbbypn.",".nppppppn.",".nnnnnnnn."],
+    :card=>["cccccccccccc","cccccccccccc","cwwwccWWWWcc","cwwwcccccccc","cwwwccWWWWcc","cccccccccccc","ccWWWWWWWWcc","cccccccccccc"],
+    :save=>["cccccccccccc","ccWWWWWWWWcc","ccWWWWWWyWcc","ccWWWWWWWWcc","cccccccccccc","cwwwwwwwwwwc","cwwwwwwwwwwc","cwwwwwwwwwwc","cwwwwwwwwwwc","cccccccccccc"],
+    :gear=>["....WWWW....",".WW.WWWW.WW.",".WWWWWWWWWW.","..WWW..WWW..","WWWW....WWWW","WWWW....WWWW","..WWW..WWW..",".WWWWWWWWWW.",".WW.WWWW.WW.","....WWWW...."],
+    :bug=>["..g......g..","...g....g...","....GGGG....","...GGGGGG...","ggg.GkkG.ggg","...GGGGGG...","ggg.GkkG.ggg","...GGGGGG...","....GGGG...."],
+    :exit=>["WWWWWWWWWW","WnnnnnnnnW","WnnnnnnnnW","WnnnnnnnnW","WnnnnnyynW","WnnnnnnnnW","WnnnnnnnnW","WnnnnnnnnW","WWWWWWWWWW"],
+    :phone=>["..cccccc..","..cbbbbc..","..cbbbbc..","..cbbbbc..","..cccccc..","..cyccyc..","..cccccc.."]
   }
-  MENU_ON=Color.new(230,234,241)
-  MENU_OFF=Color.new(80,86,102)
+  MENU_PAL={"r"=>[216,64,60],"R"=>[232,72,60],"b"=>[127,212,255],"y"=>[242,201,76],"g"=>[122,130,148],
+    "k"=>[35,38,47],"w"=>[255,255,255],"W"=>[220,226,236],"o"=>[224,138,46],"d"=>[184,96,28],
+    "p"=>[232,217,168],"c"=>[74,134,216],"G"=>[76,195,106],"n"=>[168,103,45]}
 
   def self.menuIconKey(label)
     case label
@@ -2531,13 +2532,16 @@ module REM_UI
     return :card      # el nombre del jugador = ficha de entrenador
   end
 
-  def self.drawMenuIcon(bmp,key,cx,cy,c)
+  # k = brillo (1.0 seleccionada, <1 apagada)
+  def self.drawMenuIcon(bmp,key,cx,cy,k)
     g=MENU_ICONS[key] || MENU_ICONS[:card]
     w=g[0].length*2; h=g.length*2
     ox=cx-w/2; oy=cy-h/2
     for r in 0...g.length
-      for k in 0...g[r].length
-        bmp.fill_rect(ox+k*2,oy+r*2,2,2,c) if g[r][k,1]=="#"
+      for i in 0...g[r].length
+        c=MENU_PAL[g[r][i,1]]
+        next if !c
+        bmp.fill_rect(ox+i*2,oy+r*2,2,2,Color.new((c[0]*k).to_i,(c[1]*k).to_i,(c[2]*k).to_i))
       end
     end
   end
@@ -2560,8 +2564,8 @@ class PokemonMenu_Scene
     @viewport=Viewport.new(0,0,Graphics.width,Graphics.height)
     @viewport.z=99999
     @sprites={}
-    @sprites["cards"]=BitmapSprite.new(204,Graphics.height,@viewport)
-    @sprites["cards"].x=Graphics.width-204
+    @sprites["cards"]=BitmapSprite.new(186,Graphics.height,@viewport)
+    @sprites["cards"].x=Graphics.width-186
     @sprites["cards"].visible=false
     @sprites["infowindow"]=Window_UnformattedTextPokemon.newWithSize("",0,0,32,32,@viewport)
     @sprites["infowindow"].visible=false
@@ -2597,31 +2601,31 @@ class PokemonMenu_Scene
       total+=(i==index ? MENU_HSEL : MENU_H)
     end
     total+=MENU_GAP*(last-@menuTop-1)
-    y=(Graphics.height-total)/2
+    y=10
     top=y
     for i in @menuTop...last
       sel=(i==index)
       h=sel ? MENU_HSEL : MENU_H
-      x=sel ? 4 : 20
-      w=sel ? 188 : 172
+      x=sel ? 4 : 18
+      w=sel ? 170 : 156
       key=REM_UI.menuIconKey(commands[i])
       if sel
         REM_UI.slotBox(bmp,x,y,w,h,Color.new(28,32,43),REM_UI::SILVER,2)
         bmp.fill_rect(x+3,y+3,w-6,1,Color.new(40,46,61)); bmp.fill_rect(x+3,y+h-4,w-6,1,Color.new(40,46,61))
         bmp.fill_rect(x+3,y+3,1,h-6,Color.new(40,46,61)); bmp.fill_rect(x+w-4,y+3,1,h-6,Color.new(40,46,61))
-        REM_UI.slotBox(bmp,x+10,y+(h-28)/2,28,28,Color.new(15,17,23),Color.new(46,52,66),1)
-        REM_UI.drawMenuIcon(bmp,key,x+24,y+h/2,REM_UI::MENU_ON)
-        REM_UI.texts(bmp,[[:c,commands[i],x+60,y+h/2,0,REM_UI::WHITE,22,w-70]])
+        REM_UI.slotBox(bmp,x+22,y+(h-28)/2,28,28,Color.new(15,17,23),Color.new(46,52,66),1)
+        REM_UI.drawMenuIcon(bmp,key,x+36,y+h/2,1.0)
+        REM_UI.texts(bmp,[[:c,commands[i],x+58,y+h/2,0,REM_UI::WHITE,25,w-64]])
       else
         REM_UI.slotBox(bmp,x,y,w,h,Color.new(14,16,21,217),Color.new(46,52,66),1)
-        REM_UI.slotBox(bmp,x+10,y+(h-28)/2,28,28,Color.new(10,12,16,200),Color.new(30,34,44),1)
-        REM_UI.drawMenuIcon(bmp,key,x+24,y+h/2,REM_UI::MENU_OFF)
-        REM_UI.texts(bmp,[[:c,commands[i],x+44,y+h/2,0,Color.new(122,130,148),20,w-54]])
+        REM_UI.slotBox(bmp,x+8,y+(h-28)/2,28,28,Color.new(10,12,16,200),Color.new(30,34,44),1)
+        REM_UI.drawMenuIcon(bmp,key,x+22,y+h/2,0.72)
+        REM_UI.texts(bmp,[[:c,commands[i],x+44,y+h/2,0,Color.new(150,158,176),23,w-50]])
       end
       y+=h+MENU_GAP
     end
-    REM_UI.vArrow(bmp,102,top-12,-1,REM_UI::SILVER) if @menuTop>0
-    REM_UI.vArrow(bmp,102,y-MENU_GAP+6,1,REM_UI::SILVER) if last<n
+    REM_UI.vArrow(bmp,93,top-8,-1,REM_UI::SILVER) if @menuTop>0
+    REM_UI.vArrow(bmp,93,y-MENU_GAP+3,1,REM_UI::SILVER) if last<n
   end
 
   def pbShowCommands(commands)
