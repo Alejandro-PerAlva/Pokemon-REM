@@ -1487,3 +1487,181 @@ class PokemonPokedexScene
     pbFadeInAndShow(@sprites,oldsprites)
   end
 end
+
+#===============================================================================
+# MOCHILA "Oniria Noir" (mundo y combate comparten PokemonBag_Scene): cabecera con nombre de
+# bolsillo y 8 pestañas, columna izquierda con vista previa y descripción, lista de huecos de una línea.
+# Fondo: tools/ui/gen_bag_noir.py (bagNoir.png).
+#===============================================================================
+module REM_UI
+  BAG_ABBR=["OBJ","MED","BALL","MT","BAYA","CART","BAT","CLAV"]
+
+  # Ventana auxiliar (cantidad, Sí/No, menú de acciones) con el marco obsidiana de las demás pantallas.
+  def self.noirWindow(w)
+    w.setSkin("Graphics/Windowskins/rem_noir_choice") if w.respond_to?(:setSkin)
+    if w.instance_variable_get(:@selarrow)
+      w.instance_variable_set(:@selarrow,AnimatedBitmap.new("Graphics/Pictures/rem_selarrow"))
+    end
+    w.baseColor=WHITE
+    w.shadowColor=INK
+  end
+end
+
+class PokemonBag_Scene
+  remove_const(:ITEMSVISIBLE) if const_defined?(:ITEMSVISIBLE)
+  ITEMSVISIBLE=8
+
+  def pbStartScene(bag)
+    if !$remBattleFontSaved
+      $remBattleFontSaved=MessageConfig.pbGetSystemFontName
+      @remFontOwner=true
+      MessageConfig.pbSetSystemFontName(pbNarrowFontName)
+    end
+    @viewport=Viewport.new(0,0,Graphics.width,Graphics.height)
+    @viewport.z=99999
+    @bag=bag
+    @sprites={}
+    lastpocket=@bag.lastpocket
+    lastitem=@bag.getChoice(lastpocket)
+    @sprites["background"]=IconSprite.new(0,0,@viewport)
+    @sprites["background"].setBitmap("Graphics/Pictures/bagNoir")
+    @sprites["remhead"]=BitmapSprite.new(Graphics.width,Graphics.height,@viewport)
+    @sprites["remprev"]=BitmapSprite.new(Graphics.width,Graphics.height,@viewport)
+    @sprites["icon"]=ItemIconSprite.new(115,105,-1,@viewport)
+    @sprites["icon"].zoom_x=1.5
+    @sprites["icon"].zoom_y=1.5
+    @sprites["icon"].z=2
+    @sprites["itemwindow"]=Window_PokemonBag.new(@bag,lastpocket,224,44,288,32+ITEMSVISIBLE*38)
+    @sprites["itemwindow"].viewport=@viewport
+    @sprites["itemwindow"].rowHeight=38
+    @sprites["itemwindow"].pocket=lastpocket
+    @sprites["itemwindow"].index=lastitem
+    @sprites["itemwindow"].refresh
+    @sprites["helpwindow"]=Window_UnformattedTextPokemon.new("")
+    @sprites["helpwindow"].visible=false
+    @sprites["helpwindow"].viewport=@viewport
+    REM_UI.noirWindow(@sprites["helpwindow"])
+    @sprites["msgwindow"]=Window_AdvancedTextPokemon.new("")
+    @sprites["msgwindow"].visible=false
+    @sprites["msgwindow"].viewport=@viewport
+    REM_UI.noirWindow(@sprites["msgwindow"])
+    pbBottomLeftLines(@sprites["helpwindow"],1)
+    pbDeactivateWindows(@sprites)
+    pbRefresh
+    pbFadeInAndShow(@sprites)
+  end
+
+  alias rem_bag_pbEndScene pbEndScene
+  def pbEndScene
+    rem_bag_pbEndScene
+    if @remFontOwner
+      MessageConfig.pbSetSystemFontName($remBattleFontSaved)
+      $remBattleFontSaved=nil
+      @remFontOwner=false
+    end
+  end
+
+  def pbRefresh
+    remDrawHeader
+    remRefreshItem
+    @sprites["itemwindow"].refresh
+  end
+
+  # Nombre del bolsillo + pestañas (la activa con borde platino y subrayado).
+  def remDrawHeader
+    bmp=@sprites["remhead"].bitmap
+    bmp.clear
+    pocket=@bag.lastpocket
+    REM_UI.texts(bmp,[[PokemonBag.pocketNames()[pocket],18,12,0,REM_UI::WHITE,28,200]])
+    for p in 1..PokemonBag.numPockets
+      x=236+34*(p-1)
+      on=(p==pocket)
+      REM_UI.slotBox(bmp,x,8,32,24,on ? Color.new(42,48,66) : Color.new(20,22,29),on ? REM_UI::SILVER : Color.new(70,80,106),1)
+      label=REM_UI::BAG_ABBR[p-1] || PokemonBag.pocketNames()[p][0,4].upcase
+      REM_UI.ctext(bmp,label,x+16,20,on ? REM_UI::WHITE : Color.new(140,150,170),16,30)
+      bmp.fill_rect(x+4,34,24,2,REM_UI::SILVER) if on
+    end
+  end
+
+  # Vista previa del objeto seleccionado: icono, nombre, datos de MT/cantidad y descripción completa.
+  def remRefreshItem
+    itemwindow=@sprites["itemwindow"]
+    item=itemwindow.item
+    @sprites["icon"].item=item
+    bmp=@sprites["remprev"].bitmap
+    bmp.clear
+    if item==0
+      REM_UI.texts(bmp,[[:c,_INTL("Cerrar la mochila"),115,170,2,REM_UI::WHITE,26,190]])
+      desc=_INTL("Cerrar la mochila.")
+    else
+      REM_UI.texts(bmp,[[:c,PokemonMartAdapter.new.getDisplayName(item),115,170,2,REM_UI::WHITE,26,190]])
+      desc=pbGetMessage(MessageTypes::ItemDescriptions,item)
+      if pbIsMachine?(item)
+        move=$ItemData[item][ITEMMACHINE]
+        md=PBMoveData.new(move)
+        types=AnimatedBitmap.new(_INTL("Graphics/Pictures/types"))
+        bmp.blt(22,190,types.bitmap,Rect.new(0,md.type*28,64,28))
+        types.dispose
+        icons=AnimatedBitmap.new("Graphics/Pictures/category")
+        bmp.blt(88,190,icons.bitmap,Rect.new(0,md.category*28,64,28))
+        icons.dispose
+        pw=(md.category==2 || md.basedamage<=0) ? "-" : (md.basedamage==1 ? "???" : sprintf("%d",md.basedamage))
+        ac=(md.accuracy==0) ? "-" : sprintf("%d%%",md.accuracy)
+        REM_UI.texts(bmp,[[:c,_INTL("Pot {1}",pw),156,196,0,REM_UI::WHITE,17,52],
+                          [:c,_INTL("Prec {1}",ac),156,212,0,REM_UI::LABEL,17,52]])
+      elsif !pbIsImportantItem?(item)
+        REM_UI.texts(bmp,[[:c,_INTL("En la mochila: x{1}",@bag.pbQuantity(item)),115,203,2,REM_UI::LABEL,22,186]])
+      end
+    end
+    pbSetNarrowFont(bmp)
+    bmp.font.size=20
+    lines=REM_UI.wrap(bmp,desc,196)
+    if lines.length>6
+      lines=lines[0,6]
+      lines[5]=lines[5]+"..."
+    end
+    list=[]
+    for i in 0...lines.length
+      list.push([lines[i],18,244+i*21,0,REM_UI::WHITE,20])
+    end
+    REM_UI.texts(bmp,list)
+  end
+end
+
+class Window_PokemonBag
+  def drawCursor(index,rect)
+    return rect
+  end
+
+  def drawItem(index,count,rect)
+    pocket=@bag.pockets[self.pocket]
+    x=rect.x; y=rect.y+2; w=rect.width; h=@row_height-4
+    sel=(self.index==index)
+    sorting=(index==@sortIndex)
+    border=sorting ? Color.new(245,165,36) : (sel ? Color.new(226,244,255) : Color.new(38,43,56))
+    REM_UI.slotBox(self.contents,x,y,w,h,sel ? Color.new(34,40,54) : Color.new(24,27,36),border,(sel || sorting) ? 2 : 1)
+    pbSetNarrowFont(self.contents)
+    self.contents.font.size=24
+    if index==pocket.length
+      pbDrawShadowText(self.contents,x,y,w,h,_INTL("CERRAR LA MOCHILA"),REM_UI::DIM,REM_UI::INK,2)
+      return
+    end
+    item=pocket[index][0]
+    file=pbItemIconFile(item)
+    bmp=(pbBitmap(file) rescue nil)
+    self.contents.stretch_blt(Rect.new(x+8,y+5,24,24),bmp,Rect.new(0,0,48,48)) if bmp
+    important=pbIsImportantItem?(item)
+    maxw=w-44-(important ? 10 : 58)
+    name=@adapter.getDisplayName(item)
+    REM_UI.fit(self.contents,name,maxw,24)
+    pbDrawShadowText(self.contents,x+40,y,maxw,h,name,REM_UI::WHITE,REM_UI::INK)
+    if !important
+      pbSetNarrowFont(self.contents)
+      self.contents.font.size=24
+      pbDrawShadowText(self.contents,x,y,w-10,h,_ISPRINTF("x{1: 2d}",pocket[index][1]),REM_UI::LABEL,REM_UI::INK,1)
+    end
+    if @bag.registeredItem==item
+      pbDrawImagePositions(self.contents,[["Graphics/Pictures/bagReg",x+w-(important ? 52 : 104),y+5,0,0,-1,-1]])
+    end
+  end
+end

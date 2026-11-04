@@ -267,16 +267,7 @@ class PokemonBag_Scene
           oldindex=itemwindow.index
           self.update
           if itemwindow.item!=olditem
-            # Update slider position
-            ycoord=60
-            if itemwindow.itemCount>1
-              ycoord+=116.0 * itemwindow.index/(itemwindow.itemCount-1)
-            end
-            @sprites["slider"].y=ycoord
-            # Update item icon and description
-            @sprites["icon"].item=itemwindow.item
-            @sprites["itemtextwindow"].text=(itemwindow.item==0) ? _INTL("Cerrar la mochila.") :
-               pbGetMessage(MessageTypes::ItemDescriptions,itemwindow.item)
+            remRefreshItem   # REM_UI: icono, datos y descripción
              end
           if itemwindow.index!=oldindex
             # Update selected item for current pocket
@@ -1100,6 +1091,7 @@ module UIHelper
     ret=0
     using(numwindow=Window_UnformattedTextPokemon.new("x000")){
         numwindow.viewport=helpwindow.viewport
+        REM_UI.noirWindow(numwindow)
         numwindow.letterbyletter=false
         numwindow.text=_ISPRINTF("x{1:03d}",curnumber)
         numwindow.resizeToFit(numwindow.text,480)
@@ -1203,6 +1195,7 @@ module UIHelper
     pbBottomLeftLines(dw,2)
     commands=[_INTL("Sí"),_INTL("No")]
     cw = Window_CommandPokemon.new(commands)
+    REM_UI.noirWindow(cw)
     cw.viewport=helpwindow.viewport
     pbBottomRight(cw)
     cw.y-=dw.height
@@ -1236,6 +1229,7 @@ module UIHelper
     helpwindow.letterbyletter=false
     helpwindow.text=helptext ? helptext : ""
     cmdwindow=Window_CommandPokemon.new(commands)
+    REM_UI.noirWindow(cmdwindow)
     begin
       cmdwindow.viewport=helpwindow.viewport
       pbBottomRight(cmdwindow)
