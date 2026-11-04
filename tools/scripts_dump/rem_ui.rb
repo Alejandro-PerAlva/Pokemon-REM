@@ -1298,17 +1298,23 @@ class PokemonPokedexScene
     # evolución (datos de evolutions.dat, compilado desde el PBS) en una caja compacta de 2 líneas
     evos=REM_UI.pbsEntry(species) ? REM_UI.pbsEvos(species) : pbGetEvolvedFormData(species).select{|e| e[2]<=PBSpecies.maxValue}
     prev=REM_UI.pbsEntry(species) ? REM_UI.pbsPrevOf(species) : pbGetPreviousForm(species)
-    lines=[]
-    lines.push([_INTL("Evoluciona de {1}",PBSpecies.getName(prev)),REM_UI::LABEL]) if prev!=species
+    branchlines=[]
+    branchlines.push([_INTL("Evoluciona de {1}",PBSpecies.getName(prev)),REM_UI::DIM]) if prev!=species
     for e in evos
-      lines.push([(e.length==3 && e[0].is_a?(String)) ? REM_UI.pbsEvoText(e[0],e[1],e[2]) : REM_UI.evoText(e),REM_UI::WHITE])
+      branchlines.push([(e.length==3 && e[0].is_a?(String)) ? REM_UI.pbsEvoText(e[0],e[1],e[2]) : REM_UI.evoText(e),REM_UI::WHITE])
     end
-    if evos.length==0
-      lines.push([prev!=species ? _INTL("Fase final") : _INTL("No evoluciona"),REM_UI::WHITE])
-    end
-    if lines.length>2
-      extra=lines.length-1
-      lines=[lines[0],[_INTL("+{1} más",extra),REM_UI::DIM]]
+    @remBranches=branchlines
+    @remMulti=(evos.length>1)
+    lines=[]
+    if @remMulti
+      lines.push(prev!=species ? [_INTL("Evoluciona de {1}",PBSpecies.getName(prev)),REM_UI::LABEL] : [_INTL("{1} evoluciones posibles",evos.length),REM_UI::LABEL])
+      lines.push([_INTL("Tecla S: ver ramificaciones"),Color.new(214,219,228)])
+    else
+      lines=branchlines
+      if evos.length==0
+        lines.push([prev!=species ? _INTL("Fase final") : _INTL("No evoluciona"),REM_UI::WHITE])
+      end
+      lines=lines[0,2]
     end
     for i in 0...lines.length
       cy=(lines.length==1) ? 346 : 331+i*30
@@ -1316,21 +1322,44 @@ class PokemonPokedexScene
     end
     # descripción (PBS) en el cuadro inferior derecho
     pbSetNarrowFont(overlay)
-    overlay.font.size=22
+    overlay.font.size=23
     text=owned ? (REM_UI.pbsDex(species) || @dummypokemon.dexEntry) : _INTL("Aún no has capturado a este Pokémon, así que su descripción sigue sin registrarse.")
-    dlines=REM_UI.wrap(overlay,text,246)
-    if dlines.length>6
-      dlines=dlines[0,6]
-      dlines[5]=dlines[5]+"..."
+    dlines=REM_UI.wrap(overlay,text,244)
+    if dlines.length>5
+      dlines=dlines[0,5]
+      dlines[4]=dlines[4]+"..."
     end
+    dy=232+(144-dlines.length*23)/2
     list=[]
     for i in 0...dlines.length
-      list.push([dlines[i],246,241+i*21,0,owned ? REM_UI::WHITE : REM_UI::DIM,22])
+      list.push([dlines[i],246,dy+i*23,0,owned ? REM_UI::WHITE : REM_UI::DIM,23])
     end
     REM_UI.texts(overlay,list)
-    @sprites["entryicon"].setSpeciesBitmap(species,(gender==1),form)
-    remFitSprite(@sprites["entryicon"],115,206,198,196)
-    pbPlayCry(@dummypokemon)
+    if @remBranch && @remMulti
+      @sprites["entryicon"].visible=false
+      n=@remBranches.length
+      pitch=[30,(186/n).floor].min
+      size=(pitch>=26) ? 24 : ((pitch>=22) ? 21 : 18)
+      cy0=206-(n-1)*pitch/2.0
+      for i in 0...n
+        REM_UI.texts(overlay,[[:c,@remBranches[i][0],115,(cy0+i*pitch).round,2,@remBranches[i][1],size,196]])
+      end
+    else
+      @remBranch=false
+      @sprites["entryicon"].visible=true
+      @sprites["entryicon"].setSpeciesBitmap(species,(gender==1),form)
+      remFitSprite(@sprites["entryicon"],115,206,198,196)
+    end
+    pbPlayCry(@dummypokemon) if !@remSkipCry
+  end
+
+  # Alterna entre el sprite y el árbol de ramificaciones evolutivas (tecla S).
+  def remToggleBranches(species)
+    return if !@remMulti
+    @remBranch=!@remBranch
+    @remSkipCry=true
+    pbChangeToDexEntry(species)
+    @remSkipCry=false
   end
 
   def pbStartDexEntryScene(species)     # al capturar una especie nueva
@@ -1350,7 +1379,28 @@ class PokemonPokedexScene
     pbFadeInAndShow(@sprites)
   end
 
+  def pbMiddleDexEntryScene             # al capturar una especie nueva
+    @remBranch=false
+    pbActivateWindow(@sprites,nil){
+       loop do
+         Graphics.update
+         Input.update
+         pbUpdate
+         if Input.trigger?(Input::Y)
+           remToggleBranches(@dummypokemon.species)
+         elsif Input.trigger?(Input::B) || Input.trigger?(Input::C)
+           if @remBranch
+             remToggleBranches(@dummypokemon.species)
+           else
+             break
+           end
+         end
+       end
+    }
+  end
+
   def pbDexEntry(index)
+    @remBranch=false
     oldsprites=pbFadeOutAndHide(@sprites)
     pbChangeToDexEntry(@dexlist[index][0])
     pbFadeInAndShow(@sprites)
@@ -1361,10 +1411,16 @@ class PokemonPokedexScene
          Input.update
          pbUpdate
          if Input.trigger?(Input::B)
-           pbPlayCancelSE()
-           pbFadeOutAndHide(@sprites)
-           @sprites["entryicon"].clearBitmap
-           break
+           if @remBranch
+             remToggleBranches(@dexlist[curindex][0])
+           else
+             pbPlayCancelSE()
+             pbFadeOutAndHide(@sprites)
+             @sprites["entryicon"].clearBitmap
+             break
+           end
+         elsif Input.trigger?(Input::Y)
+           remToggleBranches(@dexlist[curindex][0])
          elsif Input.trigger?(Input::UP)
            nextindex=-1
            i=curindex-1; loop do break unless i>=0
@@ -1376,6 +1432,7 @@ class PokemonPokedexScene
            end
            if nextindex>=0
              curindex=nextindex
+             @remBranch=false
              pbPlayCursorSE()
              pbChangeToDexEntry(@dexlist[curindex][0])
            end
@@ -1389,6 +1446,7 @@ class PokemonPokedexScene
            end
            if nextindex>=0
              curindex=nextindex
+             @remBranch=false
              pbPlayCursorSE()
              pbChangeToDexEntry(@dexlist[curindex][0])
            end
