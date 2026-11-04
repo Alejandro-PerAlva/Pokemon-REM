@@ -465,6 +465,7 @@ class PokeBattle_Scene
   def pbEndBattle(result)
     rem_orig_pbEndBattle(result)
     $remBagBattle=false
+    pbRemRefreshFollower if defined?(pbRemRefreshFollower)
   end
 end
 

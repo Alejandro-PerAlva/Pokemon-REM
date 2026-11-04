@@ -115,6 +115,7 @@ class PokeBattle_Battler
   alias rem_orig_pbInitPokemon pbInitPokemon
   def pbInitPokemon(pkmn,pkmnIndex)
     rem_orig_pbInitPokemon(pkmn,pkmnIndex)
+    @remPiaKO=false
     mode=$PokemonTemp ? $PokemonTemp.remDominantMode : nil
     if mode && (@index%2)==1 && !@battle.opponent    # solo el salvaje (lado rival)
       case mode
@@ -412,8 +413,12 @@ def pbPiaEvent(kind,species,type1,type2)
   tys=[type1,type2]
   case kind
   when :defeat
-    hit.push(0) if pbPiaInFamily?(species,q[0])
-    hit.push(2) if hasConst?(PBTypes,q[2]) && tys.include?(getConst(PBTypes,q[2]))
+    # un KO suma a UN solo objetivo: la especie objetivo (1) tiene prioridad sobre el tipo (3)
+    if pbPiaInFamily?(species,q[0])
+      hit.push(0)
+    elsif hasConst?(PBTypes,q[2]) && tys.include?(getConst(PBTypes,q[2]))
+      hit.push(2)
+    end
   when :evolve
     hit.push(1) if pbPiaInFamily?(species,q[1])
   when :capture
@@ -457,6 +462,14 @@ def pbRemTypeSyms(*ids)   # (compat) ids de tipo -> símbolos
   return ret
 end
 
+# Refresca el gráfico del Pokémon acompañante (Following) sin poder fallar nunca.
+def pbRemRefreshFollower
+  begin
+    $PokemonTemp.dependentEvents.refresh_sprite if $PokemonTemp && $PokemonTemp.dependentEvents
+  rescue
+  end
+end
+
 # Entrada segura para los hooks de combate: una comprobación de misión nunca rompe un combate.
 def pbPiaHook(kind,obj)
   begin
@@ -493,7 +506,8 @@ class PokeBattle_Battler
   alias rem_orig_pbFaint pbFaint
   def pbFaint(showMessage=true)
     ret=rem_orig_pbFaint(showMessage)
-    if (@index&1)==1 && @battle && @battle.internalbattle
+    if (@index&1)==1 && @battle && @battle.internalbattle && !@remPiaKO
+      @remPiaKO=true              # un único recuento por Pokémon derrotado
       pbPiaHook(:defeat,self)     # objetivos 1 y 3: derrotar
     end
     return ret
@@ -515,6 +529,7 @@ class PokemonEvolutionScene
     ret=rem_orig_pbEvolution(cancancel)
     if @pokemon.species!=before
       pbPiaHook(:evolve,@pokemon)   # objetivo 2: evolucionar
+      pbRemRefreshFollower          # el acompañante cambia de gráfico al instante
     end
     return ret
   end
