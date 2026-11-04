@@ -10,7 +10,7 @@
 #-------------------------------------------------------------------------------
 # CONFIGURACIÓN
 #-------------------------------------------------------------------------------
-REM_NIGHT_LEVEL_MULT  = 1.25   # nivel salvaje nocturno x factor (redondeado)
+REM_NIGHT_LEVEL_MULT  = 1.5    # nivel salvaje nocturno x factor (redondeo hacia abajo, tope MAXLEVEL)
 REM_NIGHT_START_HOUR  = 22     # hora a la que salta pbSetNight(true)  (noche: 20-06)
 REM_DAY_START_HOUR    = 8      # hora a la que salta pbSetNight(false)
 REM_PRODIGIO_BST_SPAN = 30     # ± BST de Don Prodigio (se amplía si no hay candidatos)
@@ -67,7 +67,7 @@ end
 Events.onWildPokemonCreate+=proc {|sender,e|
   pkmn=e[0]
   if pkmn && PBDayNight.isNight? && !$PokemonTemp.remDominantMode
-    newlevel=[[(pkmn.level*REM_NIGHT_LEVEL_MULT).round,1].max,PBExperience::MAXLEVEL].min
+    newlevel=[[(pkmn.level*REM_NIGHT_LEVEL_MULT).floor,1].max,PBExperience::MAXLEVEL].min
     if newlevel!=pkmn.level
       pkmn.level_cap_level(newlevel)     # setter original: salta el Level_Cap del jugador
       pkmn.resetMoves
