@@ -2811,8 +2811,9 @@ class PokemonEvolutionScene
     rescue
       rsprite1.bitmap=nil
     end
-    begin
-      rsprite2.setPokemonBitmapSpecies(@pokemon,@newspecies,false)
+    begin     # un único fotograma (BitmapWrapperEX), no la tira entera de animación
+      rsprite2.setSpeciesBitmap(@newspecies,@pokemon.isFemale?,(@pokemon.form rescue 0),
+                                @pokemon.isShiny?,(@pokemon.isShadow? rescue false),false,@pokemon.isEgg?)
     rescue
       rsprite2.bitmap=nil
     end

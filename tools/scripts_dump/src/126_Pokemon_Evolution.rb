@@ -983,7 +983,9 @@ class PokemonEvolutionScene
          elsif evonib==PBEvolution::TradeItem ||
                evonib==PBEvolution::DayHoldItem ||
                evonib==PBEvolution::NightHoldItem ||
-               evonib==PBEvolution::HoldItem
+               evonib==PBEvolution::HoldItemForm0 ||
+               evonib==PBEvolution::HoldItemForm1 ||
+               evonib==PBEvolution::HoldItemForm2
            removeItem=true if poke==@newspecies   # El objeto ahora es consumido
          end
          next -1
