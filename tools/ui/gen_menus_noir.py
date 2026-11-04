@@ -51,15 +51,21 @@ def loadscreen():
     W = 408; sheet = Image.new("RGBA", (W, 536), (0, 0, 0, 0))
     def panel(h, selected):
         p = Image.new("RGBA", (W, h), (0, 0, 0, 0))
-        S.card(p, (0, 0, W - 1, h - 1), hexc("181B24"))
-        if selected:
-            d = ImageDraw.Draw(p, "RGBA")
-            for n, a in ((3, 70), (2, 130)):
-                d.rounded_rectangle((n - 1, n - 1, W - n, h - n), radius=8, outline=(214, 219, 228, a), width=1)
-            d.rounded_rectangle((0, 0, W - 1, h - 1), radius=8, outline=(255, 255, 255, 255), width=2)
+        S.card(p, (0, 0, W - 1, h - 1), hexc("14161D"))
         d = ImageDraw.Draw(p, "RGBA")
+        d.rounded_rectangle((3, 3, W - 4, h - 4), radius=6, outline=(30, 34, 45, 255), width=1)   # marco grafito interior
+        if selected:
+            for n, a in ((3, 60), (2, 120)):
+                d.rounded_rectangle((n - 1, n - 1, W - n, h - n), radius=9, outline=(130, 215, 255, a), width=1)
+            d.rounded_rectangle((0, 0, W - 1, h - 1), radius=8, outline=(235, 247, 255, 255), width=2)
         if h > 100:
-            d.line([(12, 40), (W - 13, 40)], fill=(58, 64, 77, 255))
+            S.box(p, (6, 6, W - 7, 36), hexc("181B24"), None, 5)                        # tira superior
+            S.box(p, (14, 46, 110, 160), S.WELL, S.DIV, 6)                              # retrato
+            for (x0, y0, x1, y1) in ((124, 62, 250, 90), (124, 116, 250, 144), (262, 62, 394, 90), (262, 116, 394, 144)):
+                S.box(p, (x0, y0, x1, y1), S.WELL, S.DIV, 5)                            # valores
+            S.box(p, (118, 150, 394, 208), hexc("12141B"), S.DIV, 6)                    # fila del equipo
+            for i in range(6):
+                S.box(p, (122 + 46 * i, 154, 163 + 46 * i, 204), hexc("1B1F2A"), None, 8)  # píldoras
         return p
     sheet.paste(panel(222, False), (0, 0)); sheet.paste(panel(222, True), (0, 222))
     sheet.paste(panel(46, False), (0, 444)); sheet.paste(panel(46, True), (0, 490))

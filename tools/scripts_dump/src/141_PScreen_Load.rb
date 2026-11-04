@@ -159,7 +159,7 @@ class PokemonLoadScene
   def pbSetParty(trainer)
     return if !trainer || !trainer.party
     meta=pbGetMetadata(0,MetadataPlayerA+trainer.metaID)
-    if meta
+    if false && meta   # REM_UI: el retrato va dentro de la tarjeta
       filename=pbGetPlayerCharset(meta,1,trainer)
       @sprites["player"]=TrainerWalkingCharSprite.new(filename,@viewport)
       charwidth=@sprites["player"].bitmap.width
@@ -171,8 +171,10 @@ class PokemonLoadScene
     for i in 0...trainer.party.length
       @sprites["party#{i}"]=PokemonIconSprite.new(trainer.party[i],@viewport)
       @sprites["party#{i}"].z=99999
-      @sprites["party#{i}"].x=48+12+66*i   # REM_UI: equipo en una fila inferior
-      @sprites["party#{i}"].y=32+148
+      @sprites["party#{i}"].zoom_x=0.7   # REM_UI: equipo en píldoras bajo los datos
+      @sprites["party#{i}"].zoom_y=0.7
+      @sprites["party#{i}"].x=48+118+46*i
+      @sprites["party#{i}"].y=32+158
     end
   end
 

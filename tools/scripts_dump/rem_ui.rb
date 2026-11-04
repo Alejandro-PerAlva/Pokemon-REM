@@ -1934,7 +1934,7 @@ class PokemonOptionScene
 
   def remDrawDesc
     bmp=@sprites["overlay"].bitmap
-    bmp.clear_rect(12,308,488,64)
+    bmp.fill_rect(12,308,488,64,Color.new(0,0,0,0))
     idx=[@sprites["option"].index,@remDescs.length-1].min
     pbSetNarrowFont(bmp)
     bmp.font.size=22
@@ -2062,30 +2062,45 @@ class PokemonLoadPanel
     if @refreshBitmap
       @refreshBitmap=false
       self.bitmap.clear if self.bitmap
+      bmp=self.bitmap
+      wh=REM_UI::WHITE; lb=REM_UI::LABEL
       if @isContinue
-        self.bitmap.blt(0,0,@bgbitmap.bitmap,Rect.new(0,(@selected ? 111*2 : 0),@bgbitmap.width,111*2))
+        bmp.blt(0,0,@bgbitmap.bitmap,Rect.new(0,(@selected ? 111*2 : 0),@bgbitmap.width,111*2))
         hour=@totalsec/60/60
         min=@totalsec/60%60
-        time=hour>0 ? _INTL("{1}h {2}m",hour,min) : _INTL("{1}m",min)
         mapname=pbGetMapNameFromId(@mapid)
         mapname.gsub!(/\\PN/,@trainer.name)
         owned=0
         for sp in 1..REM_UI::DEX_MAX
           owned+=1 if @trainer.owned[sp]
         end
-        namecol=@trainer.isMale? ? Color.new(110,170,255) : Color.new(255,120,160)
-        wh=REM_UI::WHITE; lb=REM_UI::LABEL
-        REM_UI.texts(self.bitmap,[
-           [:c,@title,16,22,0,wh,28,200],
-           [:c,mapname,392,22,1,lb,22,190],
-           [:c,@trainer.name,72,134,2,namecol,26,124],
-           [:c,_INTL("Tiempo"),140,54,0,lb,18,110],[:c,time,140,76,0,wh,26,116],
-           [:c,_INTL("Dinero"),140,104,0,lb,18,110],[:c,_INTL("${1}",@trainer.money),140,126,0,wh,26,116],
-           [:c,_INTL("Medallas"),274,54,0,lb,18,110],[:c,@trainer.numbadges.to_s,274,76,0,wh,26,116],
-           [:c,_INTL("Pokédex"),274,104,0,lb,18,110],[:c,owned.to_s,274,126,0,wh,26,116]])
+        # retrato del entrenador centrado en su marco (14,46)-(110,160)
+        file=(pbPlayerSpriteFile(@trainer.trainertype) rescue nil)
+        img=(file ? (pbBitmap(file) rescue nil) : nil)
+        if img
+          z=[1.0,88.0/img.width,104.0/img.height].min
+          dw=(img.width*z).round; dh=(img.height*z).round
+          bmp.stretch_blt(Rect.new(62-dw/2,103-dh/2,dw,dh),img,Rect.new(0,0,img.width,img.height))
+        end
+        REM_UI.texts(bmp,[
+           [:c,_INTL("Partida Guardada"),16,21,0,wh,26,200],
+           [:c,mapname,392,21,1,Color.new(214,219,228),22,180],
+           [:c,@trainer.name,62,178,2,wh,26,100],
+           [:c,_INTL("Tiempo"),128,52,0,lb,18,110],
+           [:c,_ISPRINTF("{1:02d}:{2:02d}",hour,min),187,76,2,wh,26,116],
+           [:c,_INTL("Medallas"),128,106,0,lb,18,110],
+           [:c,@trainer.numbadges.to_s,134,130,0,wh,26,24],
+           [:c,_INTL("Dinero"),266,52,0,lb,18,110],
+           [:c,_INTL("${1}",@trainer.money),328,76,2,wh,26,122],
+           [:c,_INTL("Pokédex"),266,106,0,lb,18,110],
+           [:c,_ISPRINTF("{1}/{2}",owned,REM_UI::DEX_MAX),328,130,2,wh,26,122]])
+        for i in 0...8   # 8 casillas de medalla: llenas las ganadas
+          on=(i<@trainer.numbadges)
+          REM_UI.slotBox(bmp,164+i*11,126,8,8,on ? Color.new(226,244,255) : Color.new(54,60,78),on ? REM_UI::SILVER : Color.new(54,60,78),1)
+        end
       else
-        self.bitmap.blt(0,0,@bgbitmap.bitmap,Rect.new(0,111*2*2+(@selected ? 23*2 : 0),@bgbitmap.width,23*2))
-        REM_UI.texts(self.bitmap,[[:c,@title,204,23,2,REM_UI::WHITE,28,360]])
+        bmp.blt(0,0,@bgbitmap.bitmap,Rect.new(0,111*2*2+(@selected ? 23*2 : 0),@bgbitmap.width,23*2))
+        REM_UI.texts(bmp,[[:c,@title,204,23,2,wh,28,360]])
       end
     end
     @refreshing=false
