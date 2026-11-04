@@ -2556,16 +2556,16 @@ end
 
 class PokemonMenu_Scene
   MENU_VISIBLE=6
-  MENU_GAP=6
-  MENU_H=36
-  MENU_HSEL=44
+  MENU_GAP=4
+  MENU_H=40
+  MENU_HSEL=50
 
   def pbStartScene
     @viewport=Viewport.new(0,0,Graphics.width,Graphics.height)
     @viewport.z=99999
     @sprites={}
-    @sprites["cards"]=BitmapSprite.new(186,Graphics.height,@viewport)
-    @sprites["cards"].x=Graphics.width-186
+    @sprites["cards"]=BitmapSprite.new(240,Graphics.height,@viewport)
+    @sprites["cards"].x=Graphics.width-240
     @sprites["cards"].visible=false
     @sprites["infowindow"]=Window_UnformattedTextPokemon.newWithSize("",0,0,32,32,@viewport)
     @sprites["infowindow"].visible=false
@@ -2593,39 +2593,54 @@ class PokemonMenu_Scene
     bmp=@sprites["cards"].bitmap
     bmp.clear
     n=commands.length
-    @menuTop=[[@menuTop,index].min,index-MENU_VISIBLE+1].max
-    @menuTop=0 if @menuTop<0
-    last=[@menuTop+MENU_VISIBLE,n].min
-    total=0
-    for i in @menuTop...last
-      total+=(i==index ? MENU_HSEL : MENU_H)
+    # fuente exacta de los mensajes (MessageConfig / pbSetSystemFont)
+    pbSetSystemFont(bmp)
+    mw=0
+    for c in commands; mw=[mw,bmp.text_size(c).width].max; end
+    uw=[[mw+56,156].max,214].min          # ancho de la tarjeta sin seleccionar (más ancha solo si el texto lo pide)
+    sw=uw+14
+    fs=bmp.font.size
+    while fs>16 && mw>uw-56
+      fs-=1; bmp.font.size=fs
+      mw=0
+      for c in commands; mw=[mw,bmp.text_size(c).width].max; end
     end
-    total+=MENU_GAP*(last-@menuTop-1)
+    vis=1
+    vis+=1 while vis<n && (vis+1)*MENU_H+(MENU_HSEL-MENU_H)+vis*MENU_GAP<=Graphics.height-20
+    @menuTop=[[@menuTop,index].min,index-vis+1].max
+    @menuTop=0 if @menuTop<0
+    @menuTop=n-vis if @menuTop>n-vis
+    last=[@menuTop+vis,n].min
+    right=@sprites["cards"].bitmap.width-12
     y=10
     top=y
     for i in @menuTop...last
       sel=(i==index)
       h=sel ? MENU_HSEL : MENU_H
-      x=sel ? 4 : 18
-      w=sel ? 170 : 156
+      w=sel ? sw : uw
+      x=right-w
       key=REM_UI.menuIconKey(commands[i])
+      ix=right-uw+8          # eje común de iconos y texto para ambos estados
       if sel
         REM_UI.slotBox(bmp,x,y,w,h,Color.new(28,32,43),REM_UI::SILVER,2)
         bmp.fill_rect(x+3,y+3,w-6,1,Color.new(40,46,61)); bmp.fill_rect(x+3,y+h-4,w-6,1,Color.new(40,46,61))
         bmp.fill_rect(x+3,y+3,1,h-6,Color.new(40,46,61)); bmp.fill_rect(x+w-4,y+3,1,h-6,Color.new(40,46,61))
-        REM_UI.slotBox(bmp,x+22,y+(h-28)/2,28,28,Color.new(15,17,23),Color.new(46,52,66),1)
-        REM_UI.drawMenuIcon(bmp,key,x+36,y+h/2,1.0)
-        REM_UI.texts(bmp,[[:c,commands[i],x+58,y+h/2,0,REM_UI::WHITE,25,w-64]])
+        REM_UI.slotBox(bmp,ix,y+(h-30)/2,30,30,Color.new(15,17,23),Color.new(46,52,66),1)
+        REM_UI.drawMenuIcon(bmp,key,ix+15,y+h/2,1.0)
+        base=REM_UI::WHITE; shadow=Color.new(40,44,55)
       else
         REM_UI.slotBox(bmp,x,y,w,h,Color.new(14,16,21,217),Color.new(46,52,66),1)
-        REM_UI.slotBox(bmp,x+8,y+(h-28)/2,28,28,Color.new(10,12,16,200),Color.new(30,34,44),1)
-        REM_UI.drawMenuIcon(bmp,key,x+22,y+h/2,0.72)
-        REM_UI.texts(bmp,[[:c,commands[i],x+44,y+h/2,0,Color.new(150,158,176),23,w-50]])
+        REM_UI.slotBox(bmp,ix,y+(h-30)/2,30,30,Color.new(10,12,16,200),Color.new(30,34,44),1)
+        REM_UI.drawMenuIcon(bmp,key,ix+15,y+h/2,0.72)
+        base=Color.new(150,158,176); shadow=Color.new(30,33,42)
       end
+      bmp.font.size=fs
+      pbDrawShadowText(bmp,ix+40,y,w-(ix+40-x)-6,h,commands[i],base,shadow)
       y+=h+MENU_GAP
     end
-    REM_UI.vArrow(bmp,93,top-8,-1,REM_UI::SILVER) if @menuTop>0
-    REM_UI.vArrow(bmp,93,y-MENU_GAP+3,1,REM_UI::SILVER) if last<n
+    cx=right-uw/2
+    REM_UI.vArrow(bmp,cx,top-8,-1,REM_UI::SILVER) if @menuTop>0
+    REM_UI.vArrow(bmp,cx,y-MENU_GAP+3,1,REM_UI::SILVER) if last<n
   end
 
   def pbShowCommands(commands)
