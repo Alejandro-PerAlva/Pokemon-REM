@@ -27,12 +27,11 @@ def listbg():
 def entrybg():
     im = S.base_bg()
     silver_box(im, (8, 8, 222, 56)); silver_box(im, (8, 62, 222, 98))
-    silver_box(im, (8, 104, 222, 232), hexc("0F1117"))
-    silver_box(im, (8, 240, 222, 376), hexc("12141B"))
-    for b, title_h in (((232, 8, 504, 224), 28), ((232, 232, 504, 376), 28)):
-        silver_box(im, b, PANEL)
-        x0, y0, x1, y1 = b
-        S.box(im, (x0 + 3, y0 + 3, x1 - 3, y0 + title_h), hexc("12141B"), None, 4)
+    silver_box(im, (8, 104, 222, 308), hexc("0F1117"))          # pozo del sprite (alto)
+    silver_box(im, (8, 316, 222, 376), hexc("12141B"))          # evolución (compacta)
+    silver_box(im, (232, 8, 504, 224), PANEL)                   # estadísticas base
+    S.box(im, (235, 11, 501, 36), hexc("12141B"), None, 4)
+    silver_box(im, (232, 232, 504, 376), hexc("12141B"))        # descripción
     for i in range(6):                                          # pistas de las barras de estadísticas
         y = 40 + 30 * i
         S.box(im, (338, y + 8, 492, y + 20), WELL, DIV, 3)

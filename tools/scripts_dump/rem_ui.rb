@@ -1020,6 +1020,17 @@ class Window_Pokedex
 end
 
 class PokemonPokedexScene
+  # Centra un sprite animado en (cx,cy) y lo reduce si su fotograma no cabe en maxw x maxh.
+  def remFitSprite(sprite,cx,cy,maxw,maxh)
+    sprite.zoom_x=1.0; sprite.zoom_y=1.0
+    return if !sprite.bitmap || sprite.bitmap.disposed?
+    w=sprite.bitmap.width; h=sprite.bitmap.height
+    z=[1.0,maxw*1.0/w,maxh*1.0/h].min
+    sprite.zoom_x=z; sprite.zoom_y=z
+    sprite.x=(cx-(w*z)/2).round
+    sprite.y=(cy-(h*z)/2).round
+  end
+
   def pbStartScene
     @dummypokemon=PokeBattle_Pokemon.new(1,1)
     @sprites={}
@@ -1081,7 +1092,7 @@ class PokemonPokedexScene
     gender=($Trainer.formlastseen[species][0] rescue 0)
     form=($Trainer.formlastseen[species][1] rescue 0)
     @sprites["icon"].setSpeciesBitmap(species,(gender==1),form)
-    pbPositionPokemonSprite(@sprites["icon"],115-64,128-64)
+    remFitSprite(@sprites["icon"],115,128,184,212)
     remDrawShowcase(species,gender,form)
   end
 
@@ -1162,40 +1173,39 @@ class PokemonPokedexScene
       w=1 if w<1
       overlay.fill_rect(340,y+10,w,8,REM_UI.statColor(v))
     end
-    # evolución
-    REM_UI.texts(overlay,[[_INTL("Evolución"),244,234,0,REM_UI::LABEL,22,150]])
+    # evolución (datos de evolutions.dat, compilado desde el PBS) en una caja compacta de 2 líneas
     evos=pbGetEvolvedFormData(species).select{|e| e[2]<=PBSpecies.maxValue}
     prev=pbGetPreviousForm(species)
     lines=[]
-    lines.push([_INTL("Evoluciona de {1}",PBSpecies.getName(prev)),REM_UI::DIM]) if prev!=species
+    lines.push([_INTL("Evoluciona de {1}",PBSpecies.getName(prev)),REM_UI::LABEL]) if prev!=species
     for e in evos; lines.push([REM_UI.evoText(e),REM_UI::WHITE]); end
     if evos.length==0
-      lines.push([prev!=species ? _INTL("Etapa final") : _INTL("No evoluciona"),REM_UI::WHITE])
+      lines.push([prev!=species ? _INTL("Fase final") : _INTL("No evoluciona"),REM_UI::WHITE])
     end
-    if lines.length>4
-      extra=lines.length-3
-      lines=lines[0,3]
-      lines.push([_INTL("+{1} más",extra),REM_UI::DIM])
+    if lines.length>2
+      extra=lines.length-1
+      lines=[lines[0],[_INTL("+{1} más",extra),REM_UI::DIM]]
     end
     for i in 0...lines.length
-      REM_UI.texts(overlay,[[lines[i][0],244,268+i*24,0,lines[i][1],24,244]])
+      cy=(lines.length==1) ? 346 : 331+i*30
+      REM_UI.texts(overlay,[[:c,lines[i][0],115,cy,2,lines[i][1],24,200]])
     end
-    # descripción
+    # descripción (PBS) en el cuadro inferior derecho
     pbSetNarrowFont(overlay)
-    overlay.font.size=19
+    overlay.font.size=22
     text=owned ? @dummypokemon.dexEntry : _INTL("Aún no has capturado a este Pokémon, así que su descripción sigue sin registrarse.")
-    dlines=REM_UI.wrap(overlay,text,192)
+    dlines=REM_UI.wrap(overlay,text,246)
     if dlines.length>6
       dlines=dlines[0,6]
       dlines[5]=dlines[5]+"..."
     end
     list=[]
     for i in 0...dlines.length
-      list.push([dlines[i],18,248+i*21,0,owned ? REM_UI::WHITE : REM_UI::DIM,19])
+      list.push([dlines[i],246,241+i*21,0,owned ? REM_UI::WHITE : REM_UI::DIM,22])
     end
     REM_UI.texts(overlay,list)
     @sprites["entryicon"].setSpeciesBitmap(species,(gender==1),form)
-    pbPositionPokemonSprite(@sprites["entryicon"],115-64,168-64)
+    remFitSprite(@sprites["entryicon"],115,206,198,196)
     pbPlayCry(@dummypokemon)
   end
 
