@@ -2665,7 +2665,8 @@ class PokemonMenu_Scene
     return false
   end
 
-  # Columna de cajitas informativas arriba a la izquierda: Guardar (siempre que se pueda) y Pokévial (si lo tienes)
+  # Columna de cajitas informativas arriba a la izquierda: Pokévial (si lo tienes) y debajo Guardar.
+  # Las dos tienen siempre el mismo ancho (el que ocupa la del Pokévial), exista o no.
   def remDrawVial
     vspr=@sprites["vial"]; sspr=@sprites["save"]
     hasSave=(@saveIndex && @saveIndex>=0)
@@ -2673,34 +2674,34 @@ class PokemonMenu_Scene
     cur=hasVial ? pbRemVialCharges : 0
     mx=hasVial ? pbRemVialMax : 1
     empty=(cur<=0)
-    ctext=_INTL("Cargas: {1}/{2}",cur,mx)
+    num=sprintf("%d/%d",cur,mx)
     vhint=empty ? _INTL("Vacío") : _INTL("Z: usar")
     shint=_INTL("S: usar")
     probe=sspr.bitmap
     pbSetSystemFont(probe)
     probe.font.size=20
-    l1=[probe.text_size(_INTL("Guardar")).width]
-    l1.push(probe.text_size(ctext).width) if hasVial
+    l1=[probe.text_size(_INTL("Guardar")).width,probe.text_size(_INTL("Cargas: {1}","3/3")).width].max
     probe.font.size=17
-    l2=[probe.text_size(shint).width,probe.text_size(vhint).width]
-    w=46+[l1.max,l2.max].max+14
+    l2=[probe.text_size(shint).width,probe.text_size(_INTL("Z: usar")).width,probe.text_size(_INTL("Vacío")).width].max
+    w=46+[l1,l2].max+14
     sspr.visible=false; vspr.visible=false
     y=10
+    if hasVial
+      bmp=vspr.bitmap; bmp.clear
+      remInfoBox(bmp,w,getConst(PBItems,:POKEVIAL),nil,_INTL("Cargas: "),REM_UI::WHITE,vhint,
+                 num,empty ? Color.new(150,158,176) : Color.new(74,200,255))
+      vspr.y=y; vspr.visible=true
+      y+=50
+    end
     if hasSave
       bmp=sspr.bitmap; bmp.clear
       remInfoBox(bmp,w,nil,:save,_INTL("Guardar"),REM_UI::WHITE,shint)
       sspr.y=y; sspr.visible=true
-      y+=50
-    end
-    if hasVial
-      bmp=vspr.bitmap; bmp.clear
-      remInfoBox(bmp,w,getConst(PBItems,:POKEVIAL),nil,ctext,empty ? Color.new(150,158,176) : Color.new(74,200,255),vhint)
-      vspr.y=y; vspr.visible=true
     end
   end
 
-  # Cajita de 44 px: hueco de icono (32 px), línea 1 (20 px) y pista (17 px)
-  def remInfoBox(bmp,w,item,iconkey,line1,color1,line2)
+  # Cajita de 44 px: hueco de icono (32 px), línea 1 (20 px, con un segundo tramo opcional de otro color) y pista (17 px)
+  def remInfoBox(bmp,w,item,iconkey,line1,color1,line2,line1b=nil,color1b=nil)
     pbSetSystemFont(bmp)
     REM_UI.slotBox(bmp,0,0,w,44,Color.new(20,22,29),REM_UI::SILVER,1)
     REM_UI.slotBox(bmp,6,6,32,32,Color.new(15,17,23),Color.new(38,43,56),1)
@@ -2715,7 +2716,12 @@ class PokemonMenu_Scene
       end
     end
     bmp.font.size=20
-    pbDrawShadowText(bmp,46,2,w-50,22,line1,color1,Color.new(40,44,55))
+    x=46
+    pbDrawShadowText(bmp,x,2,w-50,22,line1,color1,Color.new(40,44,55))
+    if line1b
+      x+=bmp.text_size(line1).width
+      pbDrawShadowText(bmp,x,2,w-x-4,22,line1b,color1b,Color.new(40,44,55))
+    end
     bmp.font.size=17
     pbDrawShadowText(bmp,46,22,w-50,18,line2,Color.new(122,130,148),Color.new(30,33,42))
   end
