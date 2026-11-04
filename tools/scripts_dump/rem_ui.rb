@@ -2140,3 +2140,404 @@ module FontInstaller
 end
 FontInstaller.registerPrivate
 MessageConfig.pbSetSystemFontName(nil)
+
+#===============================================================================
+# MISIONES — encargos del Ayudante del Profesor (Pía): un expediente por inicial.
+# REM_Quests es la capa de datos sobre el sistema ya existente (pbRemPia en
+# $PokemonGlobal, se guarda con la partida). Estados: :locked :active :ready :completed
+#===============================================================================
+module REM_Quests
+  REGIONS=["Kanto","Johto","Hoenn","Sinnoh","Teselia","Kalos"]
+
+  def self.entries
+    first=pbPiaFirst
+    ret=[]
+    for i in 0...REM_PIA_STARTERS.length
+      sym=REM_PIA_STARTERS[i][0]
+      next if sym==first          # tu inicial no tiene encargo
+      ret.push(build(i))
+    end
+    return ret
+  end
+
+  def self.find(id)
+    for q in entries
+      return q if q[:id]==id
+    end
+    return nil
+  end
+
+  def self.symOf(id)
+    for s in REM_PIA_STARTERS
+      return s[0] if ("starter_"+s[0].to_s.downcase).to_sym==id
+    end
+    return nil
+  end
+
+  def self.build(i)
+    sym=REM_PIA_STARTERS[i][0]
+    sp=getConst(PBSpecies,sym)
+    name=PBSpecies.getName(sp)
+    tsym=REM_PIA_STARTERS[i][1]
+    tname=REM_PIA_TYPENAMES[tsym]
+    pr=pbPiaProg(sym); g=pbPiaGoals(sym)
+    objs=[]
+    for k in 0...4
+      objs.push({:text=>sprintf(REM_PIA_KINDS[k],tname),:cur=>[pr[k],g[k]].min,:goal=>g[k]})
+    end
+    st=case pbPiaState(sym)
+      when :claimed then :completed
+      when :ready   then :ready
+      when :active  then :active
+      else :locked
+    end
+    return {:id=>("starter_"+sym.to_s.downcase).to_sym,:sym=>sym,:title=>_INTL("Investigación: {1}",name),
+      :short=>name,:species=>sp,:giver=>_INTL("Ayudante Prof."),:location=>REGIONS[(i/3)%REGIONS.length],
+      :type=>getConst(PBTypes,tsym),:state=>st,:objectives=>objs,
+      :description=>_INTL("El Ayudante necesita datos de campo sobre los Pokémon de tipo {1} para completar el estudio de {2}. Cumple los cuatro objetivos y podrás reclamarlo.",tname,name),
+      :reward_text=>_INTL("{1} (Nv. 5) como Pokémon inicial",name)}
+  end
+
+  def self.done(q)
+    return q[:objectives].select{|o| o[:cur]>=o[:goal]}.length
+  end
+end
+
+# Ayudas para eventos de mapa
+def pbUnlockQuest(id)      # deja el encargo disponible (activa el menú de misiones)
+  $game_switches[REM_PIA_QUESTS_SWITCH]=true
+  $game_map.need_refresh=true if $game_map
+  return true
+end
+def pbActivateQuest(id)    # lo pone en seguimiento
+  sym=REM_Quests.symOf(id)
+  return false if !sym
+  pbUnlockQuest(id)
+  return pbPiaSelect(sym)
+end
+def pbCompleteQuest(id)    # cumple todos los objetivos (queda listo para reclamar)
+  sym=REM_Quests.symOf(id)
+  return false if !sym
+  g=pbPiaGoals(sym); pr=pbPiaProg(sym)
+  for k in 0...4; pr[k]=g[k]; end
+  d=pbRemPia
+  d[:ready][sym]=true
+  d[:active]=nil if d[:active]==sym
+  return true
+end
+def pbSetQuestStage(id,stage) # stage = nº de objetivos cumplidos (0..4)
+  sym=REM_Quests.symOf(id)
+  return false if !sym
+  g=pbPiaGoals(sym); pr=pbPiaProg(sym)
+  for k in 0...4; pr[k]=(k<stage) ? g[k] : 0; end
+  return pbCompleteQuest(id) if stage>=4
+  return true
+end
+
+class PokemonQuests_Scene
+  CYAN=Color.new(74,200,255)
+  EMERALD=Color.new(56,216,120)
+  GREY=Color.new(130,138,152)
+  BG=Color.new(14,16,21)
+  PANEL=Color.new(20,22,29)
+  ROW=Color.new(24,27,36)
+  ROWSEL=Color.new(30,34,45)
+  WELL=Color.new(15,17,23)
+  WELLB=Color.new(38,43,56)
+  GRID=Color.new(19,22,29)
+  FILTERS=["TODAS","EN CURSO","COMPLETADAS"]
+  FILTERW=[56,74,100]
+  ROWS=6
+  ROWH=46
+
+  def pbStartScene
+    @viewport=Viewport.new(0,0,Graphics.width,Graphics.height)
+    @viewport.z=99999
+    @sprites={}
+    @sprites["bg"]=BitmapSprite.new(Graphics.width,Graphics.height,@viewport)
+    @sprites["overlay"]=BitmapSprite.new(Graphics.width,Graphics.height,@viewport)
+    @sprites["species"]=PokemonSprite.new(@viewport)
+    @sprites["species"].z=5
+    @icons={}
+    @filter=0; @index=0; @top=0; @shown=nil
+    drawBackground
+    reload
+    refresh
+    pbFadeInAndShow(@sprites) { pbUpdate }
+    loop do
+      Graphics.update
+      Input.update
+      pbUpdate
+      if Input.trigger?(Input::B)
+        pbPlayCancelSE()
+        break
+      elsif Input.trigger?(Input::UP)
+        move(-1)
+      elsif Input.trigger?(Input::DOWN)
+        move(1)
+      elsif Input.trigger?(Input::LEFT)
+        setFilter((@filter+FILTERS.length-1)%FILTERS.length)
+      elsif Input.trigger?(Input::RIGHT)
+        setFilter((@filter+1)%FILTERS.length)
+      elsif Input.trigger?(Input::C)
+        act
+      end
+    end
+    pbFadeOutAndHide(@sprites) { pbUpdate }
+    pbEndScene
+  end
+
+  def pbUpdate
+    pbUpdateSpriteHash(@sprites)
+  end
+
+  def pbEndScene
+    for i in @icons.values; i.dispose if i && !i.disposed?; end
+    pbDisposeSpriteHash(@sprites)
+    @viewport.dispose
+  end
+
+  def reload
+    @all=REM_Quests.entries
+    @list=@all.select{|q|
+      case @filter
+      when 1 then (q[:state]==:active || q[:state]==:ready)
+      when 2 then q[:state]==:completed
+      else true
+      end
+    }
+    @index=[[@index,@list.length-1].min,0].max
+    @top=[[@top,@index].min,@index-ROWS+1].max
+    @top=0 if @top<0
+  end
+
+  def setFilter(f)
+    pbPlayCursorSE()
+    @filter=f; @index=0; @top=0
+    reload; refresh
+  end
+
+  def move(d)
+    return if @list.length==0
+    n=[[@index+d,0].max,@list.length-1].min
+    return if n==@index
+    pbPlayCursorSE()
+    @index=n
+    @top=@index if @index<@top
+    @top=@index-ROWS+1 if @index>=@top+ROWS
+    refresh
+  end
+
+  def act
+    q=@list[@index]
+    return if !q
+    if q[:state]==:ready
+      if pbClaimPiaStarter(q[:sym])
+        reload; refresh
+      end
+    elsif q[:state]==:active
+      pbPiaSelect(nil); reload; refresh
+    elsif q[:state]==:locked
+      if !$game_switches[REM_PIA_QUESTS_SWITCH]
+        Kernel.pbMessage(_INTL("El Ayudante aún no te ha encargado esta investigación."))
+      else
+        pbPiaSelect(q[:sym]); reload; refresh
+      end
+    end
+  end
+
+  # ---- dibujo ---------------------------------------------------------------
+  def drawBackground
+    bmp=@sprites["bg"].bitmap
+    bmp.fill_rect(0,0,512,384,BG)
+    x=0
+    while x<512; bmp.fill_rect(x,0,1,384,GRID); x+=16; end
+    y=0
+    while y<384; bmp.fill_rect(0,y,512,1,GRID); y+=16; end
+  end
+
+  def box(bmp,x,y,w,h,fill,border)
+    REM_UI.slotBox(bmp,x,y,w,h,fill,border,1)
+  end
+
+  def pill(bmp,x,y,w,h,text,color,filled)
+    REM_UI.slotBox(bmp,x,y,w,h,filled ? REM_UI.dim(color,0.30) : WELL,color,1)
+    REM_UI.texts(bmp,[[:c,text,x+w/2,y+h/2,2,color,15,w-6]])
+  end
+
+  def diamond(bmp,cx,cy,r,c)
+    for dy in -r..r
+      bmp.fill_rect(cx-(r-dy.abs),cy+dy,(r-dy.abs)*2+1,1,c)
+    end
+  end
+
+  def check(bmp,cx,cy,c)   # visto de 9x7 px
+    pts=[[-4,0],[-3,1],[-2,2],[-1,1],[0,0],[1,-1],[2,-2],[3,-3]]
+    for p in pts
+      bmp.fill_rect(cx+p[0],cy+p[1],1,2,c)
+      bmp.fill_rect(cx+p[0]+1,cy+p[1],1,2,c)
+    end
+  end
+
+  def checkbox(bmp,x,y,on)
+    box(bmp,x,y,13,13,WELL,on ? EMERALD : WELLB)
+    check(bmp,x+6,y+6,EMERALD) if on
+  end
+
+  def stateInfo(q)
+    case q[:state]
+    when :active    then return [_INTL("ACTIVA"),CYAN,false,_INTL("EN CURSO")]
+    when :ready     then return [_INTL("LISTA"),EMERALD,true,_INTL("LISTA PARA RECLAMAR")]
+    when :completed then return [_INTL("HECHA"),EMERALD,false,_INTL("COMPLETADA")]
+    end
+    return [_INTL("PENDIENTE"),GREY,false,_INTL("SIN INICIAR")]
+  end
+
+  def iconFor(q)
+    return @icons[q[:species]] if @icons[q[:species]]
+    file=pbCheckPokemonIconFiles([q[:species],false,false,0,false])
+    @icons[q[:species]]=file ? AnimatedBitmap.new(file) : nil
+    return @icons[q[:species]]
+  end
+
+  def refresh
+    bmp=@sprites["overlay"].bitmap
+    bmp.clear
+    done=@all.select{|q| q[:state]==:completed}.length
+    # cabecera
+    REM_UI.texts(bmp,[[:c,_INTL("MISIONES"),16,22,0,REM_UI::WHITE,30,110]])
+    box(bmp,128,10,118,24,WELL,WELLB)
+    REM_UI.texts(bmp,[[:c,_INTL("Completadas: {1}/{2}",done,@all.length),187,22,2,REM_UI::WHITE,16,110]])
+    x=500
+    for i in (0...FILTERS.length).to_a.reverse
+      x-=FILTERW[i]
+      if i==@filter
+        box(bmp,x,10,FILTERW[i],24,ROWSEL,REM_UI::SILVER)
+        REM_UI.texts(bmp,[[:c,FILTERS[i],x+FILTERW[i]/2,22,2,REM_UI::WHITE,17,FILTERW[i]-6]])
+      else
+        box(bmp,x,10,FILTERW[i],24,PANEL,WELLB)
+        REM_UI.texts(bmp,[[:c,FILTERS[i],x+FILTERW[i]/2,22,2,REM_UI::DIM,17,FILTERW[i]-6]])
+      end
+      x-=6
+    end
+    bmp.fill_rect(12,40,488,1,WELLB)
+    drawList(bmp)
+    drawDossier(bmp)
+    # pie
+    bmp.fill_rect(12,352,488,1,WELLB)
+    hint=_INTL("Izq/Der: filtro    Arriba/Abajo: elegir    C: seguir / reclamar    B: volver")
+    REM_UI.texts(bmp,[[:c,hint,256,367,2,REM_UI::DIM,16,484]])
+  end
+
+  def drawList(bmp)
+    box(bmp,12,48,212,298,PANEL,REM_UI::SILVER)
+    if @list.length==0
+      REM_UI.texts(bmp,[[:c,_INTL("Sin misiones aquí"),118,197,2,REM_UI::DIM,18,190]])
+      return
+    end
+    for r in 0...ROWS
+      i=@top+r
+      break if i>=@list.length
+      q=@list[i]
+      y=54+r*ROWH
+      sel=(i==@index)
+      box(bmp,18,y,192,ROWH-4,sel ? ROWSEL : ROW,sel ? REM_UI::SILVER : WELLB)
+      ic=iconFor(q)
+      if ic
+        bmp.stretch_blt(Rect.new(22,y+3,36,36),ic.bitmap,Rect.new(0,0,64,64))
+      end
+      info=stateInfo(q)
+      if q[:state]==:completed
+        box(bmp,44,y+27,13,13,WELL,EMERALD); check(bmp,50,y+33,EMERALD)
+      elsif q[:state]==:active || q[:state]==:ready
+        box(bmp,44,y+27,13,13,WELL,info[1]); diamond(bmp,50,y+33,3,info[1])
+      end
+      REM_UI.texts(bmp,[[:c,q[:short],62,y+13,0,REM_UI::WHITE,18,82],
+                        [:c,_INTL("{1}/4 objetivos",REM_Quests.done(q)),62,y+30,0,REM_UI::DIM,15,82]])
+      pill(bmp,148,y+10,58,20,info[0],info[1],info[2])
+    end
+    if @list.length>ROWS   # barra de desplazamiento
+      th=290; bh=[th*ROWS/@list.length,18].max
+      by=52+((th-bh)*@top/(@list.length-ROWS))
+      bmp.fill_rect(216,52,3,th,WELL)
+      bmp.fill_rect(216,by,3,bh,REM_UI::SILVER)
+    end
+  end
+
+  def drawDossier(bmp)
+    q=@list[@index]
+    sp=@sprites["species"]
+    if !q
+      box(bmp,232,48,268,298,PANEL,REM_UI::SILVER)
+      REM_UI.texts(bmp,[[:c,_INTL("Nada que mostrar"),366,197,2,REM_UI::DIM,18,240]])
+      sp.visible=false
+      @shown=nil
+      return
+    end
+    info=stateInfo(q)
+    # --- tarjeta superior ---
+    box(bmp,232,48,268,104,PANEL,REM_UI::SILVER)
+    box(bmp,240,54,76,76,WELL,WELLB)
+    bmp.fill_rect(241,92,74,1,GRID); bmp.fill_rect(278,55,1,74,GRID)
+    if @shown!=q[:species]
+      sp.setSpeciesBitmap(q[:species])
+      @shown=q[:species]
+    end
+    sp.visible=true
+    sp.zoom_x=1.0; sp.zoom_y=1.0
+    if sp.bitmap && !sp.bitmap.disposed?
+      w=sp.bitmap.width; h=sp.bitmap.height
+      z=[1.0,68.0/w,68.0/h].min
+      sp.zoom_x=z; sp.zoom_y=z
+      sp.x=(278-(w*z)/2).round
+      sp.y=(92-(h*z)/2).round
+    end
+    types=REM_UI.pbsTypes(q[:species]) || [q[:type],q[:type]]
+    tb=AnimatedBitmap.new(_INTL("Graphics/Pictures/types"))
+    if types[0]==types[1]
+      bmp.stretch_blt(Rect.new(260,135,36,14),tb.bitmap,Rect.new(0,types[0]*28,64,28))
+    else
+      bmp.stretch_blt(Rect.new(240,135,36,14),tb.bitmap,Rect.new(0,types[0]*28,64,28))
+      bmp.stretch_blt(Rect.new(280,135,36,14),tb.bitmap,Rect.new(0,types[1]*28,64,28))
+    end
+    tb.dispose
+    REM_UI.texts(bmp,[[:c,q[:title],324,66,0,REM_UI::WHITE,22,170]])
+    box(bmp,324,80,168,18,WELL,WELLB)
+    REM_UI.texts(bmp,[[:c,_INTL("Encargo: {1}",q[:giver]),330,89,0,REM_UI::WHITE,16,156]])
+    box(bmp,324,102,168,18,WELL,WELLB)
+    REM_UI.texts(bmp,[[:c,_INTL("Zona: {1}",q[:location]),330,111,0,REM_UI::WHITE,16,156]])
+    pill(bmp,324,126,168,20,info[3],info[1],info[2])
+    # --- descripción ---
+    box(bmp,232,156,268,66,PANEL,REM_UI::SILVER)
+    REM_UI.fit(bmp,"x",999,17)
+    lines=REM_UI.wrap(bmp,q[:description],252)
+    for k in 0...[lines.length,3].min
+      t=lines[k]
+      t=t+"..." if k==2 && lines.length>3
+      REM_UI.texts(bmp,[[:c,t,240,171+k*18,0,REM_UI::WHITE,17,254]])
+    end
+    # --- objetivos ---
+    box(bmp,232,226,268,120,PANEL,REM_UI::SILVER)
+    d=REM_Quests.done(q)
+    REM_UI.texts(bmp,[[:c,_INTL("OBJETIVO ACTUAL"),240,238,0,REM_UI::WHITE,17,110]])
+    bmp.fill_rect(366,234,122,8,WELL)
+    bmp.fill_rect(367,235,120,6,GRID)
+    bmp.fill_rect(367,235,30*d,6,info[1])
+    REM_UI.texts(bmp,[[:c,sprintf("%d/4",d),492,238,1,REM_UI::DIM,15,30]])
+    cur=nil
+    for k in 0...4
+      cur=k if !cur && q[:objectives][k][:cur]<q[:objectives][k][:goal]
+    end
+    for k in 0...4
+      o=q[:objectives][k]
+      y=252+k*17
+      ok=o[:cur]>=o[:goal]
+      checkbox(bmp,240,y,ok)
+      col=ok ? EMERALD : ((k==cur && q[:state]!=:locked) ? REM_UI::WHITE : REM_UI::DIM)
+      REM_UI.texts(bmp,[[:c,o[:text],260,y+7,0,col,16,184],
+                        [:c,sprintf("%d/%d",o[:cur],o[:goal]),492,y+7,1,col,16,40]])
+    end
+    bmp.fill_rect(240,322,252,1,WELLB)
+    REM_UI.texts(bmp,[[:c,_INTL("Recompensa: {1}",q[:reward_text]),240,334,0,REM_UI::SILVER,16,252]])
+  end
+end

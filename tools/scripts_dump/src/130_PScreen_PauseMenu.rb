@@ -116,8 +116,8 @@ class PokemonMenu
     commands[cmdPokedex=commands.length]=_INTL("Pokédex") if $Trainer.pokedex && $PokemonGlobal.pokedexViable.length>0
     commands[cmdPokemon=commands.length]=_INTL("Pokémon") if $Trainer.party.length>0
     commands[cmdBag=commands.length]=_INTL("Mochila") if !pbInBugContest?
+    commands[cmdQuests=commands.length]=_INTL("Misiones")   # REM_UI: PokemonQuests_Scene (encargos del Ayudante)
     commands[cmdPokegear=commands.length]=_INTL("Pokégear") if $Trainer.pokegear
-    commands[cmdQuests=commands.length]=_INTL("Misiones") if defined?(REM_PIA_QUESTS_SWITCH) && $game_switches[REM_PIA_QUESTS_SWITCH]   # REM_UI: panel de Pía
     commands[cmdTrainer=commands.length]=$Trainer.name
     if pbInSafari?
       if SAFARISTEPS<=0
@@ -167,7 +167,7 @@ class PokemonMenu
           end
         end
       elsif cmdQuests>=0 && command==cmdQuests
-        pbRemQuestLog
+        pbFadeOutIn(99999) { PokemonQuests_Scene.new.pbStartScene; @scene.pbRefresh }
       elsif cmdPokegear>=0 && command==cmdPokegear
         pbLoadRpgxpScene(Scene_Pokegear.new)
       elsif cmdPokemon>=0 && command==cmdPokemon
