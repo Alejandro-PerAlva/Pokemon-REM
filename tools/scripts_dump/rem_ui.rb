@@ -1744,3 +1744,350 @@ class PokemonBag
     return ps
   end
 end
+
+#===============================================================================
+# FICHA DE ENTRENADOR, OPCIONES, CARGA Y MARCO GLOBAL "Oniria Noir"
+# Fondos y marcos: tools/ui/gen_menus_noir.py
+#===============================================================================
+# --- Marco de diálogo, menús y fuente bloqueados (ya no son opciones del jugador) ---
+module MessageConfig
+  remove_const(:TextSkinName) if const_defined?(:TextSkinName)
+  TextSkinName="rem_noir_speech"
+  remove_const(:ChoiceSkinName) if const_defined?(:ChoiceSkinName)
+  ChoiceSkinName="rem_noir_choice"
+  remove_const(:FontName) if const_defined?(:FontName)
+  FontName="Power Green Narrow"
+  @@systemFrame=nil
+  @@defaultTextSkin=nil
+  @@systemFont=nil
+
+  def self.pbSetSystemFrame(value)
+    @@systemFrame=pbResolveBitmap("Graphics/Windowskins/rem_noir_choice") || ""
+  end
+
+  def self.pbSetSpeechFrame(value)
+    @@defaultTextSkin=pbResolveBitmap("Graphics/Windowskins/rem_noir_speech") || ""
+  end
+
+  def self.pbSetSystemFontName(value)
+    @@systemFont=MessageConfig.pbTryFonts(FontName,"Arial Narrow","Arial")
+  end
+end
+
+class PokemonSystem
+  def frame; return 0; end
+  def textskin; return 0; end
+  def font; return 0; end
+  def border; return 0; end
+  def runstyle; return 0; end
+  alias rem_orig_initialize initialize
+  def initialize
+    rem_orig_initialize
+    @battlestyle=1   # Fijo por defecto
+  end
+end
+
+#-------------------------------------------------------------------------------
+# OPCIONES: 6 ajustes en una sola pantalla, sin desplazamiento
+#-------------------------------------------------------------------------------
+class Window_PokemonOption
+  def initialize(options,x,y,width,height)
+    @options=options
+    @optvalues=[]
+    @mustUpdateOptions=false
+    for i in 0...@options.length
+      @optvalues[i]=0
+    end
+    super(x,y,width,height)
+    self.windowskin=nil
+    self.rowHeight=34
+  end
+
+  def drawCursor(index,rect)
+    return rect
+  end
+
+  def drawItem(index,count,rect)
+    x=rect.x; y=rect.y+2; w=rect.width; h=@row_height-6
+    sel=(self.index==index)
+    REM_UI.slotBox(self.contents,x,y,w,h,sel ? Color.new(30,34,45) : Color.new(24,27,36),
+       sel ? Color.new(214,219,228) : Color.new(38,43,56),sel ? 2 : 1)
+    cy=y+h/2
+    pbSetNarrowFont(self.contents)
+    if index==@options.length
+      REM_UI.ctext(self.contents,_INTL("Salir"),x+w/2,cy,REM_UI::WHITE,26,200)
+      return
+    end
+    REM_UI.texts(self.contents,[[:c,@options[index].name,x+12,cy,0,REM_UI::WHITE,24,170]])
+    opt=@options[index]
+    vx=x+196; vw=w-196-12
+    if opt.is_a?(EnumOption)
+      vals=opt.values
+      n=vals.length
+      pw=(vw-(n-1)*6)/n
+      for k in 0...n
+        on=(k==self[index])
+        px=vx+k*(pw+6)
+        REM_UI.slotBox(self.contents,px,y+3,pw,h-6,on ? Color.new(48,56,78) : Color.new(20,22,29),
+           on ? Color.new(214,219,228) : Color.new(52,58,76),1)
+        REM_UI.ctext(self.contents,vals[k],px+pw/2,cy,on ? REM_UI::WHITE : REM_UI::DIM,22,pw-6)
+      end
+    elsif opt.is_a?(SliderOption)
+      val=opt.optstart+self[index]
+      tw=vw-52
+      self.contents.fill_rect(vx,cy-2,tw,4,Color.new(46,52,68))
+      fill=tw*val/opt.optend
+      self.contents.fill_rect(vx,cy-2,fill,4,Color.new(214,219,228))
+      self.contents.fill_rect(vx+[fill-3,0].max,cy-8,6,16,REM_UI::WHITE)
+      REM_UI.ctext(self.contents,sprintf("%d",val),vx+vw-20,cy,REM_UI::WHITE,24,44)
+    else
+      REM_UI.ctext(self.contents,sprintf("%d",opt.optstart+self[index]),vx+vw/2,cy,REM_UI::WHITE,24,vw)
+    end
+  end
+end
+
+class PokemonOptionScene
+  def pbStartScene(inloadscreen=false)
+    @sprites={}
+    @viewport=Viewport.new(0,0,Graphics.width,Graphics.height)
+    @viewport.z=99999
+    @sprites["bg"]=IconSprite.new(0,0,@viewport)
+    @sprites["bg"].setBitmap("Graphics/Pictures/optionsNoir")
+    @sprites["overlay"]=BitmapSprite.new(Graphics.width,Graphics.height,@viewport)
+    @PokemonOptions=[
+       EnumOption.new(_INTL("Velocidad de texto"),[_INTL("Lenta"),_INTL("Normal"),_INTL("Rápida")],
+          proc { $PokemonSystem.textspeed },
+          proc {|value|
+             $PokemonSystem.textspeed=value
+             MessageConfig.pbSetTextSpeed(pbSettingToTextSpeed(value))
+          }
+       ),
+       EnumOption.new(_INTL("Animación de combate"),[_INTL("Sí"),_INTL("No")],
+          proc { $PokemonSystem.battlescene },
+          proc {|value| $PokemonSystem.battlescene=value }
+       ),
+       EnumOption.new(_INTL("Estilo de combate"),[_INTL("Cambio"),_INTL("Fijo")],
+          proc { $PokemonSystem.battlestyle },
+          proc {|value| $PokemonSystem.battlestyle=value }
+       ),
+       SliderOption.new(_INTL("Volumen BGM"),0,100,5,
+          proc { $PokemonSystem.bgmvolume },
+          proc {|value|
+             if $PokemonSystem.bgmvolume!=value
+               $PokemonSystem.bgmvolume=value
+               if $game_system.playing_bgm != nil && !inloadscreen
+                 $game_system.playing_bgm.volume=value
+                 playingBGM=$game_system.getPlayingBGM
+                 $game_system.bgm_pause
+                 $game_system.bgm_resume(playingBGM)
+               end
+             end
+          }
+       ),
+       SliderOption.new(_INTL("Volumen SE"),0,100,5,
+          proc { $PokemonSystem.sevolume },
+          proc {|value|
+             if $PokemonSystem.sevolume!=value
+               $PokemonSystem.sevolume=value
+               if $game_system.playing_bgs != nil
+                 $game_system.playing_bgs.volume=value
+                 playingBGS=$game_system.getPlayingBGS
+                 $game_system.bgs_pause
+                 $game_system.bgs_resume(playingBGS)
+               end
+               pbPlayCursorSE()
+             end
+          }
+       ),
+       EnumOption.new(_INTL("Tamaño de pantalla"),[_INTL("P"),_INTL("M"),_INTL("G"),_INTL("MG"),_INTL("Compl")],
+          proc { $PokemonSystem.screensize },
+          proc {|value|
+             oldvalue=$PokemonSystem.screensize
+             $PokemonSystem.screensize=value
+             if value!=oldvalue
+               pbSetResizeFactor($PokemonSystem.screensize)
+               ObjectSpace.each_object(TilemapLoader){|o| next if o.disposed?; o.updateClass }
+             end
+          }
+       )
+    ]
+    @PokemonOptions=pbAddOnOptions(@PokemonOptions)
+    @remDescs=[_INTL("Velocidad a la que aparecen los textos de los diálogos."),
+               _INTL("Activa o desactiva las animaciones de los movimientos en combate."),
+               _INTL("Fijo: no se ofrece cambiar de Pokémon al derrotar a un rival. Cambio: sí se ofrece."),
+               _INTL("Volumen de la música de fondo."),
+               _INTL("Volumen de los efectos de sonido."),
+               _INTL("Tamaño de la ventana del juego."),
+               _INTL("Guarda los ajustes y vuelve al menú.")]
+    @sprites["option"]=Window_PokemonOption.new(@PokemonOptions,0,40,Graphics.width,
+       32+(@PokemonOptions.length+1)*34)
+    @sprites["option"].viewport=@viewport
+    @sprites["option"].visible=true
+    for i in 0...@PokemonOptions.length
+      @sprites["option"][i]=(@PokemonOptions[i].get || 0)
+    end
+    REM_UI.texts(@sprites["overlay"].bitmap,[[_INTL("OPCIONES"),18,12,0,REM_UI::WHITE,28,300]])
+    remDrawDesc
+    pbDeactivateWindows(@sprites)
+    pbFadeInAndShow(@sprites) { pbUpdate }
+  end
+
+  def remDrawDesc
+    bmp=@sprites["overlay"].bitmap
+    bmp.clear_rect(12,308,488,64)
+    idx=[@sprites["option"].index,@remDescs.length-1].min
+    pbSetNarrowFont(bmp)
+    bmp.font.size=22
+    lines=REM_UI.wrap(bmp,@remDescs[idx],468)[0,2]
+    for i in 0...lines.length
+      REM_UI.texts(bmp,[[:c,lines[i],20,340+(i-(lines.length-1)/2.0)*26,0,REM_UI::WHITE,22,468]])
+    end
+  end
+
+  def pbOptions
+    pbActivateWindow(@sprites,"option"){
+       olddesc=-1
+       loop do
+         Graphics.update
+         Input.update
+         pbUpdate
+         if @sprites["option"].mustUpdateOptions
+           for i in 0...@PokemonOptions.length
+             @PokemonOptions[i].set(@sprites["option"][i])
+           end
+         end
+         if @sprites["option"].index!=olddesc
+           olddesc=@sprites["option"].index
+           remDrawDesc
+         end
+         if Input.trigger?(Input::B)
+           break
+         end
+         if Input.trigger?(Input::C) && @sprites["option"].index==@PokemonOptions.length
+           break
+         end
+       end
+    }
+  end
+
+  def pbEndScene
+    pbFadeOutAndHide(@sprites) { pbUpdate }
+    for i in 0...@PokemonOptions.length
+      @PokemonOptions[i].set(@sprites["option"][i])
+    end
+    pbDisposeSpriteHash(@sprites)
+    pbRefreshSceneMap
+    @viewport.dispose
+  end
+end
+
+#-------------------------------------------------------------------------------
+# FICHA DE ENTRENADOR
+#-------------------------------------------------------------------------------
+class PokemonTrainerCardScene
+  def pbStartScene
+    @sprites={}
+    @viewport=Viewport.new(0,0,Graphics.width,Graphics.height)
+    @viewport.z=99999
+    @sprites["card"]=IconSprite.new(0,0,@viewport)
+    @sprites["card"].setBitmap("Graphics/Pictures/trainercard")
+    @sprites["overlay"]=BitmapSprite.new(Graphics.width,Graphics.height,@viewport)
+    @sprites["trainer"]=IconSprite.new(0,0,@viewport)
+    @sprites["trainer"].setBitmap(pbPlayerSpriteFile($Trainer.trainertype))
+    bw=@sprites["trainer"].bitmap.width; bh=@sprites["trainer"].bitmap.height
+    z=[1.0,184.0/bw,180.0/bh].min
+    @sprites["trainer"].zoom_x=z
+    @sprites["trainer"].zoom_y=z
+    @sprites["trainer"].x=(406-bw*z/2).round
+    @sprites["trainer"].y=(153-bh*z/2).round
+    @sprites["trainer"].z=2
+    pbDrawTrainerCardFront
+    if $PokemonGlobal.trainerRecording
+      $PokemonGlobal.trainerRecording.play
+    end
+    pbFadeInAndShow(@sprites) { update }
+  end
+
+  def pbDrawTrainerCardFront
+    overlay=@sprites["overlay"].bitmap
+    overlay.clear
+    totalsec=Graphics.frame_count/Graphics.frame_rate
+    time=_ISPRINTF("{1:02d}:{2:02d}",totalsec/60/60,totalsec/60%60)
+    $PokemonGlobal.startTime=pbGetTimeNow if !$PokemonGlobal.startTime
+    starttime=_ISPRINTF("{2:d} {1:s} {3:d}",
+       pbGetAbbrevMonthName($PokemonGlobal.startTime.mon),
+       $PokemonGlobal.startTime.day,$PokemonGlobal.startTime.year)
+    pubid=sprintf("%05d",$Trainer.publicID($Trainer.id))
+    owned=0; seen=0
+    for sp in 1..REM_UI::DEX_MAX
+      owned+=1 if $Trainer.owned[sp]
+      seen+=1 if $Trainer.seen[sp]
+    end
+    list=[[:c,_INTL("FICHA DE ENTRENADOR"),18,28,0,REM_UI::WHITE,28,330],
+          [:c,_INTL("ID No. {1}",pubid),433,28,2,REM_UI::WHITE,22,120]]
+    rows=[[_INTL("Nombre"),$Trainer.name],
+          [_INTL("Dinero"),_INTL("${1}",$Trainer.money)],
+          [_INTL("Pokédex"),_INTL("{1} capt. / {2} vistos",owned,seen)],
+          [_INTL("Tiempo"),time],
+          [_INTL("Inicio"),starttime]]
+    for i in 0...5
+      cy=56+38*i+17
+      list.push([:c,rows[i][0],18,cy,0,REM_UI::LABEL,22,80])
+      list.push([:c,rows[i][1],290,cy,1,REM_UI::WHITE,24,180])
+    end
+    list.push([:c,_INTL("MEDALLAS"),20,276,0,REM_UI::LABEL,22,200])
+    REM_UI.texts(overlay,list)
+    region=pbGetCurrentRegion(0)
+    imagePositions=[]
+    for i in 0...8
+      if $Trainer.badges[i+region*8]
+        imagePositions.push(["Graphics/Pictures/badges",20+60*i+10,298+10,i*32,region*32,32,32])
+      end
+    end
+    pbDrawImagePositions(overlay,imagePositions)
+  end
+end
+
+#-------------------------------------------------------------------------------
+# CARGA / MENÚ PRINCIPAL: tarjetas de partida
+#-------------------------------------------------------------------------------
+class PokemonLoadPanel
+  def refresh
+    return if @refreshing
+    return if disposed?
+    @refreshing=true
+    if !self.bitmap || self.bitmap.disposed?
+      self.bitmap=BitmapWrapper.new(@bgbitmap.width,111*2)
+    end
+    if @refreshBitmap
+      @refreshBitmap=false
+      self.bitmap.clear if self.bitmap
+      if @isContinue
+        self.bitmap.blt(0,0,@bgbitmap.bitmap,Rect.new(0,(@selected ? 111*2 : 0),@bgbitmap.width,111*2))
+        hour=@totalsec/60/60
+        min=@totalsec/60%60
+        time=hour>0 ? _INTL("{1}h {2}m",hour,min) : _INTL("{1}m",min)
+        mapname=pbGetMapNameFromId(@mapid)
+        mapname.gsub!(/\\PN/,@trainer.name)
+        owned=0
+        for sp in 1..REM_UI::DEX_MAX
+          owned+=1 if @trainer.owned[sp]
+        end
+        namecol=@trainer.isMale? ? Color.new(110,170,255) : Color.new(255,120,160)
+        wh=REM_UI::WHITE; lb=REM_UI::LABEL
+        REM_UI.texts(self.bitmap,[
+           [:c,@title,16,22,0,wh,28,200],
+           [:c,mapname,392,22,1,lb,22,190],
+           [:c,@trainer.name,72,134,2,namecol,26,124],
+           [:c,_INTL("Tiempo"),140,54,0,lb,18,110],[:c,time,140,76,0,wh,26,116],
+           [:c,_INTL("Dinero"),140,104,0,lb,18,110],[:c,_INTL("${1}",@trainer.money),140,126,0,wh,26,116],
+           [:c,_INTL("Medallas"),274,54,0,lb,18,110],[:c,@trainer.numbadges.to_s,274,76,0,wh,26,116],
+           [:c,_INTL("Pokédex"),274,104,0,lb,18,110],[:c,owned.to_s,274,126,0,wh,26,116]])
+      else
+        self.bitmap.blt(0,0,@bgbitmap.bitmap,Rect.new(0,111*2*2+(@selected ? 23*2 : 0),@bgbitmap.width,23*2))
+        REM_UI.texts(self.bitmap,[[:c,@title,204,23,2,REM_UI::WHITE,28,360]])
+      end
+    end
+    @refreshing=false
+  end
+end

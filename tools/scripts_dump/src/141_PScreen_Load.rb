@@ -164,15 +164,15 @@ class PokemonLoadScene
       @sprites["player"]=TrainerWalkingCharSprite.new(filename,@viewport)
       charwidth=@sprites["player"].bitmap.width
       charheight=@sprites["player"].bitmap.height
-      @sprites["player"].x = 56*2 - charwidth/8
-      @sprites["player"].y = 56*2 - charheight/8
+      @sprites["player"].x = 48+72 - charwidth/8   # REM_UI: columna izquierda de la tarjeta
+      @sprites["player"].y = 32+96 - charheight/8
       @sprites["player"].src_rect = Rect.new(0,0,charwidth/4,charheight/4)
     end
     for i in 0...trainer.party.length
       @sprites["party#{i}"]=PokemonIconSprite.new(trainer.party[i],@viewport)
       @sprites["party#{i}"].z=99999
-      @sprites["party#{i}"].x=151*2+33*2*(i&1)
-      @sprites["party#{i}"].y=36*2+25*2*(i/2)
+      @sprites["party#{i}"].x=48+12+66*i   # REM_UI: equipo en una fila inferior
+      @sprites["party#{i}"].y=32+148
     end
   end
 
