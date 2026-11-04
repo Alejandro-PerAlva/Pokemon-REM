@@ -563,7 +563,7 @@ def pbTrainerName(name=nil,outfit=0)
   $Trainer=PokeBattle_Trainer.new(trname,trainertype)
   $Trainer.outfit=outfit
   if trname==nil
-    trname=pbEnterPlayerName(_INTL("¿Cuál es tu nombre?"),0,7)
+    trname=pbEnterPlayerName(_INTL("¿Cuál es tu nombre?"),0,12)
     if trname==""
       gender=pbGetTrainerTypeGender(trainertype) 
       trname=pbSuggestTrainerName(gender)

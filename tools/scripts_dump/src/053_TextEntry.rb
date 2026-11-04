@@ -911,11 +911,11 @@ class PokemonEntryScene
     @viewport.z=99999
     if USEKEYBOARD
       @sprites["entry"]=Window_TextEntry_Keyboard.new(initialText,
-         0,0,400-112,96,helptext,true)
+         0,0,336,96,helptext,true)
     else
       @sprites["entry"]=Window_TextEntry.new(initialText,0,0,400,96,helptext,true)
     end
-    @sprites["entry"].x=(Graphics.width/2)-(@sprites["entry"].width/2)+32
+    @sprites["entry"].x=144   # hasta 12 caracteres sin salirse de la cabecera
     @sprites["entry"].viewport=@viewport
     @sprites["entry"].visible=true
     @minlength=minlength
@@ -955,14 +955,15 @@ class PokemonEntryScene
         if meta
           @sprites["shadow"]=IconSprite.new(0,0,@viewport)
           @sprites["shadow"].setBitmap("Graphics/Pictures/namingShadow")
-          @sprites["shadow"].x=33*2
-          @sprites["shadow"].y=32*2
           filename=pbGetPlayerCharset(meta,1)
           @sprites["subject"]=TrainerWalkingCharSprite.new(filename,@viewport)
           charwidth=@sprites["subject"].bitmap.width
           charheight=@sprites["subject"].bitmap.height
-          @sprites["subject"].x = 44*2 - charwidth/8
-          @sprites["subject"].y = 38*2 - charheight/4
+          # centrado en el hueco del fondo naming2bg (centro 75,49)
+          @sprites["subject"].x = 75 - charwidth/8
+          @sprites["subject"].y = 49 - charheight/8
+          @sprites["shadow"].x=75-22
+          @sprites["shadow"].y=49+charheight/8-10
         end
       end
     when 2   # Pokémon
@@ -995,13 +996,13 @@ class PokemonEntryScene
     when 4   # NPC
       @sprites["shadow"]=IconSprite.new(0,0,@viewport)
       @sprites["shadow"].setBitmap("Graphics/Pictures/namingShadow")
-      @sprites["shadow"].x=33*2
-      @sprites["shadow"].y=32*2
       @sprites["subject"]=TrainerWalkingCharSprite.new(pokemon.to_s,@viewport)
       charwidth=@sprites["subject"].bitmap.width
       charheight=@sprites["subject"].bitmap.height
-      @sprites["subject"].x = 44*2 - charwidth/8
-      @sprites["subject"].y = 38*2 - charheight/4
+      @sprites["subject"].x = 75 - charwidth/8
+      @sprites["subject"].y = 49 - charheight/8
+      @sprites["shadow"].x=75-22
+      @sprites["shadow"].y=49+charheight/8-10
     end
     pbFadeInAndShow(@sprites)
   end

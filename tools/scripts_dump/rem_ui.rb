@@ -3273,15 +3273,19 @@ module REM_Intro
   #-----------------------------------------------------------------------------
   # Selector de entrenador. Devuelve 0 (chico) o 1 (chica); ya confirmado.
   #-----------------------------------------------------------------------------
-  def self.selectTrainer
+  def self.selectTrainer(blur=nil)
     vp=Viewport.new(0,0,Graphics.width,Graphics.height)
     vp.z=99010
     vp.color=Color.new(0,0,0,255)
-    sp={}
+    sp={}; own=[]
     trainer=["intro_trainer_m","intro_trainer_f"]
     begin
       sp["bg"]=Sprite.new(vp)
-      sp["bg"].bitmap=pbBitmap("Graphics/Pictures/intro_select_bg")
+      sp["bg"].bitmap=blur ? blur : pbBitmap("Graphics/Pictures/intro_select_bg")   # mismo fondo difuminado que el resto de la intro
+      if blur
+        sp["dim"]=Sprite.new(vp); sp["dim"].z=1
+        sp["dim"].bitmap=blank(Graphics.width,Graphics.height,Color.new(15,17,23,140)); own.push(sp["dim"].bitmap)
+      end
       baseY=0
       xs=[0,0]
       for i in 0...2
@@ -3323,6 +3327,7 @@ module REM_Intro
       return idx
     ensure
       sp.each_value{|s| s.dispose if s && !s.disposed?}
+      own.each{|b| b.dispose if b && !b.disposed?}
       vp.dispose
     end
   end
@@ -3399,7 +3404,7 @@ module REM_Intro
       # --- Fase 3: selector de entrenador ---
       sp["letter"].visible=false
       fadeViewport(vp,0,255,20)
-      selectTrainer      # (fundido a negro al terminar; el selector ya aplicó pbChangePlayer)
+      selectTrainer(sp["mapblur"] ? sp["mapblur"].bitmap : nil)      # (fundido a negro al terminar; el selector ya aplicó pbChangePlayer)
       sp["letter"].visible=true
 
       # --- Fase 4: vuelta a la carta, nombre y cita ---
