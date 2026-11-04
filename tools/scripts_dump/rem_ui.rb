@@ -1139,7 +1139,30 @@ class Window_Pokedex
   end
 end
 
+module REM_UI
+  DEX_MAX=721   # la Pokédex nacional termina en Volcanion (generación 6)
+end
+
 class PokemonPokedexScene
+  alias rem_orig_pbGetDexList pbGetDexList
+  def pbGetDexList()
+    return rem_orig_pbGetDexList().select{|e| e[0]<=REM_UI::DEX_MAX}
+  end
+
+  # Especies de la Pokédex activa limitadas a #721 (nacional o regional).
+  def remDexSpecies
+    region=pbGetPokedexRegion()
+    list=[]
+    if region>=0
+      reg=pbAllRegionalSpecies(region)
+      for i in 1...reg.length
+        list.push(reg[i]) if reg[i] && reg[i]>0 && reg[i]<=REM_UI::DEX_MAX
+      end
+    end
+    list=(1..REM_UI::DEX_MAX).to_a if list.length==0
+    return list
+  end
+
   # Centra un sprite animado en (cx,cy) y lo reduce si su fotograma no cabe en maxw x maxh.
   def remFitSprite(sprite,cx,cy,maxw,maxh)
     sprite.zoom_x=1.0; sprite.zoom_y=1.0
@@ -1238,17 +1261,18 @@ class PokemonPokedexScene
       REM_UI.texts(bmp,[["-----",115,246,2,REM_UI::DIM,30,190]])
     end
     if @searchResults
-      seenno=0; ownedno=0
-      for i in @dexlist
-        seenno+=1 if $Trainer.seen[i[0]]
-        ownedno+=1 if $Trainer.owned[i[0]]
-      end
+      pool=@dexlist.map{|i| i[0]}
     else
-      seenno=$Trainer.pokedexSeen(pbGetPokedexRegion)
-      ownedno=$Trainer.pokedexOwned(pbGetPokedexRegion)
+      pool=remDexSpecies
     end
-    REM_UI.texts(bmp,[[_INTL("Vistos"),67,323,2,REM_UI::LABEL,18,90],[sprintf("%d",seenno),67,340,2,REM_UI::WHITE,26,90],
-       [_INTL("Capturados"),163,323,2,REM_UI::LABEL,18,90],[sprintf("%d",ownedno),163,340,2,REM_UI::WHITE,26,90]])
+    seenno=0; ownedno=0
+    for sp in pool
+      seenno+=1 if $Trainer.seen[sp]
+      ownedno+=1 if $Trainer.owned[sp]
+    end
+    total=pool.length
+    REM_UI.texts(bmp,[[_INTL("Vistos"),67,323,2,REM_UI::LABEL,18,90],[sprintf("%d/%d",seenno,total),67,340,2,REM_UI::WHITE,26,90],
+       [_INTL("Capturados"),163,323,2,REM_UI::LABEL,18,90],[sprintf("%d/%d",ownedno,total),163,340,2,REM_UI::WHITE,26,90]])
   end
 
   # Ficha única: identidad y descripción a la izquierda; estadísticas base y evolución a la derecha.
@@ -1307,8 +1331,7 @@ class PokemonPokedexScene
     @remMulti=(evos.length>1)
     lines=[]
     if @remMulti
-      lines.push(prev!=species ? [_INTL("Evoluciona de {1}",PBSpecies.getName(prev)),REM_UI::LABEL] : [_INTL("{1} evoluciones posibles",evos.length),REM_UI::LABEL])
-      lines.push([_INTL("Tecla S: ver ramificaciones"),Color.new(214,219,228)])
+      lines.push([_INTL("Tecla S: ver ramificaciones"),Color.new(214,219,228)])   # el origen va en el árbol
     else
       lines=branchlines
       if evos.length==0
