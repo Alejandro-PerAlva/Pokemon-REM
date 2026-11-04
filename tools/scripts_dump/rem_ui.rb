@@ -2673,11 +2673,10 @@ class PokemonMenu_Scene
     pbSetSystemFont(bmp)
     bmp.font.size=20
     cw=bmp.text_size(sprintf("%d/%d",cur,mx)).width
-    nw=bmp.text_size(_INTL("Pokévial")).width
     bmp.font.size=17
     hint=empty ? _INTL("Vacío") : _INTL("Z: usar")
     hw=bmp.text_size(hint).width
-    w=[46+[nw+10+cw,hw].max+10,100].max
+    w=46+[cw,hw].max+12
     REM_UI.slotBox(bmp,0,0,w,44,Color.new(20,22,29),REM_UI::SILVER,1)
     REM_UI.slotBox(bmp,6,6,32,32,Color.new(15,17,23),Color.new(38,43,56),1)
     file=pbItemIconFile(getConst(PBItems,:POKEVIAL))
@@ -2687,8 +2686,7 @@ class PokemonMenu_Scene
       ico.dispose
     end
     bmp.font.size=20
-    pbDrawShadowText(bmp,46,2,nw+4,22,_INTL("Pokévial"),white,Color.new(40,44,55))
-    pbDrawShadowText(bmp,w-10-cw-2,2,cw+4,22,sprintf("%d/%d",cur,mx),empty ? white : Color.new(74,200,255),Color.new(40,44,55))
+    pbDrawShadowText(bmp,46,2,cw+4,22,sprintf("%d/%d",cur,mx),empty ? white : Color.new(74,200,255),Color.new(40,44,55))
     bmp.font.size=17
     pbDrawShadowText(bmp,46,22,hw+4,18,hint,Color.new(122,130,148),Color.new(30,33,42))
     spr.visible=true
