@@ -1489,12 +1489,13 @@ class PokemonPokedexScene
 end
 
 #===============================================================================
-# MOCHILA "Oniria Noir" (mundo y combate comparten PokemonBag_Scene): cabecera con nombre de
-# bolsillo y 8 pestañas, columna izquierda con vista previa y descripción, lista de huecos de una línea.
-# Fondo: tools/ui/gen_bag_noir.py (bagNoir.png).
+# MOCHILA "Oniria Noir" (mundo y combate comparten PokemonBag_Scene): título del bolsillo, mochila con
+# indicador de 8 puntos, lista de huecos de una línea y pie de ancho completo con icono + descripción.
+# Fondo y mochilas recoloreadas: tools/ui/gen_bag_noir.py.
 #===============================================================================
 module REM_UI
-  BAG_ABBR=["OBJ","MED","BALL","MT","BAYA","CART","BAT","CLAV"]
+  BAG_FOOT=80
+  BAG_SHADOW=Color.new(40,44,55)
 
   # Ventana auxiliar (cantidad, Sí/No, menú de acciones) con el marco obsidiana de las demás pantallas.
   def self.noirWindow(w)
@@ -1505,11 +1506,19 @@ module REM_UI
     w.baseColor=WHITE
     w.shadowColor=INK
   end
+
+  # Triángulo relleno de 6x11 apuntando a la izquierda (dir=-1) o a la derecha (dir=1).
+  def self.arrow(bmp,x,cy,dir,c)
+    for dy in -5..5
+      w=6-dy.abs
+      bmp.fill_rect(dir<0 ? x+(6-w) : x,cy+dy,w,1,c)
+    end
+  end
 end
 
 class PokemonBag_Scene
   remove_const(:ITEMSVISIBLE) if const_defined?(:ITEMSVISIBLE)
-  ITEMSVISIBLE=8
+  ITEMSVISIBLE=7
 
   def pbStartScene(bag)
     if !$remBattleFontSaved
@@ -1517,6 +1526,7 @@ class PokemonBag_Scene
       @remFontOwner=true
       MessageConfig.pbSetSystemFontName(pbNarrowFontName)
     end
+    $remBagFooter=true
     @viewport=Viewport.new(0,0,Graphics.width,Graphics.height)
     @viewport.z=99999
     @bag=bag
@@ -1525,13 +1535,12 @@ class PokemonBag_Scene
     lastitem=@bag.getChoice(lastpocket)
     @sprites["background"]=IconSprite.new(0,0,@viewport)
     @sprites["background"].setBitmap("Graphics/Pictures/bagNoir")
+    @sprites["bag"]=IconSprite.new(39,78,@viewport)
     @sprites["remhead"]=BitmapSprite.new(Graphics.width,Graphics.height,@viewport)
     @sprites["remprev"]=BitmapSprite.new(Graphics.width,Graphics.height,@viewport)
-    @sprites["icon"]=ItemIconSprite.new(115,105,-1,@viewport)
-    @sprites["icon"].zoom_x=1.5
-    @sprites["icon"].zoom_y=1.5
+    @sprites["icon"]=ItemIconSprite.new(44,336,-1,@viewport)   # icono nativo (1x) en su pedestal
     @sprites["icon"].z=2
-    @sprites["itemwindow"]=Window_PokemonBag.new(@bag,lastpocket,224,44,288,32+ITEMSVISIBLE*38)
+    @sprites["itemwindow"]=Window_PokemonBag.new(@bag,lastpocket,198,-1,314,32+ITEMSVISIBLE*38)
     @sprites["itemwindow"].viewport=@viewport
     @sprites["itemwindow"].rowHeight=38
     @sprites["itemwindow"].pocket=lastpocket
@@ -1554,6 +1563,7 @@ class PokemonBag_Scene
   alias rem_bag_pbEndScene pbEndScene
   def pbEndScene
     rem_bag_pbEndScene
+    $remBagFooter=false
     if @remFontOwner
       MessageConfig.pbSetSystemFontName($remBattleFontSaved)
       $remBattleFontSaved=nil
@@ -1567,23 +1577,33 @@ class PokemonBag_Scene
     @sprites["itemwindow"].refresh
   end
 
-  # Nombre del bolsillo + pestañas (la activa con borde platino y subrayado).
+  # Título del bolsillo, mochila del bolsillo activo e indicador de 8 puntos con flechas.
   def remDrawHeader
     bmp=@sprites["remhead"].bitmap
     bmp.clear
     pocket=@bag.lastpocket
-    REM_UI.texts(bmp,[[PokemonBag.pocketNames()[pocket],18,12,0,REM_UI::WHITE,28,200]])
-    for p in 1..PokemonBag.numPockets
-      x=236+34*(p-1)
-      on=(p==pocket)
-      REM_UI.slotBox(bmp,x,8,32,24,on ? Color.new(42,48,66) : Color.new(20,22,29),on ? REM_UI::SILVER : Color.new(70,80,106),1)
-      label=REM_UI::BAG_ABBR[p-1] || PokemonBag.pocketNames()[p][0,4].upcase
-      REM_UI.ctext(bmp,label,x+16,20,on ? REM_UI::WHITE : Color.new(140,150,170),16,30)
-      bmp.fill_rect(x+4,34,24,2,REM_UI::SILVER) if on
+    REM_UI.texts(bmp,[[:c,PokemonBag.pocketNames()[pocket],103,28,2,REM_UI::WHITE,28,176]])
+    f=sprintf("Graphics/Pictures/bag#{pocket}f")
+    if $Trainer.isFemale? && pbResolveBitmap(f)
+      @sprites["bag"].setBitmap(f)
+    else
+      @sprites["bag"].setBitmap(sprintf("Graphics/Pictures/bag#{pocket}"))
     end
+    n=PokemonBag.numPockets
+    x0=103-(n-1)*8
+    for p in 1..n
+      cx=x0+(p-1)*16
+      if p==pocket
+        REM_UI.slotBox(bmp,cx-5,258-5,10,10,Color.new(226,244,255),REM_UI::SILVER,1)
+      else
+        REM_UI.slotBox(bmp,cx-3,258-3,6,6,Color.new(54,60,78),Color.new(54,60,78),1)
+      end
+    end
+    REM_UI.arrow(bmp,x0-26,258,-1,REM_UI::LABEL)
+    REM_UI.arrow(bmp,x0+(n-1)*16+20,258,1,REM_UI::LABEL)
   end
 
-  # Vista previa del objeto seleccionado: icono, nombre, datos de MT/cantidad y descripción completa.
+  # Pie: icono del objeto + descripción completa (y datos del movimiento en el bolsillo de MT/MO).
   def remRefreshItem
     itemwindow=@sprites["itemwindow"]
     item=itemwindow.item
@@ -1591,38 +1611,39 @@ class PokemonBag_Scene
     bmp=@sprites["remprev"].bitmap
     bmp.clear
     if item==0
-      REM_UI.texts(bmp,[[:c,_INTL("Cerrar la mochila"),115,170,2,REM_UI::WHITE,26,190]])
-      desc=_INTL("Cerrar la mochila.")
+      desc=_INTL("Guarda la mochila y vuelve al juego.")
     else
-      REM_UI.texts(bmp,[[:c,PokemonMartAdapter.new.getDisplayName(item),115,170,2,REM_UI::WHITE,26,190]])
       desc=pbGetMessage(MessageTypes::ItemDescriptions,item)
-      if pbIsMachine?(item)
-        move=$ItemData[item][ITEMMACHINE]
-        md=PBMoveData.new(move)
-        types=AnimatedBitmap.new(_INTL("Graphics/Pictures/types"))
-        bmp.blt(22,190,types.bitmap,Rect.new(0,md.type*28,64,28))
-        types.dispose
-        icons=AnimatedBitmap.new("Graphics/Pictures/category")
-        bmp.blt(88,190,icons.bitmap,Rect.new(0,md.category*28,64,28))
-        icons.dispose
-        pw=(md.category==2 || md.basedamage<=0) ? "-" : (md.basedamage==1 ? "???" : sprintf("%d",md.basedamage))
-        ac=(md.accuracy==0) ? "-" : sprintf("%d%%",md.accuracy)
-        REM_UI.texts(bmp,[[:c,_INTL("Pot {1}",pw),156,196,0,REM_UI::WHITE,17,52],
-                          [:c,_INTL("Prec {1}",ac),156,212,0,REM_UI::LABEL,17,52]])
-      elsif !pbIsImportantItem?(item)
-        REM_UI.texts(bmp,[[:c,_INTL("En la mochila: x{1}",@bag.pbQuantity(item)),115,203,2,REM_UI::LABEL,22,186]])
-      end
+    end
+    tm=(item!=0 && pbIsMachine?(item))
+    if tm
+      move=$ItemData[item][ITEMMACHINE]
+      md=PBMoveData.new(move)
+      types=AnimatedBitmap.new(_INTL("Graphics/Pictures/types"))
+      bmp.stretch_blt(Rect.new(84,303,56,24),types.bitmap,Rect.new(0,md.type*28,64,28))
+      types.dispose
+      icons=AnimatedBitmap.new("Graphics/Pictures/category")
+      bmp.stretch_blt(Rect.new(144,303,56,24),icons.bitmap,Rect.new(0,md.category*28,64,28))
+      icons.dispose
+      pw=(md.category==2 || md.basedamage<=0) ? "-" : (md.basedamage==1 ? "???" : sprintf("%d",md.basedamage))
+      ac=(md.accuracy==0) ? "-" : sprintf("%d%%",md.accuracy)
+      REM_UI.texts(bmp,[[:c,_INTL("Potencia {1}",pw),212,315,0,REM_UI::WHITE,22,130],
+                        [:c,_INTL("Precisión {1}",ac),356,315,0,REM_UI::WHITE,22,130]])
     end
     pbSetNarrowFont(bmp)
-    bmp.font.size=20
-    lines=REM_UI.wrap(bmp,desc,196)
-    if lines.length>6
-      lines=lines[0,6]
-      lines[5]=lines[5]+"..."
+    size=tm ? 20 : 22
+    bmp.font.size=size
+    maxlines=tm ? 2 : 3
+    lines=REM_UI.wrap(bmp,desc,404)
+    if lines.length>maxlines
+      lines=lines[0,maxlines]
+      lines[maxlines-1]=lines[maxlines-1]+"..."
     end
+    pitch=tm ? 21 : 24
+    cy0=tm ? 349-(lines.length-1)*pitch/2.0 : 336-(lines.length-1)*pitch/2.0
     list=[]
     for i in 0...lines.length
-      list.push([lines[i],18,244+i*21,0,REM_UI::WHITE,20])
+      list.push([:c,lines[i],84,(cy0+i*pitch).round,0,REM_UI::WHITE,size,404])
     end
     REM_UI.texts(bmp,list)
   end
@@ -1638,30 +1659,33 @@ class Window_PokemonBag
     x=rect.x; y=rect.y+2; w=rect.width; h=@row_height-4
     sel=(self.index==index)
     sorting=(index==@sortIndex)
-    border=sorting ? Color.new(245,165,36) : (sel ? Color.new(226,244,255) : Color.new(38,43,56))
-    REM_UI.slotBox(self.contents,x,y,w,h,sel ? Color.new(34,40,54) : Color.new(24,27,36),border,(sel || sorting) ? 2 : 1)
+    border=sorting ? Color.new(245,165,36) : (sel ? Color.new(214,219,228) : Color.new(38,43,56))
+    REM_UI.slotBox(self.contents,x,y,w,h,sel ? Color.new(30,34,45) : Color.new(24,27,36),border,(sel || sorting) ? 2 : 1)
+    close=(index==pocket.length)
+    item=close ? 0 : pocket[index][0]
+    bmp=(pbBitmap(pbItemIconFile(item)) rescue nil)
+    self.contents.stretch_blt(Rect.new(x+10,y+5,24,24),bmp,Rect.new(0,0,48,48)) if bmp
     pbSetNarrowFont(self.contents)
     self.contents.font.size=24
-    if index==pocket.length
-      pbDrawShadowText(self.contents,x,y,w,h,_INTL("CERRAR LA MOCHILA"),REM_UI::DIM,REM_UI::INK,2)
+    if close
+      pbDrawShadowText(self.contents,x+44,y,w-54,h,_INTL("Cerrar la mochila"),REM_UI::WHITE,REM_UI::BAG_SHADOW)
       return
     end
-    item=pocket[index][0]
-    file=pbItemIconFile(item)
-    bmp=(pbBitmap(file) rescue nil)
-    self.contents.stretch_blt(Rect.new(x+8,y+5,24,24),bmp,Rect.new(0,0,48,48)) if bmp
     important=pbIsImportantItem?(item)
-    maxw=w-44-(important ? 10 : 58)
+    qty=important ? "" : _ISPRINTF("x{1: 2d}",pocket[index][1])
+    qw=qty=="" ? 0 : self.contents.text_size(qty).width
+    reg=(@bag.registeredItem==item) ? 50 : 0
+    maxw=w-44-14-qw-(qw>0 ? 8 : 0)-reg
     name=@adapter.getDisplayName(item)
     REM_UI.fit(self.contents,name,maxw,24)
-    pbDrawShadowText(self.contents,x+40,y,maxw,h,name,REM_UI::WHITE,REM_UI::INK)
-    if !important
+    pbDrawShadowText(self.contents,x+44,y,maxw,h,name,REM_UI::WHITE,REM_UI::BAG_SHADOW)
+    if qty!=""
       pbSetNarrowFont(self.contents)
       self.contents.font.size=24
-      pbDrawShadowText(self.contents,x,y,w-10,h,_ISPRINTF("x{1: 2d}",pocket[index][1]),REM_UI::LABEL,REM_UI::INK,1)
+      pbDrawShadowText(self.contents,x,y,w-14,h,qty,REM_UI::WHITE,REM_UI::BAG_SHADOW,1)
     end
-    if @bag.registeredItem==item
-      pbDrawImagePositions(self.contents,[["Graphics/Pictures/bagReg",x+w-(important ? 52 : 104),y+5,0,0,-1,-1]])
+    if reg>0
+      pbDrawImagePositions(self.contents,[["Graphics/Pictures/bagReg",x+w-14-qw-(qw>0 ? 8 : 0)-46,y+5,0,0,-1,-1]])
     end
   end
 end

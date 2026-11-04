@@ -151,11 +151,11 @@ def pbPocketNames; return ["",
    _INTL("Objetos"),
    _INTL("Medicinas"),
    _INTL("Poké Balls"),
-   _INTL("MTs / MOs"),
+   _INTL("MT y MO"),
    _INTL("Bayas"),
    _INTL("Cartas"),
-   _INTL("Obj. Batallas"),
-   _INTL("Obj. Claves")
+   _INTL("Combate"),
+   _INTL("Objetos Clave")
 ]; end
 MAXPOCKETSIZE  = [0,-1,-1,-1,-1,-1,-1,-1,-1]
 BAGMAXPERSLOT  = 99

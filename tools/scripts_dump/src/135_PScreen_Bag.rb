@@ -1096,8 +1096,10 @@ module UIHelper
         numwindow.text=_ISPRINTF("x{1:03d}",curnumber)
         numwindow.resizeToFit(numwindow.text,480)
         pbBottomRight(numwindow) # Move number window to the bottom right
+        numwindow.y-=REM_UI::BAG_FOOT if $remBagFooter   # REM_UI: sobre el pie de la mochila
         helpwindow.resizeHeightToFit(helpwindow.text,480-numwindow.width)
         pbBottomLeft(helpwindow) # Move help window to the bottom left
+        helpwindow.y-=REM_UI::BAG_FOOT if $remBagFooter
         loop do
           Graphics.update
           Input.update
@@ -1235,6 +1237,10 @@ module UIHelper
       pbBottomRight(cmdwindow)
       helpwindow.resizeHeightToFit(helpwindow.text,480-cmdwindow.width)
       pbBottomLeft(helpwindow)
+      if $remBagFooter   # REM_UI: los menús se abren sobre el pie de la mochila
+        cmdwindow.y-=REM_UI::BAG_FOOT
+        helpwindow.y-=REM_UI::BAG_FOOT
+      end
       loop do
         Graphics.update
         Input.update
