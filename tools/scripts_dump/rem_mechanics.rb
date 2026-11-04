@@ -296,26 +296,27 @@ REM_PIA_STARTERS=[
   [:CHESPIN,:GRASS],[:FENNEKIN,:FIRE],[:FROAKIE,:WATER]
 ]
 # Matriz de objetivos por inicial (todos cuentan a la vez):
-#  [sym, [especies a derrotar x5], [especies a evolucionar x1], tipo a derrotar x10, tipo a capturar x3]
+#  sym=>[[UNA especie/línea a derrotar x5], [UN Pokémon base a evolucionar x1], tipo a derrotar x10, tipo a capturar x3]
+#  La línea del objetivo 1 nunca comparte tipo con el objetivo 3 ni con el propio inicial (cero solapes).
 REM_PIA_QUESTS={
-  :BULBASAUR=>[[:PIDGEY,:PIDGEOTTO],[:ODDISH],:PSYCHIC,:POISON],
-  :CHARMANDER=>[[:GEODUDE,:GRAVELER],[:GROWLITHE],:ROCK,:DRAGON],
-  :SQUIRTLE=>[[:MAGNEMITE,:MAGNETON],[:HORSEA],:ELECTRIC,:ICE],
-  :CHIKORITA=>[[:ZUBAT,:GOLBAT],[:ROSELIA,:BUDEW],:POISON,:FAIRY],
-  :CYNDAQUIL=>[[:DIGLETT,:DUGTRIO],[:SLUGMA],:WATER,:GROUND],
-  :TOTODILE=>[[:ODDISH,:GLOOM],[:CARVANHA],:GRASS,:BUG],
-  :TREECKO=>[[:SCYTHER,:BEEDRILL],[:NINCADA],:ICE,:FLYING],
-  :TORCHIC=>[[:WINGULL,:PELIPPER],[:MACHOP],:FLYING,:FIGHTING],
-  :MUDKIP=>[[:LOTAD,:LOMBRE],[:WOOPER],:BUG,:ROCK],
-  :TURTWIG=>[[:SWINUB,:PILOSWINE],[:PHANPY],:FIRE,:GRASS],
-  :CHIMCHAR=>[[:ABRA,:KADABRA],[:MANKEY],:GROUND,:FIRE],
-  :PIPLUP=>[[:SHINX,:LUXIO],[:ARON],:FIGHTING,:STEEL],
-  :SNIVY=>[[:VENIPEDE,:WHIRLIPEDE],[:EKANS],:STEEL,:NORMAL],
-  :TEPIG=>[[:ROGGENROLA,:BOLDORE],[:HOUNDOUR],:DRAGON,:ELECTRIC],
-  :OSHAWOTT=>[[:FOONGUS,:AMOONGUSS],[:PAWNIARD],:NORMAL,:WATER],
-  :CHESPIN=>[[:MURKROW,:STARAVIA],[:PINECO],:FAIRY,:GHOST],
-  :FENNEKIN=>[[:GASTLY,:HAUNTER],[:VULPIX],:GHOST,:PSYCHIC],
-  :FROAKIE=>[[:SHROOMISH,:BRELOOM],[:ZORUA],:DARK,:DARK]
+  :BULBASAUR=>[[:PIDGEY],[:ODDISH],:PSYCHIC,:POISON],
+  :CHARMANDER=>[[:KRABBY],[:GROWLITHE],:ROCK,:DRAGON],
+  :SQUIRTLE=>[[:BELLSPROUT],[:HORSEA],:ELECTRIC,:ICE],
+  :CHIKORITA=>[[:SPEAROW],[:ROSELIA],:POISON,:FAIRY],
+  :CYNDAQUIL=>[[:DIGLETT],[:SLUGMA],:WATER,:GROUND],
+  :TOTODILE=>[[:VOLTORB],[:CARVANHA],:GRASS,:BUG],
+  :TREECKO=>[[:SCYTHER],[:NINCADA],:ICE,:FLYING],
+  :TORCHIC=>[[:PSYDUCK],[:MACHOP],:FLYING,:FIGHTING],
+  :MUDKIP=>[[:ODDISH],[:WOOPER],:BUG,:ROCK],
+  :TURTWIG=>[[:HOOTHOOT],[:PHANPY],:FIRE,:GRASS],
+  :CHIMCHAR=>[[:ABRA],[:MANKEY],:GROUND,:FIRE],
+  :PIPLUP=>[[:SHINX],[:ARON],:FIGHTING,:STEEL],
+  :SNIVY=>[[:VENIPEDE],[:EKANS],:STEEL,:NORMAL],
+  :TEPIG=>[[:ROGGENROLA],[:HOUNDOUR],:DRAGON,:ELECTRIC],
+  :OSHAWOTT=>[[:FOONGUS],[:PAWNIARD],:NORMAL,:WATER],
+  :CHESPIN=>[[:MURKROW],[:PINECO],:FAIRY,:GHOST],
+  :FENNEKIN=>[[:SPINARAK],[:VULPIX],:GHOST,:PSYCHIC],
+  :FROAKIE=>[[:SHROOMISH],[:ZORUA],:DARK,:DARK]
 }
 REM_PIA_GOALS=[5,1,10,3]
 
@@ -532,5 +533,27 @@ class PokemonEvolutionScene
       pbRemRefreshFollower          # el acompañante cambia de gráfico al instante
     end
     return ret
+  end
+end
+
+
+# Vigilante del acompañante: si cambia la especie del líder (evolución por cualquier vía), refresca su gráfico.
+class Game_Map
+  alias rem_orig_update_follow update
+  def update
+    rem_orig_update_follow
+    @remFollowTick=(@remFollowTick || 0)+1
+    if @remFollowTick>=20
+      @remFollowTick=0
+      begin
+        lead=$Trainer ? $Trainer.party[0] : nil
+        key=lead ? [lead.species,lead.isShiny?,lead.isEgg?] : nil
+        if key!=@remFollowKey
+          @remFollowKey=key
+          pbRemRefreshFollower
+        end
+      rescue
+      end
+    end
   end
 end
