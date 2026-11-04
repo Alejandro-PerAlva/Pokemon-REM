@@ -2568,6 +2568,10 @@ class PokemonMenu_Scene
     @sprites["cards"]=BitmapSprite.new(240,Graphics.height,@viewport)
     @sprites["cards"].x=Graphics.width-240
     @sprites["cards"].visible=false
+    @sprites["vial"]=BitmapSprite.new(190,44,@viewport)
+    @sprites["vial"].x=10
+    @sprites["vial"].y=10
+    @sprites["vial"].visible=false
     @sprites["infowindow"]=Window_UnformattedTextPokemon.newWithSize("",0,0,32,32,@viewport)
     @sprites["infowindow"].visible=false
     @sprites["helpwindow"]=Window_UnformattedTextPokemon.newWithSize("",0,0,32,32,@viewport)
@@ -2579,12 +2583,14 @@ class PokemonMenu_Scene
   end
 
   def pbHideMenu
+    @sprites["vial"].visible=false
     @sprites["cards"].visible=false
     @sprites["infowindow"].visible=false
     @sprites["helpwindow"].visible=false
   end
 
   def pbShowMenu
+    remDrawVial
     @sprites["cards"].visible=true
     @sprites["infowindow"].visible=@infostate
     @sprites["helpwindow"].visible=@helpstate
@@ -2644,17 +2650,70 @@ class PokemonMenu_Scene
     REM_UI.vArrow(bmp,cx,y-MENU_GAP+3,1,REM_UI::SILVER) if last<n
   end
 
+  # ---- Pokévial: cajita informativa (arriba a la izquierda) solo si lo tienes ----
+  def remHasVial?
+    return false if pbInSafari? || pbInBugContest?
+    return false if !hasConst?(PBItems,:POKEVIAL)
+    return $PokemonBag && $PokemonBag.pbQuantity(getConst(PBItems,:POKEVIAL))>0
+  rescue
+    return false
+  end
+
+  def remDrawVial
+    spr=@sprites["vial"]
+    if !remHasVial?
+      spr.visible=false
+      return
+    end
+    bmp=spr.bitmap
+    bmp.clear
+    cur=pbRemVialCharges; mx=pbRemVialMax
+    empty=(cur<=0)
+    white=empty ? Color.new(150,158,176) : REM_UI::WHITE
+    pbSetSystemFont(bmp)
+    bmp.font.size=20
+    cw=bmp.text_size(sprintf("%d/%d",cur,mx)).width
+    nw=bmp.text_size(_INTL("Pokévial")).width
+    bmp.font.size=17
+    hint=empty ? _INTL("Vacío") : _INTL("Z: usar")
+    hw=bmp.text_size(hint).width
+    w=[46+[nw+10+cw,hw].max+10,100].max
+    REM_UI.slotBox(bmp,0,0,w,44,Color.new(20,22,29),REM_UI::SILVER,1)
+    REM_UI.slotBox(bmp,6,6,32,32,Color.new(15,17,23),Color.new(38,43,56),1)
+    file=pbItemIconFile(getConst(PBItems,:POKEVIAL))
+    if file && pbResolveBitmap(file)
+      ico=AnimatedBitmap.new(file)
+      bmp.stretch_blt(Rect.new(8,8,28,28),ico.bitmap,Rect.new(0,0,ico.bitmap.width,ico.bitmap.height))
+      ico.dispose
+    end
+    bmp.font.size=20
+    pbDrawShadowText(bmp,46,2,nw+4,22,_INTL("Pokévial"),white,Color.new(40,44,55))
+    pbDrawShadowText(bmp,w-10-cw-2,2,cw+4,22,sprintf("%d/%d",cur,mx),empty ? white : Color.new(74,200,255),Color.new(40,44,55))
+    bmp.font.size=17
+    pbDrawShadowText(bmp,46,22,hw+4,18,hint,Color.new(122,130,148),Color.new(30,33,42))
+    spr.visible=true
+  end
+
+  def remUseVial
+    @sprites["vial"].visible=false
+    ItemHandlers.triggerUseFromBag(getConst(PBItems,:POKEVIAL))
+    remDrawVial
+  end
+
   def pbShowCommands(commands)
     ret=-1
     n=commands.length
     index=[[$PokemonTemp.menuLastChoice,n-1].min,0].max
     @sprites["cards"].visible=true
     remDrawCards(commands,index)
+    remDrawVial
     loop do
       Graphics.update
       Input.update
       pbUpdateSceneMap
-      if Input.trigger?(Input::UP)
+      if Input.trigger?(Input::A) && remHasVial?
+        remUseVial
+      elsif Input.trigger?(Input::UP)
         index=(index+n-1)%n
         pbPlayCursorSE()
         remDrawCards(commands,index)
