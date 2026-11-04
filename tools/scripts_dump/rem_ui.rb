@@ -3103,3 +3103,389 @@ module REM_UI
     sprite.y=(cy-(bb[1]+bb[3]/2.0)*z).round
   end
 end
+
+
+#===============================================================================
+# REM_Intro — Nueva partida en Map001 ("Intro"): intro de debug y intro de historia.
+#   Evento "Intro"          -> pbRemStoryIntro   (si no es $DEBUG)
+#   Evento "Inicio rápido"  -> pbRemDebugIntro   (si $DEBUG)
+# Arte (placeholders, se sustituyen por el mismo nombre/tamaño; ver tools/ui/gen_intro_placeholders.py):
+#   Pictures/intro_map_oniria 512x384 · intro_letter 320x240 (alfa) · intro_select_bg 512x384
+#   Pictures/intro_trainer_m / intro_trainer_f 160x320 (alfa)
+# Sintaxis compatible con Ruby 1.8 (RGSS1).
+#===============================================================================
+module REM_Intro
+  SILVER=Color.new(214,219,228)
+  OBSIDIAN=Color.new(20,22,29)
+  CASA_PLAYER="Casa Player"
+  CASA_PLAYER_FALLBACK=3          # id real (Data/MapInfos): Casa Player = 3
+  CASA_X=33
+  CASA_Y=7
+  CASA_DIR=2
+  LETTER_Y=18                     # carta centrada en la mitad superior
+
+  SLIDES=[
+    "Desde tiempos inmemoriales, la región de Oniria ha prosperado bajo un delicado equilibrio.\nUna tierra célebre por la paz de sus pueblos y la calma que envuelve los sueños de su gente.",
+    "Las antiguas crónicas hablan de dos fuerzas ancestrales ocultas tras el velo de la noche...\nDos voluntades silenciosas cuyo pulso mantiene en armonía el mundo de la vigilia y el del descanso.",
+    "Sin embargo, algo está cambiando en silencio.\nLas noches se vuelven inquietas, los sueños se desvanecen y aquella estabilidad que parecía eterna comienza a resquebrajarse.",
+    "En medio de esta calma incierta, el destino está a punto de trazar un nuevo camino...\nY tu propia historia está a punto de comenzar."
+  ]
+
+  # id del mapa por nombre (Data/MapInfos); si no se encuentra, usa el id de respaldo
+  def self.mapId(name,fallback=CASA_PLAYER_FALLBACK)
+    begin
+      infos=pbLoadRxData("Data/MapInfos")
+      infos.each{|k,v| return k if v && v.name==name}
+    rescue
+    end
+    return fallback
+  end
+
+  def self.blank(w,h,color=nil)
+    bmp=Bitmap.new(w,h)
+    bmp.fill_rect(0,0,w,h,color) if color
+    return bmp
+  end
+
+  def self.fadeSprite(sprite,from,to,frames)
+    for i in 1..frames
+      sprite.opacity=from+(to-from)*i/frames
+      Graphics.update
+      Input.update
+    end
+    sprite.opacity=to
+  end
+
+  def self.fadeViewport(vp,from,to,frames)
+    for i in 1..frames
+      vp.color=Color.new(0,0,0,from+(to-from)*i/frames)
+      Graphics.update
+      Input.update
+    end
+    vp.color=Color.new(0,0,0,to)
+  end
+
+  def self.confirmPressed?
+    return true if Input.trigger?(Input::C)
+    return true if defined?($mouse) && $mouse && $mouse.leftClick?
+    return false
+  end
+
+  # Triángulo parpadeante "continuar" (dibujado, sin depender de glifos de la fuente)
+  def self.hintBitmap
+    bmp=blank(21,12)
+    for r in 0...11
+      bmp.fill_rect(r,r,21-2*r,1,SILVER)
+    end
+    return bmp
+  end
+
+  def self.waitForC(hint,minframes=20)
+    t=0
+    loop do
+      Graphics.update
+      Input.update
+      t+=1
+      hint.opacity=(t>=minframes) ? (150+105*Math.sin(t/7.0)).to_i : 0
+      break if t>=minframes && confirmPressed?
+    end
+    hint.opacity=0
+    pbPlayDecisionSE
+  end
+
+  # Texto centrado (horizontal y vertical) con salto automático de línea; \n = nuevo párrafo
+  def self.drawSlide(sprite,text)
+    bmp=sprite.bitmap
+    bmp.clear
+    pbSetSystemFont(bmp)
+    bmp.font.size=27
+    maxw=Graphics.width-96
+    lh=30
+    lines=[]
+    text.split("\n").each_with_index{|para,pi|
+      lines.push(nil) if pi>0
+      cur=""
+      para.split(" ").each{|w|
+        t=(cur=="") ? w : cur+" "+w
+        if cur!="" && bmp.text_size(t).width>maxw
+          lines.push(cur); cur=w
+        else
+          cur=t
+        end
+      }
+      lines.push(cur) if cur!=""
+    }
+    total=0
+    lines.each{|l| total+=(l ? lh : lh/2)}
+    y=(Graphics.height-total)/2-6
+    lines.each{|l|
+      if l
+        pbDrawShadowText(bmp,24,y,Graphics.width-48,lh,l,Color.new(255,255,255),Color.new(8,9,13),1)
+        y+=lh
+      else
+        y+=lh/2
+      end
+    }
+  end
+
+  def self.fillEllipse(bmp,cx,cy,rx,ry,color)
+    for dy in -ry..ry
+      dx=(rx*Math.sqrt(1.0-(dy*dy*1.0)/(ry*ry))).to_i
+      bmp.fill_rect(cx-dx,cy+dy,dx*2+1,1,color)
+    end
+  end
+
+  # Prepara el traslado de jugador (equivalente al comando de evento 201 con fundido) y congela la pantalla
+  def self.transfer(map_id,x,y,dir=2)
+    return if $game_temp.player_transferring
+    $game_temp.player_transferring=true
+    $game_temp.player_new_map_id=map_id
+    $game_temp.player_new_x=x
+    $game_temp.player_new_y=y
+    $game_temp.player_new_direction=dir
+    Graphics.freeze
+    $game_temp.transition_processing=true
+    $game_temp.transition_name=""
+  end
+
+  #-----------------------------------------------------------------------------
+  # Selector de entrenador. Devuelve 0 (chico) o 1 (chica); ya confirmado.
+  #-----------------------------------------------------------------------------
+  def self.selectTrainer
+    vp=Viewport.new(0,0,Graphics.width,Graphics.height)
+    vp.z=99010
+    vp.color=Color.new(0,0,0,255)
+    sp={}; own=[]
+    cw=184; ch=322; cy=32
+    cx=[52,276]
+    trainer=["intro_trainer_m","intro_trainer_f"]
+    begin
+      sp["bg"]=Sprite.new(vp)
+      sp["bg"].bitmap=pbBitmap("Graphics/Pictures/intro_select_bg")
+      for i in 0...2
+        sp["card#{i}"]=Sprite.new(vp)
+        sp["card#{i}"].bitmap=blank(cw,ch); own.push(sp["card#{i}"].bitmap)
+        sp["card#{i}"].x=cx[i]; sp["card#{i}"].y=cy; sp["card#{i}"].z=2
+        sp["tr#{i}"]=Sprite.new(vp)
+        sp["tr#{i}"].bitmap=pbBitmap("Graphics/Pictures/"+trainer[i])
+        sp["tr#{i}"].x=cx[i]+(cw-160)/2; sp["tr#{i}"].y=cy; sp["tr#{i}"].z=3
+      end
+      sp["ui"]=Sprite.new(vp)
+      sp["ui"].bitmap=blank(Graphics.width,Graphics.height); own.push(sp["ui"].bitmap)
+      sp["ui"].z=5
+      idx=0; dirty=true; t=0
+      loop do
+        if dirty
+          dirty=false
+          for i in 0...2
+            bmp=sp["card#{i}"].bitmap
+            bmp.clear
+            on=(i==idx)
+            bmp.fill_rect(0,0,cw,ch,Color.new(24,27,36,on ? 235 : 200))
+            edge=on ? SILVER : Color.new(58,64,82)
+            bmp.fill_rect(0,0,cw,2,edge); bmp.fill_rect(0,ch-2,cw,2,edge)
+            bmp.fill_rect(0,0,2,ch,edge); bmp.fill_rect(cw-2,0,2,ch,edge)
+            if on   # segundo filete interior
+              bmp.fill_rect(5,5,cw-10,1,Color.new(120,128,146)); bmp.fill_rect(5,ch-6,cw-10,1,Color.new(120,128,146))
+            end
+            fillEllipse(bmp,cw/2,ch-14,66,9,Color.new(on ? 74 : 40,on ? 82 : 45,on ? 104 : 58))
+            fillEllipse(bmp,cw/2,ch-17,56,6,Color.new(on ? 120 : 56,on ? 128 : 62,on ? 146 : 76))
+            sp["tr#{i}"].tone=(on ? Tone.new(0,0,0,0) : Tone.new(-90,-90,-90,60))
+            sp["tr#{i}"].opacity=(on ? 255 : 160)
+          end
+          ui=sp["ui"].bitmap
+          ui.clear
+          ui.fill_rect(0,0,Graphics.width,30,Color.new(27,30,40))
+          ui.fill_rect(0,30,Graphics.width,1,Color.new(70,78,98))
+          ui.fill_rect(0,356,Graphics.width,28,Color.new(27,30,40))
+          ui.fill_rect(0,356,Graphics.width,1,Color.new(70,78,98))
+          pbSetSystemFont(ui)
+          ui.font.size=24
+          pbDrawShadowText(ui,0,0,Graphics.width,30,_INTL("FICHA DE INSCRIPCIÓN  ·  IZQ / DER: elegir  ·  C: confirmar"),SILVER,Color.new(8,9,13),1)
+          names=[_INTL("CHICO"),_INTL("CHICA")]
+          for i in 0...2
+            col=(i==idx) ? SILVER : Color.new(110,118,136)
+            pbDrawShadowText(ui,cx[i],356,cw,28,names[i],col,Color.new(8,9,13),1)
+          end
+        end
+        Graphics.update
+        Input.update
+        t+=1
+        if t<=20
+          vp.color=Color.new(0,0,0,255-255*t/20)
+        end
+        if Input.trigger?(Input::LEFT) && idx!=0
+          idx=0; dirty=true; pbPlayCursorSE
+        elsif Input.trigger?(Input::RIGHT) && idx!=1
+          idx=1; dirty=true; pbPlayCursorSE
+        end
+        for i in 0...2   # el seleccionado "flota" suavemente
+          sp["tr#{i}"].y=cy-((i==idx) ? (1.5+1.5*Math.sin(t/9.0)).to_i : 0)
+        end
+        if t>20 && Input.trigger?(Input::C)
+          pbPlayDecisionSE
+          msg=(idx==0) ? _INTL("¿Así que eres un chico?") : _INTL("¿Así que eres una chica?")
+          break if Kernel.pbConfirmMessage(msg)
+        end
+      end
+      pbChangePlayer(idx)
+      vp.color=Color.new(0,0,0,0)
+      fadeViewport(vp,0,255,20)
+      return idx
+    ensure
+      sp.each_value{|s| s.dispose if s && !s.disposed?}
+      own.each{|b| b.dispose if b && !b.disposed?}
+      vp.dispose
+    end
+  end
+
+  #-----------------------------------------------------------------------------
+  # Intro de historia completa
+  #-----------------------------------------------------------------------------
+  def self.story
+    w=Graphics.width; h=Graphics.height
+    vp=Viewport.new(0,0,w,h); vp.z=99000
+    sp={}; own=[]
+    transferred=false
+    begin
+      sp["black"]=Sprite.new(vp); sp["black"].z=0
+      sp["black"].bitmap=blank(w,h,Color.new(0,0,0)); own.push(sp["black"].bitmap)
+      sp["map"]=Sprite.new(vp); sp["map"].z=1; sp["map"].opacity=0
+      sp["map"].bitmap=pbBitmap("Graphics/Pictures/intro_map_oniria")
+      sp["dim"]=Sprite.new(vp); sp["dim"].z=2; sp["dim"].opacity=0
+      sp["dim"].bitmap=blank(w,h,Color.new(15,17,23,140)); own.push(sp["dim"].bitmap)
+      sp["letter"]=Sprite.new(vp); sp["letter"].z=3; sp["letter"].opacity=0
+      sp["letter"].bitmap=pbBitmap("Graphics/Pictures/intro_letter")
+      sp["letter"].x=(w-sp["letter"].bitmap.width)/2; sp["letter"].y=LETTER_Y
+      sp["text"]=Sprite.new(vp); sp["text"].z=4; sp["text"].opacity=0
+      sp["text"].bitmap=blank(w,h); own.push(sp["text"].bitmap)
+      sp["hint"]=Sprite.new(vp); sp["hint"].z=5; sp["hint"].opacity=0
+      sp["hint"].bitmap=hintBitmap; own.push(sp["hint"].bitmap)
+      sp["hint"].x=(w-21)/2; sp["hint"].y=h-34
+      Graphics.update
+
+      # --- Fase 1: prólogo a pantalla completa (sin caja de diálogo) ---
+      for i in 1..40
+        sp["map"].opacity=255*i/40
+        sp["dim"].opacity=255*i/40
+        Graphics.update
+        Input.update
+      end
+      SLIDES.each{|txt|
+        drawSlide(sp["text"],txt)
+        fadeSprite(sp["text"],0,255,20)
+        waitForC(sp["hint"])
+        fadeSprite(sp["text"],255,0,20)
+      }
+
+      # --- Fase 2: carta y bienvenida ---
+      sp["letter"].y=LETTER_Y+14
+      for i in 1..24
+        sp["letter"].opacity=255*i/24
+        sp["letter"].y=LETTER_Y+14-14*i/24
+        Graphics.update
+        Input.update
+      end
+      Kernel.pbMessage(_INTL("Has recibido una carta oficial sellada por el Laboratorio Pokémon de Oniria."))
+      Kernel.pbMessage(_INTL("«¡Hola! Te doy la más cordial bienvenida al fascinante mundo de los Pokémon.»"))
+      Kernel.pbMessage(_INTL("«Si esta carta ha llegado a tus manos, significa que tu solicitud para participar en nuestro programa de investigación de campo ha sido aprobada.»"))
+      Kernel.pbMessage(_INTL("«Como sabrás, en Oniria convivimos estrechamente con los Pokémon: estudiamos sus hábitats, combatimos codo con codo y aprendemos de los lazos que nos unen a ellos.»"))
+      Kernel.pbMessage(_INTL("«Antes de que acudas al laboratorio para formalizar tu registro y recibir a tu primer compañero, necesito que completes los datos de tu ficha de inscripción.»"))
+
+      # --- Fase 3: selector de entrenador ---
+      sp["letter"].visible=false
+      fadeViewport(vp,0,255,20)
+      selectTrainer      # (fundido a negro al terminar; el selector ya aplicó pbChangePlayer)
+      sp["letter"].visible=true
+
+      # --- Fase 4: vuelta a la carta, nombre y cita ---
+      fadeViewport(vp,255,0,20)
+      Kernel.pbMessage(_INTL("«Perfecto. Por último, indica tu nombre en la casilla superior de la ficha.»"))
+      loop do
+        pbTrainerName
+        break if Kernel.pbConfirmMessage(_INTL("«¿Tu nombre es \\PN?»"))
+        Kernel.pbMessage(_INTL("«Entiendo. Indícalo de nuevo, por favor.»"))
+      end
+      Kernel.pbMessage(_INTL("«¡Excelente! Tu ficha de inscripción ha quedado registrada oficialmente.»"))
+      Kernel.pbMessage(_INTL("«Todo está listo. Te espero hoy mismo en el Laboratorio Pokémon para finalizar el procedimiento y comenzar tu aventura.»"))
+      Kernel.pbMessage(_INTL("«¡Nos vemos muy pronto en el laboratorio!»"))
+
+      # --- Fase 5: traslado a la habitación ---
+      fadeViewport(vp,0,255,30)
+      transfer(mapId(CASA_PLAYER),CASA_X,CASA_Y,CASA_DIR)   # congela el negro; después se libera todo
+      transferred=true
+    ensure
+      sp.each_value{|s| s.dispose if s && !s.disposed?}
+      own.each{|b| b.dispose if b && !b.disposed?}
+      vp.dispose
+    end
+    return transferred
+  end
+
+  # Fundido a negro y traslado (para la intro de debug)
+  def self.fadeTransfer(map_id,x,y,dir=2)
+    vp=Viewport.new(0,0,Graphics.width,Graphics.height); vp.z=99000
+    begin
+      fadeViewport(vp,0,255,20)
+      transfer(map_id,x,y,dir)
+    ensure
+      vp.dispose
+    end
+  end
+end
+
+#===============================================================================
+# Evento "Intro" (Map001): intro de historia
+#===============================================================================
+def pbRemStoryIntro
+  REM_Intro.story
+end
+
+#===============================================================================
+# Evento "Inicio rápido" (Map001): estado de pruebas 100% desbloqueado
+#===============================================================================
+# Destinos de aparición: [etiqueta, mapa (id o nombre), x, y, dirección]. Añade o edita filas aquí.
+REM_DEBUG_DESTINATIONS=[
+  ["Ubicación por defecto del evento",  3,             33, 7, 2],   # = traslado original del evento (Casa Player)
+  ["Casa Player - Habitación",          "Casa Player", 33, 7, 2]
+]
+
+def pbRemDebugIntro
+  # 1) Identidad (chico, "Rojo")
+  pbChangePlayer(0) if !$PokemonGlobal.playerID || $PokemonGlobal.playerID<0
+  pbChangePlayer($PokemonGlobal.playerID)
+  pbTrainerName("Rojo")
+  # 2) Equipo aleatorio de 6 (nivel 15-30, especies 1..721)
+  $Trainer.party=[]
+  tries=0
+  while $Trainer.party.length<6 && tries<60
+    tries+=1
+    begin
+      pbAddPokemonSilent(1+rand(721),15+rand(16))
+    rescue
+    end
+  end
+  # 3) Sistemas sin desbloquear por historia
+  $Trainer.pokegear=true
+  $Trainer.pokedex=true
+  $PokemonGlobal.runningShoes=true
+  $PokemonGlobal.pokedexUnlocked.each_index{|i| $PokemonGlobal.pokedexUnlocked[i]=true}
+  # 4) Mochila completa (99 de cada objeto válido; los objetos clave, 1)
+  stored=0
+  for i in 1..PBItems.maxValue
+    nm=nil
+    begin; nm=PBItems.getName(i); rescue; nm=nil; end
+    next if !nm || nm=="" || nm=="????"
+    qty=99
+    begin; qty=1 if pbIsImportantItem?(i); rescue; end
+    ok=($PokemonBag.pbStoreItem(i,qty) rescue false)
+    stored+=1 if ok
+  end
+  # 5) Destino
+  labels=REM_DEBUG_DESTINATIONS.map{|d| d[0]}
+  c=Kernel.pbMessage(_INTL("Modo debug: {1} objetos en la mochila. ¿Dónde quieres aparecer?",stored),labels,0)
+  c=0 if c<0 || c>=REM_DEBUG_DESTINATIONS.length
+  d=REM_DEBUG_DESTINATIONS[c]
+  mp=d[1].is_a?(String) ? REM_Intro.mapId(d[1]) : d[1]
+  REM_Intro.fadeTransfer(mp,d[2],d[3],d[4]||2)
+end

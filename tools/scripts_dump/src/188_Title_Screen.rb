@@ -107,30 +107,30 @@ class GenCustomStyle
     @viewport.z = 99999
     @sprites = {}
     
+    # Oniria Noir: fondo, logo y barra "PULSA START" (arte final: Graphics/Titles/intro_bg.png e intro_logo.png)
     @sprites["background"] = Sprite.new(@viewport)
-    @sprites["background"].bitmap = pbBitmap("Graphics/Titles/custom_background")
-    @sprites["background"].ox = @sprites["background"].bitmap.width/2
-    @sprites["background"].oy = @sprites["background"].bitmap.height/2
-    @sprites["background"].x = @viewport.rect.width/2
-    @sprites["background"].y = @viewport.rect.height/2
-    
-    @sprites["plane"] = ScrollingSprite.new(@viewport)
-    @sprites["plane"].setBitmap("Graphics/Titles/custom_plane")
-    @sprites["plane"].speed = 1
-    
+    @sprites["background"].bitmap = pbBitmap("Graphics/Titles/intro_bg")
+
     @sprites["logo"] = Sprite.new(@viewport)
-    @sprites["logo"].bitmap = pbBitmap("Graphics/Titles/pokelogo")
+    @sprites["logo"].bitmap = pbBitmap("Graphics/Titles/intro_logo")
     @sprites["logo"].z = 100
     @sprites["logo"].ox = @sprites["logo"].bitmap.width/2
     @sprites["logo"].oy = @sprites["logo"].bitmap.height/2
     @sprites["logo"].x = @viewport.rect.width/2
     @sprites["logo"].y = @viewport.rect.height/2 - 40
-    
+
+    bw = Graphics.width; bh = 34
+    bar = Bitmap.new(bw,bh)
+    bar.fill_rect(0,0,bw,bh,Color.new(14,16,22,200))
+    bar.fill_rect(0,0,bw,1,Color.new(214,219,228,150))
+    bar.fill_rect(0,bh-1,bw,1,Color.new(214,219,228,150))
+    pbSetSystemFont(bar)
+    bar.font.size = 26
+    pbDrawShadowText(bar,0,1,bw,bh,_INTL("PULSA START O C PARA CONTINUAR"),Color.new(214,219,228),Color.new(20,22,29),1)
     @sprites["start"] = Sprite.new(@viewport)
-    @sprites["start"].bitmap = pbBitmap("Graphics/Titles/pokestart")
+    @sprites["start"].bitmap = bar
     @sprites["start"].z = 110
-    @sprites["start"].ox = @sprites["start"].bitmap.width/2
-    @sprites["start"].x = @viewport.rect.width/2
+    @sprites["start"].x = 0
     @sprites["start"].y = @viewport.rect.height - 60
     @sprites["start"].opacity = 0
     
@@ -153,7 +153,6 @@ class GenCustomStyle
     @opacity = -10 if @sprites["start"].opacity >= 255
     @opacity = 10 if @sprites["start"].opacity <= 0
     
-    @sprites["plane"].update
     for i in 0...@particles
       @sprites["p#{i}"].update if @sprites["p#{i}"]
     end

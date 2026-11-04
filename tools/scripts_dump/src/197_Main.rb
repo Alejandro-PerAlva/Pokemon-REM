@@ -17,15 +17,10 @@ end
 
 
 def pbCallTitle #:nodoc:
-  if $DEBUG
-    return Scene_DebugIntro.new
-  else
-    # El primer parámetro es un arreglo de imágenes de la carpeta Titles
-    # sin la extensión del archivo, que se mostrarán antes de la pantalla
-    # de títulos real. El segundo parámetro es el nombre del archivo de
-    # la pantalla de títulos real, también en Titles sin extensión.
-    return Scene_Intro.new(['intro1'], 'splash') 
-  end
+  # Siempre pasa por la pantalla de título (Scene_Intro, ver Title_Screen):
+  # Arranque -> Título -> Pulsar C/Start -> Continuar / Nueva partida (PokemonLoad).
+  # (Antes, con $DEBUG, se usaba Scene_DebugIntro y se saltaba el título.)
+  return Scene_Intro.new(['intro1'], 'splash')
 end
 
 def mainFunction #:nodoc:
