@@ -278,13 +278,13 @@ class PokemonBag_Scene
             numpockets=PokemonBag.numPockets
             if Input.trigger?(Input::LEFT)
               if !sorting
-                itemwindow.pocket=(itemwindow.pocket==1) ? numpockets : itemwindow.pocket-1
+                itemwindow.pocket=REM_UI.bagStep(itemwindow.pocket,-1)   # REM_UI: bolsillos visibles
                 @bag.lastpocket=itemwindow.pocket
                 pbRefresh
               end
             elsif Input.trigger?(Input::RIGHT)
               if !sorting
-                itemwindow.pocket=(itemwindow.pocket==numpockets) ? 1 : itemwindow.pocket+1
+                itemwindow.pocket=REM_UI.bagStep(itemwindow.pocket,1)
                 @bag.lastpocket=itemwindow.pocket
                 pbRefresh
               end

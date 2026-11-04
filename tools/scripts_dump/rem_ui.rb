@@ -1495,6 +1495,23 @@ end
 #===============================================================================
 module REM_UI
   BAG_FOOT=80
+  BAG_HIDDEN=[6,7]   # Cartas y Combate: eliminados (sus objetos pasan a Objetos)
+
+  # Bolsillos navegables: en combate solo Medicinas, Poké Balls y Bayas.
+  def self.bagPockets
+    return [2,3,5] if $game_temp && $game_temp.in_battle
+    ret=[]
+    for i in 1..PokemonBag.numPockets
+      ret.push(i) if !BAG_HIDDEN.include?(i)
+    end
+    return ret
+  end
+
+  def self.bagStep(cur,dir)
+    list=bagPockets
+    i=list.index(cur) || 0
+    return list[(i+dir)%list.length]
+  end
   BAG_SHADOW=Color.new(40,44,55)
 
   # Ventana auxiliar (cantidad, Sí/No, menú de acciones) con el marco obsidiana de las demás pantallas.
@@ -1531,6 +1548,10 @@ class PokemonBag_Scene
     @viewport.z=99999
     @bag=bag
     @sprites={}
+    @remOldPocket=@bag.lastpocket
+    if !REM_UI.bagPockets.include?(@bag.lastpocket)
+      @bag.lastpocket=REM_UI.bagPockets[0]
+    end
     lastpocket=@bag.lastpocket
     lastitem=@bag.getChoice(lastpocket)
     @sprites["background"]=IconSprite.new(0,0,@viewport)
@@ -1564,6 +1585,7 @@ class PokemonBag_Scene
   def pbEndScene
     rem_bag_pbEndScene
     $remBagFooter=false
+    @bag.lastpocket=@remOldPocket if @remOldPocket && $game_temp && $game_temp.in_battle && !REM_UI.bagPockets.include?(@remOldPocket)
     if @remFontOwner
       MessageConfig.pbSetSystemFontName($remBattleFontSaved)
       $remBattleFontSaved=nil
@@ -1589,11 +1611,12 @@ class PokemonBag_Scene
     else
       @sprites["bag"].setBitmap(sprintf("Graphics/Pictures/bag#{pocket}"))
     end
-    n=PokemonBag.numPockets
+    list=REM_UI.bagPockets
+    n=list.length
     x0=103-(n-1)*8
-    for p in 1..n
-      cx=x0+(p-1)*16
-      if p==pocket
+    for k in 0...n
+      cx=x0+k*16
+      if list[k]==pocket
         REM_UI.slotBox(bmp,cx-5,258-5,10,10,Color.new(226,244,255),REM_UI::SILVER,1)
       else
         REM_UI.slotBox(bmp,cx-3,258-3,6,6,Color.new(54,60,78),Color.new(54,60,78),1)
@@ -1687,5 +1710,37 @@ class Window_PokemonBag
     if reg>0
       pbDrawImagePositions(self.contents,[["Graphics/Pictures/bagReg",x+w-14-qw-(qw>0 ? 8 : 0)-46,y+5,0,0,-1,-1]])
     end
+  end
+end
+
+# Cartas (6) y Combate (7) ya no existen: sus objetos se guardan en Objetos (1), también los de partidas ya guardadas.
+alias rem_orig_pbGetPocket pbGetPocket
+def pbGetPocket(item)
+  p=rem_orig_pbGetPocket(item)
+  return 1 if REM_UI::BAG_HIDDEN.include?(p)
+  return p
+end
+
+class PokemonBag
+  alias rem_orig_pockets pockets
+  def pockets
+    ps=rem_orig_pockets
+    for k in REM_UI::BAG_HIDDEN
+      next if !ps[k] || ps[k].length==0
+      for entry in ps[k]
+        next if !entry
+        found=nil
+        for e in ps[1]
+          found=e if e && e[0]==entry[0]
+        end
+        if found
+          found[1]=[found[1]+entry[1],BAGMAXPERSLOT].min
+        else
+          ps[1].push(entry)
+        end
+      end
+      ps[k].clear
+    end
+    return ps
   end
 end
