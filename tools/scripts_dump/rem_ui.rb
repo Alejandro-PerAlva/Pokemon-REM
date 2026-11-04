@@ -2495,3 +2495,162 @@ class PokemonQuests_Scene
     REM_UI.texts(bmp,[[:c,_INTL("Recompensa: {1}",q[:reward_text]),366,352,2,REM_UI::SILVER,18,240]])
   end
 end
+
+#===============================================================================
+# MENÚ DE PAUSA — columna flotante de tarjetas Oniria Noir (sin ventana contenedora)
+#===============================================================================
+module REM_UI
+  # Iconos de 2x escala (rejilla de hasta 12x12). '#' = trazo.
+  MENU_ICONS={
+    :dex=>[".##########.","#..........#","#.########.#","#.#......#.#","#.#.####.#.#","#.#......#.#","#.########.#","#..........#","#..##...#..#","#..##...#..#","#..........#",".##########."],
+    :ball=>["...######...",".##......##.",".#........#.","#..........#","############","#....##....#","#...#..#...#","#....##....#","#..........#",".#........#.",".##......##.","...######..."],
+    :bag=>["....####....","...#....#...","..########..",".#........#.",".#........#.",".#.######.#.",".#.#....#.#.",".#.######.#.",".#........#.",".#........#.",".##########."],
+    :quest=>["...####...",".########.",".#......#.",".#.####.#.",".#......#.",".#.####.#.",".#......#.",".#.###..#.",".#......#.",".########."],
+    :card=>["############","#..........#","#.###.####.#","#.#.#......#","#.###.####.#","#..#.......#","#.###.####.#","#..........#","############"],
+    :save=>["############","#.#######..#","#.#######..#","#.#######..#","#..........#","#..........#","#.########.#","#.#......#.#","#.#......#.#","#.#......#.#","############"],
+    :gear=>["....####....",".##.####.##.",".##########.","..###..###..","####....####","####....####","..###..###..",".##########.",".##.####.##.","....####...."],
+    :bug=>["..#......#..","...#....#...","....####....","...######...","###.####.###","...######...","###.####.###","...######...","....####...."],
+    :exit=>[".########.",".#......#.",".#......#.",".#......#.",".#....#.#.",".#......#.",".#......#.",".#......#.","##########"],
+    :phone=>[".######.",".#....#.",".#.##.#.",".#.##.#.",".#....#.",".#.##.#.",".######."]
+  }
+  MENU_ON=Color.new(230,234,241)
+  MENU_OFF=Color.new(80,86,102)
+
+  def self.menuIconKey(label)
+    case label
+    when _INTL("Pokédex") then return :dex
+    when _INTL("Pokémon") then return :ball
+    when _INTL("Mochila") then return :bag
+    when _INTL("Pokégear") then return :phone
+    when _INTL("Misiones") then return :quest
+    when _INTL("Guardar") then return :save
+    when _INTL("Opciones") then return :gear
+    when _INTL("Depurador") then return :bug
+    when _INTL("Salir"),_INTL("Salir del Juego") then return :exit
+    end
+    return :card      # el nombre del jugador = ficha de entrenador
+  end
+
+  def self.drawMenuIcon(bmp,key,cx,cy,c)
+    g=MENU_ICONS[key] || MENU_ICONS[:card]
+    w=g[0].length*2; h=g.length*2
+    ox=cx-w/2; oy=cy-h/2
+    for r in 0...g.length
+      for k in 0...g[r].length
+        bmp.fill_rect(ox+k*2,oy+r*2,2,2,c) if g[r][k,1]=="#"
+      end
+    end
+  end
+
+  def self.vArrow(bmp,cx,cy,dir,c)   # triángulo de 11x6 arriba (dir=-1) o abajo (dir=1)
+    for dx in -5..5
+      h=6-dx.abs
+      bmp.fill_rect(cx+dx,dir<0 ? cy+(6-h) : cy,1,h,c)
+    end
+  end
+end
+
+class PokemonMenu_Scene
+  MENU_VISIBLE=6
+  MENU_GAP=6
+  MENU_H=36
+  MENU_HSEL=44
+
+  def pbStartScene
+    @viewport=Viewport.new(0,0,Graphics.width,Graphics.height)
+    @viewport.z=99999
+    @sprites={}
+    @sprites["cards"]=BitmapSprite.new(204,Graphics.height,@viewport)
+    @sprites["cards"].x=Graphics.width-204
+    @sprites["cards"].visible=false
+    @sprites["infowindow"]=Window_UnformattedTextPokemon.newWithSize("",0,0,32,32,@viewport)
+    @sprites["infowindow"].visible=false
+    @sprites["helpwindow"]=Window_UnformattedTextPokemon.newWithSize("",0,0,32,32,@viewport)
+    @sprites["helpwindow"].visible=false
+    @infostate=false
+    @helpstate=false
+    @menuTop=0
+    pbSEPlay("menu")
+  end
+
+  def pbHideMenu
+    @sprites["cards"].visible=false
+    @sprites["infowindow"].visible=false
+    @sprites["helpwindow"].visible=false
+  end
+
+  def pbShowMenu
+    @sprites["cards"].visible=true
+    @sprites["infowindow"].visible=@infostate
+    @sprites["helpwindow"].visible=@helpstate
+  end
+
+  def remDrawCards(commands,index)
+    bmp=@sprites["cards"].bitmap
+    bmp.clear
+    n=commands.length
+    @menuTop=[[@menuTop,index].min,index-MENU_VISIBLE+1].max
+    @menuTop=0 if @menuTop<0
+    last=[@menuTop+MENU_VISIBLE,n].min
+    total=0
+    for i in @menuTop...last
+      total+=(i==index ? MENU_HSEL : MENU_H)
+    end
+    total+=MENU_GAP*(last-@menuTop-1)
+    y=(Graphics.height-total)/2
+    top=y
+    for i in @menuTop...last
+      sel=(i==index)
+      h=sel ? MENU_HSEL : MENU_H
+      x=sel ? 4 : 20
+      w=sel ? 188 : 172
+      key=REM_UI.menuIconKey(commands[i])
+      if sel
+        REM_UI.slotBox(bmp,x,y,w,h,Color.new(28,32,43),REM_UI::SILVER,2)
+        bmp.fill_rect(x+3,y+3,w-6,1,Color.new(40,46,61)); bmp.fill_rect(x+3,y+h-4,w-6,1,Color.new(40,46,61))
+        bmp.fill_rect(x+3,y+3,1,h-6,Color.new(40,46,61)); bmp.fill_rect(x+w-4,y+3,1,h-6,Color.new(40,46,61))
+        REM_UI.slotBox(bmp,x+10,y+(h-28)/2,28,28,Color.new(15,17,23),Color.new(46,52,66),1)
+        REM_UI.drawMenuIcon(bmp,key,x+24,y+h/2,REM_UI::MENU_ON)
+        REM_UI.texts(bmp,[[:c,commands[i],x+60,y+h/2,0,REM_UI::WHITE,22,w-70]])
+      else
+        REM_UI.slotBox(bmp,x,y,w,h,Color.new(14,16,21,217),Color.new(46,52,66),1)
+        REM_UI.slotBox(bmp,x+10,y+(h-28)/2,28,28,Color.new(10,12,16,200),Color.new(30,34,44),1)
+        REM_UI.drawMenuIcon(bmp,key,x+24,y+h/2,REM_UI::MENU_OFF)
+        REM_UI.texts(bmp,[[:c,commands[i],x+44,y+h/2,0,Color.new(122,130,148),20,w-54]])
+      end
+      y+=h+MENU_GAP
+    end
+    REM_UI.vArrow(bmp,102,top-12,-1,REM_UI::SILVER) if @menuTop>0
+    REM_UI.vArrow(bmp,102,y-MENU_GAP+6,1,REM_UI::SILVER) if last<n
+  end
+
+  def pbShowCommands(commands)
+    ret=-1
+    n=commands.length
+    index=[[$PokemonTemp.menuLastChoice,n-1].min,0].max
+    @sprites["cards"].visible=true
+    remDrawCards(commands,index)
+    loop do
+      Graphics.update
+      Input.update
+      pbUpdateSceneMap
+      if Input.trigger?(Input::UP)
+        index=(index+n-1)%n
+        pbPlayCursorSE()
+        remDrawCards(commands,index)
+      elsif Input.trigger?(Input::DOWN)
+        index=(index+1)%n
+        pbPlayCursorSE()
+        remDrawCards(commands,index)
+      elsif Input.trigger?(Input::B)
+        ret=-1
+        break
+      elsif Input.trigger?(Input::C)
+        ret=index
+        $PokemonTemp.menuLastChoice=ret
+        break
+      end
+    end
+    return ret
+  end
+end
