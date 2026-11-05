@@ -125,6 +125,8 @@ COMMON = [  # simbolo, nombre, dinero, genero, nota (tipos / bioma)
     ("PUNKGUY", "Gamberro", 24, "Male", "Siniestro/Veneno/Fuego; ciudad"),
     ("COLLECTOR", "Coleccionista", 64, "Male", "Dragon/Roca/Acero; ruinas, final del juego"),
 ]
+ORDER = ['YOUNGSTER', 'LASS', 'SCHOOLBOY', 'SCHOOLGIRL', 'CAMPER', 'PICNICKER', 'BUGCATCHER', 'BIRDKEEPER', 'POKEFAN_M', 'POKEFAN_F', 'GARDENER', 'RANCHER', 'PARASOLLADY', 'BREEDER_M', 'BREEDER_F', 'BACKPACKER_M', 'BACKPACKER_F', 'HIKER', 'SWIMMER_M', 'SWIMMER_F', 'FISHERMAN', 'TUBER_M', 'TUBER_F', 'BEAUTY', 'SAILOR', 'SCUBADIVER', 'SCIENTIST', 'ENGINEER', 'WORKER', 'SUPERNERD', 'GUITARIST', 'ROCKER', 'DOCTOR', 'NURSE', 'RUINMANIAC', 'POKEMANIAC', 'AROMALADY', 'POKEMONRANGER', 'SKIER_M', 'SKIER_F', 'JUGGLER', 'MAID', 'PSYCHIC_M', 'PSYCHIC_F', 'MEDIUM', 'HEXMANIAC', 'KIMONOGIRL', 'SAGE', 'PAINTER', 'WAITER', 'WAITRESS', 'BLACKBELT', 'CRUSHGIRL', 'TAMER', 'BURGLAR', 'GAMBLER', 'KINDLER', 'PUNKGUY', 'ROUGHNECK', 'GENTLEMAN', 'LADY', 'COOLTRAINER_M', 'COOLTRAINER_F', 'VETERAN_M', 'VETERAN_F', 'DRAGONTAMER', 'COLLECTOR', 'SISANDBRO', 'TWINS', 'YOUNGCOUPLE', 'COOLCOUPLE', 'CRUSHKIN']
+COMMON.sort(key=lambda t: ORDER.index(t[0]))  # orden de progresion: Acto I -> final; dobles al cierre
 assert len(FIXED) == 24 and len(COMMON) == 72 and len(COMMON) % 8 == 0
 assert len({t[0] for t in FIXED + COMMON}) == 96
 
@@ -209,7 +211,7 @@ def main():
     made, kept = [], []
     for i, sym, name, money, gen, audio, note, kind in ALL:
         p = os.path.join(chars, "trainer%03d.png" % i)
-        if os.path.exists(p): kept.append(p); continue
+        if os.path.exists(p) and not (kind == 'common' and '--regen-commons' in sys.argv): kept.append(p); continue
         make_png(p, i, sym, name); made.append(p)
     audio_made = []
     for k, (bgm, me) in enumerate([A_RIVAL, A_LEADER, A_ELITE, A_CHAMP, A_RECRUIT, A_GENERAL, A_BOSS]):
