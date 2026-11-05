@@ -1,0 +1,77 @@
+﻿# Pokémon REM — Flujo de trabajo por ubicación (análisis y ajustes). Documento de INSTRUCCIONES para Claude: no lo lee el juego ni el Codex.
+# Uso: el diseñador abre un chat nuevo, referencia este archivo (PBS/rem_workflow_ubicaciones.txt) y dice «análisis de <ubicación>». Claude ejecuta el FLUJO de abajo sin pedir más contexto.
+# Formato: texto plano en español (UTF-8 BOM, CRLF), secciones [NOMBRE] y comentarios con «#». Se puede ampliar a mano: el diseñador manda sobre este documento.
+
+[PROPOSITO]
+Los PBS rem_*.txt son la BIBLIA del juego (nombres, historia, personajes, objetos, tiendas, variables, progresión). Las guías de docs/ (md/PDF) son solo histórico y pueden estar desfasadas: ante un conflicto manda el PBS.
+El diseñador analiza el juego ubicación por ubicación: Claude entrega un análisis; el diseñador propone cambios; Claude los aplica en TODOS los PBS afectados manteniendo la coherencia.
+
+[FLUJO]
+1. ANÁLISIS. El diseñador pide el análisis de una ubicación (clave LOC_KEY o nombre actual). Claude lo entrega con el formato de [FORMATO_ANALISIS], solo lectura: no modifica nada en esta fase.
+2. CAMBIOS. El diseñador responde con cambios y ajustes en lenguaje natural («este objeto no, ponlo en otra ubicación», «esta misión así», «añade X»). No tiene que justificarlos ni razonarlos.
+3. APLICACIÓN. Claude aplica los cambios con las reglas de [REGLAS_DE_CAMBIO], propaga a todos los archivos de [ARCHIVOS_Y_QUE_GUARDAN] y toma por sí mismo las decisiones lógicas necesarias (huecos, reubicaciones, sustituciones), siempre coherentes con la historia y la progresión.
+4. INFORME. Claude resume qué cambió, en qué archivos y qué decisiones tomó por su cuenta (para que el diseñador las revise); marca lo que quedó dudoso. Solo pregunta si algo bloquea de verdad.
+5. VERIFICACIÓN Y ENTREGA. Claude comprueba la coherencia ([CHECKLIST_DE_COHERENCIA]) y hace commit y push SOLO si el diseñador lo pide (o si ya lo pidió para esa sesión).
+
+[FORMATO_ANALISIS]
+# Mismo esquema para toda ubicación. Si un apartado no aplica, se indica «no aplica» (no se omite en silencio).
+1. Ficha: nombre actual, LOC_KEY, categoría, acto, orden de progresión (ProgressionOrder), mapa del juego (MapID/estado) y conexiones (ConnN/S/E/O).
+2. Escenas y eventos que debe tener, en orden cronológico (tomados de EventsSummary, CHAPTER_xx de rem_story y Chronology de rem_characters).
+3. Personajes presentes y su función (rem_characters), más entrenadores y NPC de ambientación previstos; clases de entrenador del Vol. 11 actualizadas a la lista de 96 clases.
+4. Objetos y regalos: objetos de rem_location_items.txt y KeyItemsUnlocked de rem_progression; quién los da, dónde y en qué momento.
+5. Tiendas y servicios (rem_shops: Poké Mart por medallas, Centro Pokémon, misiones de Pía).
+6. Salvajes y pesca (rem_encounters / encounters.txt) y topes de nivel (LevelCapDay/Night, variables 50 y 111).
+7. Variables e interruptores: macro iniciales (101-117), historia local (V121-V184), sidequest (V201-V240), interruptores de jefes, herramientas, bloqueos y únicos, con el valor esperado en cada hito.
+8. Misión local (sidequest): título, pasos y recompensa.
+9. Bloqueos y condiciones de acceso (qué lo abre y cuándo).
+10. Incoherencias detectadas (nombres antiguos, clases eliminadas, objetos duplicados, huecos, conflictos de variables) y qué falta por decidir.
+Tono: conciso, tablas o listas, sin proponer cambios (el diseñador decide); sí señala lo que no cuadra.
+
+[ARCHIVOS_Y_QUE_GUARDAN]
+rem_locations.txt          Ficha de cada ubicación: nombre, conexiones, EventsSummary, CharactersPresent, MapID, StoryVar/SidequestVar, Sidequest*.
+rem_progression.txt        68 pasos [STEP_NN]: objetivo, topes de nivel, KeyItemsUnlocked, KeyEvents, variables del hito.
+rem_story.txt              Novela: [CHAPTER_NN] por escena (texto, hitos).
+rem_characters.txt         [CHAR_*]: rol, ubicaciones, cronología y apariciones.
+rem_location_items.txt     Objetos por ubicación (ItemN = ID,cantidad,tipo,dónde,nota). Tipos: N = narrativo/clave, P = premio de Pía, B = recogible.
+rem_shops.txt              Poké Marts por medallas, tiendas únicas y [PIA_MISSIONS] (premios por capturas).
+rem_variables_switches.txt Mapa de Variables e Interruptores (rangos y nombres). Reservados: Variables 1-14 y 50; Interruptores 1-58, 72, 100-101, 135, 287, 368, 400.
+rem_encounters.txt         Tablas salvajes por ubicación (Vol. 10).
+rem_changelog.txt          Notas de diseño de especies/habilidades/movimientos/objetos (solo si cambia el uso de un objeto).
+metadata.txt, encounters.txt   PBS del juego (los lee el motor): NO se tocan salvo orden expresa.
+tools/rebalance/phase1/event_arch_data.py y event_arch.json   Arquitectura de eventos que dio origen a las variables: mantener alineados con rem_variables_switches si cambia un ID o nombre.
+tools/codex/location_keys.json, codex/location_keys.json, codex_bundle/model.json   Solo si cambia una LOC_KEY o un nombre de ubicación.
+
+[REGLAS_DE_CAMBIO]
+Mover un objeto:
+  - Si el diseñador quita un objeto de una ubicación, Claude le busca el hueco lógico en OTRA ubicación (misma función, misma etapa de la historia, sin romper topes de nivel ni la economía) y lo reubica; actualiza rem_location_items (ambas ubicaciones), KeyItemsUnlocked del STEP afectado, y el interruptor «Regalo_Unico_*» o «Tienda_Unica_*» del bloque 4 (se renombra y conserva su número si es posible).
+  - Si el diseñador pide un objeto que no existe en el reparto, Claude busca dónde estaría lógicamente, lo coloca, y si ese hueco ya está ocupado reorganiza (desplaza o sustituye el objeto menos esencial) y lo comunica.
+  - Un objeto no debe quedar duplicado ni huérfano: cada objeto clave tiene un único origen.
+Misiones (sidequests y misiones de Pía):
+  - Si cambia una misión, se reescriben SidequestTitle/Steps/Reward en rem_locations, la variable de rem_variables_switches (rango V201-V240) y el premio en rem_location_items/rem_shops si lo hubiera.
+  - Las misiones de Pía son capturas acumuladas: si se cambia un premio o un umbral, se reajusta [PIA_MISSIONS] y los ItemN de tipo P del laboratorio.
+Personajes:
+  - Si un personaje se añade, quita o cambia de ubicación, se actualizan CharactersPresent en rem_locations, Locations/Chronology en rem_characters, CharactersInScene en rem_story y, si afecta a la historia, el STEP.
+Variables e interruptores:
+  - No reutilizar reservados. Si falta un ID, usar los «Reservada_*» libres de cada bloque. Si cambia el significado de una variable, actualizar rem_variables_switches y event_arch_data.py/event_arch.json.
+Ubicación (nombre/clave):
+  - Si se renombra una ubicación, buscar en TODO el repo con palabra completa (cuidado con subcadenas: p. ej. PLAYA_SEPIOLITA contiene IOLITA) y actualizar mapas/BGM/tilesets solo si el diseñador lo pide (herramienta: tools/rename_locations_data.py).
+Entrenadores:
+  - Existen 96 clases (000-095, 3 dígitos fijos por el motor). Sin clases dobles. Los sprites son trainerXXX/trcharXXX/npcXXX en Graphics/Characters; el generador es tools/rebalance/build_trainertypes.py (no usar --regen-commons si ya hay arte final).
+
+[CHECKLIST_DE_COHERENCIA]
+- Cada objeto de rem_location_items aparece una sola vez y su STEP lo lista en KeyItemsUnlocked (si es clave).
+- Cada interruptor «Regalo_Unico/Tienda_Unica» de un objeto existe y tiene el nombre de su ubicación actual.
+- Los topes de nivel (V50, V111, LevelCapDay/Night) no se contradicen con salvajes ni jefes del paso.
+- No hay referencias a nombres antiguos (Cianita, Iolar, Iolita, Topacio, Ambarina, Turmalino) ni a clases eliminadas (dobles) fuera de DraftNames.
+- Los IDs de variables/interruptores citados existen en rem_variables_switches y no son reservados.
+- Los archivos conservan formato: UTF-8 con BOM, CRLF, claves «Clave = Valor».
+- Si algo no se puede arreglar sin decisión del diseñador, queda anotado en el informe.
+
+[NOTAS_IMPORTANTES]
+- Los PBS rem_* declaran «generado, no editar a mano», pero los generadores (tools/rebalance/phase1/build_*.py) están desfasados respecto a los nombres actuales: regenerarlos revertiría los cambios. Se editan los PBS directamente.
+- docs/ está en .gitignore y sus PDF no se pueden re-renderizar aquí: no se actualizan salvo petición.
+- No se toca Data/ (mapas, eventos compilados) salvo petición expresa; el diseñador recompila.
+- Roster: solo #001-#721; movimientos y habilidades hasta Gen 8 (+ Nieve/Congelación).
+
+[REGISTRO_DE_DECISIONES]
+# Se anota aquí, por fecha, cada ajuste de diseño aplicado (formato: AAAA-MM-DD | ubicación | cambio | archivos tocados).
