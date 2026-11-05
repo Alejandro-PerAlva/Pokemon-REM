@@ -535,35 +535,35 @@ EndSpeechLose="Man, I lost!"
 Name=VITA
 PokemonNos=136,150,162,169,172,194,198,202,211,213,223,240
 BeginSpeech=Here I come!
-Type=TWINS
+Type=SCHOOLGIRL
 EndSpeechWin="Yes, I won!"
 [077]
 EndSpeechLose="Man, I lost!"
 Name=OMECHA
 PokemonNos=141,152,153,154,160,165,167,169,174,193,197,210,214,216,231,241
 BeginSpeech=Here I come!
-Type=TWINS
+Type=SCHOOLGIRL
 EndSpeechWin="Yes, I won!"
 [078]
 EndSpeechLose="Man, I lost!"
 Name=UDONDRA
 PokemonNos=127,138,141,146,148,152,166,183,185,235,239
 BeginSpeech=Here I come!
-Type=TWINS
+Type=SCHOOLGIRL
 EndSpeechWin="Yes, I won!"
 [079]
 EndSpeechLose="Man, I lost!"
 Name=ICANKA
 PokemonNos=124,127,130,153,169,175,187,197,207,227
 BeginSpeech=Here I come!
-Type=TWINS
+Type=SCHOOLGIRL
 EndSpeechWin="Yes, I won!"
 [080]
 EndSpeechLose="Man, I lost!"
 Name=ANDRA
 PokemonNos=130,133,153,181,186,196,203,205,221,224,228,233,237
 BeginSpeech=Here I come!
-Type=TWINS
+Type=SCHOOLGIRL
 EndSpeechWin="Yes, I won!"
 [081]
 EndSpeechLose="Man, I lost!"
@@ -1270,14 +1270,14 @@ EndSpeechLose="Man, I lost!"
 Name=ARAY
 PokemonNos=246,254,256,257,261,270,286,294,302,304,305,310,315,321,325,330,342,359,362,367
 BeginSpeech=Here I come!
-Type=YOUNGCOUPLE
+Type=YOUNGSTER
 EndSpeechWin="Yes, I won!"
 [182]
 EndSpeechLose="Man, I lost!"
 Name=ANGIFS
 PokemonNos=260,263,264,276,281,298,306,309,311,325,329
 BeginSpeech=Here I come!
-Type=YOUNGCOUPLE
+Type=YOUNGSTER
 EndSpeechWin="Yes, I won!"
 [183]
 EndSpeechLose="Man, I lost!"

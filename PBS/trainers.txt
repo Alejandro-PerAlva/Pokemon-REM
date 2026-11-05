@@ -68,12 +68,6 @@ Crissy
 PLUSLE,17
 MINUN,17
 #-------------------
-COOLCOUPLE
-Alice & Bob
-2
-TURTWIG,19
-CHIMCHAR,19
-#-------------------
 SWIMMER_F
 Ariel
 2

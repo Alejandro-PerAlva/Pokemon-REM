@@ -74,7 +74,6 @@ COMMON = [  # simbolo, nombre, dinero, genero, nota (tipos / bioma)
     ("TUBER_F", "Playera", 4, "Female", "Agua; playa"),
     ("BLACKBELT", "Karateka", 32, "Male", "Lucha; calzada/montana"),
     ("CRUSHGIRL", "Luchadora", 24, "Female", "Lucha; calzada/montana"),
-    ("CRUSHKIN", "Dúo Fuerte", 48, "Mixed", "Lucha doble; calzada"),
     ("SCIENTIST", "Científico", 48, "Male", "Electrico/Acero/Veneno; industrial"),
     ("ENGINEER", "Ingeniero", 48, "Male", "Electrico/Acero; industrial"),
     ("WORKER", "Obrero", 32, "Male", "Acero/Tierra; central y minas"),
@@ -112,10 +111,6 @@ COMMON = [  # simbolo, nombre, dinero, genero, nota (tipos / bioma)
     ("SAGE", "Sabio", 48, "Male", "Psiquico/Fantasma; templo"),
     ("POKEMONRANGER", "Guardabosques", 60, "Male", "Planta/Bicho/Normal; bosque/reserva"),
     ("MAID", "Sirvienta", 32, "Female", "Fantasma/Normal; villas y ruinas"),
-    ("YOUNGCOUPLE", "Pareja Joven", 60, "Mixed", "Doble; ciudad/playa"),
-    ("COOLCOUPLE", "Pareja Guay", 72, "Mixed", "Doble; ciudad/playa"),
-    ("SISANDBRO", "Hermanos", 16, "Mixed", "Doble; pueblo/pradera"),
-    ("TWINS", "Gemelas", 24, "Mixed", "Doble; pradera/playa"),
     ("GARDENER", "Jardinero", 32, "Male", "Planta/Bicho; jardines y reserva"),
     ("RANCHER", "Ganadero", 32, "Male", "Normal/Tierra; granja/estepa"),
     ("WAITER", "Camarero", 32, "Male", "Normal/Hada; ciudad/pueblo"),
@@ -123,10 +118,15 @@ COMMON = [  # simbolo, nombre, dinero, genero, nota (tipos / bioma)
     ("PAINTER", "Pintor", 16, "Male", "Normal/Psiquico/Hada; ciudad/reserva"),
     ("ROUGHNECK", "Matón", 40, "Male", "Siniestro/Lucha; ciudad, calzada"),
     ("PUNKGUY", "Gamberro", 24, "Male", "Siniestro/Veneno/Fuego; ciudad"),
+    ("BUGMANIAC", "Bichómano", 48, "Male", "Bicho; bosque y ruinas, Acto II-III"),
+    ("CHEF", "Cocinero", 48, "Male", "Fuego/Normal; ciudad industrial"),
+    ("POLICEMAN", "Policía", 48, "Male", "Siniestro/Normal; ciudad, entorno Morfeo"),
+    ("NINJABOY", "Ninja", 32, "Male", "Veneno/Siniestro/Bicho; ruinas y cuevas"),
+    ("EXPERT", "Experto", 64, "Male", "Lucha/Psiquico; calzada, final del juego"),
     ("COLLECTOR", "Coleccionista", 64, "Male", "Dragon/Roca/Acero; ruinas, final del juego"),
 ]
-ORDER = ['YOUNGSTER', 'LASS', 'SCHOOLBOY', 'SCHOOLGIRL', 'CAMPER', 'PICNICKER', 'BUGCATCHER', 'BIRDKEEPER', 'POKEFAN_M', 'POKEFAN_F', 'GARDENER', 'RANCHER', 'PARASOLLADY', 'BREEDER_M', 'BREEDER_F', 'BACKPACKER_M', 'BACKPACKER_F', 'HIKER', 'SWIMMER_M', 'SWIMMER_F', 'FISHERMAN', 'TUBER_M', 'TUBER_F', 'BEAUTY', 'SAILOR', 'SCUBADIVER', 'SCIENTIST', 'ENGINEER', 'WORKER', 'SUPERNERD', 'GUITARIST', 'ROCKER', 'DOCTOR', 'NURSE', 'RUINMANIAC', 'POKEMANIAC', 'AROMALADY', 'POKEMONRANGER', 'SKIER_M', 'SKIER_F', 'JUGGLER', 'MAID', 'PSYCHIC_M', 'PSYCHIC_F', 'MEDIUM', 'HEXMANIAC', 'KIMONOGIRL', 'SAGE', 'PAINTER', 'WAITER', 'WAITRESS', 'BLACKBELT', 'CRUSHGIRL', 'TAMER', 'BURGLAR', 'GAMBLER', 'KINDLER', 'PUNKGUY', 'ROUGHNECK', 'GENTLEMAN', 'LADY', 'COOLTRAINER_M', 'COOLTRAINER_F', 'VETERAN_M', 'VETERAN_F', 'DRAGONTAMER', 'COLLECTOR', 'SISANDBRO', 'TWINS', 'YOUNGCOUPLE', 'COOLCOUPLE', 'CRUSHKIN']
-COMMON.sort(key=lambda t: ORDER.index(t[0]))  # orden de progresion: Acto I -> final; dobles al cierre
+ORDER = ['YOUNGSTER', 'LASS', 'SCHOOLBOY', 'SCHOOLGIRL', 'CAMPER', 'PICNICKER', 'BUGCATCHER', 'BIRDKEEPER', 'POKEFAN_M', 'POKEFAN_F', 'GARDENER', 'RANCHER', 'PARASOLLADY', 'BREEDER_M', 'BREEDER_F', 'BACKPACKER_M', 'BACKPACKER_F', 'HIKER', 'SWIMMER_M', 'SWIMMER_F', 'FISHERMAN', 'TUBER_M', 'TUBER_F', 'BEAUTY', 'SAILOR', 'SCUBADIVER', 'SCIENTIST', 'ENGINEER', 'WORKER', 'SUPERNERD', 'GUITARIST', 'ROCKER', 'DOCTOR', 'NURSE', 'RUINMANIAC', 'POKEMANIAC', 'AROMALADY', 'POKEMONRANGER', 'BUGMANIAC', 'SKIER_M', 'SKIER_F', 'JUGGLER', 'MAID', 'PSYCHIC_M', 'PSYCHIC_F', 'MEDIUM', 'HEXMANIAC', 'KIMONOGIRL', 'SAGE', 'PAINTER', 'WAITER', 'WAITRESS', 'CHEF', 'BLACKBELT', 'CRUSHGIRL', 'TAMER', 'BURGLAR', 'NINJABOY', 'GAMBLER', 'KINDLER', 'PUNKGUY', 'ROUGHNECK', 'POLICEMAN', 'GENTLEMAN', 'LADY', 'EXPERT', 'COOLTRAINER_M', 'COOLTRAINER_F', 'VETERAN_M', 'VETERAN_F', 'DRAGONTAMER', 'COLLECTOR']
+COMMON.sort(key=lambda t: ORDER.index(t[0]))  # orden de progresion: Acto I -> final; sin dobles
 assert len(FIXED) == 24 and len(COMMON) == 72 and len(COMMON) % 8 == 0
 assert len({t[0] for t in FIXED + COMMON}) == 96
 
@@ -193,6 +193,24 @@ def make_png(path, i, sym, name):
     d.text((S // 2, S - 14), "PLACEHOLDER · ONIRIA NOIR", font=font(8), fill=(110, 116, 140), anchor="mm")
     im.save(path)
 
+# --- Overworld placeholder: hoja 256x256 = 4x4 fotogramas de 64 px (abajo, izq, der, arriba) ---
+def make_char_png(path, label, color):
+    im = Image.new("RGBA", (256, 256), (0, 0, 0, 0))
+    d = ImageDraw.Draw(im)
+    f = font(11)
+    for row in range(4):          # direccion: 0 abajo, 1 izquierda, 2 derecha, 3 arriba
+        for c in range(4):        # 4 fotogramas de la animacion de paso
+            x, y = c * 64, row * 64
+            bob = 2 if c % 2 else 0
+            d.rounded_rectangle([x + 20, y + 30 - bob, x + 44, y + 54], 6, fill=(26, 30, 44, 255), outline=color + (255,), width=2)
+            d.ellipse([x + 22, y + 8 - bob, x + 42, y + 28 - bob], fill=(38, 44, 64, 255), outline=color + (255,), width=2)
+            cx, cy = x + 32, y + 18 - bob
+            tri = {0: [(cx - 4, cy), (cx + 4, cy), (cx, cy + 5)], 1: [(cx - 6, cy), (cx, cy - 4), (cx, cy + 4)],
+                   2: [(cx + 6, cy), (cx, cy - 4), (cx, cy + 4)], 3: [(cx - 4, cy + 3), (cx + 4, cy + 3), (cx, cy - 3)]}[row]
+            d.polygon(tri, fill=color + (255,))
+            d.text((x + 32, y + 42 - bob), label, font=f, fill=(238, 238, 244), anchor="mm")
+    im.save(path)
+
 # --- Audio placeholder (WAV 16-bit mono 22.05 kHz, tono muy bajo, bucle limpio) --
 def make_wav(path, freq, secs):
     rate = 22050
@@ -213,6 +231,18 @@ def main():
         p = os.path.join(chars, "trainer%03d.png" % i)
         if os.path.exists(p) and not (kind == 'common' and '--regen-commons' in sys.argv): kept.append(p); continue
         make_png(p, i, sym, name); made.append(p)
+    regen = "--regen-commons" in sys.argv
+    ch_made = []
+    for i, sym, name, money, gen, audio, note, kind in ALL:   # overworld del entrenador
+        p = os.path.join(chars, "trchar%03d.png" % i)
+        if os.path.exists(p) and not (kind == "common" and regen): continue
+        make_char_png(p, "%03d" % i, col(sym)); ch_made.append(p)
+    npc_made = []
+    for n in range(1, 33):                                    # 32 NPC sin nombre (3 digitos: el motor usa %03d)
+        p = os.path.join(chars, "npc%03d.png" % n)
+        if os.path.exists(p): continue
+        make_char_png(p, "N%02d" % n, (150, 160, 180)); npc_made.append(p)
+    print("trchar nuevos: %d | npc nuevos: %d" % (len(ch_made), len(npc_made)))
     audio_made = []
     for k, (bgm, me) in enumerate([A_RIVAL, A_LEADER, A_ELITE, A_CHAMP, A_RECRUIT, A_GENERAL, A_BOSS]):
         p = os.path.join(ROOT, "Audio", "BGM", bgm + ".wav")

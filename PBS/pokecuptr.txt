@@ -570,21 +570,21 @@ EndSpeechLose="Man, I lost!"
 Name=ATHONKA
 PokemonNos=128,134,137,149,158,160,163,168,171,174,179,189,207,210,220,239,241
 BeginSpeech=Here I come!
-Type=TWINS
+Type=SCHOOLGIRL
 EndSpeechWin="Yes, I won!"
 [082]
 EndSpeechLose="Man, I lost!"
 Name=ARILA
 PokemonNos=149,152,155,156,162,165,168,175,185,200,222,228,229,234,239
 BeginSpeech=Here I come!
-Type=TWINS
+Type=SCHOOLGIRL
 EndSpeechWin="Yes, I won!"
 [083]
 EndSpeechLose="Man, I lost!"
 Name=ANSULI
 PokemonNos=133,138,152,184,198,200,209,220,235,236,240
 BeginSpeech=Here I come!
-Type=TWINS
+Type=SCHOOLGIRL
 EndSpeechWin="Yes, I won!"
 [084]
 EndSpeechLose="Man, I lost!"
@@ -1102,7 +1102,7 @@ EndSpeechLose="Man, I lost!"
 Name=IRP
 PokemonNos=267,278,287,292,308,312,313,322,331,335,338,349,359
 BeginSpeech=Here I come!
-Type=SISANDBRO
+Type=SCHOOLBOY
 EndSpeechWin="Yes, I won!"
 [158]
 EndSpeechLose="Man, I lost!"
@@ -1319,35 +1319,35 @@ EndSpeechLose="Man, I lost!"
 Name=SEDIE
 PokemonNos=247,249,293,295,309,331,355,357,361,362
 BeginSpeech=Here I come!
-Type=YOUNGCOUPLE
+Type=YOUNGSTER
 EndSpeechWin="Yes, I won!"
 [189]
 EndSpeechLose="Man, I lost!"
 Name=KLUSTA
 PokemonNos=243,250,251,254,261,266,275,280,284,290,291,294,297,298,311,320,342,347,358,361
 BeginSpeech=Here I come!
-Type=YOUNGCOUPLE
+Type=YOUNGSTER
 EndSpeechWin="Yes, I won!"
 [190]
 EndSpeechLose="Man, I lost!"
 Name=AUCSE
 PokemonNos=245,248,256,264,275,286,289,305,311,312,317,323,345,346
 BeginSpeech=Here I come!
-Type=YOUNGCOUPLE
+Type=YOUNGSTER
 EndSpeechWin="Yes, I won!"
 [191]
 EndSpeechLose="Man, I lost!"
 Name=ALOO
 PokemonNos=256,286,308,328,347,359
 BeginSpeech=Here I come!
-Type=YOUNGCOUPLE
+Type=YOUNGSTER
 EndSpeechWin="Yes, I won!"
 [192]
 EndSpeechLose="Man, I lost!"
 Name=LULOO
 PokemonNos=257,259,260,262,272,286,306,308,313,321,323,329,342,348,358,359,361
 BeginSpeech=Here I come!
-Type=YOUNGCOUPLE
+Type=YOUNGSTER
 EndSpeechWin="Yes, I won!"
 [193]
 EndSpeechLose="Man, I lost!"
