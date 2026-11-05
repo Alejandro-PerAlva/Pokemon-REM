@@ -50,7 +50,7 @@
 22,MORFEO_SUBCAPTAIN,Subcapitana,100,Combate General Morfeo,,,Female,,
 # Lider del Equipo Morfeo: Eliseo
 23,MORFEO_LEADER,Líder Supremo,150,Combate Lider Morfeo,,,Male,,
-# --- Comunes 024-087 (audio vacío = música por defecto del mapa) ---
+# --- Comunes 024-095 (audio vacío = música por defecto del mapa) ---
 24,YOUNGSTER,Joven,16,,,,Male,,
 25,LASS,Chica,16,,,,Female,,
 26,SCHOOLBOY,Colegial,16,,,,Male,,
@@ -115,3 +115,11 @@
 85,COOLCOUPLE,Pareja Guay,72,,,,Mixed,,
 86,SISANDBRO,Hermanos,16,,,,Mixed,,
 87,TWINS,Gemelas,24,,,,Mixed,,
+88,GARDENER,Jardinero,32,,,,Male,,
+89,RANCHER,Ganadero,32,,,,Male,,
+90,WAITER,Camarero,32,,,,Male,,
+91,WAITRESS,Camarera,32,,,,Female,,
+92,PAINTER,Pintor,16,,,,Male,,
+93,ROUGHNECK,Matón,40,,,,Male,,
+94,PUNKGUY,Gamberro,24,,,,Male,,
+95,COLLECTOR,Coleccionista,64,,,,Male,,

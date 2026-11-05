@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Genera PBS/trainertypes.txt (24 fijos + 64 comunes = 88), los placeholders
+"""Genera PBS/trainertypes.txt (24 fijos + 72 comunes = 96), los placeholders
 Graphics/Characters/trainerXXX.png que falten y los audios placeholder de los
 24 primeros puestos. Fuente unica de la lista: TYPES (abajo).
 
@@ -116,9 +116,17 @@ COMMON = [  # simbolo, nombre, dinero, genero, nota (tipos / bioma)
     ("COOLCOUPLE", "Pareja Guay", 72, "Mixed", "Doble; ciudad/playa"),
     ("SISANDBRO", "Hermanos", 16, "Mixed", "Doble; pueblo/pradera"),
     ("TWINS", "Gemelas", 24, "Mixed", "Doble; pradera/playa"),
+    ("GARDENER", "Jardinero", 32, "Male", "Planta/Bicho; jardines y reserva"),
+    ("RANCHER", "Ganadero", 32, "Male", "Normal/Tierra; granja/estepa"),
+    ("WAITER", "Camarero", 32, "Male", "Normal/Hada; ciudad/pueblo"),
+    ("WAITRESS", "Camarera", 32, "Female", "Normal/Hada; ciudad/pueblo"),
+    ("PAINTER", "Pintor", 16, "Male", "Normal/Psiquico/Hada; ciudad/reserva"),
+    ("ROUGHNECK", "Matón", 40, "Male", "Siniestro/Lucha; ciudad, calzada"),
+    ("PUNKGUY", "Gamberro", 24, "Male", "Siniestro/Veneno/Fuego; ciudad"),
+    ("COLLECTOR", "Coleccionista", 64, "Male", "Dragon/Roca/Acero; ruinas, final del juego"),
 ]
-assert len(FIXED) == 24 and len(COMMON) == 64 and len(COMMON) % 8 == 0
-assert len({t[0] for t in FIXED + COMMON}) == 88
+assert len(FIXED) == 24 and len(COMMON) == 72 and len(COMMON) % 8 == 0
+assert len({t[0] for t in FIXED + COMMON}) == 96
 
 def acc(name):
     return ACCENTS.get(name, name)
@@ -136,7 +144,7 @@ def write_pbs():
              "# Formato: ID,Símbolo,Nombre,DineroBase,MúsicaCombate,MEVictoria,MEIntro,Género,Habilidad,CódigosHab"]
     for i, sym, name, money, gen, audio, note, kind in ALL:
         if i == 0: lines.append("# --- Fijos 000-023 ---")
-        if i == 24: lines.append("# --- Comunes 024-087 (audio vacío = música por defecto del mapa) ---")
+        if i == 24: lines.append("# --- Comunes 024-095 (audio vacío = música por defecto del mapa) ---")
         if kind == "fixed": lines.append("# %s" % note)
         lines.append("%d,%s,%s,%d,%s,%s,,%s,," % (i, sym, name, money, audio[0], audio[1], gen))
     with open(os.path.join(ROOT, "PBS", "trainertypes.txt"), "w", encoding="utf-8", newline="") as f:
