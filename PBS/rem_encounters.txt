@@ -977,15 +977,15 @@ Slot7 = UNCOMMON,10,AVALUGG,66,68,99,100,Iceberg andante, pieza natural de las n
 Slot8 = RARE,6,MIENSHAO,66,68,99,100,Artista marcial de los puentes, un duelista entre veteranos. Retipado a Lucha y Dragón (antes solo Lucha), junta Atq 125 y Vel 115: Pat. Salto Alta (pot. 130) y Guillotina golpean, y Regeneración lo repone. Mienfoo, de Ruta 22, evoluciona a Mienshao en Nv 50. Raro, 6 %.
 
 [SPECIAL_OBTAINABILITY]
-001 = STARTER,PUEBLO_IOLITA,5,Elección Inicial · Laboratorio del Pueblo Iolar (Acto I)
-002 = EVOLUTION_LEVEL,,16,Evoluciona de Bulbasaur nivel 16 (línea inicial: Elección Inicial · Laboratorio del Pueblo Iolar (Acto I))
-003 = EVOLUTION_LEVEL,,36,Evoluciona de Ivysaur nivel 36 (línea inicial: Elección Inicial · Laboratorio del Pueblo Iolar (Acto I))
-004 = STARTER,PUEBLO_IOLITA,5,Elección Inicial · Laboratorio del Pueblo Iolar (Acto I)
-005 = EVOLUTION_LEVEL,,16,Evoluciona de Charmander nivel 16 (línea inicial: Elección Inicial · Laboratorio del Pueblo Iolar (Acto I))
-006 = EVOLUTION_LEVEL,,36,Evoluciona de Charmeleon nivel 36 (línea inicial: Elección Inicial · Laboratorio del Pueblo Iolar (Acto I))
-007 = STARTER,PUEBLO_IOLITA,5,Elección Inicial · Laboratorio del Pueblo Iolar (Acto I)
-008 = EVOLUTION_LEVEL,,16,Evoluciona de Squirtle nivel 16 (línea inicial: Elección Inicial · Laboratorio del Pueblo Iolar (Acto I))
-009 = EVOLUTION_LEVEL,,36,Evoluciona de Wartortle nivel 36 (línea inicial: Elección Inicial · Laboratorio del Pueblo Iolar (Acto I))
+001 = STARTER,PUEBLO_ALBOR,5,Elección Inicial · Laboratorio del Pueblo Albor (Acto I)
+002 = EVOLUTION_LEVEL,,16,Evoluciona de Bulbasaur nivel 16 (línea inicial: Elección Inicial · Laboratorio del Pueblo Albor (Acto I))
+003 = EVOLUTION_LEVEL,,36,Evoluciona de Ivysaur nivel 36 (línea inicial: Elección Inicial · Laboratorio del Pueblo Albor (Acto I))
+004 = STARTER,PUEBLO_ALBOR,5,Elección Inicial · Laboratorio del Pueblo Albor (Acto I)
+005 = EVOLUTION_LEVEL,,16,Evoluciona de Charmander nivel 16 (línea inicial: Elección Inicial · Laboratorio del Pueblo Albor (Acto I))
+006 = EVOLUTION_LEVEL,,36,Evoluciona de Charmeleon nivel 36 (línea inicial: Elección Inicial · Laboratorio del Pueblo Albor (Acto I))
+007 = STARTER,PUEBLO_ALBOR,5,Elección Inicial · Laboratorio del Pueblo Albor (Acto I)
+008 = EVOLUTION_LEVEL,,16,Evoluciona de Squirtle nivel 16 (línea inicial: Elección Inicial · Laboratorio del Pueblo Albor (Acto I))
+009 = EVOLUTION_LEVEL,,36,Evoluciona de Wartortle nivel 36 (línea inicial: Elección Inicial · Laboratorio del Pueblo Albor (Acto I))
 010 = WILD,BOSQUE_DIOPTASA,9-11,Común (16 %) · Nv 9–11 día / 13–16 noche · Mapa 1
 011 = WILD,RUTA_02,11-13,Incomún (15 %) · Nv 11–13 día / 16–19 noche
 012 = THIRD_STAGE,,10,Evoluciona de Metapod nivel 10 (obtenible en Ruta 2)

@@ -11,7 +11,7 @@ Idioma de la interfaz y de todos los textos de usuario: **español**. Claves/ide
 * Los archivos oficiales de `PBS/` y los `PBS/rem_*.txt` se escriben **UTF-8 con BOM (EF BB BF) y finales de línea CRLF**.
   Úsalo siempre vía `open(path,'w',encoding='utf-8-sig',newline='')` y `'\r\n'.join(lines)+'\r\n'`.
 * Fuentes de diseño (solo lectura): `docs/rebalance/*` (Vol. 1–10 + `proposed_*.txt`). Vol. 11 queda fuera de esta fase.
-* Plantel: solo #001–#721. Nombres definitivos: Pueblo Iolita, Pueblo Heliodoro, Granja Apatita, Bosque Dioptasa.
+* Plantel: solo #001–#721. Nombres definitivos: Pueblo Albor, Pueblo Heliodoro, Granja Apatita, Bosque Dioptasa.
 * Equipos de entrenadores/ases/Dominantes son **marcadores**: conserva literalmente `[PENDIENTE DE ASIGNACIÓN]`, `[EN REVISIÓN*]`,
   `[Especie Pendiente]*`, «Dominante N (tipo)». No inventes especies de jefes.
 * Los generadores que escribas deben ser **reproducibles** y vivir en `tools/rebalance/phase1/` (Python 3 stdlib; `PIL`/`fitz` solo si ya están instalados).
@@ -23,7 +23,7 @@ Idioma de la interfaz y de todos los textos de usuario: **español**. Claves/ide
 
 `tools/codex/location_keys.json` (lista ordenada: 8 ciudades, 8 pueblos, 16 lugares especiales, 32 rutas) contiene
 `{key, name, category}`. **Esa lista fija los 64 `LOC_KEY`** usados en todos los `rem_*.txt`
-(p. ej. `PUEBLO_IOLITA`, `RUTA_01`, `GRANJA_APATITA`, `GRUTA_PIRITA`). Para zonas dobles (Lago Amatista, Ciénaga Limonita, Ladera Pórfido)
+(p. ej. `PUEBLO_ALBOR`, `RUTA_01`, `GRANJA_APATITA`, `GRUTA_PIRITA`). Para zonas dobles (Lago Amatista, Ciénaga Limonita, Ladera Pórfido)
 las tablas de encuentros usan `LOC_KEY:ZONA` (`LAGO_AMATISTA:A`, `LAGO_AMATISTA:B`); el resto usa `LOC_KEY` a secas.
 Sub-lugares fuera de las 64 (Geoda Hundida, Umbral de la Liga…) no tienen clave propia: viven dentro de su ubicación madre.
 Categorías (`Category`): `Ciudad`, `Pueblo`, `Lugar especial`, `Ruta normal`, `Ruta especial`, `Ruta de montaña`, `Ruta marina`, `Ruta nevada`.
@@ -47,7 +47,7 @@ Slot1 = COMMON,20,PIDGEY,3,5,4,7,Texto con, comas libres   ; ver cada archivo
 
 ### 2.1 `rem_locations.txt` — `[LOC_KEY]` ×64
 ```
-Name = Pueblo Iolita
+Name = Pueblo Albor
 DraftNames = Pueblo Cianita
 Category = Pueblo
 Act = I
@@ -82,7 +82,7 @@ FishRare = 30,GOLDEEN,10,12,15,18,Nota
 `PCT` son los porcentajes **exactos del Vol. 10** (6 casillas 20/15/10; 4 → 35/20/10; 8 → 16/10/6; 10 → 12/10/5; 16 → 7/6/4; pesca 70/30).
 Además la sección especial **`[SPECIAL_OBTAINABILITY]`** con las **721** especies:
 ```
-001 = STARTER,PUEBLO_IOLITA,5,Elección de inicial en el laboratorio
+001 = STARTER,PUEBLO_ALBOR,5,Elección de inicial en el laboratorio
         #  DEX3 = METHOD,LOC_KEY,LEVEL,Detail   (METHOD ∈ WILD, FISHING, STARTER, FOSSIL, EVENT, LEGENDARY, EVOLUTION_LEVEL, EVOLUTION_ITEM, EVOLUTION_STONE, THIRD_STAGE)
 ```
 (`LOC_KEY` vacío en evoluciones; el detalle explica «Evoluciona de X nivel N / con Piedra…»). Cada especie tiene exactamente una línea.
@@ -201,7 +201,7 @@ Códigos mínimos: `UNKNOWN_TYPE`, `UNKNOWN_MOVE`, `UNKNOWN_ABILITY`, `UNKNOWN_I
            "where":[{"loc":"RUTA_01","qty":1,"method":"B","zone":"…","note":"…"}],"shops":[{"shop":"MART_0_MEDALS","price":200}],"missions":[2],
            "baseline":{…}|null,"diff":{"changed":true,"fields":["price"]}}],
  "tms":[{"number":1,"sym":"TM01","move":"PROTECT","name":"MT01","price":3000,"learners":[1,2],"where":[…igual que items.where…],"missions":[1]}],
- "locations":[{"key":"PUEBLO_IOLITA","name":"…","draftNames":[],"category":"Pueblo","act":"I","order":1,"node":1,"routeLabel":null,"coords":[136,232],"path":null,
+ "locations":[{"key":"PUEBLO_ALBOR","name":"…","draftNames":[],"category":"Pueblo","act":"I","order":1,"node":1,"routeLabel":null,"coords":[136,232],"path":null,
                "conn":{"N":{"keys":[],"text":""},"S":{…},"E":{…},"O":{…}},"levelDay":[3,5]|null,"levelNight":[4,7]|null,"etymology":"…","situation":"…","description":"…",
                "events":["…"],"characters":["Ambrosio (Profesor)"],"charKeys":["CHAR_AMBROSIO"],"boss":"…",
                "encounters":[{"zone":null,"zoneName":null,"kind":"Land","slotCount":6,"slots":[{"slot":1,"rarity":"COMMON","pct":20,"dex":16,"sym":"PIDGEY","day":[3,5],"night":[4,7],"note":"…"}]}],
@@ -210,9 +210,9 @@ Códigos mínimos: `UNKNOWN_TYPE`, `UNKNOWN_MOVE`, `UNKNOWN_ABILITY`, `UNKNOWN_I
  "shops":[{"key":"MART_0_MEDALS","name":"…","medals":0|null,"cumulative":true,"location":null|"LOC_KEY","description":"","requirement":"",
            "items":[{"item":"POKEBALL","price":200}],"stock":[…lista acumulada resuelta, solo marts…]}],
  "missions":[{"n":1,"species":5,"item":"TM01","qty":1,"title":"…","note":"…"}],
- "progression":[{"step":1,"act":"I","loc":"PUEBLO_IOLITA","summary":"…","levelCapDay":5,"levelCapNight":5,"boss":"…","bossType":"…","bossLevel":16,"tms":["TM01"],"keyItems":["…"]}],
- "characters":[{"key":"CHAR_AMBROSIO","name":"…","role":"…","category":"…", /* + todas las claves del INI en minúscula camelCase */ "locations":["PUEBLO_IOLITA"]}],
- "story":[{"key":"CHAPTER_01","title":"…","act":"I","loc":"PUEBLO_IOLITA","characters":["…"],"charKeys":["…"],"paragraphs":["…"],"summary":null}],
+ "progression":[{"step":1,"act":"I","loc":"PUEBLO_ALBOR","summary":"…","levelCapDay":5,"levelCapNight":5,"boss":"…","bossType":"…","bossLevel":16,"tms":["TM01"],"keyItems":["…"]}],
+ "characters":[{"key":"CHAR_AMBROSIO","name":"…","role":"…","category":"…", /* + todas las claves del INI en minúscula camelCase */ "locations":["PUEBLO_ALBOR"]}],
+ "story":[{"key":"CHAPTER_01","title":"…","act":"I","loc":"PUEBLO_ALBOR","characters":["…"],"charKeys":["…"],"paragraphs":["…"],"summary":null}],
  "prelude":{…igual que story…}|null,"ledger":[{"n":1,"name":"…","dominant":"…","loc":"…","chapter":"CHAPTER_12","note":"…"}],
  "assets":{"icons":[1,2,…],"battlers":[1,2,…],"battlersBack":[…],"battlersShiny":[…],"itemIcons":["item001.png",…],"missing":[]}, // qué ficheros existen en Graphics/
  "warnings":[…Warning…],"files":[…FileInfo…]

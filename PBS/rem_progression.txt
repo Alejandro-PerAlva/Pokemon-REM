@@ -9,8 +9,8 @@
 [STEP_01]
 StepNumber = 1
 Act = I
-LocationKey = PUEBLO_IOLITA
-StepName = Pueblo Iolar
+LocationKey = PUEBLO_ALBOR
+StepName = Pueblo Albor
 ObjectiveSummary = Despídete de tu madre, recibe tu primer Pokémon en el laboratorio del Profesor y parte de viaje junto a Lucián y Guiomar.
 LevelCapDay = 9
 LevelCapNight = 9

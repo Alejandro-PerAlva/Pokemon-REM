@@ -965,7 +965,7 @@ def build_characters(steps):
             v7locs = v7locs[:]
         v6locs = _presence_locs(d['presence'], pres6) if d['presence'] else []
         if d['slug'] == 'PADRE':
-            v6locs = ['PUEBLO_IOLITA']
+            v6locs = ['PUEBLO_ALBOR']
         locs = sorted(set(v7locs) | set(v6locs), key=lambda k: (order.get(k, 999), k))
         diffs.append((d['slug'], sorted(set(v7locs) - set(v6locs), key=lambda k: order.get(k, 999)),
                       sorted(set(v6locs) - set(v7locs), key=lambda k: order.get(k, 999))))
@@ -1023,8 +1023,8 @@ def emit_characters(chars):
 CHAPTER_LOC_OVERRIDE = {   # capítulos sin ubicación única en la cabecera: (LOC principal, [alternativas], motivo)
     64: ('ISLA_OBSIDIANA', ['GRUTA_HIALINA', 'GRUTA_AZURITA', 'GRUTA_LABRADORITA', 'GRUTA_PIRITA'],
          'Interludio sin lugar propio: arranca en la orilla de la Isla Obsidiana y mira a las cuatro grutas'),
-    68: ('MESETA_CELESTITA', ['PUEBLO_IOLITA'],
-         'Epílogo: terraza de la Liga (Meseta Celestita), un bosque tranquilo y, al final, la loma de Pueblo Iolita'),
+    68: ('MESETA_CELESTITA', ['PUEBLO_ALBOR'],
+         'Epílogo: terraza de la Liga (Meseta Celestita), un bosque tranquilo y, al final, la loma de Pueblo Albor'),
 }
 
 HEADER_STORY = [

@@ -89,32 +89,32 @@ Item5 = CAREFULMINT,1,H,Cuadrante S · en el parque del barrio viejo,
 Item6 = MAXREPEL,2,B,Cuadrante E · tras el gimnasio,Suministro de ruta (consumible común).
 Item7 = LUXURYBALL,1,B,Cuadrante E · en la puerta trasera del ayuntamiento,
 
-# Pueblo Iolar - 24 filas
-[PUEBLO_IOLITA]
-Item1 = ITEMFINDER,1,P,Laboratorio de Pueblo Iolar (entrega por buzón de cualquier Centro Pokémon) · Misión n.º 2 de Pía «Rastro de campo»,Capturar 12 especies. Detector de objetos invisibles para la ayudante de campo.
+# Pueblo Albor - 24 filas
+[PUEBLO_ALBOR]
+Item1 = ITEMFINDER,1,P,Laboratorio de Pueblo Albor (entrega por buzón de cualquier Centro Pokémon) · Misión n.º 2 de Pía «Rastro de campo»,Capturar 12 especies. Detector de objetos invisibles para la ayudante de campo.
 Item2 = TOWNMAP,1,N,Laboratorio · mostrador de Pía,Mapa de Oniria: primera conversación con Pía.
-Item3 = SHINYCHARM,1,P,Laboratorio de Pueblo Iolar (entrega por buzón de cualquier Centro Pokémon) · Misión n.º 27 de Pía «Amuleto de la suerte»,Capturar 500 especies. Amuleto Iris: más probabilidades de encontrar Pokémon variocolor.
+Item3 = SHINYCHARM,1,P,Laboratorio de Pueblo Albor (entrega por buzón de cualquier Centro Pokémon) · Misión n.º 27 de Pía «Amuleto de la suerte»,Capturar 500 especies. Amuleto Iris: más probabilidades de encontrar Pokémon variocolor.
 Item4 = SHEARS,1,N,Casa familiar · Amparo · junto al jardín,Tijeras de podar de Amparo; se usan con 2 medallas (sustituye a Corte).
-Item5 = EXPALL,1,P,Laboratorio de Pueblo Iolar (entrega por buzón de cualquier Centro Pokémon) · Misión n.º 3 de Pía «Manada compartida»,Capturar 25 especies. Repartir Exp: el equipo entero crece junto.
+Item5 = EXPALL,1,P,Laboratorio de Pueblo Albor (entrega por buzón de cualquier Centro Pokémon) · Misión n.º 3 de Pía «Manada compartida»,Capturar 25 especies. Repartir Exp: el equipo entero crece junto.
 Item6 = POKEVIAL,1,N,Casa familiar · Amparo · en la despedida,Pokévial con 1 carga: la madre lo entrega al salir de casa; se recarga solo en cualquier Centro Pokémon. Sube a 2 cargas con la Misión n.º 6 de Pía y a 3 con la Misión n.º 17 (tabla 3.4.1).
 Item7 = INFINITECANDY,1,N,Laboratorio · estantería de Pía · tras elegir al inicial,Caramelo Infinito: Pía lo entrega al empezar el viaje; sube 1 nivel por uso, sin límite de usos, hasta el tope de nivel (variable 50).
-Item8 = TM01,1,P,Laboratorio de Pueblo Iolar (entrega por buzón de cualquier Centro Pokémon) · Misión n.º 1 de Pía «Primeras anotaciones»,Capturar 5 especies. Pía revisa el cuaderno y entrega la primera MT del juego: Protección.
-Item9 = CHOICESPECS,1,P,Laboratorio de Pueblo Iolar (entrega por buzón de cualquier Centro Pokémon) · Misión n.º 18 de Pía «Examen de visión»,Capturar 175 especies. Gafas Elegidas: la ayudante confía en tu ojo clínico.
-Item10 = MOONSTONE,1,P,Laboratorio de Pueblo Iolar (entrega por buzón de cualquier Centro Pokémon) · Misión n.º 6 de Pía «Cuaderno de lunas»,Capturar 60 especies. Piedra Lunar para el cuaderno de evoluciones. Pía rellena además el Pokévial: pasa a 2 cargas.
-Item11 = SUNSTONE,1,P,Laboratorio de Pueblo Iolar (entrega por buzón de cualquier Centro Pokémon) · Misión n.º 25 de Pía «Sol en el cuaderno»,Capturar 350 especies. Piedra Solar.
-Item12 = DAWNSTONE,1,P,Laboratorio de Pueblo Iolar (entrega por buzón de cualquier Centro Pokémon) · Misión n.º 13 de Pía «Amanecer en el cuaderno»,Capturar 130 especies. Piedra Alba.
-Item13 = HEARTSCALE,1,P,Laboratorio de Pueblo Iolar (entrega por buzón de cualquier Centro Pokémon) · Misión n.º 11 de Pía «Colección de escamas»,Capturar 90 especies. Escama Corazón para el recuerdo de movimientos.
-Item14 = SACREDASH,1,P,Laboratorio de Pueblo Iolar (entrega por buzón de cualquier Centro Pokémon) · Misión n.º 24 de Pía «Reserva sagrada»,Capturar 300 especies. Ceniza Sagrada: revive y cura a todo el equipo.
-Item15 = PPMAX,1,P,Laboratorio de Pueblo Iolar (entrega por buzón de cualquier Centro Pokémon) · Misión n.º 28 de Pía «Reserva de energía»,Capturar 600 especies. PP Máximos.
-Item16 = ABILITYCAPSULE,1,P,Laboratorio de Pueblo Iolar (entrega por buzón de cualquier Centro Pokémon) · Misión n.º 4 de Pía «Genética de habilidades»,Capturar 40 especies. Primera Cápsula Habilidad (Acto II).
-Item17 = ABILITYCAPSULE,1,P,Laboratorio de Pueblo Iolar (entrega por buzón de cualquier Centro Pokémon) · Misión n.º 19 de Pía «Genética avanzada»,Capturar 200 especies. Segunda Cápsula Habilidad.
-Item18 = ADAMANTMINT,1,P,Laboratorio de Pueblo Iolar (entrega por buzón de cualquier Centro Pokémon) · Misión n.º 26 de Pía «Aroma firme»,Capturar 400 especies. Menta Firme.
-Item19 = JOLLYMINT,1,P,Laboratorio de Pueblo Iolar (entrega por buzón de cualquier Centro Pokémon) · Misión n.º 8 de Pía «Primer aroma»,Capturar 75 especies. Menta Alegre: primer ajuste de Naturaleza.
-Item20 = MODESTMINT,1,P,Laboratorio de Pueblo Iolar (entrega por buzón de cualquier Centro Pokémon) · Misión n.º 20 de Pía «Cartas de rutas»,Capturar 250 especies. Menta Modesta.
-Item21 = TIMIDMINT,1,P,Laboratorio de Pueblo Iolar (entrega por buzón de cualquier Centro Pokémon) · Misión n.º 14 de Pía «Calma en el pulso»,Capturar 150 especies. Menta Miedosa.
-Item22 = BIGNUGGET,1,P,Laboratorio de Pueblo Iolar (entrega por buzón de cualquier Centro Pokémon) · Misión n.º 29 de Pía «Pokédex completa»,Capturar las 721 especies. Maxipepita: premio de la ayudante a la investigadora completa.
+Item8 = TM01,1,P,Laboratorio de Pueblo Albor (entrega por buzón de cualquier Centro Pokémon) · Misión n.º 1 de Pía «Primeras anotaciones»,Capturar 5 especies. Pía revisa el cuaderno y entrega la primera MT del juego: Protección.
+Item9 = CHOICESPECS,1,P,Laboratorio de Pueblo Albor (entrega por buzón de cualquier Centro Pokémon) · Misión n.º 18 de Pía «Examen de visión»,Capturar 175 especies. Gafas Elegidas: la ayudante confía en tu ojo clínico.
+Item10 = MOONSTONE,1,P,Laboratorio de Pueblo Albor (entrega por buzón de cualquier Centro Pokémon) · Misión n.º 6 de Pía «Cuaderno de lunas»,Capturar 60 especies. Piedra Lunar para el cuaderno de evoluciones. Pía rellena además el Pokévial: pasa a 2 cargas.
+Item11 = SUNSTONE,1,P,Laboratorio de Pueblo Albor (entrega por buzón de cualquier Centro Pokémon) · Misión n.º 25 de Pía «Sol en el cuaderno»,Capturar 350 especies. Piedra Solar.
+Item12 = DAWNSTONE,1,P,Laboratorio de Pueblo Albor (entrega por buzón de cualquier Centro Pokémon) · Misión n.º 13 de Pía «Amanecer en el cuaderno»,Capturar 130 especies. Piedra Alba.
+Item13 = HEARTSCALE,1,P,Laboratorio de Pueblo Albor (entrega por buzón de cualquier Centro Pokémon) · Misión n.º 11 de Pía «Colección de escamas»,Capturar 90 especies. Escama Corazón para el recuerdo de movimientos.
+Item14 = SACREDASH,1,P,Laboratorio de Pueblo Albor (entrega por buzón de cualquier Centro Pokémon) · Misión n.º 24 de Pía «Reserva sagrada»,Capturar 300 especies. Ceniza Sagrada: revive y cura a todo el equipo.
+Item15 = PPMAX,1,P,Laboratorio de Pueblo Albor (entrega por buzón de cualquier Centro Pokémon) · Misión n.º 28 de Pía «Reserva de energía»,Capturar 600 especies. PP Máximos.
+Item16 = ABILITYCAPSULE,1,P,Laboratorio de Pueblo Albor (entrega por buzón de cualquier Centro Pokémon) · Misión n.º 4 de Pía «Genética de habilidades»,Capturar 40 especies. Primera Cápsula Habilidad (Acto II).
+Item17 = ABILITYCAPSULE,1,P,Laboratorio de Pueblo Albor (entrega por buzón de cualquier Centro Pokémon) · Misión n.º 19 de Pía «Genética avanzada»,Capturar 200 especies. Segunda Cápsula Habilidad.
+Item18 = ADAMANTMINT,1,P,Laboratorio de Pueblo Albor (entrega por buzón de cualquier Centro Pokémon) · Misión n.º 26 de Pía «Aroma firme»,Capturar 400 especies. Menta Firme.
+Item19 = JOLLYMINT,1,P,Laboratorio de Pueblo Albor (entrega por buzón de cualquier Centro Pokémon) · Misión n.º 8 de Pía «Primer aroma»,Capturar 75 especies. Menta Alegre: primer ajuste de Naturaleza.
+Item20 = MODESTMINT,1,P,Laboratorio de Pueblo Albor (entrega por buzón de cualquier Centro Pokémon) · Misión n.º 20 de Pía «Cartas de rutas»,Capturar 250 especies. Menta Modesta.
+Item21 = TIMIDMINT,1,P,Laboratorio de Pueblo Albor (entrega por buzón de cualquier Centro Pokémon) · Misión n.º 14 de Pía «Calma en el pulso»,Capturar 150 especies. Menta Miedosa.
+Item22 = BIGNUGGET,1,P,Laboratorio de Pueblo Albor (entrega por buzón de cualquier Centro Pokémon) · Misión n.º 29 de Pía «Pokédex completa»,Capturar las 721 especies. Maxipepita: premio de la ayudante a la investigadora completa.
 Item23 = PARLYZHEAL,1,B,Cuadrante O · en el huerto trasero,Suministro de ruta (consumible común).
-Item24 = RARECANDY,1,P,Laboratorio de Pueblo Iolar (entrega por buzón de cualquier Centro Pokémon) · Misión n.º 12 de Pía «Cuarto de golosinas»,Capturar 110 especies. Caramelo Raro (respeta el tope de nivel).
+Item24 = RARECANDY,1,P,Laboratorio de Pueblo Albor (entrega por buzón de cualquier Centro Pokémon) · Misión n.º 12 de Pía «Cuarto de golosinas»,Capturar 110 especies. Caramelo Raro (respeta el tope de nivel).
 
 # Pueblo Heliar - 3 filas
 [PUEBLO_HELIODORO]

@@ -219,10 +219,10 @@ Battle tuning switches in `000 Settings` ✅: `USENEWBATTLEMECHANICS=true`, `USE
 
 ### 3.5 Maps, encounters, events
 
-* **Maps:** `Data/MapNNN.rxdata` (24 maps: Intro, Pueblo Cianita, Casa Player, Laboratorio, Casas, Ruta 1, Pueblo Topacio, Granja Ambarina, Torre del Reloj, Bosque Turmalino, Ruta 2, …) ✅ names from `MapInfos.rxdata`. Per-map metadata in `PBS/metadata.txt` (`[002]` → `Bicycle`, `Outdoor`, `ShowArea`, `MapPosition=region,x,y`, `HealingSpot`, `BattleBack`, `SnapEdges`). Global section `[000]` holds the player sprites, default BGMs, `Home=map,x,y,dir`. ✅
+* **Maps:** `Data/MapNNN.rxdata` (24 maps: Intro, Pueblo Albor, Casa Player, Laboratorio, Casas, Ruta 1, Pueblo Heliar, Granja Apato, Torre del Reloj, Bosque Dioptasa, Ruta 2, …) ✅ names from `MapInfos.rxdata`. Per-map metadata in `PBS/metadata.txt` (`[002]` → `Bicycle`, `Outdoor`, `ShowArea`, `MapPosition=region,x,y`, `HealingSpot`, `BattleBack`, `SnapEdges`). Global section `[000]` holds the player sprites, default BGMs, `Home=map,x,y,dir`. ✅
 * **Wild encounters:** `PBS/encounters.txt`:
   ```
-  002 # Pueblo Cianita        ← map ID (comment = name)
+  002 # Pueblo Albor        ← map ID (comment = name)
   25,10,10                    ← step densities: Land,Cave,Water
   Water                       ← encounter type header
   TENTACOOL,14,19             ← SPECIES,minLevel,maxLevel (slot order matters!)
@@ -453,7 +453,7 @@ end
 
 ### 0. Executive summary (read this first)
 
-1. **The playable slice is 10 of 24 maps.** Reachable by warps from the start: Maps 1, 3, 2, 4, 5, 6, 10, 9, 11, 14. **Maps 7, 8, 12, 13, 15–24 have zero events** — they have no entrances or exits and are unreachable (terrain drafts: Granja Ambarina, Torre del Reloj, Bosque Turmalino ×3, Cueva, Ruta 2, gatehouses…). ✅
+1. **The playable slice is 10 of 24 maps.** Reachable by warps from the start: Maps 1, 3, 2, 4, 5, 6, 10, 9, 11, 14. **Maps 7, 8, 12, 13, 15–24 have zero events** — they have no entrances or exits and are unreachable (terrain drafts: Granja Apato, Torre del Reloj, Bosque Dioptasa ×3, Cueva, Ruta 2, gatehouses…). ✅
 2. **There are no NPCs, trainers, item balls, hidden items, signs, shops, nurses, story cutscenes or boss fights placed on any map.** All 47 events across 10 maps are invisible player-touch triggers (43 warps/doors), except: the Oak intro (Map 1), a quick-start autorun (Map 1), a level-cap setter and a Rare Candy dispenser (Map 3). `trainers.txt` (79 trainers) and the item tables are **not referenced by any event**. ✅
 3. **No story progression is wired**: no event reads or sets a gate/badge/story switch. The only global state touched by events is self-switch `A` (Map 1) and **Variable 50 = 15** (level cap) ✅.
 4. **No wild encounters can occur today**: tall grass exists only on Maps 6, 18, 19, 20 (tag 2), and `PBS/encounters.txt` has sections only for maps `002` (water/rods) and `005` (stale vanilla block on an interior map). Ruta 1 (Map 6) has 238 grass tiles but no `006` encounter table. ✅
@@ -510,7 +510,7 @@ end
 No parallel or autorun common events exist → **zero background cost/risk** from them.
 
 #### A.4 Story milestones Map 1 → endgame
-Implemented: *(1)* New game → Map 1 autorun quick-start → Map 3 (player house, name “Rojo”, PlayerA sprite, running shoes ON). *(2)* Walk Pueblo Cianita → Ruta 1 ↔ Pasa Ruta (Map 10) ↔ Pueblo Topacio (Map 9) → Centro Pokémon (Map 11). *(3)* Level cap 15 after touching Map 3 (34,6).
+Implemented: *(1)* New game → Map 1 autorun quick-start → Map 3 (player house, name “Rojo”, PlayerA sprite, running shoes ON). *(2)* Walk Pueblo Albor → Ruta 1 ↔ Pasa Ruta (Map 10) ↔ Pueblo Heliar (Map 9) → Centro Pokémon (Map 11). *(3)* Level cap 15 after touching Map 3 (34,6).
 Not implemented: starter selection, rival, first gym (Map 18/20 area drafted), badges, Elite Four, Pokédex gating, trainers, items, shops, healing.
 
 ### System & tileset facts ✅
@@ -520,14 +520,14 @@ Not implemented: starter selection, rival, first gym (Map 18/20 area drafted), b
 
 | TS | Name | Graphic (`Graphics/Tilesets`) | Autotiles (`Graphics/Autotiles`) | Fog | Used by maps |
 |---|---|---|---|---|---|
-| 1 | Pueblo Cianita | Pueblo Cianita.png | Black, Camino A, Cascada A | Nubes | 1, 2 |
+| 1 | Pueblo Albor | Pueblo Albor.png | Black, Camino A, Cascada A | Nubes | 1, 2 |
 | 2 | Interior Casas | Interior Casas.png | Black | – | 3, 5, 15 |
 | 3 | Aguas | Aguas.png | – | – | *(unused)* |
 | 4 | Interior Especial A | Interior Especial A.png | Black, Laboratorio | – | 4, 13 |
 | 5 | Ruta A | Ruta A.png | Black, Hierba A, Camino A, Cascada A | Nubes | 6 |
 | 6 | Centro y Pasa Rutas | Centro y Pasa Rutas.png | Black | – | 7, 8, 10, 11, 23, 24 |
-| 7 | Pueblo Topacio | Pueblo Topacio.png | Black, Topacio, Camino A, Cascada A, Hierba A, Entrada Bosque | Nubes | 9, 12, 16, 17, 22 |
-| 8 | Bosque Turmalino | Bosque Turmalino.png | Black, Hierba Bosque, Camino Bosque, Cascada B | Bosque | 18, 19, 20 |
+| 7 | Pueblo Heliar | Pueblo Heliar.png | Black, Heliar, Camino A, Cascada A, Hierba A, Entrada Bosque | Nubes | 9, 12, 16, 17, 22 |
+| 8 | Bosque Dioptasa | Bosque Dioptasa.png | Black, Hierba Bosque, Camino Bosque, Cascada B | Bosque | 18, 19, 20 |
 | 9 | Cueva A | Cueva A.png | Black, Cueva A1, Cueva A2, Cascada A, Cascada B | – | 14, 21 |
 
 (`Graphics/Tilesets/Cueva B.png`, `Aguas.png` exist but no map uses them.)
@@ -573,7 +573,7 @@ Observations: all pairs are mutually consistent (arrive 1 tile inside the opposi
 ### B. Map-by-Map Directory
 Every section: header = `size / tileset / BGM / BGS`; terrain-tag census; events; then the ASCII layout (one char per tile; column ruler on top, row numbers left).
 
-#### Map 1 — Intro 20x15 tileset 1 (Pueblo Cianita)
+#### Map 1 — Intro 20x15 tileset 1 (Pueblo Albor)
 
 `Intro size=20x15 tileset=1 bgm= bgs= autoBGM=false parent=0`
 
@@ -601,9 +601,9 @@ Every section: header = `size / tileset / BGM / BGS`; terrain-tag census; events
  14 E...................
 ```
 
-#### Map 2 — Pueblo Cianita 40x40 tileset 1 (Pueblo Cianita)
+#### Map 2 — Pueblo Albor 40x40 tileset 1 (Pueblo Albor)
 
-`Pueblo Cianita size=40x40 tileset=1 bgm=Pueblo Cianita bgs= autoBGM=true parent=0`
+`Pueblo Albor size=40x40 tileset=1 bgm=Pueblo Albor bgs= autoBGM=true parent=0`
 
 - Terrain-tag census (tag=count): `0=1400 7=200`  (tags: 1 ledge, 2 grass, 7 water)
 
@@ -660,7 +660,7 @@ Terrain: 200 water tiles (tag 7) forming a N–S river (x≈15–21) and a lake 
 
 #### Map 3 — Casa Player 40x32 tileset 2 (Interior Casas)
 
-`Casa Player size=40x32 tileset=2 bgm=Pueblo Cianita bgs= autoBGM=true parent=2`
+`Casa Player size=40x32 tileset=2 bgm=Pueblo Albor bgs= autoBGM=true parent=2`
 
 - Terrain-tag census (tag=count): `0=1280`  (tags: 1 ledge, 2 grass, 7 water)
 
@@ -740,7 +740,7 @@ Terrain: 200 water tiles (tag 7) forming a N–S river (x≈15–21) and a lake 
 
 #### Map 5 — Casas 40x64 tileset 2 (Interior Casas)
 
-`Casas size=40x64 tileset=2 bgm=Pueblo Cianita bgs= autoBGM=true parent=2`
+`Casas size=40x64 tileset=2 bgm=Pueblo Albor bgs= autoBGM=true parent=2`
 
 - Terrain-tag census (tag=count): `0=2560`  (tags: 1 ledge, 2 grass, 7 water)
 
@@ -934,9 +934,9 @@ No events. Orphan Pokémon Center (note: `metadata.txt` `[009] HealingSpot=8,17,
  23 ################################################
 ```
 
-#### Map 9 — Pueblo Topacio 40x40 tileset 7 (Pueblo Topacio)
+#### Map 9 — Pueblo Heliar 40x40 tileset 7 (Pueblo Heliar)
 
-`Pueblo Topacio size=40x40 tileset=7 bgm=Pueblo Topacio bgs= autoBGM=true parent=0`
+`Pueblo Heliar size=40x40 tileset=7 bgm=Pueblo Heliar bgs= autoBGM=true parent=0`
 
 - Terrain-tag census (tag=count): `0=1534 7=66`  (tags: 1 ledge, 2 grass, 7 water)
 
@@ -992,7 +992,7 @@ No events. Orphan Pokémon Center (note: `metadata.txt` `[009] HealingSpot=8,17,
 
 - Terrain-tag census (tag=count): `0=400`  (tags: 1 ledge, 2 grass, 7 water)
 
-**Events (6).** Gatehouse between Ruta 1 and Pueblo Topacio: `R1` ×3 (3,8..10) → Map 6 (55,31..33); `PT` ×3 (15,8..10) → Map 9 (4,31..33).
+**Events (6).** Gatehouse between Ruta 1 and Pueblo Heliar: `R1` ×3 (3,8..10) → Map 6 (55,31..33); `PT` ×3 (15,8..10) → Map 9 (4,31..33).
 
 ```text
     0         1
@@ -1054,13 +1054,13 @@ No events. Orphan Pokémon Center (note: `metadata.txt` `[009] HealingSpot=8,17,
  23 ################################################
 ```
 
-#### Map 12 — Granja Ambarina 60x40 tileset 7 (Pueblo Topacio)
+#### Map 12 — Granja Apato 60x40 tileset 7 (Pueblo Heliar)
 
-`Granja Ambarina size=60x40 tileset=7 bgm=Granja bgs= autoBGM=true parent=0`
+`Granja Apato size=60x40 tileset=7 bgm=Granja bgs= autoBGM=true parent=0`
 
 - Terrain-tag census (tag=count): `0=2212 1=9 7=179`  (tags: 1 ledge, 2 grass, 7 water)
 
-No events: Granja Ambarina (farm) exterior — orphan; parent for Maps 16, 17.
+No events: Granja Apato (farm) exterior — orphan; parent for Maps 16, 17.
 
 ```text
     0         1         2         3         4         5
@@ -1172,11 +1172,11 @@ No events: Torre del Reloj — orphan.
 
 #### Map 15 — Casas 40x72 tileset 2 (Interior Casas)
 
-`Casas size=40x72 tileset=2 bgm=Pueblo Topacio bgs= autoBGM=true parent=9`
+`Casas size=40x72 tileset=2 bgm=Pueblo Heliar bgs= autoBGM=true parent=9`
 
 - Terrain-tag census (tag=count): `0=2880`  (tags: 1 ledge, 2 grass, 7 water)
 
-No events: 72-row stack of house interiors for Pueblo Topacio — orphan.
+No events: 72-row stack of house interiors for Pueblo Heliar — orphan.
 
 ```text
     0         1         2         3
@@ -1254,7 +1254,7 @@ No events: 72-row stack of house interiors for Pueblo Topacio — orphan.
  71 ########################################
 ```
 
-#### Map 16 — Guardería 20x15 tileset 7 (Pueblo Topacio)
+#### Map 16 — Guardería 20x15 tileset 7 (Pueblo Heliar)
 
 `Guardería size=20x15 tileset=7 bgm= bgs= autoBGM=false parent=12`
 
@@ -1281,7 +1281,7 @@ No events: Guardería (Day Care) interior — orphan. (Settings/`108 PField_DayC
  14 ....................
 ```
 
-#### Map 17 — Granero 20x15 tileset 7 (Pueblo Topacio)
+#### Map 17 — Granero 20x15 tileset 7 (Pueblo Heliar)
 
 `Granero size=20x15 tileset=7 bgm= bgs= autoBGM=false parent=12`
 
@@ -1308,13 +1308,13 @@ No events: Granero (barn) — orphan.
  14 ....................
 ```
 
-#### Map 18 — Bosque Turmalino 60x40 tileset 8 (Bosque Turmalino)
+#### Map 18 — Bosque Dioptasa 60x40 tileset 8 (Bosque Dioptasa)
 
-`Bosque Turmalino size=60x40 tileset=8 bgm=Bosque Turmalino bgs= autoBGM=true parent=0`
+`Bosque Dioptasa size=60x40 tileset=8 bgm=Bosque Dioptasa bgs= autoBGM=true parent=0`
 
 - Terrain-tag census (tag=count): `0=1794 1=12 2=248 7=346`  (tags: 1 ledge, 2 grass, 7 water)
 
-No events: Bosque Turmalino exterior — orphan. 248 **tall-grass** tiles, 12 ledge tiles, 346 water tiles.
+No events: Bosque Dioptasa exterior — orphan. 248 **tall-grass** tiles, 12 ledge tiles, 346 water tiles.
 
 ```text
     0         1         2         3         4         5
@@ -1360,9 +1360,9 @@ No events: Bosque Turmalino exterior — orphan. 248 **tall-grass** tiles, 12 le
  39 #####################....####.~~~~~~########....############
 ```
 
-#### Map 19 — Claro del Bosque 40x40 tileset 8 (Bosque Turmalino)
+#### Map 19 — Claro del Bosque 40x40 tileset 8 (Bosque Dioptasa)
 
-`Claro del Bosque size=40x40 tileset=8 bgm=Bosque Turmalino bgs= autoBGM=true parent=18`
+`Claro del Bosque size=40x40 tileset=8 bgm=Bosque Dioptasa bgs= autoBGM=true parent=18`
 
 - Terrain-tag census (tag=count): `0=1397 1=6 2=154 7=43`  (tags: 1 ledge, 2 grass, 7 water)
 
@@ -1412,9 +1412,9 @@ No events: Claro del Bosque — orphan. 154 tall-grass tiles.
  39 ########################################
 ```
 
-#### Map 20 — Profundidades 40x60 tileset 8 (Bosque Turmalino)
+#### Map 20 — Profundidades 40x60 tileset 8 (Bosque Dioptasa)
 
-`Profundidades size=40x60 tileset=8 bgm=Bosque Turmalino bgs= autoBGM=true parent=18`
+`Profundidades size=40x60 tileset=8 bgm=Bosque Dioptasa bgs= autoBGM=true parent=18`
 
 - Terrain-tag census (tag=count): `0=1747 1=3 2=296 7=354`  (tags: 1 ledge, 2 grass, 7 water)
 
@@ -1536,13 +1536,13 @@ No events: Cueva (cave) — orphan; 3 ledge tiles.
  39 ########################################
 ```
 
-#### Map 22 — Ruta 2 60x40 tileset 7 (Pueblo Topacio)
+#### Map 22 — Ruta 2 60x40 tileset 7 (Pueblo Heliar)
 
 `Ruta 2 size=60x40 tileset=7 bgm=Ruta A bgs= autoBGM=true parent=0`
 
 - Terrain-tag census (tag=count): `0=2156 1=6 7=238`  (tags: 1 ledge, 2 grass, 7 water)
 
-No events: Ruta 2 — orphan. Tileset 7 (Pueblo Topacio) has **no grass-tag tiles** here (no tag 2/10). ⚠ Hard-coded `obtainMap==22` evolution hack (Cubone night / Pikachu / Exeggcute) refers to this map.
+No events: Ruta 2 — orphan. Tileset 7 (Pueblo Heliar) has **no grass-tag tiles** here (no tag 2/10). ⚠ Hard-coded `obtainMap==22` evolution hack (Cubone night / Pikachu / Exeggcute) refers to this map.
 
 ```text
     0         1         2         3         4         5
@@ -1659,7 +1659,7 @@ flowchart LR
   M1["1 Intro<br/>(autorun quick-start)"] -->|"201 → (33,7)"| M3
   M3["3 Casa Player"] -->|"PC (9,13)"| M2
   M3 -.->|"door (4,25)→(16,7)"| M3
-  M2["2 Pueblo Cianita"] -->|"CP (25,16)"| M3
+  M2["2 Pueblo Albor"] -->|"CP (25,16)"| M3
   M2 -->|"C1 / C2"| M5["5 Casas (houses)"]
   M5 -->|"PC ×2"| M2
   M5 -.->|"4 internal doors"| M5
@@ -1672,21 +1672,21 @@ flowchart LR
   M6 -->|"PC ×4 (16-19,0) facing up"| M2
   M6 -->|"PR ×3 (56,31-33)"| M10["10 Pasa Ruta"]
   M10 -->|"R1 ×3 (3,8-10)"| M6
-  M10 -->|"PT ×3 (15,8-10)"| M9["9 Pueblo Topacio"]
+  M10 -->|"PT ×3 (15,8-10)"| M9["9 Pueblo Heliar"]
   M9 -->|"PR ×3 (3,31-33)"| M10
   M9 -->|"CP (25,17)"| M11["11 Centro Pokémon"]
   M11 -->|"CP (9,17)"| M9
   subgraph Unreachable["No events = no entrances / exits"]
-    M7["7 Pasa Ruta H"]; M8["8 Centro Pokémon"]; M12["12 Granja Ambarina"]
-    M13["13 Torre del Reloj"]; M15["15 Casas (Topacio)"]; M16["16 Guardería"]; M17["17 Granero"]
-    M18["18 Bosque Turmalino"]; M19["19 Claro del Bosque"]; M20["20 Profundidades"]; M21["21 Cueva"]
+    M7["7 Pasa Ruta H"]; M8["8 Centro Pokémon"]; M12["12 Granja Apato"]
+    M13["13 Torre del Reloj"]; M15["15 Casas (Heliar)"]; M16["16 Guardería"]; M17["17 Granero"]
+    M18["18 Bosque Dioptasa"]; M19["19 Claro del Bosque"]; M20["20 Profundidades"]; M21["21 Cueva"]
     M22["22 Ruta 2"]; M23["23 Pasa Ruta V"]; M24["24 Pasa Ruta"]
   end
 ```
-Intended topology (from `MapInfos` parents; 🔶 not wired): Map 1's children = 7, 8, 23 (gatehouses/center); Map 2's children = 3, 4, 5, 14; Map 6's child = 10; Map 9's children = 11, 13, 15; Map 12's children = 16, 17 (farm); Map 18's children = 19, 20, 21 (forest); Map 22's child = 24. Top-level outdoor maps: 2, 6, 9, 12, 18, 22 — so the planned route is **Cianita → Ruta 1 → Topacio → (Ruta 2 / Granja / Bosque Turmalino)**, where the last three are not yet connected.
+Intended topology (from `MapInfos` parents; 🔶 not wired): Map 1's children = 7, 8, 23 (gatehouses/center); Map 2's children = 3, 4, 5, 14; Map 6's child = 10; Map 9's children = 11, 13, 15; Map 12's children = 16, 17 (farm); Map 18's children = 19, 20, 21 (forest); Map 22's child = 24. Top-level outdoor maps: 2, 6, 9, 12, 18, 22 — so the planned route is **Albor → Ruta 1 → Heliar → (Ruta 2 / Granja / Bosque Dioptasa)**, where the last three are not yet connected.
 
 ### D. Findings & to-do list (ordered by impact)
-1. **Wire the remaining maps**: no warps exist to Maps 12, 18, 22 or any interior of Topacio (15–17, 13, 7, 8, 23, 24).
+1. **Wire the remaining maps**: no warps exist to Maps 12, 18, 22 or any interior of Heliar (15–17, 13, 7, 8, 23, 24).
 2. **Remove the Rare Candy dispenser** (Map 3 `EV002`, 50 per touch, repeatable) before any build is shared.
 3. **Fix the intro**: Map 1 `Intro` is an Action trigger; make it Autorun (and gate the debug `Inicio rápido` with a switch/`$DEBUG`), otherwise players never see name/gender selection and always become “Rojo” with PlayerA.
 4. **Encounters**: add `006` (Ruta 1) / `018`/`019`/`020` sections to `PBS/encounters.txt`; delete the stale vanilla block under `005`; metadata for maps 13+ is missing from `metadata.txt` (only 000–012, 018–020, 022 exist).

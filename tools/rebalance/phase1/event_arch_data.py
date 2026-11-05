@@ -49,8 +49,8 @@ SQ = {
    s3='El huevo eclosiona en cuanto sube la temperatura: un Smoochum que la heladera te cede.',
    reward=[('MON',238,48,'Huevo')]),
  # ------------------------------------------------------------ 8 PUEBLOS
- 'PUEBLO_IOLITA': dict(title='Recados del pueblo',
-   s1='Los vecinos de Pueblo Iolar necesitan 3 recados que tú, recién llegado, puedes hacer en el pueblo.',
+ 'PUEBLO_ALBOR': dict(title='Recados del pueblo',
+   s1='Los vecinos de Pueblo Albor necesitan 3 recados que tú, recién llegado, puedes hacer en el pueblo.',
    s2='Reparte tres cartas a casas distintas del pueblo y recoge cada vez un sello de buzón.',
    s3='La cartera del pueblo canjea los tres sellos por una pieza de Pokévial: sube a 2 cargas.',
    reward=[('VIAL',2)]),

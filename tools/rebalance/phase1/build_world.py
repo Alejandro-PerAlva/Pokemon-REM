@@ -76,14 +76,14 @@ NO_WILD_BUT_SECTIONS = []           # (reservado)
 
 # Mapas del prototipo (Data/MapInfos.rxdata, lectura): id -> (nombre, id del padre). Solo para documentar la correspondencia.
 PROTOTYPE_MAPS = {
-    1: ('Intro', 0), 2: ('Pueblo Cianita', 0), 3: ('Casa Player', 2), 4: ('Laboratorio', 2), 5: ('Casas', 2), 6: ('Ruta 1', 0),
-    7: ('Pasa Ruta H', 1), 8: ('Centro Pokémon', 1), 9: ('Pueblo Topacio', 0), 10: ('Pasa Ruta', 6), 11: ('Centro Pokémon', 9),
-    12: ('Granja Ambarina', 0), 13: ('Torre del Reloj', 9), 14: ('Pozo', 2), 15: ('Casas', 9), 16: ('Guardería', 12),
-    17: ('Granero', 12), 18: ('Bosque Turmalino', 0), 19: ('Claro del Bosque', 18), 20: ('Profundidades', 18), 21: ('Cueva', 18),
+    1: ('Intro', 0), 2: ('Pueblo Albor', 0), 3: ('Casa Player', 2), 4: ('Laboratorio', 2), 5: ('Casas', 2), 6: ('Ruta 1', 0),
+    7: ('Pasa Ruta H', 1), 8: ('Centro Pokémon', 1), 9: ('Pueblo Heliar', 0), 10: ('Pasa Ruta', 6), 11: ('Centro Pokémon', 9),
+    12: ('Granja Apato', 0), 13: ('Torre del Reloj', 9), 14: ('Pozo', 2), 15: ('Casas', 9), 16: ('Guardería', 12),
+    17: ('Granero', 12), 18: ('Bosque Dioptasa', 0), 19: ('Claro del Bosque', 18), 20: ('Profundidades', 18), 21: ('Cueva', 18),
     22: ('Ruta 2', 0), 23: ('Pasa Ruta V', 1), 24: ('Pasa Ruta', 22)}
 # Mapas principales del prototipo que corresponden CON CERTEZA a una de las 64 ubicaciones (el nombre del mapa es un nombre en
 # borrador / provisional de la ficha del Vol. 6). Se verifica en check_mapping(): nombre del mapa in {Name, DraftNames} de la ficha.
-PROTOTYPE_TO_LOC = {2: 'PUEBLO_IOLITA', 6: 'RUTA_01', 9: 'PUEBLO_HELIODORO', 12: 'GRANJA_APATITA', 18: 'BOSQUE_DIOPTASA', 22: 'RUTA_02'}
+PROTOTYPE_TO_LOC = {2: 'PUEBLO_ALBOR', 6: 'RUTA_01', 9: 'PUEBLO_HELIODORO', 12: 'GRANJA_APATITA', 18: 'BOSQUE_DIOPTASA', 22: 'RUTA_02'}
 
 # Aliases de lugares para localizar un LOC_KEY dentro de un texto del Vol. 10 (regalos, eventos, legendarios).
 PLACE_ALIASES = {'Centro Comercial de Azabache': 'CIUDAD_AZABACHE', 'Mercado Minero': 'PUEBLO_CASITERITA',

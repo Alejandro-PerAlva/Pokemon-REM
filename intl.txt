@@ -25817,8 +25817,8 @@ Area de Buceo
 Intro
 Intro
 2
-Pueblo Cianita
-Pueblo Cianita
+Pueblo Albor
+Pueblo Albor
 3
 Casa Player
 Casa Player
@@ -25838,8 +25838,8 @@ Pasa Ruta
 Centro Pokémon
 Centro Pokémon
 9
-Pueblo Topacio
-Pueblo Topacio
+Pueblo Heliar
+Pueblo Heliar
 10
 Pasa Ruta
 Pasa Ruta
@@ -25847,8 +25847,8 @@ Pasa Ruta
 Centro Pokémon
 Centro Pokémon
 12
-Granja Ambarina
-Granja Ambarina
+Granja Apato
+Granja Apato
 13
 Torre del Reloj
 Torre del Reloj

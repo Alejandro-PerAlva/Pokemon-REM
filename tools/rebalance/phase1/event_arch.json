@@ -20,7 +20,7 @@
   "117": "Rivales_Derrotados",
   "118": "Reservada_Macro_118",
   "119": "Reservada_Macro_119",
-  "121": "H_PUEBLO_IOLAR",
+  "121": "H_PUEBLO_ALBOR",
   "122": "H_RUTA_1",
   "123": "H_PUEBLO_HELIAR",
   "124": "H_GRANJA_APATO",
@@ -84,7 +84,7 @@
   "182": "H_GRUTA_PIRAL",
   "183": "H_CALZADA_CORINDAL",
   "184": "H_MESETA_CELESTE",
-  "201": "M_PUEBLO_IOLAR",
+  "201": "M_PUEBLO_ALBOR",
   "202": "M_PUEBLO_HELIAR",
   "203": "M_GRANJA_APATO",
   "204": "M_BOSQUE_DIOPTASA",
@@ -230,10 +230,10 @@
   "691": "Regalo_Unico_CiudadAzabache_AMULETCOIN",
   "692": "Regalo_Unico_CiudadVenturina_CALMHERB",
   "693": "Tienda_Unica_CiudadVenturina_TM05",
-  "694": "Regalo_Unico_PuebloIolar_TOWNMAP",
-  "695": "Regalo_Unico_PuebloIolar_SHEARS",
-  "696": "Regalo_Unico_PuebloIolar_POKEVIAL",
-  "697": "Regalo_Unico_PuebloIolar_INFINITECANDY",
+  "694": "Regalo_Unico_PuebloAlbor_TOWNMAP",
+  "695": "Regalo_Unico_PuebloAlbor_SHEARS",
+  "696": "Regalo_Unico_PuebloAlbor_POKEVIAL",
+  "697": "Regalo_Unico_PuebloAlbor_INFINITECANDY",
   "698": "Tienda_Unica_PuebloPedernal_TM30",
   "699": "Regalo_Unico_PuebloPedernal_PREMIERBALL",
   "700": "Regalo_Unico_PuebloEstea_ABILITYCAPSULE",
@@ -319,7 +319,7 @@
    "medals": 0,
    "frags": 0,
    "boss": 0,
-   "loc": "PUEBLO_IOLITA"
+   "loc": "PUEBLO_ALBOR"
   },
   {
    "id": 2,
@@ -1060,7 +1060,7 @@
   }
  ],
  "hvar": {
-  "PUEBLO_IOLITA": 121,
+  "PUEBLO_ALBOR": 121,
   "RUTA_01": 122,
   "PUEBLO_HELIODORO": 123,
   "GRANJA_APATITA": 124,
@@ -1126,7 +1126,7 @@
   "MESETA_CELESTITA": 184
  },
  "qvar": {
-  "PUEBLO_IOLITA": 201,
+  "PUEBLO_ALBOR": 201,
   "PUEBLO_HELIODORO": 202,
   "GRANJA_APATITA": 203,
   "BOSQUE_DIOPTASA": 204,
@@ -1224,7 +1224,7 @@
   "721": 814
  },
  "quest_vial": {
-  "PUEBLO_IOLITA": 2,
+  "PUEBLO_ALBOR": 2,
   "LADERA_PORFIDO": 3
  }
 }

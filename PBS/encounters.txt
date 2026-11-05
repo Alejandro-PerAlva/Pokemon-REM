@@ -14,11 +14,11 @@
 # Pesca: OldRod = 70/30 EXACTO (Comun/Rara); GoodRod = [C,R,R] y SuperRod = [C,R,C,C,C] = 60/40 (con [60,20,20] y [40,40,15,4,1] el 70/30 es imposible); asi las tres canas funcionan. Surf = Water (4 rutas marinas). Densidad 25,10,10 = valores por defecto.
 # Calzada Corindon (hierba y cueva en el Vol. 10) = Land: Essentials no admite Land y Cave en el mismo mapa. Monte Azogue y las ciudades/pueblos sin agua no tienen tabla.
 # CORRESPONDENCIA CON LOS MAPAS DEL PROTOTIPO (Data/MapInfos.rxdata + PBS/metadata.txt, solo lectura):
-#   mapa 002 «Pueblo Cianita» = PUEBLO_IOLITA -> sin salvajes ni pesca en el diseno: se retira su tabla del prototipo
+#   mapa 002 «Pueblo Albor» = PUEBLO_ALBOR -> sin salvajes ni pesca en el diseno: se retira su tabla del prototipo
 #   mapa 006 «Ruta 1» = RUTA_01 -> tablas del Vol. 10 (sustituyen a las del prototipo)
-#   mapa 009 «Pueblo Topacio» = PUEBLO_HELIODORO -> sin salvajes ni pesca en el diseno (el prototipo no tenia tabla)
-#   mapa 012 «Granja Ambarina» = GRANJA_APATITA -> tablas del Vol. 10 (sustituyen a las del prototipo)
-#   mapa 018 «Bosque Turmalino» = BOSQUE_DIOPTASA -> tablas del Vol. 10 (sustituyen a las del prototipo)
+#   mapa 009 «Pueblo Heliar» = PUEBLO_HELIODORO -> sin salvajes ni pesca en el diseno (el prototipo no tenia tabla)
+#   mapa 012 «Granja Apato» = GRANJA_APATITA -> tablas del Vol. 10 (sustituyen a las del prototipo)
+#   mapa 018 «Bosque Dioptasa» = BOSQUE_DIOPTASA -> tablas del Vol. 10 (sustituyen a las del prototipo)
 #   mapa 022 «Ruta 2» = RUTA_02 -> tablas del Vol. 10 (sustituyen a las del prototipo)
 #   Mapas hijos/interiores del prototipo (1, 3, 4, 5, 7, 8, 10, 11, 13-17, 19, 20, 21, 23, 24) no son ubicaciones: sus entradas (005 «Casas», 021 «Cueva») y los restos del encounters.txt vanilla sin Map###.rxdata (028-075) se conservan TAL CUAL.
 # MAPAS PROVISIONALES para el resto: ID = 900 + ProgressionOrder (p. ej. RUTA_03 = 908) y 969-978 para el 2.o mapa (zona B) de las 10 mazmorras con dos mapas de 8 casillas (969 Lago Amatista, 970 Ciénaga Limonita, 971 Ladera Pórfido, 972 Bosque Dioptasa, 973 Central Fulgurita, 974 Desierto Halita, 975 Ruinas Atacamita, 976 Cascadas Travertinas, 977 Villa Adularia, 978 Templo Moldavita). Sustituir por el ID real al crear cada mapa.

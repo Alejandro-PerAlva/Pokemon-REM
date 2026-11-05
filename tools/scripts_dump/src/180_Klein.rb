@@ -39,7 +39,7 @@ KleinTiles=[]
 # Initialize the array for tileset 1
 
 KleinTiles[1]=[]
-#Agua Pueblo Cianita
+#Agua Pueblo Albor
 KleinTiles[1].push([248,[16,56,96,136]])
 KleinTiles[1].push([249,[18,58,98,138]])
 KleinTiles[1].push([250,[18,58,98,138]])
@@ -90,7 +90,7 @@ KleinTiles[5].push([261,[162,170,178,186]])
 KleinTiles[5].push([262,[11,51,91,131]])
 
 KleinTiles[7]=[]
-#Agua Pueblo Topacio
+#Agua Pueblo Heliar
 KleinTiles[7].push([248,[16,56,96,136]])
 KleinTiles[7].push([249,[18,58,98,138]])
 KleinTiles[7].push([250,[18,58,98,138]])
@@ -107,7 +107,7 @@ KleinTiles[7].push([261,[162,170,178,186]])
 KleinTiles[7].push([262,[11,51,91,131]])
 
 KleinTiles[8]=[]
-#Agua Bosque Turmalino
+#Agua Bosque Dioptasa
 KleinTiles[8].push([248,[216,256,296,336]])
 KleinTiles[8].push([249,[218,258,298,338]])
 KleinTiles[8].push([250,[218,258,298,338]])

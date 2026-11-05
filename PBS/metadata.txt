@@ -9,7 +9,7 @@ WildBattleBGM=002-Battle02.mid
 [001]
 # Intro
 [002]
-# Pueblo Cianita
+# Pueblo Albor
 SnapEdges=true
 Bicycle=true
 MapPosition=0,13,12
@@ -52,7 +52,7 @@ ShowArea=true
 # Centro Pokémon
 MapPosition=0,13,12
 [009]
-# Pueblo Topacio
+# Pueblo Heliar
 SnapEdges=true
 Bicycle=true
 MapPosition=0,14,10
@@ -74,12 +74,12 @@ Outdoor=false
 HealingSpot=9,25,17
 ShowArea=false
 [012]
-# Granja Ambarina
+# Granja Apato
 SnapEdges=true
 Outdoor=true
 ShowArea=true
 [018]
-# Bosque Turmalino
+# Bosque Dioptasa
 SnapEdges=true
 Outdoor=true
 ShowArea=true
