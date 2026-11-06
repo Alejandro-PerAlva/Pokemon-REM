@@ -66,7 +66,7 @@ Variables e interruptores (se revisan SIEMPRE que un cambio los afecte; incluye 
 Ubicación (nombre/clave):
   - Si se renombra una ubicación, buscar en TODO el repo con palabra completa (cuidado con subcadenas: p. ej. PLAYA_SEPIOLITA contiene IOLITA) y actualizar mapas/BGM/tilesets solo si el diseñador lo pide (herramienta: tools/rename_locations_data.py).
 Entrenadores:
-  - Existen 96 clases (000-095, 3 dígitos fijos por el motor). Sin clases dobles. Los sprites son trainerXXX/trcharXXX/npcXXX en Graphics/Characters; el generador es tools/rebalance/build_trainertypes.py (no usar --regen-commons si ya hay arte final).
+  - Existen 88 clases (000-087: 24 fijos + 64 comunes; 3 dígitos fijos por el motor). Sin clases dobles. Los sprites son trainerXXX/trcharXXX/npcXXX en Graphics/Characters; el generador es tools/rebalance/build_trainertypes.py (no usar --regen-commons si ya hay arte final).
 
 [CHECKLIST_DE_COHERENCIA]
 - Cada objeto de rem_location_items aparece una sola vez y su STEP lo lista en KeyItemsUnlocked (si es clave).

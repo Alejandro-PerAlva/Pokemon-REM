@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Genera PBS/trainertypes.txt (24 fijos + 72 comunes = 96), los placeholders
+"""Genera PBS/trainertypes.txt (24 fijos + 64 comunes = 88), los placeholders
 Graphics/Characters/trainerXXX.png que falten y los audios placeholder de los
 24 primeros puestos. Fuente unica de la lista: TYPES (abajo).
 
@@ -82,7 +82,6 @@ COMMON = [  # simbolo, nombre, dinero, genero, nota (tipos / bioma)
     ("ROCKER", "Rockero", 24, "Male", "Electrico/Siniestro/Fuego; ciudad"),
     ("PSYCHIC_M", "Psíquico", 32, "Male", "Psiquico/Fantasma; templo/cristal"),
     ("PSYCHIC_F", "Psíquica", 32, "Female", "Psiquico/Fantasma; templo/cristal"),
-    ("MEDIUM", "Médium", 32, "Female", "Fantasma/Psiquico; ruinas"),
     ("HEXMANIAC", "Bruja", 32, "Female", "Fantasma/Psiquico/Siniestro; bosque, isla"),
     ("SKIER_M", "Esquiador", 32, "Male", "Hielo; nieve"),
     ("SKIER_F", "Esquiadora", 32, "Female", "Hielo; nieve"),
@@ -98,7 +97,6 @@ COMMON = [  # simbolo, nombre, dinero, genero, nota (tipos / bioma)
     ("LADY", "Dama", 160, "Female", "Normal/Hada/Psiquico; ciudad"),
     ("BEAUTY", "Bella", 56, "Female", "Normal/Agua/Hada; playa"),
     ("AROMALADY", "Chica Aroma", 32, "Female", "Planta/Veneno/Hada; bosque/pantano"),
-    ("KIMONOGIRL", "Chica Kimono", 48, "Female", "Fantasma/Psiquico/Hada; templo"),
     ("PARASOLLADY", "Dama Parasol", 40, "Female", "Planta/Hada; pradera/reserva"),
     ("BREEDER_M", "Criador", 48, "Male", "Normal/Hada; granja/pueblo"),
     ("BREEDER_F", "Criadora", 48, "Female", "Normal/Hada; granja/pueblo"),
@@ -111,24 +109,38 @@ COMMON = [  # simbolo, nombre, dinero, genero, nota (tipos / bioma)
     ("SAGE", "Sabio", 48, "Male", "Psiquico/Fantasma; templo"),
     ("POKEMONRANGER", "Guardabosques", 60, "Male", "Planta/Bicho/Normal; bosque/reserva"),
     ("MAID", "Sirvienta", 32, "Female", "Fantasma/Normal; villas y ruinas"),
-    ("GARDENER", "Jardinero", 32, "Male", "Planta/Bicho; jardines y reserva"),
     ("RANCHER", "Ganadero", 32, "Male", "Normal/Tierra; granja/estepa"),
     ("WAITER", "Camarero", 32, "Male", "Normal/Hada; ciudad/pueblo"),
     ("WAITRESS", "Camarera", 32, "Female", "Normal/Hada; ciudad/pueblo"),
     ("PAINTER", "Pintor", 16, "Male", "Normal/Psiquico/Hada; ciudad/reserva"),
     ("ROUGHNECK", "Matón", 40, "Male", "Siniestro/Lucha; ciudad, calzada"),
-    ("PUNKGUY", "Gamberro", 24, "Male", "Siniestro/Veneno/Fuego; ciudad"),
-    ("BUGMANIAC", "Bichómano", 48, "Male", "Bicho; bosque y ruinas, Acto II-III"),
     ("CHEF", "Cocinero", 48, "Male", "Fuego/Normal; ciudad industrial"),
     ("POLICEMAN", "Policía", 48, "Male", "Siniestro/Normal; ciudad, entorno Morfeo"),
-    ("NINJABOY", "Ninja", 32, "Male", "Veneno/Siniestro/Bicho; ruinas y cuevas"),
-    ("EXPERT", "Experto", 64, "Male", "Lucha/Psiquico; calzada, final del juego"),
-    ("COLLECTOR", "Coleccionista", 64, "Male", "Dragon/Roca/Acero; ruinas, final del juego"),
 ]
-ORDER = ['YOUNGSTER', 'LASS', 'SCHOOLBOY', 'SCHOOLGIRL', 'CAMPER', 'PICNICKER', 'BUGCATCHER', 'BIRDKEEPER', 'POKEFAN_M', 'POKEFAN_F', 'GARDENER', 'RANCHER', 'PARASOLLADY', 'BREEDER_M', 'BREEDER_F', 'BACKPACKER_M', 'BACKPACKER_F', 'HIKER', 'SWIMMER_M', 'SWIMMER_F', 'FISHERMAN', 'TUBER_M', 'TUBER_F', 'BEAUTY', 'SAILOR', 'SCUBADIVER', 'SCIENTIST', 'ENGINEER', 'WORKER', 'SUPERNERD', 'GUITARIST', 'ROCKER', 'DOCTOR', 'NURSE', 'RUINMANIAC', 'POKEMANIAC', 'AROMALADY', 'POKEMONRANGER', 'BUGMANIAC', 'SKIER_M', 'SKIER_F', 'JUGGLER', 'MAID', 'PSYCHIC_M', 'PSYCHIC_F', 'MEDIUM', 'HEXMANIAC', 'KIMONOGIRL', 'SAGE', 'PAINTER', 'WAITER', 'WAITRESS', 'CHEF', 'BLACKBELT', 'CRUSHGIRL', 'TAMER', 'BURGLAR', 'NINJABOY', 'GAMBLER', 'KINDLER', 'PUNKGUY', 'ROUGHNECK', 'POLICEMAN', 'GENTLEMAN', 'LADY', 'EXPERT', 'COOLTRAINER_M', 'COOLTRAINER_F', 'VETERAN_M', 'VETERAN_F', 'DRAGONTAMER', 'COLLECTOR']
-COMMON.sort(key=lambda t: ORDER.index(t[0]))  # orden de progresion: Acto I -> final; sin dobles
-assert len(FIXED) == 24 and len(COMMON) == 72 and len(COMMON) % 8 == 0
-assert len({t[0] for t in FIXED + COMMON}) == 96
+ORDER = [
+    # Novatos y rurales (Actos I-III)
+    'YOUNGSTER', 'LASS', 'SCHOOLBOY', 'SCHOOLGIRL', 'CAMPER', 'PICNICKER', 'BUGCATCHER', 'BIRDKEEPER',
+    # Campo y crianza
+    'POKEFAN_M', 'POKEFAN_F', 'RANCHER', 'PARASOLLADY', 'BREEDER_M', 'BREEDER_F', 'AROMALADY', 'POKEMONRANGER',
+    # Camino, cueva y ruinas
+    'BACKPACKER_M', 'BACKPACKER_F', 'HIKER', 'RUINMANIAC', 'POKEMANIAC', 'BURGLAR',
+    # Agua
+    'SWIMMER_M', 'SWIMMER_F', 'FISHERMAN', 'TUBER_M', 'TUBER_F', 'BEAUTY', 'SAILOR', 'SCUBADIVER',
+    # Industrial, musica y arte
+    'SCIENTIST', 'ENGINEER', 'WORKER', 'SUPERNERD', 'GUITARIST', 'ROCKER', 'PAINTER', 'JUGGLER',
+    # Mistico
+    'PSYCHIC_M', 'PSYCHIC_F', 'HEXMANIAC', 'MAID', 'SAGE',
+    # Civil y alta sociedad
+    'DOCTOR', 'NURSE', 'WAITER', 'WAITRESS', 'CHEF', 'POLICEMAN', 'GAMBLER', 'GENTLEMAN', 'LADY',
+    # Nieve y fuego
+    'SKIER_M', 'SKIER_F', 'KINDLER',
+    # Combate y elite (Actos IV-V)
+    'BLACKBELT', 'CRUSHGIRL', 'TAMER', 'ROUGHNECK', 'COOLTRAINER_M', 'COOLTRAINER_F', 'VETERAN_M', 'VETERAN_F', 'DRAGONTAMER',
+]
+COMMON.sort(key=lambda t: ORDER.index(t[0]))  # orden por familias, de Acto I a final; sin dobles
+assert len(FIXED) == 24 and len(COMMON) == 64 and len(COMMON) % 8 == 0
+assert len({t[0] for t in FIXED + COMMON}) == 88
+assert sorted(ORDER) == sorted(t[0] for t in COMMON)
 
 def acc(name):
     return ACCENTS.get(name, name)
@@ -146,7 +158,7 @@ def write_pbs():
              "# Formato: ID,Símbolo,Nombre,DineroBase,MúsicaCombate,MEVictoria,MEIntro,Género,Habilidad,CódigosHab"]
     for i, sym, name, money, gen, audio, note, kind in ALL:
         if i == 0: lines.append("# --- Fijos 000-023 ---")
-        if i == 24: lines.append("# --- Comunes 024-095 (audio vacío = música por defecto del mapa) ---")
+        if i == 24: lines.append("# --- Comunes 024-087 (audio vacío = música por defecto del mapa) ---")
         if kind == "fixed": lines.append("# %s" % note)
         lines.append("%d,%s,%s,%d,%s,%s,,%s,," % (i, sym, name, money, audio[0], audio[1], gen))
     with open(os.path.join(ROOT, "PBS", "trainertypes.txt"), "w", encoding="utf-8", newline="") as f:
