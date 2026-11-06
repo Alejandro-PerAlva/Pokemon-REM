@@ -21,7 +21,7 @@ El diseñador analiza el juego ubicación por ubicación: Claude entrega un aná
 4. Objetos y regalos: objetos de rem_location_items.txt y KeyItemsUnlocked de rem_progression; quién los da, dónde y en qué momento.
 5. Tiendas y servicios (rem_shops: Poké Mart por medallas, Centro Pokémon, misiones de Pía).
 6. Salvajes y pesca (rem_encounters / encounters.txt) y topes de nivel (LevelCapDay/Night, variables 50 y 111).
-7. Variables e interruptores: macro iniciales (101-117), historia local (V121-V184), sidequest (V201-V240), interruptores de jefes, herramientas, bloqueos y únicos, con el valor esperado en cada hito.
+7. Variables e interruptores: macro iniciales (101-117), historia local (V121-V184), sidequest (V201-V240), interruptores de jefes, herramientas, bloqueos y únicos, con el valor esperado en cada hito. Se revisa si hay que AÑADIR, QUITAR, RENOMBRAR o REASIGNAR alguno por los cambios de la ubicación, y qué scripts los leen (REM_Events, REM_Mechanics, REM_UI) para avisar si hay que tocarlos.
 8. Misión local (sidequest): título, pasos y recompensa.
 9. Bloqueos y condiciones de acceso (qué lo abre y cuándo).
 10. Incoherencias detectadas (nombres antiguos, clases eliminadas, objetos duplicados, huecos, conflictos de variables) y qué falta por decidir.
@@ -39,6 +39,8 @@ rem_encounters.txt         Tablas salvajes por ubicación (Vol. 10).
 rem_changelog.txt          Notas de diseño de especies/habilidades/movimientos/objetos (solo si cambia el uso de un objeto).
 metadata.txt, encounters.txt   PBS del juego (los lee el motor): NO se tocan salvo orden expresa.
 tools/rebalance/phase1/event_arch_data.py y event_arch.json   Arquitectura de eventos que dio origen a las variables: mantener alineados con rem_variables_switches si cambia un ID o nombre.
+Data/System.rxdata         Nombres de variables e interruptores del juego (RPG Maker). Debe coincidir con event_arch.json y rem_variables_switches (estado verificado el 2026-11-06: 124 variables y 180 interruptores idénticos en las tres fuentes).
+Data/Scripts.rxdata        Scripts del juego. REM_Events indexa por LOC_KEY (REM_STORY_VAR, REM_QUEST_VAR, REM_QUEST_VIAL); su fuente es tools/scripts_dump/rem_events.rb, que genera build_event_architecture.py.
 tools/codex/location_keys.json, codex/location_keys.json, codex_bundle/model.json   Solo si cambia una LOC_KEY o un nombre de ubicación.
 
 [REGLAS_DE_CAMBIO]
@@ -51,8 +53,12 @@ Misiones (sidequests y misiones de Pía):
   - Las misiones de Pía son capturas acumuladas: si se cambia un premio o un umbral, se reajusta [PIA_MISSIONS] y los ItemN de tipo P del laboratorio.
 Personajes:
   - Si un personaje se añade, quita o cambia de ubicación, se actualizan CharactersPresent en rem_locations, Locations/Chronology en rem_characters, CharactersInScene en rem_story y, si afecta a la historia, el STEP.
-Variables e interruptores:
-  - No reutilizar reservados. Si falta un ID, usar los «Reservada_*» libres de cada bloque. Si cambia el significado de una variable, actualizar rem_variables_switches y event_arch_data.py/event_arch.json.
+Variables e interruptores (se revisan SIEMPRE que un cambio los afecte; incluye los scripts que los usan):
+  - No reutilizar reservados. Si falta un ID, usar los «Reservada_*» libres de cada bloque.
+  - Fuente de verdad: tools/rebalance/phase1/event_arch_data.py. Tras cambiarlo: (1) python3 tools/rebalance/phase1/build_event_architecture.py (regenera event_arch.json, rem_variables_switches.txt y tools/scripts_dump/rem_events.rb); (2) ruby tools/scripts_dump/build_system.rb (nombres en Data/System.rxdata); (3) parchear SOLO la sección REM_Events de Data/Scripts.rxdata con el nuevo rem_events.rb (inflate, sustituir, deflate).
+  - NO ejecutar build_scripts.rb a ciegas: sus volcados src/ (p. ej. «Title Screen» y REM_UI) están más antiguos que el compilado y lo sobrescribiría.
+  - El generador build_event_architecture.py duplica un texto en un comentario de rem_encounters.txt («[SPECIAL_OBTAINABILITY]»): tras ejecutarlo, revertir ese cambio (git checkout PBS/rem_encounters.txt).
+  - Si cambia una LOC_KEY, actualizar también las claves de REM_STORY_VAR/REM_QUEST_VAR/REM_QUEST_VIAL.
 Ubicación (nombre/clave):
   - Si se renombra una ubicación, buscar en TODO el repo con palabra completa (cuidado con subcadenas: p. ej. PLAYA_SEPIOLITA contiene IOLITA) y actualizar mapas/BGM/tilesets solo si el diseñador lo pide (herramienta: tools/rename_locations_data.py).
 Entrenadores:
