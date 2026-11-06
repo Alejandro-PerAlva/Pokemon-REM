@@ -28,15 +28,15 @@
 11,LEADER_7,Líder,100,Combate Lider,Victoria Lider,,Female,,
 # Gimnasio 8: Baltasar (Fuego)
 12,LEADER_8,Líder,110,Combate Lider,Victoria Lider,,Male,,
-# Alto Mando 1: Nicodemo (Roca/Hada)
+# Alto Mando 1: Nicodemo (Bicho)
 13,ELITE_1,Alto Mando,120,Combate Alto Mando,Victoria Liga,,Male,,
-# Alto Mando 2: Oriana (Hielo/Siniestro)
+# Alto Mando 2: Oriana (Psíquico)
 14,ELITE_2,Alto Mando,120,Combate Alto Mando,Victoria Liga,,Female,,
-# Alto Mando 3: Anteo (Fuego/Tierra)
+# Alto Mando 3: Anteo (Siniestro)
 15,ELITE_3,Alto Mando,120,Combate Alto Mando,Victoria Liga,,Male,,
-# Alto Mando 4: Leucotea (Agua/Fantasma)
+# Alto Mando 4: Leucotea (Tierra)
 16,ELITE_4,Alto Mando,120,Combate Alto Mando,Victoria Liga,,Female,,
-# Campeona: Rolanda Altamira (Dragon/Volador)
+# Campeona: Rolanda Altamira (Variad
 17,CHAMPION,Campeona,150,Combate Campeona,Victoria Liga,,Female,,
 # Recluta M del Equipo Morfeo
 18,MORFEO_RECRUIT_M,Recluta Morfeo,16,Combate Recluta Morfeo,,,Male,,
