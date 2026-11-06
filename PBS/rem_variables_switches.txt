@@ -167,7 +167,7 @@ M68 = cap 80 / 100 | Acto 5 | Cap. 68 | Med. 8 | Frag. 6 | Jefe S— | Meseta Ce
 
 [VARS_SIDEQUESTS_40]
 # 0 = No iniciada · 1 = Activa / Paso 1 · 2 = Paso 2 (puzle o combate local) · 3 = Lista para entregar · 99 = Completada
-201 = M_PUEBLO_ALBOR | PUEBLO_ALBOR · «Recados del pueblo» · Pokévial 2 cargas
+201 = M_PUEBLO_ALBOR | PUEBLO_ALBOR · «El Pokémon del pozo» · PARLYZHEAL x1
 202 = M_PUEBLO_HELIAR | PUEBLO_HELIODORO · «La gallina de oro» · Togepi Nv 5 (huevo)
 203 = M_GRANJA_APATO | GRANJA_APATITA · «El apetito del establo» · Munchlax Nv 10
 204 = M_BOSQUE_DIOPTASA | BOSQUE_DIOPTASA · «La ilusión del claro» · Zorua Nv 12
@@ -198,7 +198,7 @@ M68 = cap 80 / 100 | Acto 5 | Cap. 68 | Med. 8 | Frag. 6 | Jefe S— | Meseta Ce
 229 = M_PUEBLO_ESTEA | PUEBLO_ESTEATITA · «El entrenamiento de nieve» · Tyrogue Nv 5 (huevo)
 230 = M_CIUDAD_ALABASTRO | CIUDAD_ALABASTRO · «Helado de media noche» · Smoochum Nv 5 (huevo)
 231 = M_TEMPLO_MOLDAR | TEMPLO_MOLDAVITA · «Las campanillas del monje» · Chingling Nv 5 (huevo)
-232 = M_LADERA_PORFIRAL | LADERA_PORFIDO · «La boquilla del Pokévial» · Pokévial 3 cargas
+232 = M_LADERA_PORFIRAL | LADERA_PORFIDO · «El cinturón del chatarrero» · EXPERTBELT x1
 233 = M_CIUDAD_REJALGAR | CIUDAD_REJALGAR · «La brasa del herrero» · Larvesta Nv 5 (huevo)
 234 = M_MONTE_AZOGUE | MONTE_AZOGUE · «Las campanas del ascenso» · AMULETCOIN x1
 235 = M_GRUTA_HIALINA | GRUTA_HIALINA · «El prisma de la cámara» · CHOICEBAND x1
@@ -324,7 +324,7 @@ M68 = cap 80 / 100 | Acto 5 | Cap. 68 | Med. 8 | Frag. 6 | Jefe S— | Meseta Ce
 692 = Regalo_Unico_CiudadVenturina_CALMHERB
 693 = Tienda_Unica_CiudadVenturina_TM05
 694 = Regalo_Unico_PuebloAlbor_TOWNMAP
-695 = Regalo_Unico_PuebloAlbor_SHEARS
+695 = Regalo_Unico_CiudadCalaire_SHEARS
 696 = Regalo_Unico_PuebloAlbor_POKEVIAL
 697 = Regalo_Unico_PuebloAlbor_INFINITECANDY
 698 = Tienda_Unica_PuebloPedernal_TM30

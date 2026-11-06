@@ -914,7 +914,7 @@ Category = PNJ
 Aliases = Amparo
 Age = 
 Appearance = 
-Personality = Mujer práctica, de manos hacendosas, que despide al protagonista en Pueblo Albor con un último desayuno. Su nombre significa «refugio». «Vuelve cuando quieras; la casa no se mueve.» Aparece una vez.
+Personality = Mujer práctica, de manos hacendosas, que despide al protagonista en Pueblo Albor con un último desayuno. Su nombre significa «refugio». «Vuelve cuando quieras; la casa no se mueve.» Entrega el Pokévial (1 carga) y lo mejora al volver a verla: 2 cargas con 3 medallas y 3 cargas con 6 medallas.
 Backstory = 
 Motivation = 
 Arc = 
@@ -924,7 +924,9 @@ TypeSpecialty =
 Team = 
 Quotes = «Vuelve cuando quieras; la casa no se mueve.»
 Chronology = 1 | Pueblo Albor | PUEBLO_ALBOR | Despide al protagonista en casa; el último hogar tranquilo | Madre | No
-Appearances = 1
+Chronology = 19 | Pueblo Albor | PUEBLO_ALBOR | Con 3 medallas: mejora el Pokévial a 2 cargas | Madre | No
+Chronology = 41 | Pueblo Albor | PUEBLO_ALBOR | Con 6 medallas: mejora el Pokévial a 3 cargas | Madre | No
+Appearances = 3
 Battles = 0
 Source = Vol. 7 §6.2
 
@@ -987,12 +989,12 @@ Source = Vol. 7 §6.5
 
 [CHAR_PADRE]
 Name = Padre
-Role = Padre del protagonista (NPC de ambientación)
+Role = Padre del protagonista (punto de curación de Pueblo Albor)
 Category = PNJ
 Aliases = Padre
 Age = 
 Appearance = 
-Personality = Figura listada en Personajes.md sin apariciones en la trama; NPC de ambientación (ausente, mencionado en Pueblo Albor).
+Personality = Padre del protagonista. Atiende en casa: cura al equipo cada vez que se lo pides (es el punto de curación de Pueblo Albor, que no tiene Centro Pokémon).
 Backstory = 
 Motivation = 
 Arc = 
@@ -1000,6 +1002,10 @@ FirstLocation = PUEBLO_ALBOR
 Locations = PUEBLO_ALBOR
 TypeSpecialty = 
 Team = 
+Quotes = «Si te cansas, vuelve a casa: aquí siempre os dejaremos como nuevos.»
+Chronology = 1 | Pueblo Albor | PUEBLO_ALBOR | Cura al equipo en casa (punto de curación del pueblo) | Padre | No
+Appearances = 1
+Battles = 0
 Source = Vol. 7 §6.5
 
 [CHAR_RECLUTAS]

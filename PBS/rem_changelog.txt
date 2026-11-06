@@ -8619,7 +8619,7 @@ Note = Implementación: Requiere script (sobrescribir la Naturaleza efectiva).
 Note = Objeto nuevo en REM (Vol. 9 §1.3, ID 716): categoría Clave, rareza Clave.
 Note = Implementación: Requiere script: contador de cargas (variable), curación del equipo y recarga en el Centro Pokémon.
 Note = Comodidad de viaje (Vol. 9 §1.3.5): Frasco portátil que cura a todo el equipo entre combates y rutas. Se recarga automáticamente en cualquier Centro Pokémon. Mejora de 1 a 3 cargas (tabla 3.4.1).
-Note = Cómo se obtiene: Amparo (la madre) lo entrega con 1 carga al salir de casa en el Pueblo Albor (Acto I). 2.ª carga: Misión n.º 6 de Pía (Acto III). 3.ª carga: Misión n.º 17 de Pía (Acto IV).
+Note = Cómo se obtiene: Amparo (la madre) lo entrega con 1 carga al salir de casa en el Pueblo Albor (Acto I). La 2.ª carga (con 3 medallas) y la 3.ª (con 6 medallas) las da la propia Amparo al volver a verla en Pueblo Albor.
 
 [ITEM_INFINITECANDY]
 Note = Objeto nuevo en REM (Vol. 9 §1.3, ID 717): categoría Clave, rareza Clave.

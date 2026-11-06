@@ -365,7 +365,7 @@ BOSS = {
 # Se omiten los que dependen de misiones de Pía por nº de capturas (Buscaobjetos, Repartir Exp, Amuletos) y los
 # objetos de legendarios opcionales (Espejo Veraz, Gracídea, Punta ADN, Vasija Castigo): no marcan progreso de historia.
 KEY_ITEMS = {
-    1: ['TOWNMAP', 'SHEARS', 'POKEVIAL', 'INFINITECANDY'],
+    1: ['TOWNMAP', 'POKEVIAL', 'INFINITECANDY'],
     4: ['WAILMERPAIL'],
     5: ['NIGHTMAREFRAG1'],
     8: ['PICKAXE'],

@@ -277,11 +277,11 @@ ConnE = RUTA_20 | Ruta 20 → Cruce de las Rutas 20 y 21
 ConnO = RUTA_13 | Ruta 13 → Cruce de la Ruta 13
 LevelRangeDay = 
 LevelRangeNight = 
-Etymology = La iolita (cordierita) es el «zafiro de agua»: un silicato azul violáceo cuyo color cambia según el ángulo desde el que se mira, de modo que una misma piedra parece azul, violeta o gris. Un nombre perfecto para un lugar «modesto y apacible» que contiene más de lo que aparenta.
+Etymology = El albor es la primera luz del día, el amanecer: un pueblo modesto y apacible donde empieza el viaje, el último hogar tranquilo antes de la tormenta.
 Situation = Extremo suroccidental. Por el sur le llega la Ruta 1; por el este sale la Ruta 20 (una cueva sellada al inicio); por el oeste, la Ruta 13 marítima (bloqueada al inicio). (Nodo de pueblo en las coordenadas (136, 232) del mapa de 480×320.)
 Description = Casas bajas de tejas azuladas alrededor de una plaza con un olmo viejo; el laboratorio del Profesor domina una pequeña loma. Gallos, ropa tendida y una música de flauta sencilla. Transmite el último hogar tranquilo antes de la tormenta.
-EventsSummary = Apertura del juego. Mañana especial: el Profesor ha convocado al protagonista, a Lucián (su vecino) y a Guiomar, que llega desde Pueblo Heliar. Cada uno expresa su motivación: Lucián, completar la Pokédex, Guiomar, ser la mejor, el protagonista, silencioso, es el equilibrio entre ambos.; Entrega y tutorial. El Profesor habla del vínculo con los Pokémon y de «desequilibrios en los sueños». Reparte los iniciales (Nv 5) y se celebra un combate amistoso de tutorial, Guiomar parte primero. Los tres se despiden con la promesa de reencontrarse en el camino hacia el sur.; Detalle de auditoría. El Profesor consulta compulsivamente su reloj de bolsillo de oro agrietado: primera pista de su doble juego.
-CharactersPresent = Ambrosio (Profesor); Pía (ayudante); Amparo (madre); Lucián; Guiomar
+EventsSummary = Apertura del juego. Mañana especial: el Profesor ha convocado al protagonista, a Lucián (su vecino) y a Guiomar, que llega desde Pueblo Heliar. Cada uno expresa su motivación: Lucián, completar la Pokédex, Guiomar, ser la mejor, el protagonista, silencioso, es el equilibrio entre ambos.; Entrega y tutorial. El Profesor habla del vínculo con los Pokémon y de «desequilibrios en los sueños». Reparte los iniciales (Nv 5) y se celebra un combate amistoso de tutorial, Guiomar parte primero. Los tres se despiden con la promesa de reencontrarse en el camino hacia el sur.; Detalle de auditoría. El Profesor consulta compulsivamente su reloj de bolsillo de oro agrietado: primera pista de su doble juego.; Casa familiar: Amparo entrega el Pokévial (1 carga) y pide que vuelvas a verla con 3 y 6 medallas para mejorarlo (2 y 3 cargas); el Padre cura al equipo (sin Centro Pokémon ni tienda).
+CharactersPresent = Ambrosio (Profesor); Pía (ayudante); Amparo (madre); Padre (punto de curación); Lucián; Guiomar
 BossInfo = Entrega inicial del Pokémon (Nv 5)
 MapID = 2
 MapIDStatus = Existing
@@ -289,9 +289,9 @@ StoryVar = 121
 StoryVarName = H_PUEBLO_ALBOR
 SidequestVar = 201
 SidequestVarName = M_PUEBLO_ALBOR
-SidequestTitle = Recados del pueblo
-SidequestSteps = Los vecinos de Pueblo Albor necesitan 3 recados que tú, recién llegado, puedes hacer en el pueblo. | Reparte tres cartas a casas distintas del pueblo y recoge cada vez un sello de buzón. | La cartera del pueblo canjea los tres sellos por una pieza de Pokévial: sube a 2 cargas.
-SidequestReward = Pokévial a 2 cargas
+SidequestTitle = El Pokémon del pozo
+SidequestSteps = Un señor mayor del pueblo ha perdido a su Pokémon: se cayó al pozo de Pueblo Albor y no sabe cómo sacarlo. | Baja al fondo del pozo: el Pokémon, aterrado y asustado, te ataca; combátelo (Nv 5) hasta calmarlo y recógelo. | Devuélvele su Pokémon al señor: en agradecimiento te da un Antiparalizador.
+SidequestReward = PARLYZHEAL x1
 
 [PUEBLO_HELIODORO]
 Name = Pueblo Heliar
@@ -843,9 +843,9 @@ StoryVar = 171
 StoryVarName = H_LADERA_PORFIRAL
 SidequestVar = 232
 SidequestVarName = M_LADERA_PORFIRAL
-SidequestTitle = La boquilla del Pokévial
-SidequestSteps = Un chatarrero de la ladera guarda restos de un frasco mayor. | Encuentra 3 piezas (anillo, tapa, boquilla) entre los restos de la ladera. | Monta el frasco con el chatarrero: el Pokévial sube a 3 cargas.
-SidequestReward = Pokévial a 3 cargas
+SidequestTitle = El cinturón del chatarrero
+SidequestSteps = Un chatarrero de la ladera guarda restos de un equipo de mineros y le faltan piezas. | Encuentra 3 piezas (hebilla, correa, remache) entre los restos de la ladera. | Monta el cinturón con el chatarrero: te lo regala, una Cinta Experta.
+SidequestReward = EXPERTBELT x1
 
 [GRUTA_PIRITA]
 Name = Gruta Piral (Gruta Volcánica)

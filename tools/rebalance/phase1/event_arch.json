@@ -231,7 +231,7 @@
   "692": "Regalo_Unico_CiudadVenturina_CALMHERB",
   "693": "Tienda_Unica_CiudadVenturina_TM05",
   "694": "Regalo_Unico_PuebloAlbor_TOWNMAP",
-  "695": "Regalo_Unico_PuebloAlbor_SHEARS",
+  "695": "Regalo_Unico_CiudadCalaire_SHEARS",
   "696": "Regalo_Unico_PuebloAlbor_POKEVIAL",
   "697": "Regalo_Unico_PuebloAlbor_INFINITECANDY",
   "698": "Tienda_Unica_PuebloPedernal_TM30",
@@ -1223,8 +1223,5 @@
   "720": 813,
   "721": 814
  },
- "quest_vial": {
-  "PUEBLO_ALBOR": 2,
-  "LADERA_PORFIDO": 3
- }
+ "quest_vial": {}
 }

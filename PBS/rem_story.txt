@@ -22,11 +22,13 @@ LocationKey = PUEBLO_ALBOR
 MedalsEarned = 0
 FragmentsInPlay = Ninguno todavía. El Profesor menciona «desequilibrios en los sueños».
 WildLevels = Sin salvajes en esta escena
-CharactersInScene = Tú (Protagonista);Ambrosio;Lucián;Guiomar;Amparo;Pía
+CharactersInScene = Tú (Protagonista);Ambrosio;Lucián;Guiomar;Amparo;Padre;Pía
 NarrativeText = Te despierta el olor a pan. La luz entra sesgada por la ventana de tu cuarto y dibuja en el suelo un rectángulo amarillo. Abajo, tu madre, Amparo, ya ha puesto la mesa y mueve las tazas con esa precisión suya que no admite replicas.
 NarrativeText = —Hoy es el día —dice, sin volverse—. No te he llamado para que te quedes mirando el techo.
 NarrativeText = Desayunas con prisa. Ella te ajusta el cuello de la chaqueta, te coloca un mechón rebelde y te mira un segundo de más.
 NarrativeText = —Vuelve cuando quieras —añade al fin—. La casa no se mueve.
+NarrativeText = Antes de que cruces la puerta te pone un frasco en las manos: un Pokévial, con una sola carga. —Cuando hayas ganado tres medallas, pasa a verme; y otra vez con seis. Ya veré qué puedo hacer por él —dice, sin explicar más.
+NarrativeText = Tu padre, apoyado en el marco del salón, te guiña un ojo: —Si te cansas, vuelve a casa. Aquí siempre os dejaremos como nuevos, a ti y a los tuyos.
 NarrativeText = Pueblo Albor es un lugar pequeño, de tejas azuladas y un olmo viejo en la plaza. Todo el mundo se conoce. Cada mañana la misma gallina cruza la misma calle. Al fondo, sobre una loma, la casa-laboratorio del Profesor despide humo por la chimenea.
 NarrativeText = En la verja te espera Lucián, tu vecino de toda la vida. Lleva el chaleco abrochado hasta arriba, las gafas torcidas de tanto empujárselas y una libreta bajo el brazo.
 NarrativeText = —Llegas ocho minutos tarde —dice—. Probablemente no es grave. Aunque… con un setenta por ciento de confianza, Guiomar ya está dentro.
@@ -45,6 +47,8 @@ NarrativeText = Al terminar, Guiomar ya se ha marchado hacia el gimnasio más ce
 NarrativeText = —Probablemente nos alcanzará en el primer cruce —murmura.
 NarrativeText = Sales a la loma. Hacia el noreste, una cueva cuya entrada está sellada con tablones; hacia el oeste, el mar, y una ruta que solo se atraviesa con barco. Hacia el sur, la Ruta 1. Detrás de ti, Amparo agita la mano desde la puerta, y la mano del Profesor, desde la ventana del laboratorio, abre y cierra la tapa de su reloj.
 Milestones = Entrega del Pokémon inicial (Nv 5) y presentación del trío; el Pokédex queda en tu poder.
+Milestones = Amparo entrega el Pokévial (1 carga) y pide que vuelvas con 3 y con 6 medallas para mejorarlo (2 y 3 cargas).
+Milestones = El Padre es el punto de curación del pueblo (no hay Centro Pokémon ni tienda).
 Milestones = Combate tutorial contra Lucián (guion, Nv 5): no cuenta como duelo «real».
 Milestones = Foreshadowing: el reloj agrietado y la frase «los vínculos despiertan todo lo que duerme»; el Profesor insiste en que viajen juntos (así despertarán los fragmentos).
 Milestones = Bloqueos: Ruta 20 (cueva NE) y Ruta 13 (marina, W) quedan cerradas; se abren en la fase final y a mitad del juego.
@@ -268,6 +272,7 @@ NarrativeText = Abre las puertas de su gimnasio: una piscina de olas artificiale
 NarrativeText = —Eso ha sido un buen oleaje —dice, y te entrega la Medalla 2.
 Milestones = Allanamiento de Morfeo (búsqueda del fragmento inexistente), expulsión de los reclutas y cooperación con Guiomar e Ismael.
 Milestones = Gimnasio 2 (Agua) — Ismael: Ace Nv 25. Medalla 2.
+Milestones = Tras la Medalla 2, Ismael regala las Tijeras (Corte, 2 medallas).
 WhyItMatters = Muestra que Morfeo actúa con información de segunda mano (el fragmento no estaba allí) y convierte a Ismael en defensor activo de su ciudad antes del combate.
 
 [CHAPTER_13]
@@ -445,6 +450,7 @@ NarrativeText = —Bien soldado —dice—. Hay tensión de sobra en ti… de la
 NarrativeText = Te entrega la Medalla 3.
 Milestones = Gimnasio 3 (Acero) — Argos: Ace Nv 35. Medalla 3.
 Milestones = Mapa.md decía «Segundo gimnasio (Acero)»: es el tercero, y está en Ciudad Magno.
+Milestones = Con 3 medallas, Amparo mejora el Pokévial a 2 cargas si vuelves a verla en Pueblo Albor.
 WhyItMatters = Medalla 3 y confirmación de que la isla importa: Argos entrega la advertencia que dará sentido a la travesía final.
 
 [CHAPTER_22]
@@ -901,6 +907,7 @@ NarrativeText = Te entrega una hierba calmante.
 NarrativeText = —Con esto podrás volver a la Ruta 14 y despejar el paso. Tu amigo sigue allí.
 Milestones = Gimnasio 6 (Planta) — Hildegarda: Ace Nv 54. Medalla 6.
 Milestones = Roldán entrega la hierba calmante: desbloquea la Ruta 14/16 y alerta de la base de la ciénaga.
+Milestones = Con 6 medallas, Amparo mejora el Pokévial a 3 cargas si vuelves a verla en Pueblo Albor.
 WhyItMatters = Medalla 6 y entrega de la hierba calmante: sin ella la Ruta 14 seguiría cerrada y la historia no llegaría a la Villa.
 
 [CHAPTER_45]
