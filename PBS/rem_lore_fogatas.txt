@@ -1,0 +1,292 @@
+﻿# Pokémon REM — Relatos de fogata (24, uno por ruta numerada). Documento de TRABAJO (no lo lee el juego). Reglas en PBS/rem_workflow_ubicaciones.txt ([REGLAS_DE_FOGATA_Y_RELATOS]).
+# Cada ruta numerada tiene una fogata: de día apagada y sin nadie; de noche encendida con un NPC que cuenta una anécdota de la formación de la región, sin relación con la trama principal.
+# El relato se puede oír siempre; el objeto Reward solo la primera vez (interruptor Switch). El texto de Story se escribe en el análisis de cada ruta y se guarda aquí al aprobarla.
+# Formato: [RELATO_NN] con «Clave = Valor». Story = un mensaje de narrador por línea (6-12). Status = PENDIENTE | PROPUESTO | APROBADO.
+
+[RELATO_01]
+LocationKey = RUTA_01
+Name = Ruta 1
+Category = Ruta normal
+Act = I
+Title =
+NpcName =
+Reward =
+Switch = Fogata_Regalo_Ruta01
+Status = PENDIENTE
+Story =
+
+[RELATO_02]
+LocationKey = RUTA_02
+Name = Ruta 2
+Category = Ruta normal
+Act = I
+Title =
+NpcName =
+Reward =
+Switch = Fogata_Regalo_Ruta02
+Status = PENDIENTE
+Story =
+
+[RELATO_03]
+LocationKey = RUTA_03
+Name = Ruta 3
+Category = Ruta de montaña
+Act = I
+Title =
+NpcName =
+Reward =
+Switch = Fogata_Regalo_Ruta03
+Status = PENDIENTE
+Story =
+
+[RELATO_04]
+LocationKey = RUTA_04
+Name = Ruta 4
+Category = Ruta normal
+Act = I
+Title =
+NpcName =
+Reward =
+Switch = Fogata_Regalo_Ruta04
+Status = PENDIENTE
+Story =
+
+[RELATO_05]
+LocationKey = RUTA_05
+Name = Ruta 5
+Category = Ruta normal
+Act = I
+Title =
+NpcName =
+Reward =
+Switch = Fogata_Regalo_Ruta05
+Status = PENDIENTE
+Story =
+
+[RELATO_06]
+LocationKey = RUTA_06
+Name = Ruta 6
+Category = Ruta normal
+Act = II
+Title =
+NpcName =
+Reward =
+Switch = Fogata_Regalo_Ruta06
+Status = PENDIENTE
+Story =
+
+[RELATO_07]
+LocationKey = RUTA_07
+Name = Ruta 7
+Category = Ruta normal
+Act = II
+Title =
+NpcName =
+Reward =
+Switch = Fogata_Regalo_Ruta07
+Status = PENDIENTE
+Story =
+
+[RELATO_08]
+LocationKey = RUTA_08
+Name = Ruta 8
+Category = Ruta normal
+Act = II
+Title =
+NpcName =
+Reward =
+Switch = Fogata_Regalo_Ruta08
+Status = PENDIENTE
+Story =
+
+[RELATO_09]
+LocationKey = RUTA_09
+Name = Ruta 9
+Category = Ruta normal
+Act = II
+Title =
+NpcName =
+Reward =
+Switch = Fogata_Regalo_Ruta09
+Status = PENDIENTE
+Story =
+
+[RELATO_10]
+LocationKey = RUTA_10
+Name = Ruta 10
+Category = Ruta de montaña
+Act = III
+Title =
+NpcName =
+Reward =
+Switch = Fogata_Regalo_Ruta10
+Status = PENDIENTE
+Story =
+
+[RELATO_11]
+LocationKey = RUTA_11
+Name = Ruta 11
+Category = Ruta nevada
+Act = III
+Title =
+NpcName =
+Reward =
+Switch = Fogata_Regalo_Ruta11
+Status = PENDIENTE
+Story =
+
+[RELATO_12]
+LocationKey = RUTA_12
+Name = Ruta 12
+Category = Ruta marina
+Act = III
+Title =
+NpcName =
+Reward =
+Switch = Fogata_Regalo_Ruta12
+Status = PENDIENTE
+Story =
+
+[RELATO_13]
+LocationKey = RUTA_13
+Name = Ruta 13
+Category = Ruta marina
+Act = III
+Title =
+NpcName =
+Reward =
+Switch = Fogata_Regalo_Ruta13
+Status = PENDIENTE
+Story =
+
+[RELATO_14]
+LocationKey = RUTA_14
+Name = Ruta 14
+Category = Ruta normal
+Act = III
+Title =
+NpcName =
+Reward =
+Switch = Fogata_Regalo_Ruta14
+Status = PENDIENTE
+Story =
+
+[RELATO_15]
+LocationKey = RUTA_15
+Name = Ruta 15
+Category = Ruta normal
+Act = III
+Title =
+NpcName =
+Reward =
+Switch = Fogata_Regalo_Ruta15
+Status = PENDIENTE
+Story =
+
+[RELATO_16]
+LocationKey = RUTA_16
+Name = Ruta 16
+Category = Ruta normal
+Act = III
+Title =
+NpcName =
+Reward =
+Switch = Fogata_Regalo_Ruta16
+Status = PENDIENTE
+Story =
+
+[RELATO_17]
+LocationKey = RUTA_17
+Name = Ruta 17
+Category = Ruta nevada
+Act = IV
+Title =
+NpcName =
+Reward =
+Switch = Fogata_Regalo_Ruta17
+Status = PENDIENTE
+Story =
+
+[RELATO_18]
+LocationKey = RUTA_19
+Name = Ruta 19
+Category = Ruta nevada
+Act = IV
+Title =
+NpcName =
+Reward =
+Switch = Fogata_Regalo_Ruta19
+Status = PENDIENTE
+Story =
+
+[RELATO_19]
+LocationKey = RUTA_18
+Name = Ruta 18
+Category = Ruta nevada
+Act = IV
+Title =
+NpcName =
+Reward =
+Switch = Fogata_Regalo_Ruta18
+Status = PENDIENTE
+Story =
+
+[RELATO_20]
+LocationKey = RUTA_20
+Name = Ruta 20
+Category = Ruta de montaña
+Act = IV
+Title =
+NpcName =
+Reward =
+Switch = Fogata_Regalo_Ruta20
+Status = PENDIENTE
+Story =
+
+[RELATO_21]
+LocationKey = RUTA_21
+Name = Ruta 21
+Category = Ruta de montaña
+Act = IV
+Title =
+NpcName =
+Reward =
+Switch = Fogata_Regalo_Ruta21
+Status = PENDIENTE
+Story =
+
+[RELATO_22]
+LocationKey = RUTA_22
+Name = Ruta 22
+Category = Ruta de montaña
+Act = V
+Title =
+NpcName =
+Reward =
+Switch = Fogata_Regalo_Ruta22
+Status = PENDIENTE
+Story =
+
+[RELATO_23]
+LocationKey = RUTA_23
+Name = Ruta 23
+Category = Ruta marina
+Act = V
+Title =
+NpcName =
+Reward =
+Switch = Fogata_Regalo_Ruta23
+Status = PENDIENTE
+Story =
+
+[RELATO_24]
+LocationKey = RUTA_24
+Name = Ruta 24
+Category = Ruta marina
+Act = V
+Title =
+NpcName =
+Reward =
+Switch = Fogata_Regalo_Ruta24
+Status = PENDIENTE
+Story =

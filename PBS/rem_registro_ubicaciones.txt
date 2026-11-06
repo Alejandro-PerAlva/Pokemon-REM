@@ -1,0 +1,92 @@
+﻿# Pokémon REM — Registro de ubicaciones. Documento de TRABAJO para Claude (no lo lee el juego ni el Codex). Reglas en PBS/rem_workflow_ubicaciones.txt ([REGISTRO_Y_VISTO_BUENO]).
+# Estados: PENDIENTE → ANALIZADA → AJUSTADA → EVENTOS_GENERADOS → EN_REVISION → APROBADA. Un snapshot solo se escribe con el visto bueno explícito del diseñador.
+# Formato: UTF-8 BOM, CRLF. [ESTADO_DE_UBICACIONES]: una línea por ubicación en orden de progresión: LOC_KEY | Nombre | Categoría | Acto | STEP(s) (tope día/noche) | MapID (estado) | Estado | Notas.
+
+[ESTADO_DE_UBICACIONES]
+PUEBLO_ALBOR | Pueblo Albor | Pueblo | I | STEP_01 (9/9) | 2 (Existing) | EVENTOS_GENERADOS | eventos hechos antes del registro (tools/events/albor_events.rb); sin snapshot
+RUTA_01 | Ruta 1 | Ruta normal | I | STEP_02 (9/9) | 6 (Existing) | PENDIENTE | 
+PUEBLO_HELIODORO | Pueblo Heliar | Pueblo | I | STEP_03 (9/9) | 9 (Existing) | PENDIENTE | 
+GRANJA_APATITA | Granja Apato | Ruta especial | I | STEP_04 (13/13) | 12 (Existing) | PENDIENTE | 
+BOSQUE_DIOPTASA | Bosque Dioptasa | Lugar especial | I | STEP_05 (14/16) | 18 (Existing) | PENDIENTE | 
+RUTA_02 | Ruta 2 | Ruta normal | I | STEP_06 (16/19) | 22 (Existing) | PENDIENTE | 
+CIUDAD_CALCEDONIA | Ciudad Calceda | Ciudad | I | STEP_07 (16/19) | 907 (Provisional) | PENDIENTE | 
+RUTA_03 | Ruta 3 | Ruta de montaña | I | STEP_08 (19/22) | 908 (Provisional) | PENDIENTE | 
+RUTA_04 | Ruta 4 | Ruta normal | I | STEP_09 (25/25) | 909 (Provisional) | PENDIENTE | 
+PLAYA_SEPIOLITA | Playa Sepiola | Ruta especial | I | STEP_10 (25/28) | 910 (Provisional) | PENDIENTE | 
+CIUDAD_CALAITA | Ciudad Calaire | Ciudad | I | STEP_11 (28/28) | 911 (Provisional) | PENDIENTE | 
+RUTA_05 | Ruta 5 | Ruta normal | I | STEP_12 (28/33) | 912 (Provisional) | PENDIENTE | 
+PUEBLO_PEDERNAL | Pueblo Pedernal | Pueblo | I | STEP_13 (28/33) | 913 (Provisional) | PENDIENTE | 
+LAGO_AMATISTA | Lago Amatista | Lugar especial | I | STEP_14 (28/36), STEP_15 (28/39) | 914 (Provisional) | PENDIENTE | 
+RUTA_06 | Ruta 6 | Ruta normal | II | STEP_16 (31/40) | 916 (Provisional) | PENDIENTE | 
+CENTRAL_FULGURITA | Central Fulgor | Lugar especial | II | STEP_17 (32/42) | 917 (Provisional) | PENDIENTE | 
+RUTA_07 | Ruta 7 | Ruta normal | II | STEP_18 (35/43) | 918 (Provisional) | PENDIENTE | 
+CIUDAD_MAGNETITA | Ciudad Magno | Ciudad | II | STEP_19 (38/43) | 919 (Provisional) | PENDIENTE | 
+ISLA_OPALINA | Isla Sueño | Lugar especial | II | STEP_20 (38/43), STEP_59 (75/99) | 920 (Provisional) | PENDIENTE | 
+ESTEPA_LATERITA | Estepa Latera | Ruta especial | II | STEP_21 (38/46) | 921 (Provisional) | PENDIENTE | 
+DESIERTO_HALITA | Desierto Halar | Lugar especial | II | STEP_22 (41/49) | 922 (Provisional) | PENDIENTE | 
+RUTA_08 | Ruta 8 | Ruta normal | II | STEP_23 (41/52) | 923 (Provisional) | PENDIENTE | 
+CIUDAD_NEFRITA | Ciudad Nefral | Ciudad | II | STEP_24 (42/52) | 924 (Provisional) | PENDIENTE | 
+SENDA_SERPENTINA | Senda Serpentina | Ruta especial | II | STEP_25 (45/55) | 925 (Provisional) | PENDIENTE | 
+RUINAS_ATACAMITA | Ruinas Atacama | Lugar especial | II | STEP_26 (46/58) | 926 (Provisional) | PENDIENTE | 
+RUTA_09 | Ruta 9 | Ruta normal | II | STEP_27 (46/60) | 927 (Provisional) | PENDIENTE | 
+PUENTE_DOLOMITA | Puente Dolomar | Ruta especial | II | STEP_28 (49/61) | 928 (Provisional) | PENDIENTE | 
+CIUDAD_AZABACHE | Ciudad Azabache | Ciudad | II | STEP_29 (52/61) | 929 (Provisional) | PENDIENTE | 
+RUTA_10 | Ruta 10 | Ruta de montaña | III | STEP_30 (52/63) | 930 (Provisional) | PENDIENTE | 
+CASCADAS_TRAVERTINAS | Cascadas Travertinas | Lugar especial | III | STEP_31 (55/67) | 931 (Provisional) | PENDIENTE | 
+ACANTILADOS_RODONITA | Acantilados Rodal | Ruta especial | III | STEP_32 (55/68) | 932 (Provisional) | PENDIENTE | 
+PUEBLO_CASITERITA | Pueblo Casitero | Pueblo | III | STEP_33 (55/68) | 933 (Provisional) | PENDIENTE | 
+RUTA_11 | Ruta 11 | Ruta nevada | III | STEP_34 (55/69) | 934 (Provisional) | PENDIENTE | 
+RUTA_12 | Ruta 12 | Ruta marina | III | STEP_35 (55/71) | 935 (Provisional) | PENDIENTE | 
+PUEBLO_NACAR | Pueblo Nacara | Pueblo | III | STEP_36 (55/71) | 936 (Provisional) | PENDIENTE | 
+RUTA_13 | Ruta 13 | Ruta marina | III | STEP_37 (55/71) | 937 (Provisional) | PENDIENTE | 
+ISLA_OBSIDIANA | Isla Pesadilla | Lugar especial | III | STEP_38 (55/72), STEP_61 (76/99) | 938 (Provisional) | PENDIENTE | 
+RUTA_14 | Ruta 14 | Ruta normal | III | STEP_39 (55/72) | 939 (Provisional) | PENDIENTE | 
+RESERVA_PERIDOTO | Reserva Peridoto | Ruta especial | III | STEP_40 (55/72) | 940 (Provisional) | PENDIENTE | 
+CIUDAD_VENTURINA | Ciudad Venturina | Ciudad | III | STEP_41 (58/72) | 941 (Provisional) | PENDIENTE | 
+RUTA_15 | Ruta 15 | Ruta normal | III | STEP_42 (58/74) | 942 (Provisional) | PENDIENTE | 
+RUTA_16 | Ruta 16 | Ruta normal | III | STEP_43 (58/75) | 943 (Provisional) | PENDIENTE | 
+VILLA_ADULARIA | Villa Adular | Lugar especial | III | STEP_44 (60/78) | 944 (Provisional) | PENDIENTE | 
+CIENAGA_LIMONITA | Ciénaga Limonar | Lugar especial | IV | STEP_45 (62/81) | 945 (Provisional) | PENDIENTE | 
+PUEBLO_ESTEATITA | Pueblo Estea | Pueblo | IV | STEP_46 (64/81) | 946 (Provisional) | PENDIENTE | 
+RUTA_17 | Ruta 17 | Ruta nevada | IV | STEP_47 (64/84) | 947 (Provisional) | PENDIENTE | 
+CIUDAD_ALABASTRO | Ciudad Alabastro | Ciudad | IV | STEP_48 (66/84) | 948 (Provisional) | PENDIENTE | 
+RUTA_19 | Ruta 19 | Ruta nevada | IV | STEP_49 (66/84) | 949 (Provisional) | PENDIENTE | 
+RUTA_18 | Ruta 18 | Ruta nevada | IV | STEP_50 (66/86) | 950 (Provisional) | PENDIENTE | 
+TEMPLO_MOLDAVITA | Templo Moldar | Lugar especial | IV | STEP_51 (68/87) | 951 (Provisional) | PENDIENTE | 
+LADERA_PORFIDO | Ladera Porfiral | Lugar especial | IV | STEP_52 (69/91) | 952 (Provisional) | PENDIENTE | 
+RUTA_20 | Ruta 20 | Ruta de montaña | IV | STEP_53 (70/93) | 953 (Provisional) | PENDIENTE | 
+RUTA_21 | Ruta 21 | Ruta de montaña | IV | STEP_54 (70/93) | 954 (Provisional) | PENDIENTE | 
+CIUDAD_REJALGAR | Ciudad Rejalgar | Ciudad | IV | STEP_55 (70/93) | 955 (Provisional) | PENDIENTE | 
+RUTA_22 | Ruta 22 | Ruta de montaña | V | STEP_56 (75/93) | 956 (Provisional) | PENDIENTE | 
+MONTE_AZOGUE | Monte Azogue | Pueblo | V | STEP_57 (75/93) | 957 (Provisional) | PENDIENTE | 
+RUTA_23 | Ruta 23 | Ruta marina | V | STEP_58 (75/98) | 958 (Provisional) | PENDIENTE | 
+RUTA_24 | Ruta 24 | Ruta marina | V | STEP_60 (75/99) | 960 (Provisional) | PENDIENTE | 
+GRUTA_HIALINA | Gruta Hialina (Gruta de Cristales) | Lugar especial | III | STEP_62 (76/100) | 962 (Provisional) | PENDIENTE | 
+GRUTA_AZURITA | Gruta Azur (Gruta Abisal) | Lugar especial | III | STEP_63 (76/100) | 963 (Provisional) | PENDIENTE | 
+GRUTA_LABRADORITA | Gruta Labrador (Gruta Helada) | Lugar especial | IV | STEP_64 (76/100) | 964 (Provisional) | PENDIENTE | 
+GRUTA_PIRITA | Gruta Piral (Gruta Volcánica) | Lugar especial | IV | STEP_65 (76/100) | 965 (Provisional) | PENDIENTE | 
+CALZADA_CORINDON | Calzada Corindal | Ruta especial | V | STEP_66 (77/100) | 966 (Provisional) | PENDIENTE | 
+MESETA_CELESTITA | Meseta Celeste (Liga Pokémon) | Pueblo | V | STEP_67 (80/100), STEP_68 (80/100) | 968 (Provisional) | PENDIENTE | 
+
+[CUENTAS_ACUMULADAS]
+# Se recalculan en cada aprobación. Solo cuentan las ubicaciones APROBADAS.
+UbicacionesAprobadas = 0
+Entrenadores_Total = 0
+# EntrenadoresPorActo = I:0; II:0; III:0; IV:0; V:0
+# ClasesUsadas = CLASE:n.º de ubicaciones; ...
+# PokemonUsados = ESPECIE:veces (ubicaciones); ...
+# ObjetosPorActo = Acto: consumibles n · MT n · clave n
+# RelatosFogata = 0/24
+
+[PLANTILLA_SNAPSHOT]
+# Copiar bajo [SNAPSHOT_<LOC_KEY>] al aprobar una ubicación:
+# Approved = AAAA-MM-DD
+# Steps = STEP_NN; ...        LevelCapDay = n   LevelCapNight = n
+# Maps = id, id (submapas)    EventPrefix = XXXX_    Script = tools/events/<loc>_events.rb
+# TrainerN = ID_ESTABLE | CLASE | Nombre | Zona | ESPECIE nv, ESPECIE nv, ...
+# ItemN = ITEM_ID,cant,tipo,dónde
+# Npcs = nombre (función); ...
+# Events = n.º de eventos; resumen
+# Vars = V121:0..n; V201:0..n; interruptores usados
+# Fogata = RELATO_NN | objeto (solo rutas normales)
+# Decisions = decisiones notables

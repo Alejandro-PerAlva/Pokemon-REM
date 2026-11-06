@@ -39,6 +39,14 @@ module REMEv
     # Mensaje (texto con \PN, \c[1]... escrito con UNA barra; se escapa aquí).
     def say(text); script(%{Kernel.pbMessage(_INTL("#{esc(text)}"))}); end
     def sw(id, on = true); add(121, id, id, on ? 0 : 1); end
+    # Narrador SIN caja de diálogo (fondo transparente del mensaje; se restaura al terminar).
+    def narrate(text)
+      script("$game_message.background=2"); say(text); script("$game_message.background=0")
+    end
+    # Diálogo de personaje: nombre y «:» en negrita (<b>Nombre:</b> texto).
+    def speak(name, text); say("<b>#{name}:</b> #{text}"); end
+    # Variante según el género del jugador: l.gender { |b| ... } / { |b| ... } → l.gender(lambda { |b| ... }, lambda { |b| ... })
+    def gender(male_blk, female_blk); ifelse(:script, '$Trainer.isMale?') { [male_blk, female_blk] }; end
     def var(id, val); add(122, id, id, 0, 0, val); end
     def self_sw(ch = 'A', on = true); add(123, ch, on ? 0 : 1); end
     def wait(n); add(106, n); end

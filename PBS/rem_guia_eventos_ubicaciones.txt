@@ -1,12 +1,12 @@
 ﻿# Pokémon REM — Guía de EVENTOS por ubicación. Documento de INSTRUCCIONES para Claude: no lo lee el juego ni el Codex.
-# Uso: es el paso final de cada ubicación (ver [FLUJO] paso 6 de PBS/rem_workflow_ubicaciones.txt). Tras analizar la ubicación y aplicar los cambios
+# Uso: es el paso final de cada ubicación (ver [FLUJO] pasos 5-7 de PBS/rem_workflow_ubicaciones.txt: generación, revisión y visto bueno). Tras analizar la ubicación y aplicar los cambios
 #      del diseñador a los PBS, Claude crea los eventos de esa ubicación en Data/MapNNN.rxdata siguiendo esta guía, sin pedir más contexto.
 # Referencia viva: tools/events/albor_events.rb (Pueblo Albor completo) y tools/events/rem_event_lib.rb (librería).
 
 [PRINCIPIOS]
 - Los PBS rem_* son la biblia: los eventos implementan lo que dicen rem_story (texto), rem_locations (EventsSummary, Sidequest*), rem_characters, rem_location_items, rem_progression y rem_shops.
 - Solo se AÑADEN eventos nuevos. Nunca se tocan eventos existentes, tiles, ni scripts (Data/Scripts.rxdata, tools/scripts_dump). Los eventos llaman a funciones que ya existen en los scripts.
-- Las posiciones no importan: los eventos nuevos se colocan desde la casilla (0,0) en orden de lectura y el diseñador los mueve. Cada evento lleva un comentario «[UBICACIÓN] ...» con dónde debe ir y, si hay animación, «[MOVIMIENTO] ...» (los movimientos de cinemática van SOLO como nota; los empujones funcionales, p. ej. de un bloqueo, usan pbMoveRoute en script).
+- Las posiciones no importan: los eventos nuevos se colocan EN FILA desde la casilla (0,0) en orden de lectura, en el mapa y en cada submapa, y el diseñador los mueve. Cada evento lleva un comentario «[UBICACIÓN] ...» con dónde debe ir y, si hay animación, «[MOVIMIENTO] ...» (los movimientos de cinemática van SOLO como nota; los empujones funcionales, p. ej. de un bloqueo, usan pbMoveRoute en script).
 - Prefijo propio por ubicación en el nombre de cada evento (ALBOR_, HELIODORO_...). El generador reemplaza los eventos con ese prefijo (idempotente) y deja intactos los demás.
 - Todo debe ser funcional: diálogos finales en español (texto de rem_story / personajes), objetos reales, variables reales. Lo que dependa de algo que aún no existe se protege con rescue/condición y se anota como pendiente (nunca rompe el juego).
 
@@ -21,21 +21,24 @@
 Para cada ubicación, a partir de los PBS:
   a) Escenas de historia en orden (EventsSummary + CHAPTER_xx): Autorun de una sola vez (página 0 trigger 3, página 1 con self-switch A en blanco) o NPC de acción por estado.
   b) Personajes presentes (CharactersPresent): un evento por personaje, páginas por estado de V121-V184 de la ubicación (variable ≥ n; la última página que cumple manda).
-  c) Objetos y regalos (rem_location_items): N = regalo de PNJ (con su interruptor Regalo_Unico_*), J = botín de líder, E = recompensa de sidequest, B/H = bolas/ocultos (solo si el diseñador lo pide; son del mapa), P = premios de Pía (se reclaman en su mostrador).
+  c) Objetos y regalos (rem_location_items; reglas en [REGLAS_DE_OBJETOS] del workflow): B = Poké Ball visible (gráfico rem_itemball, Kernel.pbItemBall, self-switch A), H = oculto (evento «HiddenItem» sin gráfico), C = cofre, N = regalo de PNJ (con su interruptor Regalo_Unico_*), J = botín de líder, E = recompensa de sidequest, P = premios de Pía (se reclaman en su mostrador). Todas las filas de la ubicación se convierten en evento; los NPC sin objeto en la lista no dan nada.
   d) Tiendas y servicios (rem_shops): Poké Mart por medallas solo donde la ubicación esté en Locations; Centro Pokémon o PNJ de curación (pbHealAll; pbSetPokemonCenter si es el punto de respawn).
   e) Sidequest local (rem_locations: SidequestTitle/Steps/Reward): un PNJ que la da y la entrega y los eventos de los pasos; estado en V201-V240 con pbSetQuestState(:LOC_KEY,n) (0, 1, 2, 3 = lista para entregar, 99 = completada); el premio lo entrega el evento (pbSetQuestState NO da objetos).
   f) Bloqueos y accesos (rem_progression + ConnN/S/E/O): eventos de contacto que muestran un mensaje y empujan al jugador; carteles y accesos sellados con su texto.
   g) Combates (jefes, rivales, entrenadores): pbTrainerBattle con tipos/IDs del PBS. Si el entrenador no existe en trainers.txt, el evento comprueba pbLoadTrainer y se salta el combate; la propuesta de entradas va en un fichero proposed_trainers_<loc>.txt (no se toca trainers.txt).
   h) Hito de progresión: al terminar la escena clave, pbAdvanceMilestone(n) y las variables macro (101-117) se actualizan con las funciones de REM_Events; no escribirlas a mano.
-  i) Ambientación: NPC con diálogos por estado (nunca más de 1-2 líneas por NPC si no aportan historia).
+  i) Ambientación: NPC con diálogos por estado (1-2 líneas por NPC si no aportan historia), con variedad de voces y eventos «tontos» que premian la exploración, coherentes con la descripción de la ubicación (ver [REGLAS_DE_EVENTOS] del workflow).
+  j) Fogata y relato (solo rutas numeradas): fogata apagada de día; de noche, NPC que cuenta el relato de rem_lore_fogatas.txt con narrador sin caja; objeto solo la primera vez (interruptor Fogata_Regalo_*). Gráficos rem_campfire_off / rem_campfire_on.
+  k) Entrenadores de la propuesta aprobada (proposed_trainers_<loc>.txt): un evento por entrenador con pbTrainerBattle y su identificador estable; nivel ≤ tope de la ubicación.
 
 [CONVENCIONES_TECNICAS]
 - Texto: l.say("...") genera Kernel.pbMessage(_INTL("...")); escribir \PN, \c[1], \se[ItemGet] con UNA barra en el .rb (la librería escapa). Máx. ~200 caracteres por mensaje.
+- Narrador SIN caja: l.narrate("...") (pone $game_message.background=2 solo para ese mensaje). Personaje: l.speak("Nombre","...") escribe «<b>Nombre:</b> ...» (nombre y dos puntos en negrita). Género del jugador: l.gender(lambda{|b| ...chico...}, lambda{|b| ...chica...}) (usa $Trainer.isMale?).
 - Variables: V121-V184 historia local (H_<LOC>), V201-V240 sidequest (M_<LOC>), V101-V117 macro (solo lectura salvo las funciones REM_Events), V1-V14 son temporales de Essentials (V1 se usa como resultado de pbWildBattle), V50/V111 topes de nivel (no tocar).
 - Interruptores: Regalo_Unico_*/Tienda_Unica_* (694+) por objeto único; 400 = menú de misiones de Pía; jefes en 501+. Usar solo los definidos en rem_variables_switches.txt.
 - Funciones disponibles (ya en scripts): pbAdvanceMilestone, pbStoryVar/pbSetStoryVar(:LOC,n), pbQuestState/pbSetQuestState(:LOC,n), pbRemVialSetMin(n)/pbRemVialRefill/pbRemEnsureVialVars, pbPiaFirst/pbPiaMarkFirst/pbPiaQuestPanel/pbClaimPiaStarter, pbHealAll (recarga el Pokévial), Kernel.pbReceiveItem(:SIMBOLO,cant), pbAddPokemon(:ESPECIE,nivel), pbWildBattle(:ESPECIE,nivel,1,false,false) (resultado en V1: 1 ganado, 2 perdido, 4 capturado), pbTrainerBattle, pbMoveRoute($game_player,[PBMoveRoute::Up],true), pbMarkLegendary.
 - Código del juego = Ruby 1.8 (RGSS1): sin sintaxis nueva (nada de ->, claves «a:» en hashes, Array#sum, &:sym).
-- Gráficos: personajes ya existentes: Lucián trchar002, Guiomar trchar003, Ambrosio trchar004 (placeholders numerados); NPC nuevos npcNNN (placeholders; el diseñador sustituye); los Pokémon visibles en el mapa usan el sprite del propio Pokémon (Graphics/Characters/NNN.png). No hay sprite de Poké Ball.
+- Gráficos: personajes ya existentes: Lucián trchar002, Guiomar trchar003, Ambrosio trchar004 (placeholders numerados); NPC nuevos npcNNN (placeholders; el diseñador sustituye); los Pokémon visibles en el mapa usan el sprite del propio Pokémon (Graphics/Characters/NNN.png). Placeholders de campo (tools/events/build_event_placeholders.py): Graphics/Characters/rem_itemball.png (Poké Ball del suelo), rem_campfire_off.png y rem_campfire_on.png (fogata); el diseñador los sustituye por arte final.
 - Pía: el mostrador del laboratorio de Albor es el único punto de entrega (hitos de captura, panel de misiones, reclamar iniciales). El «buzón de cualquier Centro Pokémon» NO está implementado todavía.
 
 [ESTADO_DE_UBICACIONES]
