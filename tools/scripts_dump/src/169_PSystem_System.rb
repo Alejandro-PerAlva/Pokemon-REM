@@ -69,9 +69,9 @@ def pbSetUpSystem
   if !$INEDITOR
     $PokemonSystem=pokemonSystem
     $game_system=Game_System
-    if $PokemonSystem.screenver!=1   # guardado antiguo: P,M,G,MG,Compl -> x1,x1,x2,x2,Completa
-      $PokemonSystem.screensize=[0,0,1,1,2][$PokemonSystem.screensize.to_i] || 1
-      $PokemonSystem.screenver=1
+    if $PokemonSystem.screenver!=2 || !($PokemonSystem.screensize.is_a?(Integer) && $PokemonSystem.screensize>=0 && $PokemonSystem.screensize<=2)
+      $PokemonSystem.screensize=1   # x2 por defecto en todo guardado anterior al esquema de 3 tamaños
+      $PokemonSystem.screenver=2
     end
     pbSetResizeFactor($PokemonSystem.screensize)
   else

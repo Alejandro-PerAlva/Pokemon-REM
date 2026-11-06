@@ -410,7 +410,7 @@ class PokemonSystem
     @textskin    = 0   # Speech frame
     @font        = 0   # Font (see also $VersionStyles)
     @screensize  = 1   # Tamaño de pantalla: 0=x1, 1=x2 (por defecto), 2=Completa
-    @screenver   = 1   # 1 = esquema de 3 tamaños (los guardados antiguos usaban 5)
+    @screenver   = 2   # 2 = esquema de 3 tamaños con x2 por defecto (versiones anteriores: 5 tamaños)
     @border      = 0   # Screen border (0=off, 1=on)
     @language    = 0   # Language (see also LANGUAGES in script PokemonSystem)
     @runstyle    = 0   # Run key functionality (0=hold to run, 1=toggle auto-run)
