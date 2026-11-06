@@ -40,4 +40,4 @@ Para cada ubicación, a partir de los PBS:
 
 [ESTADO_DE_UBICACIONES]
 # Una línea por ubicación con eventos hechos. Formato: LOC_KEY | mapas | prefijo | script | fecha | pendientes
-PUEBLO_ALBOR | 2, 3, 4, 5 | ALBOR_ | tools/events/albor_events.rb | 2026-11-06 | sprites de NPC, trainers RIVAL_M (proposed_trainers_albor.txt), nombre del anciano (provisional), posiciones, buzón de Pía, switch 695 SHEARS (Calaita)
+PUEBLO_ALBOR | 2, 3, 4, 5, 14 (Pozo) | ALBOR_ | tools/events/albor_events.rb | 2026-11-06 | sprites de NPC, trainers RIVAL_M (proposed_trainers_albor.txt), nombre del anciano (provisional), posiciones, buzón de Pía, switch 695 SHEARS (Calaita)

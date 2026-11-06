@@ -247,18 +247,16 @@ l.ifelse(:var, V_QUEST, :eq, 0) {
 }
 pueblo << ["ALBOR_Anciano (misión del pozo)", [pg(gfx: 'npc004', list: l)]]
 
-# Pozo
+# Wooper del pozo (mapa 14 «Pozo», hijo de Pueblo Albor). La entrada ya existe (evento E de Albor en el pozo); aquí vive el combate.
+pozo = []
 l = L.new
-loc(l, "El pozo del pueblo (brocal). Aquí empieza el combate de la misión.")
-l.ifelse(:var, V_QUEST, :eq, 1) {
-  [lambda { |b|
-    b.say("Del fondo del pozo suben quejidos y chapoteos. Alguien está muy asustado ahí abajo.")
-    b.ifelse(:script, "$Trainer.ablePokemonCount>0 && Kernel.pbConfirmMessage(_INTL(\"¿Bajas por la soga al fondo del pozo?\"))") {
-      [lambda { |c|
-        c.say("Te descuelgas por la soga. Abajo huele a agua fría y a piedra mojada; entre la penumbra brillan unos ojos aterrados.")
-        c.say("¡El Pokémon del anciano, asustado, se abalanza sobre ti!")
-        mov(c, "Opcional: fundido a negro al bajar y al subir.")
-        c.script(<<'RB')
+loc(l, "Orilla del fondo del pozo (mapa 14), cerca del agua.")
+l.say("Del agua oscura llegan quejidos y chapoteos. Entre la penumbra brillan unos ojos aterrados.")
+l.ifelse(:script, "$Trainer.ablePokemonCount>0") {
+  [lambda { |c|
+    c.say("¡El Pokémon del anciano, asustado, se abalanza sobre ti!")
+    mov(c, "Opcional: el Wooper salta desde el agua hacia el jugador antes del combate.")
+    c.script(<<'RB')
 pbWildBattle(:WOOPER,5,1,false,false)
 d=$game_variables[1]
 if d==4
@@ -274,19 +272,15 @@ if d==4
 end
 if d==1
   Kernel.pbMessage(_INTL("El Wooper, agotado, se deja coger en brazos. Poco a poco deja de temblar."))
-  Kernel.pbMessage(_INTL("Subes con él por la soga. Ahora llévaselo a su dueño."))
+  Kernel.pbMessage(_INTL("Ahora sube por la soga y llévaselo a su dueño."))
   pbSetQuestState(:PUEBLO_ALBOR,3)
 elsif d!=2
   Kernel.pbMessage(_INTL("El Wooper se hunde en el agua oscura. Tendrás que bajar otra vez."))
 end
 RB
-      }, lambda { |c| c.say("Mejor bajar con un Pokémon sano a tu lado, o sin dudarlo un segundo. Lo dejas para luego.") }]
-    }
-  }, lambda { |b|
-    b.say("Un pozo de piedra con el brocal cubierto de musgo. En el fondo se ve un reflejo redondo del cielo.")
-  }]
+  }, lambda { |c| c.say("No puedes acercarte a un Pokémon asustado sin un compañero en condiciones. Sube y vuelve cuando tu equipo esté sano.") }]
 }
-pueblo << ["ALBOR_Pozo (misión)", [pg(list: l)]]
+pozo << ["ALBOR_Wooper del pozo (misión)", [pg, pg(cond: { :var => [V_QUEST, 1] }, gfx: '194', list: l), pg(cond: { :var => [V_QUEST, 3] })]]
 
 # --------------------------------------------------------------------------- MAPA 4: LABORATORIO
 lab = []
@@ -468,7 +462,7 @@ l.ifelse(:var, V_QUEST, :eq, 0) {
 casas << ["ALBOR_Doña Remedios", [pg(gfx: 'npc007', list: l)]]
 
 # --------------------------------------------------------------------------- APLICAR
-{ 2 => pueblo, 3 => casa, 4 => lab, 5 => casas }.each do |mid, defs|
+{ 2 => pueblo, 3 => casa, 4 => lab, 5 => casas, 14 => pozo }.each do |mid, defs|
   placed = REMEv.apply(mid, 'ALBOR_', 'albor_events', defs, DRY)
   puts "Map#{'%03d' % mid}: #{placed.length} eventos #{DRY ? '(dry)' : 'escritos'}"
   placed.each { |id, nm, x, y| puts format('   ev%-3d (%2d,%2d) %s', id, x, y, nm) }
