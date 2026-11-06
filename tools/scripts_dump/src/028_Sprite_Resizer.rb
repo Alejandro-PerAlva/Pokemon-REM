@@ -17,7 +17,7 @@ if true   # Disables using Alt+Enter to go fullscreen
 end
 
 def pbSetResizeFactor(factor=1,norecalc=false)
-  factor=[0.5,1.0,1.5,2.0,-1][factor] if !norecalc
+  factor=([1.0,2.0,-1][factor.to_i] || 2.0) if !norecalc   # 0=x1, 1=x2, 2=Completa
   (factor<0) ? pbConfigureFullScreen : pbConfigureWindowedScreen(factor)
 end
 

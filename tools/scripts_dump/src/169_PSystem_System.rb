@@ -69,9 +69,13 @@ def pbSetUpSystem
   if !$INEDITOR
     $PokemonSystem=pokemonSystem
     $game_system=Game_System
+    if $PokemonSystem.screenver!=1   # guardado antiguo: P,M,G,MG,Compl -> x1,x1,x2,x2,Completa
+      $PokemonSystem.screensize=[0,0,1,1,2][$PokemonSystem.screensize.to_i] || 1
+      $PokemonSystem.screenver=1
+    end
     pbSetResizeFactor($PokemonSystem.screensize)
   else
-    pbSetResizeFactor(1.0)
+    pbSetResizeFactor(1.0,true)
   end
   # Load constants
   begin

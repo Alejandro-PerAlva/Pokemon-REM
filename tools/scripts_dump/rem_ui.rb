@@ -1852,7 +1852,7 @@ class PokemonOptionScene
              end
           }
        ),
-       EnumOption.new(_INTL("Tamaño de pantalla"),[_INTL("P"),_INTL("M"),_INTL("G"),_INTL("MG"),_INTL("Compl")],
+       EnumOption.new(_INTL("Tamaño de pantalla"),[_INTL("x1"),_INTL("x2"),_INTL("Completa")],
           proc { $PokemonSystem.screensize },
           proc {|value|
              oldvalue=$PokemonSystem.screensize
@@ -1870,7 +1870,7 @@ class PokemonOptionScene
                _INTL("Fijo: no se ofrece cambiar de Pokémon al derrotar a un rival. Cambio: sí se ofrece."),
                _INTL("Volumen de la música de fondo."),
                _INTL("Volumen de los efectos de sonido."),
-               _INTL("Tamaño de la ventana del juego."),
+               _INTL("Tamaño de la ventana: x1, x2 (por defecto) o pantalla completa."),
                _INTL("Guarda los ajustes y vuelve al menú.")]
     @sprites["option"]=Window_PokemonOption.new(@PokemonOptions,0,40,Graphics.width,
        32+(@PokemonOptions.length+1)*34)

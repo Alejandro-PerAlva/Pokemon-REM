@@ -369,6 +369,7 @@ class PokemonSystem
   attr_accessor :textskin
   attr_accessor :font
   attr_accessor :screensize
+  attr_accessor :screenver
   attr_accessor :language
   attr_accessor :border
   attr_accessor :runstyle
@@ -408,7 +409,8 @@ class PokemonSystem
     @frame       = 0   # Default window frame (see also $TextFrames)
     @textskin    = 0   # Speech frame
     @font        = 0   # Font (see also $VersionStyles)
-    @screensize  = (DEFAULTSCREENZOOM.floor).to_i   # 0=half size, 1=full size, 2=double size
+    @screensize  = 1   # Tamaño de pantalla: 0=x1, 1=x2 (por defecto), 2=Completa
+    @screenver   = 1   # 1 = esquema de 3 tamaños (los guardados antiguos usaban 5)
     @border      = 0   # Screen border (0=off, 1=on)
     @language    = 0   # Language (see also LANGUAGES in script PokemonSystem)
     @runstyle    = 0   # Run key functionality (0=hold to run, 1=toggle auto-run)
@@ -514,7 +516,7 @@ class PokemonOptionScene
 # ------------------------------------------------------------------------------
 # Quote this section out if you don't want to allow players to change the screen
 # size.
-       EnumOption.new(_INTL("Tamaño de ventana"),[_INTL("P"),_INTL("M"),_INTL("G"),_INTL("MG"),_INTL("Compl")],
+       EnumOption.new(_INTL("Tamaño de ventana"),[_INTL("x1"),_INTL("x2"),_INTL("Completa")],
           proc { $PokemonSystem.screensize },
           proc {|value|
              oldvalue=$PokemonSystem.screensize
