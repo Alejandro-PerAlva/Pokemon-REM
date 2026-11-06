@@ -71,6 +71,8 @@ def pbSetUpSystem
     $game_system=Game_System
     if $PokemonSystem.screenver!=2 || !($PokemonSystem.screensize.is_a?(Integer) && $PokemonSystem.screensize>=0 && $PokemonSystem.screensize<=2)
       $PokemonSystem.screensize=1   # x2 por defecto en todo guardado anterior al esquema de 3 tamaños
+      $PokemonSystem.textspeed=2     # Rápida
+      $PokemonSystem.battlestyle=1   # Fijo
       $PokemonSystem.screenver=2
     end
     pbSetResizeFactor($PokemonSystem.screensize)

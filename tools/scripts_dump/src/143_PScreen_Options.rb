@@ -403,9 +403,9 @@ class PokemonSystem
   def tilemap; return MAPVIEWMODE; end
 
   def initialize
-    @textspeed   = 1   # Text speed (0=slow, 1=normal, 2=fast)
+    @textspeed   = 2   # Velocidad de texto: 0=lenta, 1=normal, 2=rápida (por defecto)
     @battlescene = 0   # Battle effects (animations) (0=on, 1=off)
-    @battlestyle = 0   # Battle style (0=switch, 1=set)
+    @battlestyle = 1   # Estilo de combate: 0=cambio, 1=fijo (por defecto)
     @frame       = 0   # Default window frame (see also $TextFrames)
     @textskin    = 0   # Speech frame
     @font        = 0   # Font (see also $VersionStyles)
