@@ -3122,23 +3122,25 @@ end
 
 # Recordador de movimientos accesible desde el PC (solo equipo).
 def pbPCMoveRelearner
-  chosen=-1
+  # Una sola transición: el equipo queda debajo y el recordador se abre encima y vuelve al equipo al salir.
   pbFadeOutIn(99999){
      scene=PokemonScreen_Scene.new
      screen=PokemonScreen.new(scene,$Trainer.party)
      screen.pbStartScene(_INTL("¿A qué Pokémon enseñar?"),false)
-     chosen=screen.pbChoosePokemon
+     loop do
+       chosen=screen.pbChoosePokemon
+       break if chosen<0
+       pkmn=$Trainer.party[chosen]
+       if !pkmn || pkmn.isEgg?
+         Kernel.pbMessage(_INTL("¡Un Huevo no puede recordar movimientos!"))
+       elsif pbGetRelearnableMoves(pkmn).length==0
+         Kernel.pbMessage(_INTL("{1} no tiene movimientos que recordar.",pkmn.name))
+       else
+         MoveRelearnerScreen.new(MoveRelearnerScene.new).pbStartScreen(pkmn)   # sin segunda transición
+       end
+     end
      screen.pbEndScene
   }
-  return if chosen<0
-  pkmn=$Trainer.party[chosen]
-  if !pkmn || pkmn.isEgg?
-    Kernel.pbMessage(_INTL("¡Un Huevo no puede recordar movimientos!"))
-  elsif pbGetRelearnableMoves(pkmn).length==0
-    Kernel.pbMessage(_INTL("{1} no tiene movimientos que recordar.",pkmn.name))
-  else
-    pbRelearnMoveScreen(pkmn)
-  end
 end
 
 
