@@ -1,0 +1,6 @@
+21:03:05 cierre de menú: in_menu=false miniupdate=false msgwin=false menu_calling=false interp=false moveroute=false transfer=false fade=0 moving=false
+21:03:11 cierre de menú: in_menu=false miniupdate=false msgwin=false menu_calling=false interp=false moveroute=false transfer=false fade=0 moving=false
+21:03:18 cierre de menú: in_menu=false miniupdate=false msgwin=false menu_calling=false interp=false moveroute=false transfer=false fade=0 moving=false
+21:04:02 cierre de menú: in_menu=false miniupdate=false msgwin=true menu_calling=false interp=false moveroute=false transfer=false fade=0 moving=false
+21:04:10 cierre de menú: in_menu=false miniupdate=false msgwin=false menu_calling=false interp=false moveroute=false transfer=false fade=0 moving=false
+21:05:38 cierre de menú: in_menu=true miniupdate=false msgwin=false menu_calling=false interp=false moveroute=false transfer=false fade=0 moving=false
