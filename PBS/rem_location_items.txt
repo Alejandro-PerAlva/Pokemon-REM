@@ -1,5 +1,5 @@
 ﻿# Pokémon REM - rem_location_items.txt (generado por tools/rebalance/phase1/build_items_shops.py; no editar a mano).
-# Formato INI de SPEC.md 2.3: una sección [LOC_KEY] por ubicación (64) y una línea por fila del Vol. 9, Cap. 5 (780 filas).
+# Formato INI de SPEC.md 2.3: una sección [LOC_KEY] por ubicación (64) y una línea por fila del Vol. 9, Cap. 5 (804 filas).
 # ItemN = ITEM_ID,Qty,Method,Zone,Note   (parseo con maxsplit=4: Zone no lleva comas; Note es texto libre y puede llevarlas).
 # ITEM_ID = símbolo PBS de proposed_items.txt (las MT son TM01..TM100). Method: B Poké Ball visible, H oculto, C cofre,
 # N regalo de PNJ, E evento/misión, J botín de jefe o líder, P misión de Pía, S tienda de stock único. Note vacía = sin nota.
@@ -464,14 +464,15 @@ Item10 = ROSELIBERRY,1,B,Cuadrante E · en una playa de arena oscura,
 Item11 = FAIRYFEATHER,1,B,Cuadrante S · tras una roca retorcida,
 Item12 = ABILITYCAPSULE,1,E,Isla Sueño · Sidequest «El jardín de los sueños»,Recompensa final de la sidequest local «El jardín de los sueños» (M_ISLA_SUENO = 99).
 
-# Ruta 1 - 4 filas
+# Ruta 1 - 5 filas
 [RUTA_01]
 Item1 = POTION,1,B,Entrada de la ruta · junto al buzón,Primer suministro del juego.
 Item2 = ANTIDOTE,1,H,Junto al poste indicador · entre las flores,Primer objeto oculto (Buscaobjetos tras Pía).
 Item3 = POKEBALL,2,B,Hierba alta · tras el primer arbusto,Dos Poké Balls para empezar a capturar.
 Item4 = ORANBERRY,1,B,Cuadrante N · sobre un tocón viejo,
+Item5 = POTION,3,N,Fogata nocturna · Bernarda (anciana viajera),Relato de fogata «La piedra de las despedidas» (rem_lore_fogatas.txt, RELATO_01): solo de noche; se escucha las veces que se quiera y el objeto se da solo la primera vez (interruptor Fogata_Regalo_Ruta01, pendiente de alta).
 
-# Ruta 2 - 9 filas
+# Ruta 2 - 10 filas
 [RUTA_02]
 Item1 = TM15,1,B,Puente de madera sobre el arroyo,Ayuda previa a los Gimnasios 1 y 2 (Normal/Agua): Onda Trueno paraliza antes de que actúe el rival; pareja de Puntapié.
 Item2 = TM20,1,B,Junto al árbol caído · cerca del río,Ayuda previa al Gimnasio 1 (Normal): Puntapié (Lucha) da ventaja de tipo contra el gimnasio Normal.
@@ -482,8 +483,9 @@ Item6 = POTION,1,B,Cuadrante NO · en un claro de hierba alta,Suministro de ruta
 Item7 = PARLYZHEAL,1,H,Cuadrante NO · junto a una roca plana,Suministro de ruta (consumible común).
 Item8 = POKEBALL,2,B,Cuadrante O · bajo un árbol de copa ancha,Suministro de ruta (consumible común).
 Item9 = PECHABERRY,1,B,Cuadrante E · bajo un árbol de copa ancha,
+Item10 = GREATBALL,3,N,Fogata nocturna · Tomás (barquero de ribera),Relato de fogata «Los pasos de la abuela» (rem_lore_fogatas.txt, RELATO_02): solo de noche; se escucha las veces que se quiera y el objeto se da solo la primera vez (interruptor Fogata_Regalo_Ruta02, pendiente de alta).
 
-# Ruta 4 - 8 filas
+# Ruta 4 - 9 filas
 [RUTA_04]
 Item1 = TM22,1,B,Hierba alta · extremo este,Terratemblor (60 PB, Tierra): ayuda previa al Dominante Eléctrico (Central) y al Gimnasio 3.
 Item2 = REPEL,1,B,Cuadrante O · sobre un tocón viejo,Suministro de ruta (consumible común).
@@ -493,8 +495,9 @@ Item5 = GREATBALL,2,B,Cuadrante SE · bajo un árbol de copa ancha,Suministro de
 Item6 = POKEBALL,1,B,Cuadrante N · en un claro de hierba alta,Suministro de ruta (consumible común).
 Item7 = RAWSTBERRY,1,H,Cuadrante O · en un claro de hierba alta,
 Item8 = SITRUSBERRY,1,B,Cuadrante E · tras un arbusto aislado,
+Item9 = FULLHEAL,1,N,Fogata nocturna · Casilda (cantera retirada),Relato de fogata «El camino de las marcas» (rem_lore_fogatas.txt, RELATO_04): solo de noche; se escucha las veces que se quiera y el objeto se da solo la primera vez (interruptor Fogata_Regalo_Ruta04, pendiente de alta).
 
-# Ruta 5 - 9 filas
+# Ruta 5 - 10 filas
 [RUTA_05]
 Item1 = TM08,1,B,Sendero árido · junto a un cactus,Día Soleado: ruta árida y soleada; abre equipos de clima antes del Lago.
 Item2 = TM23,1,B,Sendero árido · junto a un cactus,Golpe Aéreo (65 PB, Volador): da ventaja de tipo contra el gimnasio Lucha (Gimnasio 4).
@@ -505,8 +508,9 @@ Item6 = PARLYZHEAL,1,B,Centro · junto al borde del camino,Suministro de ruta (c
 Item7 = POKEBALL,2,B,Cuadrante S · sobre un tocón viejo,Suministro de ruta (consumible común).
 Item8 = RAWSTBERRY,1,B,Cuadrante NO · al pie de un poste indicador,
 Item9 = ORANBERRY,1,H,Cuadrante NE · al pie de un poste indicador,
+Item10 = ETHER,2,N,Fogata nocturna · Yusuf (nómada del campamento),Relato de fogata «El pozo que caminaba» (rem_lore_fogatas.txt, RELATO_05): solo de noche; se escucha las veces que se quiera y el objeto se da solo la primera vez (interruptor Fogata_Regalo_Ruta05, pendiente de alta).
 
-# Ruta 6 - 15 filas
+# Ruta 6 - 16 filas
 [RUTA_06]
 Item1 = TM26,1,B,Camino al noreste · bajo el poste eléctrico,Ida y Vuelta: pivote para el dúo con Lucián (tramo de la Ruta 6).
 Item2 = SHEDSHELL,1,H,Cuadrante NO · en un claro de hierba alta,
@@ -523,8 +527,9 @@ Item12 = GREATBALL,1,H,Cuadrante N · sobre un tocón viejo,Suministro de ruta (
 Item13 = CHERIBERRY,1,B,Centro · bajo un árbol de copa ancha,
 Item14 = WACANBERRY,1,B,Cuadrante O · sobre un tocón viejo,
 Item15 = CHILANBERRY,1,H,Cuadrante E · junto a una roca plana,
+Item16 = SUPERPOTION,3,N,Fogata nocturna · Eufemia (pastora de la llanura),Relato de fogata «Los muros bajos» (rem_lore_fogatas.txt, RELATO_06): solo de noche; se escucha las veces que se quiera y el objeto se da solo la primera vez (interruptor Fogata_Regalo_Ruta06, pendiente de alta).
 
-# Ruta 7 - 10 filas
+# Ruta 7 - 11 filas
 [RUTA_07]
 Item1 = SHINYSTONE,1,B,Cuadrante N · al pie de un poste indicador,
 Item2 = REDCARD,1,H,Cuadrante N · entre las flores del margen,
@@ -536,8 +541,9 @@ Item7 = BURNHEAL,1,H,Cuadrante E · sobre un tocón viejo,Suministro de ruta (co
 Item8 = NESTBALL,1,B,Cuadrante S · tras un arbusto aislado,
 Item9 = PREMIERBALL,1,B,Cuadrante SO · al pie de un poste indicador,
 Item10 = CHESTOBERRY,1,B,Cuadrante SE · tras un arbusto aislado,
+Item11 = REVIVE,1,N,Fogata nocturna · Gonzalo (hortelano jubilado),Relato de fogata «Un árbol por cada niño» (rem_lore_fogatas.txt, RELATO_07): solo de noche; se escucha las veces que se quiera y el objeto se da solo la primera vez (interruptor Fogata_Regalo_Ruta07, pendiente de alta).
 
-# Ruta 8 - 14 filas
+# Ruta 8 - 15 filas
 [RUTA_08]
 Item1 = QUICKPOWDER,1,H,Meseta de arenisca · tras un pino,Polvo Veloz (Ditto).
 Item2 = FIRESTONE,1,H,Cuadrante NE · en un claro de hierba alta,
@@ -553,8 +559,9 @@ Item11 = GREATBALL,2,B,Cuadrante SE · en un claro de hierba alta,Suministro de 
 Item12 = CHERIBERRY,1,H,Cuadrante N · sobre un tocón viejo,
 Item13 = OCCABERRY,1,B,Cuadrante SO · junto a una roca plana,
 Item14 = PAYAPABERRY,1,B,Centro · entre las flores del margen,
+Item15 = HYPERPOTION,1,N,Fogata nocturna · Ludovica (panadera ambulante),Relato de fogata «Por qué los arces se ponen rojos» (rem_lore_fogatas.txt, RELATO_08): solo de noche; se escucha las veces que se quiera y el objeto se da solo la primera vez (interruptor Fogata_Regalo_Ruta08, pendiente de alta).
 
-# Ruta 9 - 15 filas
+# Ruta 9 - 16 filas
 [RUTA_09]
 Item1 = TM32,1,B,Hierba del ramal norte,Garra Umbría (75 PB): potencia Fantasma antes de la Villa Adular.
 Item2 = STICK,1,H,Ramal norte · junto al abedul,Palo (Farfetch'd).
@@ -571,8 +578,9 @@ Item12 = ASPEARBERRY,1,H,Cuadrante SO · junto al borde del camino,
 Item13 = RINDOBERRY,1,B,Cuadrante O · junto a una roca plana,
 Item14 = COBABERRY,1,B,Centro · bajo un árbol de copa ancha,
 Item15 = COLBURBERRY,1,H,Cuadrante NE · al pie de un poste indicador,
+Item16 = FULLHEAL,2,N,Fogata nocturna · Candelaria (recolectora de hierbas),Relato de fogata «El barro que guardaba nombres» (rem_lore_fogatas.txt, RELATO_09): solo de noche; se escucha las veces que se quiera y el objeto se da solo la primera vez (interruptor Fogata_Regalo_Ruta09, pendiente de alta).
 
-# Ruta 14 - 17 filas
+# Ruta 14 - 18 filas
 [RUTA_14]
 Item1 = TM28,1,B,Pasarela de madera sobre el pantano,Estoicismo (70 PB): tramo costero de la Ruta 14.
 Item2 = TM52,1,B,Hierba alta · tras la barrera de Pokémon,Ayuda previa al Gimnasio 6 (Planta): Puya Nociva (90 PB, Veneno).
@@ -591,8 +599,9 @@ Item14 = ENERGYROOT,1,B,Cuadrante N · junto al borde del camino,
 Item15 = QUICKBALL,1,B,Cuadrante S · tras un arbusto aislado,
 Item16 = MAGOBERRY,1,B,Cuadrante O · junto a una roca plana,
 Item17 = KEEBERRY,1,B,Cuadrante SO · al pie de un poste indicador,
+Item18 = MAXPOTION,1,N,Fogata nocturna · Eustaquio (carpintero costero),Relato de fogata «Las pasarelas que no se encontraron» (rem_lore_fogatas.txt, RELATO_14): solo de noche; se escucha las veces que se quiera y el objeto se da solo la primera vez (interruptor Fogata_Regalo_Ruta14, pendiente de alta).
 
-# Ruta 15 - 21 filas
+# Ruta 15 - 22 filas
 [RUTA_15]
 Item1 = TM38,1,B,Sendero húmedo · junto a las setas,Ayuda previa al Gimnasio 6 (Planta): Puño Fuego (75 PB).
 Item2 = TM47,1,B,Claro de helechos blanquecinos,Ayuda previa al Gimnasio 6 (Planta): Puño Hielo (75 PB).
@@ -615,8 +624,9 @@ Item18 = FIGYBERRY,1,H,Cuadrante SE · entre las flores del margen,
 Item19 = WIKIBERRY,1,B,Cuadrante O · junto al borde del camino,
 Item20 = RINDOBERRY,1,B,Cuadrante N · tras un arbusto aislado,
 Item21 = WHIPPEDDREAM,1,B,Cuadrante SE · al pie de un poste indicador,Objeto de evolución (Swirlix → Slurpuff): se usa sobre el Pokémon como una piedra.
+Item22 = ELIXIR,2,N,Fogata nocturna · Genoveva (farolera del bosque húmedo),Relato de fogata «La lámpara de turba» (rem_lore_fogatas.txt, RELATO_15): solo de noche; se escucha las veces que se quiera y el objeto se da solo la primera vez (interruptor Fogata_Regalo_Ruta15, pendiente de alta).
 
-# Ruta 16 - 19 filas
+# Ruta 16 - 20 filas
 [RUTA_16]
 Item1 = TM68,1,B,Paso nuboso · tras un tronco caído,Ayuda previa al Dominante Fantasma (Villa): Pulso Umbrío (80 PB, Siniestro).
 Item2 = TM69,1,B,Claro musgoso,Alarido (55 PB): conversación con Zenobia.
@@ -637,6 +647,7 @@ Item16 = LEVELBALL,1,B,Cuadrante SO · tras un arbusto aislado,
 Item17 = LEPPABERRY,1,B,Centro · junto al borde del camino,
 Item18 = PAYAPABERRY,1,H,Cuadrante N · junto a una roca plana,
 Item19 = MARANGABERRY,1,B,Cuadrante E · tras un arbusto aislado,
+Item20 = REVIVE,2,N,Fogata nocturna · Ildefonso (leñador de bosque viejo),Relato de fogata «Las nubes que se sientan» (rem_lore_fogatas.txt, RELATO_16): solo de noche; se escucha las veces que se quiera y el objeto se da solo la primera vez (interruptor Fogata_Regalo_Ruta16, pendiente de alta).
 
 # Granja Apato - 8 filas
 [GRANJA_APATITA]
@@ -741,7 +752,7 @@ Item12 = MAXETHER,1,B,Cuadrante NE · sobre un pilar de corindón,Suministro de 
 Item13 = CHOPLEBERRY,1,H,Cuadrante N · sobre un pilar de corindón,
 Item14 = CHOICESCARF,1,E,Calzada Corindal · Sidequest «El mirador de los veteranos»,Recompensa final de la sidequest local «El mirador de los veteranos» (M_CALZADA_CORINDAL = 99). Ejemplar único (Tier 1): no se repone.
 
-# Ruta 3 - 9 filas
+# Ruta 3 - 10 filas
 [RUTA_03]
 Item1 = PICKAXE,1,N,Cueva · capataz del derrumbe,Pico del capataz; se usa con 3 medallas (sustituye a Golpe Roca).
 Item2 = TM07,1,B,Cueva · galería lateral iluminada,Nitrocarga (55 PB, Fuego): ayuda previa al Gimnasio 3 (Acero); potencia baja, apta para el Acto I.
@@ -752,8 +763,9 @@ Item6 = ANTIDOTE,1,B,Cuadrante SE · tras un derrumbe parcial,Suministro de ruta
 Item7 = POKEBALL,1,B,Cuadrante E · tras un derrumbe parcial,Suministro de ruta (consumible común).
 Item8 = PECHABERRY,1,H,Cuadrante O · sobre una repisa de roca,
 Item9 = RAWSTBERRY,1,B,Cuadrante SE · en una cámara con cristales,
+Item10 = SUPERPOTION,2,N,Fogata nocturna · Rosendo (espeleólogo veterano),Relato de fogata «La vela del minero» (rem_lore_fogatas.txt, RELATO_03): solo de noche; se escucha las veces que se quiera y el objeto se da solo la primera vez (interruptor Fogata_Regalo_Ruta03, pendiente de alta).
 
-# Ruta 10 - 16 filas
+# Ruta 10 - 17 filas
 [RUTA_10]
 Item1 = TM42,1,B,Cueva con cristales azules,Puño Trueno (75 PB): cuevas de ascenso.
 Item2 = TM71,1,B,Galería alta · tras el puente de cuerda,Cabeza de Hierro (85 PB + retroceso): potencia del Acto III.
@@ -771,8 +783,9 @@ Item13 = ULTRABALL,1,H,Cuadrante NO · sobre una repisa de roca,Suministro de ru
 Item14 = TIMERBALL,1,B,Centro · junto a una vía de mina,
 Item15 = FIGYBERRY,1,B,Cuadrante NE · en una cámara con cristales,
 Item16 = CHARTIBERRY,1,B,Cuadrante O · tras una columna de piedra,
+Item17 = HYPERPOTION,2,N,Fogata nocturna · Aurelio (guía de galerías),Relato de fogata «El eco más viejo» (rem_lore_fogatas.txt, RELATO_10): solo de noche; se escucha las veces que se quiera y el objeto se da solo la primera vez (interruptor Fogata_Regalo_Ruta10, pendiente de alta).
 
-# Ruta 20 - 17 filas
+# Ruta 20 - 18 filas
 [RUTA_20]
 Item1 = TM43,1,B,Cueva de cristales · nivel superior,Rayo (90 PB): cueva de cristales.
 Item2 = TM87,1,B,Cueva de cristales · galería profunda,Ayuda previa al Gimnasio 8 (Fuego): Terremoto (100 PB, Tierra).
@@ -791,8 +804,9 @@ Item14 = RARECANDY,1,H,Cuadrante E · junto a una vía de mina,
 Item15 = FASTBALL,1,B,Cuadrante SO · sobre una repisa de roca,
 Item16 = LUMBERRY,1,H,Cuadrante NO · tras una columna de piedra,
 Item17 = HABANBERRY,1,B,Cuadrante N · junto a una vía de mina,
+Item18 = FULLRESTORE,2,N,Fogata nocturna · Ágata (tallista de cristales),Relato de fogata «El cristal que aprendió a escuchar» (rem_lore_fogatas.txt, RELATO_20): solo de noche; se escucha las veces que se quiera y el objeto se da solo la primera vez (interruptor Fogata_Regalo_Ruta20, pendiente de alta).
 
-# Ruta 21 - 16 filas
+# Ruta 21 - 17 filas
 [RUTA_21]
 Item1 = TM78,1,H,Pasarela colgante · extremo norte,Danza Espada: oculta en el viento.
 Item2 = TM95,1,B,Pasarela colgante · centro,Ayuda previa al Gimnasio 8 (Fuego): Roca Afilada (100 PB, Roca).
@@ -810,8 +824,9 @@ Item13 = MAXREVIVE,1,B,Cuadrante N · tras una columna de piedra,Suministro de r
 Item14 = ZINC,1,B,Cuadrante E · en una galería lateral oscura,
 Item15 = HEAVYBALL,1,B,Centro · tras un derrumbe parcial,
 Item16 = BABIRIBERRY,1,B,Cuadrante SE · tras un derrumbe parcial,
+Item17 = MAXREVIVE,1,N,Fogata nocturna · Telesforo (constructor de pasarelas),Relato de fogata «El puente que cantaba» (rem_lore_fogatas.txt, RELATO_21): solo de noche; se escucha las veces que se quiera y el objeto se da solo la primera vez (interruptor Fogata_Regalo_Ruta21, pendiente de alta).
 
-# Ruta 22 - 13 filas
+# Ruta 22 - 14 filas
 [RUTA_22]
 Item1 = TM80,1,B,Páramo de grava,Trueno (110 PB).
 Item2 = FIRESTONE,1,B,Cuadrante O · en una galería lateral oscura,
@@ -826,8 +841,9 @@ Item10 = FULLRESTORE,1,H,Cuadrante O · tras un derrumbe parcial,Suministro de r
 Item11 = MAXREVIVE,1,B,Cuadrante N · en el puente de cuerda,Suministro de ruta (consumible común).
 Item12 = PPUP,1,H,Centro · en el puente de cuerda,
 Item13 = ULTRABALL,2,B,Cuadrante N · tras un derrumbe parcial,Suministro de ruta (consumible común).
+Item14 = MAXELIXIR,2,N,Fogata nocturna · Gaspar (agrimensor jubilado),Relato de fogata «La senda recta» (rem_lore_fogatas.txt, RELATO_22): solo de noche; se escucha las veces que se quiera y el objeto se da solo la primera vez (interruptor Fogata_Regalo_Ruta22, pendiente de alta).
 
-# Ruta 12 - 18 filas
+# Ruta 12 - 19 filas
 [RUTA_12]
 Item1 = GOODROD,1,N,Plataforma del pescador · tercera isla,Caña Buena del pescador de la plataforma.
 Item2 = TM37,1,B,Plataforma de madera · tercera isla,Vozarrón (90 PB): el eco del mar.
@@ -847,8 +863,9 @@ Item15 = LUREBALL,1,B,Cuadrante E · en el rompeolas,
 Item16 = LUMBERRY,1,B,Cuadrante SO · en una plataforma de madera,
 Item17 = IAPAPABERRY,1,H,Cuadrante NE · junto a la boya central,
 Item18 = PASSHOBERRY,1,B,Cuadrante E · en una plataforma de madera,
+Item19 = ULTRABALL,3,N,Fogata nocturna · Nicanor (pescador de altura),Relato de fogata «Las tablas de los pescadores» (rem_lore_fogatas.txt, RELATO_12): solo de noche; se escucha las veces que se quiera y el objeto se da solo la primera vez (interruptor Fogata_Regalo_Ruta12, pendiente de alta).
 
-# Ruta 13 - 18 filas
+# Ruta 13 - 19 filas
 [RUTA_13]
 Item1 = TM12,1,B,Plataforma de observación · junto a los géiseres,Escaldar (80 PB + quemadura): potencia tardía del Acto III; ayuda previa al Dominante Fantasma.
 Item2 = TM54,1,B,Plataforma de observación,Tajo Aéreo (75 PB, Volador).
@@ -868,8 +885,9 @@ Item15 = HEALPOWDER,1,B,Cuadrante N · junto a la boya central,
 Item16 = DIVEBALL,1,B,Cuadrante E · en una plataforma de madera,
 Item17 = AGUAVBERRY,1,B,Cuadrante SO · junto a un pecio varado,
 Item18 = PASSHOBERRY,1,H,Cuadrante N · en un banco de niebla,
+Item19 = REVIVE,2,N,Fogata nocturna · Rafaela (tejedora de redes),Relato de fogata «La red que nunca se terminó» (rem_lore_fogatas.txt, RELATO_13): solo de noche; se escucha las veces que se quiera y el objeto se da solo la primera vez (interruptor Fogata_Regalo_Ruta13, pendiente de alta).
 
-# Ruta 23 - 14 filas
+# Ruta 23 - 15 filas
 [RUTA_23]
 Item1 = TM92,1,B,Banco de niebla · boya central,Paz Mental: travesía serena.
 Item2 = WATERSTONE,1,E,Ruta 23 · Misión n.º 21 de Pía «Mareas de Sueño»,Registrar 3 especies de Agua en la Ruta 23. Piedra Agua arrastrada por la marea.
@@ -885,8 +903,9 @@ Item11 = MAXPOTION,1,B,Cuadrante S · en el rompeolas,Suministro de ruta (consum
 Item12 = MAXETHER,1,B,Cuadrante NE · en una plataforma de madera,Suministro de ruta (consumible común).
 Item13 = ULTRABALL,2,B,Cuadrante SE · junto a un pecio varado,Suministro de ruta (consumible común).
 Item14 = LUREBALL,1,B,Cuadrante NE · junto a un pecio varado,
+Item15 = FULLRESTORE,2,N,Fogata nocturna · Anselmo (vigía del muelle),Relato de fogata «La campana de la niebla» (rem_lore_fogatas.txt, RELATO_23): solo de noche; se escucha las veces que se quiera y el objeto se da solo la primera vez (interruptor Fogata_Regalo_Ruta23, pendiente de alta).
 
-# Ruta 24 - 12 filas
+# Ruta 24 - 13 filas
 [RUTA_24]
 Item1 = TM98,1,B,Boya negra · a mitad de travesía,Maquinación.
 Item2 = LANSATBERRY,1,H,Cuadrante NO · en un banco de niebla,
@@ -900,8 +919,9 @@ Item9 = MAXREVIVE,1,H,Cuadrante S · sobre un islote bajo,Suministro de ruta (co
 Item10 = MAXETHER,1,H,Centro · en un banco de niebla,Suministro de ruta (consumible común).
 Item11 = ULTRABALL,1,H,Cuadrante SO · sobre un islote bajo,Suministro de ruta (consumible común).
 Item12 = COLBURBERRY,1,B,Cuadrante NO · junto a un pecio varado,
+Item13 = MAXREVIVE,2,N,Fogata nocturna · Evaristo (farero retirado),Relato de fogata «El farero que contaba las olas» (rem_lore_fogatas.txt, RELATO_24): solo de noche; se escucha las veces que se quiera y el objeto se da solo la primera vez (interruptor Fogata_Regalo_Ruta24, pendiente de alta).
 
-# Ruta 11 - 15 filas
+# Ruta 11 - 16 filas
 [RUTA_11]
 Item1 = TM19,1,B,Cima nevada · al pie del pino,Granizo: ruta nevada; clima de hielo antes del Gimnasio 7.
 Item2 = TM27,1,B,Cima nevada · junto al abeto caído,Tijera X (80 PB, Bicho): potencia del Acto III, fuera del tramo con Gimnasios 1 y 2.
@@ -918,8 +938,9 @@ Item12 = ULTRABALL,1,B,Cuadrante E · bajo una cornisa de hielo,Suministro de ru
 Item13 = LEPPABERRY,1,H,Cuadrante O · junto al abeto nevado,
 Item14 = YACHEBERRY,1,B,Centro · junto al leñador,
 Item15 = CHARTIBERRY,1,H,Cuadrante SE · tras una cabaña abandonada,
+Item16 = FULLHEAL,2,N,Fogata nocturna · Brunilda (leñadora del refugio),Relato de fogata «El primer copo» (rem_lore_fogatas.txt, RELATO_11): solo de noche; se escucha las veces que se quiera y el objeto se da solo la primera vez (interruptor Fogata_Regalo_Ruta11, pendiente de alta).
 
-# Ruta 17 - 17 filas
+# Ruta 17 - 18 filas
 [RUTA_17]
 Item1 = TM39,1,B,Ladera nevada · junto al leñador,Ayuda previa al Gimnasio 7 (Hielo): Lanzallamas (90 PB, Fuego).
 Item2 = TM46,1,B,Ladera nevada · tras el leñador,Energibola (90 PB, Planta): potencia del Acto IV; el Gimnasio 6 entrega Gigadrenado.
@@ -938,8 +959,9 @@ Item14 = FULLHEAL,1,B,Cuadrante SE · junto al leñador,Suministro de ruta (cons
 Item15 = HPUP,1,B,Cuadrante O · tras una cabaña abandonada,
 Item16 = NESTBALL,1,B,Cuadrante S · en un ventisquero hundido,
 Item17 = YACHEBERRY,1,B,Cuadrante O · junto al abeto nevado,
+Item18 = MAXPOTION,2,N,Fogata nocturna · Olegario (guía de alta montaña),Relato de fogata «La cuerda del primero» (rem_lore_fogatas.txt, RELATO_17): solo de noche; se escucha las veces que se quiera y el objeto se da solo la primera vez (interruptor Fogata_Regalo_Ruta17, pendiente de alta).
 
-# Ruta 18 - 14 filas
+# Ruta 18 - 15 filas
 [RUTA_18]
 Item1 = TM64,1,B,Camino helado · junto a una estatua,Ayuda previa al Dominante Dragón (Templo): Pulso Dragón (85 PB).
 Item2 = TM82,1,H,Acantilado nevado · tras el saliente,Ayuda previa al Dominante Dragón (Templo): Ventisca (110 PB, Hielo).
@@ -955,8 +977,9 @@ Item11 = MAXPOTION,1,H,Cuadrante N · junto al leñador,Suministro de ruta (cons
 Item12 = FULLRESTORE,1,H,Cuadrante O · junto al abeto nevado,Suministro de ruta (consumible común).
 Item13 = MAXELIXIR,1,B,Cuadrante NE · en un ventisquero hundido,Suministro de ruta (consumible común).
 Item14 = PROTEIN,1,B,Cuadrante SO · junto al leñador,
+Item15 = FULLRESTORE,1,N,Fogata nocturna · Fermina (maestra itinerante),Relato de fogata «Las pizarras del camino» (rem_lore_fogatas.txt, RELATO_18): solo de noche; se escucha las veces que se quiera y el objeto se da solo la primera vez (interruptor Fogata_Regalo_Ruta18, pendiente de alta).
 
-# Ruta 19 - 18 filas
+# Ruta 19 - 19 filas
 [RUTA_19]
 Item1 = TM74,1,B,Bosque nevado · cerca de la gruta,Ayuda previa al Dominante Dragón (Templo): Carantoña (90 PB, Hada).
 Item2 = TM91,1,B,Claro nevado · bajo el abeto,Agilidad.
@@ -976,3 +999,4 @@ Item15 = TWISTEDSPOON,1,B,Cuadrante S · en el claro helado,
 Item16 = HYPERPOTION,1,H,Cuadrante SE · junto al leñador,Suministro de ruta (consumible común).
 Item17 = IRON,1,H,Cuadrante E · junto al abeto nevado,
 Item18 = FASTBALL,1,B,Cuadrante NO · junto al abeto nevado,
+Item19 = MAXELIXIR,1,N,Fogata nocturna · Hilario (leñador de invierno),Relato de fogata «El bosque que dormía de pie» (rem_lore_fogatas.txt, RELATO_19): solo de noche; se escucha las veces que se quiera y el objeto se da solo la primera vez (interruptor Fogata_Regalo_Ruta19, pendiente de alta).
