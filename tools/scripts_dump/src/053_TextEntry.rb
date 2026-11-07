@@ -898,6 +898,30 @@ end
 #===============================================================================
 # Text entry screen - free typing.
 #===============================================================================
+# REM: centra el dibujo REAL (píxeles visibles) de un sprite en el hueco del sujeto de naming2bg (centro 75,49).
+def pbRemArtBounds(bitmap,rect)
+  x0=rect.width; y0=rect.height; x1=-1; y1=-1
+  for y in 0...rect.height
+    for x in 0...rect.width
+      if bitmap.get_pixel(rect.x+x,rect.y+y).alpha>0
+        x0=x if x<x0
+        x1=x if x>x1
+        y0=y if y<y0
+        y1=y if y>y1
+      end
+    end
+  end
+  return [0,0,rect.width-1,rect.height-1] if x1<0
+  return [x0,y0,x1,y1]
+end
+
+def pbRemCenterSubject(sprite,bitmap,rect,cx,cy)
+  b=pbRemArtBounds(bitmap,rect)
+  sprite.x=cx-(b[0]+b[2]+1)/2
+  sprite.y=cy-(b[1]+b[3]+1)/2
+  return b
+end
+
 class PokemonEntryScene
   @@Characters=[
      [("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz").scan(/./),"[*]"],
@@ -959,22 +983,22 @@ class PokemonEntryScene
           @sprites["subject"]=TrainerWalkingCharSprite.new(filename,@viewport)
           charwidth=@sprites["subject"].bitmap.width
           charheight=@sprites["subject"].bitmap.height
-          # centrado en el hueco del fondo naming2bg (centro 75,49)
-          @sprites["subject"].x = 75 - charwidth/8
-          @sprites["subject"].y = 49 - charheight/8
+          # centrado (horizontal y vertical) en el hueco del fondo naming2bg (centro 75,49) por el dibujo visible
+          b=pbRemCenterSubject(@sprites["subject"],@sprites["subject"].bitmap,
+                               Rect.new(0,0,charwidth/4,charheight/4),75,49)
           @sprites["shadow"].x=75-22
-          @sprites["shadow"].y=49+charheight/8-10
+          @sprites["shadow"].y=@sprites["subject"].y+b[3]-10
         end
       end
     when 2   # Pokémon
       if pokemon
         @sprites["shadow"]=IconSprite.new(0,0,@viewport)
         @sprites["shadow"].setBitmap("Graphics/Pictures/namingShadow")
-        @sprites["shadow"].x=33*2
-        @sprites["shadow"].y=32*2
         @sprites["subject"]=PokemonIconSprite.new(pokemon,@viewport)
-        @sprites["subject"].x=56
-        @sprites["subject"].y=14
+        # centrado (horizontal y vertical) en el hueco del fondo naming2bg (centro 75,49) por el dibujo visible
+        b=pbRemCenterSubject(@sprites["subject"],@sprites["subject"].bitmap,Rect.new(0,0,64,64),75,49)
+        @sprites["shadow"].x=75-22
+        @sprites["shadow"].y=@sprites["subject"].y+b[3]-10
         @sprites["gender"]=BitmapSprite.new(32,32,@viewport)
         @sprites["gender"].x=430
         @sprites["gender"].y=54
@@ -999,10 +1023,10 @@ class PokemonEntryScene
       @sprites["subject"]=TrainerWalkingCharSprite.new(pokemon.to_s,@viewport)
       charwidth=@sprites["subject"].bitmap.width
       charheight=@sprites["subject"].bitmap.height
-      @sprites["subject"].x = 75 - charwidth/8
-      @sprites["subject"].y = 49 - charheight/8
+      b=pbRemCenterSubject(@sprites["subject"],@sprites["subject"].bitmap,
+                           Rect.new(0,0,charwidth/4,charheight/4),75,49)
       @sprites["shadow"].x=75-22
-      @sprites["shadow"].y=49+charheight/8-10
+      @sprites["shadow"].y=@sprites["subject"].y+b[3]-10
     end
     pbFadeInAndShow(@sprites)
   end
