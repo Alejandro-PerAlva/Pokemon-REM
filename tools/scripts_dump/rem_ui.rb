@@ -1654,7 +1654,7 @@ class Window_PokemonBag
     if qty!=""
       pbSetNarrowFont(self.contents)
       self.contents.font.size=24
-      pbDrawShadowText(self.contents,x,y,w-14,h,qty,REM_UI::WHITE,REM_UI::BAG_SHADOW,1)
+      pbDrawShadowText(self.contents,x,y,w-14,h,qty,REM_UI::WHITE,REM_UI::BAG_SHADOW,2)
     end
     if reg>0
       pbDrawImagePositions(self.contents,[["Graphics/Pictures/bagReg",x+w-14-qw-(qw>0 ? 8 : 0)-46,y+5,0,0,-1,-1]])

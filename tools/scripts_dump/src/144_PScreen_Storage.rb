@@ -3077,20 +3077,26 @@ class StorageSystemPC
   end
 
   def access
-    Kernel.pbMessage(_INTL("\\se[accesspc]Acceso al Sistema de Almacenamiento de Pokémon concedido."))
     loop do
       command=Kernel.pbShowCommandsWithHelp(nil,
-         [_INTL("Sacar Pokémon"),
+         [_INTL("Mover Pokémon"),
+         _INTL("Sacar Pokémon"),
          _INTL("Dejar Pokémon"),
-         _INTL("Mover Pokémon"),
+         _INTL("Recordar Movimientos"),
          _INTL("¡Nos vemos!")],
-         [_INTL("Pasar un Pokémon guardado en una Caja a tu equipo."),
+         [_INTL("Mover los Pokémon de las Cajas y tu equipo."),
+         _INTL("Pasar un Pokémon guardado en una Caja a tu equipo."),
          _INTL("Guardar un Pokémon de tu equipo en una Caja."),
-         _INTL("Mover los Pokémon de las Cajas y tu equipo."),
+         _INTL("Enseñar a un Pokémon de tu equipo movimientos que haya olvidado."),
          _INTL("Regresar al menú anterior.")],-1
       )
+      if command==3
+        pbPCMoveRelearner
+        next
+      end
       if command>=0 && command<3
-        if command==0 && $PokemonStorage.party.length>=6
+        mode=[2,0,1][command]   # 0=Sacar, 1=Dejar, 2=Mover (modo interno de la pantalla)
+        if mode==0 && $PokemonStorage.party.length>=6
           Kernel.pbMessage(_INTL("¡Tu equipo está completo!"))
           next
         end
@@ -3098,14 +3104,14 @@ class StorageSystemPC
         for p in $PokemonStorage.party
           count+=1 if p && !p.isEgg? && p.hp>0
         end
-        if command==1 && count<=1
+        if mode==1 && count<=1
           Kernel.pbMessage(_INTL("¡No puedes dejar a tu último Pokémon!"))
           next
         end
         pbFadeOutIn(99999){
            scene=PokemonStorageScene.new
            screen=PokemonStorageScreen.new(scene,$PokemonStorage)
-           screen.pbStartScreen(command)
+           screen.pbStartScreen(mode)
         }
       else
         break
@@ -3114,18 +3120,32 @@ class StorageSystemPC
   end
 end
 
+# Recordador de movimientos accesible desde el PC (solo equipo).
+def pbPCMoveRelearner
+  chosen=-1
+  pbFadeOutIn(99999){
+     scene=PokemonScreen_Scene.new
+     screen=PokemonScreen.new(scene,$Trainer.party)
+     screen.pbStartScene(_INTL("¿A qué Pokémon enseñar?"),false)
+     chosen=screen.pbChoosePokemon
+     screen.pbEndScene
+  }
+  return if chosen<0
+  pkmn=$Trainer.party[chosen]
+  if !pkmn || pkmn.isEgg?
+    Kernel.pbMessage(_INTL("¡Un Huevo no puede recordar movimientos!"))
+  elsif pbGetRelearnableMoves(pkmn).length==0
+    Kernel.pbMessage(_INTL("{1} no tiene movimientos que recordar.",pkmn.name))
+  else
+    pbRelearnMoveScreen(pkmn)
+  end
+end
+
 
 
 def pbPokeCenterPC
   Kernel.pbMessage(_INTL("\\se[computeropen]{1} encendió el PC.",$Trainer.name))
-  loop do
-    commands=PokemonPCList.getCommandList()
-    command=Kernel.pbMessage(_INTL("¿A qué PC quieres acceder?"),
-       commands,commands.length)
-    if !PokemonPCList.callCommand(command)
-      break
-    end
-  end
+  StorageSystemPC.new.access
   pbSEPlay("computerclose")
 end
 
