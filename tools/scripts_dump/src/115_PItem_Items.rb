@@ -87,6 +87,25 @@ def pbIsEvolutionStone?(item)
   return false
 end
 
+# REM: cualquier objeto que haga evolucionar por uso (piedras, Magmatizador, Escama Dragón, Roca del Rey...),
+# según las evoluciones por objeto de Data/evolutions.dat; se usa para marcar APTO / NO APTO en el equipo.
+def pbIsEvolutionItem?(item)
+  return true if pbIsEvolutionStone?(item)
+  if !$rem_evoitems
+    list={}
+    methods=[PBEvolution::Item,PBEvolution::ItemMale,PBEvolution::ItemFemale,
+             PBEvolution::ItemForm0,PBEvolution::ItemForm1,PBEvolution::ItemForm2]
+    for sp in 1..PBSpecies.maxValue
+      data=(pbGetEvolvedFormData(sp) rescue [])
+      for e in data
+        list[e[1]]=true if methods.include?(e[0])
+      end
+    end
+    $rem_evoitems=list
+  end
+  return $rem_evoitems[item]==true
+end
+
 def pbIsMegaStone?(item)   # Does NOT include Red Orb/Blue Orb
   stones=[:ABOMASITE,:ABSOLITE,:AERODACTYLITE,:AGGRONITE,:ALAKAZITE,
           :ALTARIANITE,:AMPHAROSITE,:AUDINITE,:BANETTITE,:BEEDRILLITE,
@@ -656,7 +675,7 @@ def pbUseItem(bag,item,bagscene=nil)
     end
     ret=false
     annot=nil
-    if pbIsEvolutionStone?(item)
+    if pbIsEvolutionItem?(item)
       annot=[]
       for pkmn in $Trainer.party
         elig=(pbCheckEvolution(pkmn,item)>0)
@@ -678,6 +697,9 @@ def pbUseItem(bag,item,bagscene=nil)
              ret=ItemHandlers.triggerUseOnPokemon(item,pokemon,screen)
              if ret && $ItemData[item][ITEMUSE]==1 # Usable on Pokémon, consumed
                bag.pbDeleteItem(item)
+             end
+             if ret && annot && pbIsEvolutionItem?(item)   # tras evolucionar, se actualizan los APTO / NO APTO
+               screen.pbRefreshAnnotations(proc{|p| pbCheckEvolution(p,item)>0 })
              end
              if bag.pbQuantity(item)<=0
                Kernel.pbMessage(_INTL("Has usado el último {1}.",PBItems.getName(item)))

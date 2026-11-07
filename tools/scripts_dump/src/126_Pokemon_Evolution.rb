@@ -824,13 +824,11 @@ class PokemonEvolutionScene
   end
 
   def pbUpdateNarrowScreen
-    if @bgviewport.rect.y<20*4
-      @bgviewport.rect.height-=2*4
-      if @bgviewport.rect.height<Graphics.height-64
-        @bgviewport.rect.y+=4
-        @sprites["background"].oy=@bgviewport.rect.y
-      end
-    end
+    # REM: el fondo de la evolución (evolutionbg, 512x384) ocupa siempre la pantalla entera;
+    # antes se estrechaba a una franja de ~160 px y quedaba pequeño frente al resto de la interfaz.
+    @bgviewport.rect.y=0
+    @bgviewport.rect.height=Graphics.height
+    @sprites["background"].oy=0
   end
 
   def pbUpdateExpandScreen

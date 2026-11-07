@@ -1198,7 +1198,7 @@ class PokemonScreen
     annot=[]
     for pkmn in @party
       elig=ableProc.call(pkmn)
-      annot.push(elig ? _INTL("PUEDE") : _INTL("NO PUEDE"))
+      annot.push(elig ? _INTL("APTO") : _INTL("NO APTO"))
     end
     @scene.pbAnnotate(annot)
   end
