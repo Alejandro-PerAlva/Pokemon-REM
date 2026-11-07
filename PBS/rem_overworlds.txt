@@ -4,162 +4,166 @@
 # Sprites de ENTRENADOR como overworld: cualquier clase de trainertypes.txt tiene su trcharNNN (NNN = ID de la clase, 000-087) y puede usarse como NPC sin combate (un evento normal con ese gráfico y sin pbTrainerBattle). Para elegirlos, vale el nombre y la descripción de la clase en trainertypes.txt.
 # Formato: texto plano en español (UTF-8 BOM, CRLF), secciones [npcNNN] y comentarios con «#».
 
+# Reparto cerrado (32 sprites): npc001-012 = 12 IDENTIFICABLES (NPC con función o historia propia; 6 Male + 6 Female) · npc013-032 = 20 GENÉRICOS reutilizables (10 Male + 10 Female, en pares M/F). Las profesiones (marinero, pescador, montañero, policía, etc.) NO usan hueco npc: salen de los trcharNNN de entrenador.
+
 [npc001]
-Name = 
-Description = 
-Gender = 
+Name = Amparo (la madre)
+Description = Mujer de unos 40 años, delantal y gesto cálido. Madre del protagonista; despide al jugador en Pueblo Iolita.
+Gender = Female
 
 [npc002]
-Name = 
-Description = 
-Gender = 
+Name = Pía (ayudante del Profesor)
+Description = Joven aplicada con bata de laboratorio. Atiende el mostrador del laboratorio de Albor: entrega de iniciales, misiones y hitos de captura.
+Gender = Female
 
 [npc003]
-Name = 
-Description = 
-Gender = 
+Name = El Padre
+Description = Hombre de aspecto sereno y ropa sobria. Punto de curación de Pueblo Albor, que no tiene Centro Pokémon.
+Gender = Male
 
 [npc004]
-Name = 
-Description = 
-Gender = 
+Name = Telmo (el Viejo Pescador)
+Description = Anciano de rostro curtido, jersey de lana y pipa apagada. Presencia el duelo de la Ruta 12, regala la caña en Pueblo Nácar y lleva a la Isla Obsidiana.
+Gender = Male
 
 [npc005]
-Name = 
-Description = 
-Gender = 
+Name = Hortensia (la Guardería)
+Description = Anciana de pelo recogido y delantal. Dueña de la guardería de la Granja Apatita; activa la mecánica de crianza y los huevos.
+Gender = Female
 
 [npc006]
-Name = 
-Description = 
-Gender = 
+Name = Conservadora del Museo de Fósiles
+Description = Mujer con bata y gafas, aire de científica de campo. Revive los fósiles en el museo de Pueblo Casiterita.
+Gender = Female
 
 [npc007]
-Name = 
-Description = 
-Gender = 
+Name = Don Prodigio (Intercambio Prodigio)
+Description = Hombre de edad media, aire excéntrico y atuendo llamativo. Gestiona el Intercambio Prodigio (wonder trade) del juego.
+Gender = Male
 
 [npc008]
-Name = 
-Description = 
-Gender = 
+Name = Enfermera del Centro Pokémon
+Description = Mujer con uniforme de enfermera y cofia. Cura al equipo en los Centros Pokémon y atiende el PC.
+Gender = Female
 
 [npc009]
-Name = 
-Description = 
-Gender = 
+Name = Dependiente (Poké Mart)
+Description = Hombre con uniforme y gorra de tienda. Atiende el mostrador de los Poké Mart y de las tiendas especiales.
+Gender = Male
 
 [npc010]
-Name = 
-Description = 
-Gender = 
+Name = Dependienta (Poké Mart)
+Description = Mujer con uniforme y gorra de tienda. Atiende el mostrador de los Poké Mart y de las tiendas especiales.
+Gender = Female
 
 [npc011]
-Name = 
-Description = 
-Gender = 
+Name = Acampador de fogata
+Description = Figura de viajero junto al fuego, con manta y capa. Cuenta los 24 relatos de las fogatas nocturnas de las rutas.
+Gender = Male
 
 [npc012]
-Name = 
-Description = 
-Gender = 
+Name = Árbitro
+Description = Hombre con camisa de rayas y silbato. Arbitra y recibe en gimnasios y en la Liga.
+Gender = Male
+
+# --- Genéricos ---
 
 [npc013]
-Name = 
-Description = 
-Gender = 
+Name = Hombre adulto
+Description = Hombre adulto de aspecto corriente. Vecino de pueblos, ciudades y rutas.
+Gender = Male
 
 [npc014]
-Name = 
-Description = 
-Gender = 
+Name = Mujer adulta
+Description = Mujer adulta de aspecto corriente. Vecina de pueblos, ciudades y rutas.
+Gender = Female
 
 [npc015]
-Name = 
-Description = 
-Gender = 
+Name = Anciano
+Description = Anciano con bastón. Vecino de pueblos y casas.
+Gender = Male
 
 [npc016]
-Name = 
-Description = 
-Gender = 
+Name = Anciana
+Description = Anciana de pelo canoso. Vecina de pueblos y casas.
+Gender = Female
 
 [npc017]
-Name = 
-Description = 
-Gender = 
+Name = Niño
+Description = Niño pequeño. Pueblos y ciudades.
+Gender = Male
 
 [npc018]
-Name = 
-Description = 
-Gender = 
+Name = Niña
+Description = Niña pequeña. Pueblos y ciudades.
+Gender = Female
 
 [npc019]
-Name = 
-Description = 
-Gender = 
+Name = Chico joven
+Description = Adolescente de ropa informal. Rutas normales.
+Gender = Male
 
 [npc020]
-Name = 
-Description = 
-Gender = 
+Name = Chica joven
+Description = Adolescente de ropa informal. Rutas normales.
+Gender = Female
 
 [npc021]
-Name = 
-Description = 
-Gender = 
+Name = Hombre corpulento
+Description = Hombre corpulento y campechano. Ciudades y mercados.
+Gender = Male
 
 [npc022]
-Name = 
-Description = 
-Gender = 
+Name = Mujer de mercado
+Description = Mujer corpulenta con cesta. Ciudades y mercados.
+Gender = Female
 
 [npc023]
-Name = 
-Description = 
-Gender = 
+Name = Granjero
+Description = Hombre con sombrero de paja. Granja Apatita, huertos y campos.
+Gender = Male
 
 [npc024]
-Name = 
-Description = 
-Gender = 
+Name = Granjera
+Description = Mujer con sombrero de paja y delantal. Granja Apatita, huertos y campos.
+Gender = Female
 
 [npc025]
-Name = 
-Description = 
-Gender = 
+Name = Hombre abrigado
+Description = Hombre con abrigo grueso y bufanda. Rutas nevadas.
+Gender = Male
 
 [npc026]
-Name = 
-Description = 
-Gender = 
+Name = Mujer abrigada
+Description = Mujer con abrigo grueso y gorro. Rutas nevadas.
+Gender = Female
 
 [npc027]
-Name = 
-Description = 
-Gender = 
+Name = Viajero del desierto
+Description = Hombre con turbante y capa ligera. Desierto Halita.
+Gender = Male
 
 [npc028]
-Name = 
-Description = 
-Gender = 
+Name = Viajera del desierto
+Description = Mujer con velo y capa ligera. Desierto Halita.
+Gender = Female
 
 [npc029]
-Name = 
-Description = 
-Gender = 
+Name = Erudito
+Description = Hombre con libros bajo el brazo. Academia y biblioteca de Ciudad Calcedonia.
+Gender = Male
 
 [npc030]
-Name = 
-Description = 
-Gender = 
+Name = Bibliotecaria
+Description = Mujer con gafas y libreta. Academia y biblioteca de Ciudad Calcedonia.
+Gender = Female
 
 [npc031]
-Name = 
-Description = 
-Gender = 
+Name = Leñador
+Description = Hombre rústico con hacha y camisa de cuadros. Rutas de montaña y bosque.
+Gender = Male
 
 [npc032]
-Name = 
-Description = 
-Gender = 
+Name = Artesana
+Description = Mujer rústica de ropa de lana. Rutas de montaña y bosque.
+Gender = Female
