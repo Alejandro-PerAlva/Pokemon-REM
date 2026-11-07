@@ -1848,6 +1848,7 @@ class PokemonScreen
       cmdSwitch  = -1
       cmdMail    = -1
       cmdItem    = -1
+      cmdNick    = -1
       # Build the commands
       commands[cmdSummary=commands.length]      = _INTL("Datos")
       commands[cmdDebug=commands.length]        = _INTL("Depurador") if $DEBUG
@@ -1867,6 +1868,7 @@ class PokemonScreen
         else
           commands[cmdItem=commands.length]     = _INTL("Objeto")
         end
+        commands[cmdNick=commands.length]       = _INTL("Mote")
       end
       commands[commands.length]                 = _INTL("Salir")
       command=@scene.pbShowCommands(_INTL("¿Qué hacer con {1}?",pkmn.name),commands)
@@ -1928,6 +1930,9 @@ class PokemonScreen
         @scene.pbSummary(pkmnid)
       elsif cmdDebug>=0 && command==cmdDebug
         pbPokemonDebug(pkmn,pkmnid)
+      elsif cmdNick>=0 && command==cmdNick
+        pbRemEditNickname(pkmn)
+        pbRefreshSingle(pkmnid)
       elsif cmdSwitch>=0 && command==cmdSwitch
         @scene.pbSetHelpText(_INTL("¿A qué posición mover?"))
         oldpkmnid=pkmnid

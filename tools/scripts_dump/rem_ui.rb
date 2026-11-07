@@ -3542,7 +3542,7 @@ def pbRemDebugIntro
   # 1) Identidad (chico, "Rojo")
   pbChangePlayer(0) if !$PokemonGlobal.playerID || $PokemonGlobal.playerID<0
   pbChangePlayer($PokemonGlobal.playerID)
-  pbTrainerName("Rojo")
+  pbTrainerName("Alivra")
   # 2) Equipo aleatorio de 6 (nivel 15-30, especies 1..721)
   $Trainer.party=[]
   tries=0
@@ -3592,4 +3592,24 @@ class PokemonPokedex
     $PokemonGlobal.pokedexDex=-1 if !DEXDEPENDSONLOCATION
     rem_orig_pbStartScreen
   end
+end
+
+#===============================================================================
+# Mote editable desde el menú del equipo (opción "Mote", bajo "Objeto")
+# Vacío = se quita el mote y se usa el nombre oficial de la especie
+# (así evoluciona renombrándose solo: ver Pokemon_Evolution).
+#===============================================================================
+def pbRemHasNickname?(pkmn)
+  return false if !pkmn || pkmn.isEgg?
+  return pkmn.name && pkmn.name!="" && pkmn.name!=PBSpecies.getName(pkmn.species)
+end
+
+def pbRemEditNickname(pkmn)
+  return false if !pkmn || pkmn.isEgg?
+  speciesname=PBSpecies.getName(pkmn.species)
+  current=pbRemHasNickname?(pkmn) ? pkmn.name : ""
+  newname=pbEnterPokemonName(_INTL("Apodo de {1}",speciesname),0,10,current,pkmn)
+  newname=newname.to_s.strip
+  pkmn.name=(newname=="") ? speciesname : newname
+  return true
 end

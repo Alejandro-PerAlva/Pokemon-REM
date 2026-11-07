@@ -117,7 +117,7 @@ class GenCustomStyle
     @sprites["logo"].ox = @sprites["logo"].bitmap.width/2
     @sprites["logo"].oy = @sprites["logo"].bitmap.height/2
     @sprites["logo"].x = @viewport.rect.width/2
-    @sprites["logo"].y = @viewport.rect.height/2 - 40
+    @sprites["logo"].y = @viewport.rect.height/2
 
     bw = Graphics.width; bh = 34
     bar = Bitmap.new(bw,bh)
@@ -126,7 +126,7 @@ class GenCustomStyle
     bar.fill_rect(0,bh-1,bw,1,Color.new(214,219,228,150))
     pbSetSystemFont(bar)
     bar.font.size = 26
-    pbDrawShadowText(bar,0,1,bw,bh,_INTL("PULSA START O C PARA CONTINUAR"),Color.new(214,219,228),Color.new(20,22,29),1)
+    pbDrawShadowText(bar,0,1,bw,bh,_INTL("PULSA ENTER PARA CONTINUAR"),Color.new(214,219,228),Color.new(20,22,29),1)
     @sprites["start"] = Sprite.new(@viewport)
     @sprites["start"].bitmap = bar
     @sprites["start"].z = 110
@@ -158,7 +158,7 @@ class GenCustomStyle
     end
     
     @logoY = Math.sin(Graphics.frame_count/25.0)*6
-    @sprites["logo"].y = (@viewport.rect.height/2 - 40) + @logoY
+    @sprites["logo"].y = (@viewport.rect.height/2) + @logoY
   end
   
   def dispose

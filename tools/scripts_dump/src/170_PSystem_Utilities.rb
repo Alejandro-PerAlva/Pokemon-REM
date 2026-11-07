@@ -575,26 +575,8 @@ def pbTrainerName(name=nil,outfit=0)
 end
 
 def pbSuggestTrainerName(gender)
-  userName=pbGetUserName()
-  userName=userName.gsub(/\s+.*$/,"")
-  if userName.length>0 && userName.length<7
-    userName[0,1]=userName[0,1].upcase
-    return userName
-  end
-  userName=userName.gsub(/\d+$/,"")
-  if userName.length>0 && userName.length<7
-    userName[0,1]=userName[0,1].upcase
-    return userName
-  end
-  owner=MiniRegistry.get(MiniRegistry::HKEY_LOCAL_MACHINE,
-     "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion",
-     "RegisteredOwner","")
-  owner=owner.gsub(/\s+.*$/,"")
-  if owner.length>0 && owner.length<7
-    owner[0,1]=owner[0,1].upcase
-    return owner
-  end
-  return getRandomNameEx(gender,nil,1,7)
+  # REM: nombre por defecto fijo (chico y chica), en vez del usuario de Windows o uno aleatorio
+  return "Alivra"
 end
 
 def pbGetUserName()
