@@ -1,8 +1,9 @@
-# mapas/ — capturas del diseño de cada mapa (las aporta el diseñador). Solo lectura para Claude.
+# mapas/ — capturas del diseño de cada mapa CON CUADRÍCULA (las aporta el diseñador). Solo lectura para Claude.
 # Estructura: una subcarpeta por MapID (el id de Data/MapNNN.rxdata, p. ej. mapas/2/ para Pueblo Albor),
 # con una o varias capturas del mapa ya diseñado (png/jpg). Los submapas (interiores, pisos, pozos...) llevan su propia subcarpeta con su MapID.
 #   mapas/2/pueblo.png   mapas/3/casa_planta_baja.png   mapas/3/casa_piso_1.png ...
 # Para qué sirven (ver PBS/rem_workflow_ubicaciones.txt, [COMO_EMPEZAR] y [REGLAS_DE_EVENTOS]):
 #   1) adaptar la historia al diseño si hace falta (pisos de una casa, ríos, puentes, desniveles, distancias);
-#   2) situar bandas de activación, NPC, objetos y movimientos por lugares y estructuras (sin coordenadas).
+#   2) situar bandas de activación, NPC y objetos en su casilla (x,y) según la cuadrícula, y calcular las rutas de movimiento de personajes y jugador.
+#      El diseñador siempre puede ajustar a mano; cada evento conserva además su comentario de ubicación.
 # Si una ubicación no tiene capturas, Claude trabaja con el mapa del juego (tools/render_ascii.rb) y lo avisa.

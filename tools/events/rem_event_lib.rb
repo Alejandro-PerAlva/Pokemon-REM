@@ -118,6 +118,7 @@ module REMEv
   # Reemplaza los eventos cuyo nombre empiece por prefix; los demás no se tocan.
   # CONSERVA ID y POSICIÓN de los eventos con el mismo nombre (el diseñador ya los colocó) y también sus copias
   # (varios eventos con el mismo nombre = la misma definición repetida). Los nombres nuevos van a la primera casilla libre desde (0,0).
+  # Posición explícita opcional: [nombre, páginas, x, y] (leída de la cuadrícula del mapa); solo vale para eventos aún no colocados.
   # Los eventos con el prefijo cuyo nombre ya no está en las definiciones se eliminan.
   def self.apply(map_id, prefix, tag, defs, dry = false, renames = {})
     f = format('Data/Map%03d.rxdata', map_id); bak = f + '.bak_pre_' + tag
@@ -139,10 +140,13 @@ module REMEv
     taken = {}; ev.each { |_, e| taken[[e.instance_variable_get(:@x), e.instance_variable_get(:@y)]] = true }
     old.each_value { |l| l.each { |_, x, y| taken[[x, y]] = true } }
     nid = maxid + 1; slot = 0; placed = []
-    defs.each do |name, pages|
+    defs.each do |name, pages, gx, gy|
       name = nn.call(name)
       if old[name]
         old[name].each { |id, x, y| ev[id] = event(id, name, x, y, pages); placed << [id, name, x, y] }
+      elsif gx && gy && gx < w && gy < h && !taken[[gx, gy]]
+        taken[[gx, gy]] = true
+        ev[nid] = event(nid, name, gx, gy, pages); placed << [nid, name, gx, gy]; nid += 1
       else
         slot += 1 while taken[[slot % w, slot / w]]
         x, y = slot % w, slot / w; raise "mapa #{map_id} sin hueco" if y >= h
