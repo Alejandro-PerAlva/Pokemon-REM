@@ -2961,7 +2961,7 @@ end
 
 class MoveRelearnerScene
   # Diseño de la ficha de datos del Pokémon (summary4details) en espejo: movimientos a la izquierda
-  # (borde del color del tipo, selector summarymovesel) y ficha del movimiento a la derecha.
+  # (borde del color del tipo, selector con el dibujo summarymovesel) y ficha del movimiento a la derecha.
   CARDX = 276   # desplazamiento de la ficha respecto a la ficha original (que ocupa 0..236)
 
   def pbStartScene(pokemon,moves)
@@ -2982,12 +2982,26 @@ class MoveRelearnerScene
     @sprites["background"]=Sprite.new(@viewport)
     @sprites["background"].bitmap=mir
     @sprites["overlay"]=BitmapSprite.new(Graphics.width,Graphics.height,@viewport)
-    @sprites["pokeicon"]=PokemonBoxIcon.new(@pokemon,@viewport)
+    # Sprites propios del recordador (independientes de la ficha de datos y del almacenamiento).
+    @ownbitmaps=[mir]
+    iconbmp=AnimatedBitmap.new(pbPokemonIconFile(@pokemon))
+    iconfr=Bitmap.new(64,64)
+    iconfr.blt(0,0,iconbmp.bitmap,Rect.new(0,0,64,64))
+    iconbmp.dispose
+    @ownbitmaps.push(iconfr)
+    @sprites["pokeicon"]=Sprite.new(@viewport)
+    @sprites["pokeicon"].bitmap=iconfr
     @sprites["pokeicon"].x=14+CARDX
     @sprites["pokeicon"].y=52
-    @sprites["pokeicon"].mirror=false
-    @sprites["movesel"]=MoveSelectionSprite.new(@viewport)
-    @sprites["movesel"].visible=true
+    selsrc=AnimatedBitmap.new("Graphics/Pictures/summarymovesel")
+    selbmp=Bitmap.new(264,72)
+    selbmp.blt(0,0,selsrc.bitmap,Rect.new(0,0,264,72))   # fotograma normal; el dibujo es simétrico
+    selsrc.dispose
+    @ownbitmaps.push(selbmp)
+    @sprites["movesel"]=Sprite.new(@viewport)
+    @sprites["movesel"].bitmap=selbmp
+    @sprites["movesel"].x=12     # huecos reflejados: 16..271 (el selector sobresale 4 px a cada lado y 4 px arriba)
+    @sprites["movesel"].y=REM_UI::SUM_SLOT_Y0-4
     @sprites["commands"]=Window_CommandPokemon.new(moveCommands,32)
     @sprites["commands"].x=Graphics.width
     @sprites["commands"].height=32*(VISIBLEMOVES+1)
@@ -3009,13 +3023,6 @@ class MoveRelearnerScene
     cmds.commands=moves.map{|i| PBMoves.getName(i) }
     cmds.index=[old,[moves.length-1,0].max].min
     pbDrawMoveList
-  end
-
-  def pbUpdate
-    pbUpdateSpriteHash(@sprites)
-    # el selector del resumen fija su x en 236: se refleja a la izquierda
-    ms=@sprites["movesel"]
-    ms.x=Graphics.width-236-ms.bitmap.width if ms && ms.bitmap
   end
 
   def pbDrawMoveList
@@ -3070,8 +3077,7 @@ class MoveRelearnerScene
       dl.push([lines[i],24+cx,252+i*23,0,wh,21])
     end
     REM_UI.texts(bmp,dl)
-    @sprites["movesel"].index=cmds.index-cmds.top_item
-    @sprites["movesel"].visible=true
+    @sprites["movesel"].y=REM_UI::SUM_SLOT_Y0-4+REM_UI::SUM_SLOT_P*(cmds.index-cmds.top_item)
   end
 
   def pbChooseMove
@@ -3097,6 +3103,7 @@ class MoveRelearnerScene
     @remDisposed=true
     pbFadeOutAndHide(@sprites) { pbUpdate }
     pbDisposeSpriteHash(@sprites)
+    (@ownbitmaps||[]).each{|b| b.dispose if b && !b.disposed? }
     @typebitmap.dispose
     @catbitmap.dispose
     @viewport.dispose
@@ -3107,6 +3114,7 @@ class MoveRelearnerScene
     return if @remDisposed
     @remDisposed=true
     (pbDisposeSpriteHash(@sprites) rescue nil)
+    (@ownbitmaps||[]).each{|b| (b.dispose if b && !b.disposed?) rescue nil }
     (@typebitmap.dispose rescue nil)
     (@catbitmap.dispose rescue nil)
     (@viewport.dispose rescue nil)
