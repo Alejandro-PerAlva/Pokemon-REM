@@ -1723,6 +1723,8 @@ class PokemonBag
       ps[k].clear
     end
     for pk in 1...ps.length
+      # objetos retirados del juego (p. ej. el antiguo Repartir Exp) desaparecen de partidas antiguas
+      ps[pk].delete_if{|e| e.nil? || ($ItemData && $ItemData[e[0]].nil?) }
       pbRemSortPocket(ps[pk])   # siempre alfabético, también tras añadir, cambiar o cargar partida
     end
     return ps

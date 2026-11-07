@@ -462,7 +462,7 @@ ItemNote = TM97,Trampa Rocas: única copia, 10 000
 [PIA_MISSIONS]
 Mission1 = 5,TM01,1,Primeras anotaciones,Capturar 5 especies. Pía revisa el cuaderno y entrega la primera MT del juego: Protección.
 Mission2 = 12,ITEMFINDER,1,Rastro de campo,Capturar 12 especies. Detector de objetos invisibles para la ayudante de campo.
-Mission3 = 25,EXPALL,1,Manada compartida,Capturar 25 especies. Repartir Exp: el equipo entero crece junto.
+Mission3 = 25,LUCKYEGG,1,Manada compartida,Capturar 25 especies. Huevo Suerte: el equipo entero crece junto.
 Mission4 = 40,ABILITYCAPSULE,1,Genética de habilidades,Capturar 40 especies. Primera Cápsula Habilidad (Acto II).
 Mission5 = 0,DUSKSTONE,1,Muestreo de las Alcantarillas,Registrar 3 especies de las Ruinas Atacama. Pía pide muestras de las alcantarillas; el rastro termina en una piedra oscura.
 Mission6 = 60,MOONSTONE,1,Cuaderno de lunas,Capturar 60 especies. Piedra Lunar para el cuaderno de evoluciones.

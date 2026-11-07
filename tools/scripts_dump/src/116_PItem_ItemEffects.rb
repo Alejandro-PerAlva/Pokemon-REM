@@ -148,17 +148,7 @@ ItemHandlers::UseFromBag.add(:COINCASE,proc{|item|
    next 1 # Continue
 })
 
-ItemHandlers::UseFromBag.add(:EXPALL,proc{|item|
-   $PokemonBag.pbChangeItem(:EXPALL,:EXPALLOFF)
-   Kernel.pbMessage(_INTL("Has desactivado el Repartir Exp."))
-   next 1 # Continue
-})
-
-ItemHandlers::UseFromBag.add(:EXPALLOFF,proc{|item|
-   $PokemonBag.pbChangeItem(:EXPALLOFF,:EXPALL)
-   Kernel.pbMessage(_INTL("Has activado el Repartir Exp."))
-   next 1 # Continue
-})
+# REM: el Repartir Exp ya no es un objeto; funciona siempre (ver Battle#pbGainEXP).
 
 #===============================================================================
 # UseInField handlers

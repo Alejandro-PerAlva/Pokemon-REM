@@ -8523,8 +8523,8 @@ Note = Objeto nuevo en REM (Vol. 9 §1.3, ID 691): categoría Clave, rareza Clav
 Note = Implementación: El manejador ya existe en los scripts (:SURFBOARD); faltaba el objeto en el PBS.
 
 [ITEM_EXPALL]
-Note = Objeto nuevo en REM (Vol. 9 §1.3, ID 693): categoría Clave, rareza Clave.
-Note = Implementación: Los scripts lo admiten como constante opcional; falta cablear el reparto.
+Note = Eliminado: el Repartir Exp ya no es un objeto, funciona de serie en todos los combates (participantes: Exp completa; resto del equipo con PS: la mitad; EVs para todos; también al capturar).
+Note = La recompensa de la misión n.º 3 de Pía «Manada compartida» pasa a ser el Huevo Suerte (LUCKYEGG).
 
 [ITEM_COVERTCLOAK]
 Note = Objeto nuevo en REM (Vol. 9 §1.3, ID 694): categoría Combate, rareza Tier 1.

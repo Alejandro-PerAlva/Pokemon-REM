@@ -2060,6 +2060,9 @@ class PokeBattle_Battle
 ################################################################################
 # Gaining Experience. / Ganando experiencia
 ################################################################################
+  # REM: Repartir Exp integrado de serie (como en las generaciones nuevas, sin objeto ni opción).
+  # Al derrotar o capturar un Pokémon, todo el equipo con PS (huevos aparte) gana Exp y EVs:
+  # los participantes reciben la Exp completa y el resto del equipo la mitad.
   def pbGainEXP
     return if !@internalbattle
     successbegin=true
@@ -2070,50 +2073,32 @@ class PokeBattle_Battle
       end
       if pbIsOpposing?(i) && @battlers[i].participants.length>0 &&
          (@battlers[i].isFainted? || @battlers[i].captured)
-        haveexpall=(hasConst?(PBItems,:EXPALL) && $PokemonBag.pbQuantity(:EXPALL)>0)
-        # First count the number of participants
+        # Primero se cuentan los participantes
         partic=0
-        expshare=0
         for j in @battlers[i].participants
           next if !@party1[j] || !pbIsOwner?(0,j)
           partic+=1 if @party1[j].hp>0 && !@party1[j].isEgg?
         end
-        if !haveexpall
-          for j in 0...@party1.length
-            next if !@party1[j] || !pbIsOwner?(0,j)
-            expshare+=1 if @party1[j].hp>0 && !@party1[j].isEgg? && 
-                           (isConst?(@party1[j].item,PBItems,:EXPSHARE) ||
-                           isConst?(@party1[j].itemInitial,PBItems,:EXPSHARE))
-          end
+        if !@opponent && successbegin && pbAllFainted?(@party2)
+          @scene.pbWildBattleSuccess
+          successbegin=false
         end
-        # Now calculate EXP for the participants
-        if partic>0 || expshare>0 || haveexpall
-          if !@opponent && successbegin && pbAllFainted?(@party2)
-            @scene.pbWildBattleSuccess
-            successbegin=false
-          end
-          for j in 0...@party1.length
-            next if !@party1[j] || !pbIsOwner?(0,j)
-            next if @party1[j].hp<=0 || @party1[j].isEgg?
-            haveexpshare=(isConst?(@party1[j].item,PBItems,:EXPSHARE) ||
-                          isConst?(@party1[j].itemInitial,PBItems,:EXPSHARE))
-            next if !haveexpshare && !@battlers[i].participants.include?(j)
-            pbGainExpOne(j,@battlers[i],partic,expshare,haveexpall)
-          end
-          if haveexpall
-            showmessage=true
-            for j in 0...@party1.length
-              next if !@party1[j] || !pbIsOwner?(0,j)
-              next if @party1[j].hp<=0 || @party1[j].isEgg?
-              next if isConst?(@party1[j].item,PBItems,:EXPSHARE) ||
-                      isConst?(@party1[j].itemInitial,PBItems,:EXPSHARE)
-              next if @battlers[i].participants.include?(j)
-              pbDisplayPaused(_INTL("¡El resto del equipo también ha ganado Puntos de Experiencia gracias al {1}!",
-                 PBItems.getName(getConst(PBItems,:EXPALL)))) if showmessage
-              showmessage=false
-              pbGainExpOne(j,@battlers[i],partic,expshare,haveexpall,false)
-            end
-          end
+        # Participantes (Exp completa)
+        for j in 0...@party1.length
+          next if !@party1[j] || !pbIsOwner?(0,j)
+          next if @party1[j].hp<=0 || @party1[j].isEgg?
+          next if !@battlers[i].participants.include?(j)
+          pbGainExpOne(j,@battlers[i],partic,0,true)
+        end
+        # Resto del equipo (Repartir Exp integrado: la mitad)
+        showmessage=true
+        for j in 0...@party1.length
+          next if !@party1[j] || !pbIsOwner?(0,j)
+          next if @party1[j].hp<=0 || @party1[j].isEgg?
+          next if @battlers[i].participants.include?(j)
+          pbDisplayPaused(_INTL("¡El resto del equipo también ha ganado Puntos de Experiencia!")) if showmessage
+          showmessage=false
+          pbGainExpOne(j,@battlers[i],partic,0,true,false)
         end
         # Now clear the participants array
         @battlers[i].participants=[]
@@ -2174,29 +2159,15 @@ class PokeBattle_Battle
         end
       end
     end
-    # Gain experience
+    # Gain experience (Repartir Exp integrado)
     ispartic=0
     ispartic=1 if defeated.participants.include?(index)
-    haveexpshare=(isConst?(thispoke.item,PBItems,:EXPSHARE) ||
-                  isConst?(thispoke.itemInitial,PBItems,:EXPSHARE)) ? 1 : 0
+    haveexpshare=0
     exp=0
-    if expshare>0
-      if partic==0 # No participants, all Exp goes to Exp Share holders
-        exp=(level*baseexp).floor
-        exp=(exp/(NOSPLITEXP ? 1 : expshare)).floor*haveexpshare
-      else
-        if NOSPLITEXP
-          exp=(level*baseexp).floor*ispartic
-          exp=(level*baseexp/2).floor*haveexpshare if ispartic==0
-        else
-          exp=(level*baseexp/2).floor
-          exp=(exp/partic).floor*ispartic + (exp/expshare).floor*haveexpshare
-        end
-      end
-    elsif ispartic==1
-      exp=(level*baseexp/(NOSPLITEXP ? 1 : partic)).floor
-    elsif haveexpall
-      exp=(level*baseexp/2).floor
+    if ispartic==1
+      exp=(level*baseexp/((NOSPLITEXP || partic<1) ? 1 : partic)).floor
+    else
+      exp=(level*baseexp/2).floor   # resto del equipo: la mitad
     end
     return if exp<=0
     exp=(exp*3/2).floor if @opponent

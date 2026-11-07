@@ -387,7 +387,6 @@
 689,PICKAXE,Pico,Picos,8,0,"Pico de minero. Sirve para romper rocas que obstruyen el camino.",2,0,6,
 690,GLOVES,Guantes de Fuerza,Guantes de Fuerza,8,0,"Guantes reforzados que permiten mover rocas pesadas.",2,0,6,
 691,SURFBOARD,Tabla de Surf,Tablas de Surf,8,0,"Tabla de surf construida en el astillero. Permite surcar el agua montado en un Pokémon.",2,0,6,
-693,EXPALL,Repartir Exp,Repartir Exp,8,0,"Reparte la Exp. de cada combate entre todo el equipo, aunque no haya participado.",0,0,6,
 694,COVERTCLOAK,Capa Furtiva,Capas Furtivas,1,0,"Capa oscura que protege al portador de los efectos secundarios de los ataques rivales.",0,0,0,
 695,CLEARAMULET,Amuleto Puro,Amuletos Puros,1,0,"Amuleto de cristal transparente: ningún rival puede reducir las características del portador.",0,0,0,
 696,LOADEDDICE,Dado Trucado,Dados Trucados,1,0,"Dado cargado: los movimientos de golpes múltiples del portador impactan siempre entre cuatro y cinco veces.",0,0,0,
