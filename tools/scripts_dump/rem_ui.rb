@@ -1180,6 +1180,8 @@ class PokemonPokedexScene
     @sprites["slider"].visible=false
     @sprites["icon"]=PokemonSprite.new(@viewport)
     @sprites["entryicon"]=PokemonSprite.new(@viewport)
+    # botón SALIR (formato del equipo) bajo la columna izquierda, centrado: columna 8..222 -> 112 px
+    @sprites["exitbtn"]=PokeSelectionConfirmCancelSprite.new(_INTL("SALIR"),59,328,false,@viewport)
     @sprites["remlist"].z=1
     @sprites["overlay"].z=1
     @sprites["icon"].z=2
@@ -1195,7 +1197,7 @@ class PokemonPokedexScene
     gender=($Trainer.formlastseen[species][0] rescue 0)
     form=($Trainer.formlastseen[species][1] rescue 0)
     @sprites["icon"].setSpeciesBitmap(species,(gender==1),form)
-    remFitSprite(@sprites["icon"],115,128,184,212)
+    remFitSprite(@sprites["icon"],115,98,180,146)
     remDrawShowcase(species,gender,form)
   end
 
@@ -1206,19 +1208,19 @@ class PokemonPokedexScene
       @dummypokemon.species=species
       @dummypokemon.setGender(gender)
       @dummypokemon.forceForm(form)
-      REM_UI.texts(bmp,[[PBSpecies.getName(species),115,246,2,REM_UI::WHITE,30,190]])
+      REM_UI.texts(bmp,[[PBSpecies.getName(species),115,177,2,REM_UI::WHITE,30,190]])
       typebmp=AnimatedBitmap.new(_INTL("Graphics/Pictures/types"))
       pt=REM_UI.pbsTypes(species) || [@dummypokemon.type1,@dummypokemon.type2]
       t1=pt[0]; t2=pt[1]
       if t1==t2
-        bmp.blt(115-32,282,typebmp.bitmap,Rect.new(0,t1*28,64,28))
+        bmp.blt(115-32,208,typebmp.bitmap,Rect.new(0,t1*28,64,28))
       else
-        bmp.blt(115-68,282,typebmp.bitmap,Rect.new(0,t1*28,64,28))
-        bmp.blt(115+4,282,typebmp.bitmap,Rect.new(0,t2*28,64,28))
+        bmp.blt(115-68,208,typebmp.bitmap,Rect.new(0,t1*28,64,28))
+        bmp.blt(115+4,208,typebmp.bitmap,Rect.new(0,t2*28,64,28))
       end
       typebmp.dispose
     else
-      REM_UI.texts(bmp,[["-----",115,246,2,REM_UI::DIM,30,190]])
+      REM_UI.texts(bmp,[["-----",115,177,2,REM_UI::DIM,30,190]])
     end
     if @searchResults
       pool=@dexlist.map{|i| i[0]}
@@ -1231,8 +1233,8 @@ class PokemonPokedexScene
       ownedno+=1 if $Trainer.owned[sp]
     end
     total=pool.length
-    REM_UI.texts(bmp,[[_INTL("Vistos"),67,323,2,REM_UI::LABEL,18,90],[sprintf("%d/%d",seenno,total),67,340,2,REM_UI::WHITE,26,90],
-       [_INTL("Capturados"),163,323,2,REM_UI::LABEL,18,90],[sprintf("%d/%d",ownedno,total),163,340,2,REM_UI::WHITE,26,90]])
+    REM_UI.texts(bmp,[[_INTL("Vistos"),67,251,2,REM_UI::LABEL,18,90],[sprintf("%d/%d",seenno,total),67,268,2,REM_UI::WHITE,26,90],
+       [_INTL("Capturados"),163,251,2,REM_UI::LABEL,18,90],[sprintf("%d/%d",ownedno,total),163,268,2,REM_UI::WHITE,26,90]])
   end
 
   # Ficha única: identidad y descripción a la izquierda; estadísticas base y evolución a la derecha.
@@ -3582,4 +3584,76 @@ def pbRemDebugIntro
   d=REM_DEBUG_DESTINATIONS[c]
   mp=d[1].is_a?(String) ? REM_Intro.mapId(d[1]) : d[1]
   REM_Intro.fadeTransfer(mp,d[2],d[3],d[4]||2)
+end
+
+# Pokédex: botón SALIR bajo la columna izquierda. Izquierda lo selecciona; Derecha/Arriba vuelven a la lista;
+# Aceptar o Atrás con el botón seleccionado cierran la Pokédex (o la búsqueda, si hay una abierta).
+class PokemonPokedexScene
+  def pbPokedex
+    @remExitFocus=false
+    pbActivateWindow(@sprites,"pokedex"){
+       loop do
+         Graphics.update
+         Input.update
+         oldindex=@sprites["pokedex"].index
+         pbUpdate
+         if oldindex!=@sprites["pokedex"].index
+           $PokemonGlobal.pokedexIndex[pbGetSavePositionIndex]=@sprites["pokedex"].index if !@searchResults
+           iconspecies=@sprites["pokedex"].species
+           iconspecies=0 if !$Trainer.seen[iconspecies]
+           setIconBitmap(iconspecies)
+           if iconspecies>0
+             @sprites["species"].text=_ISPRINTF("<ac>{1:s}</ac>",PBSpecies.getName(iconspecies))
+           else
+             @sprites["species"].text=""
+           end
+           ycoord=62
+           if @sprites["pokedex"].itemCount>1
+             ycoord+=188.0 * @sprites["pokedex"].index/(@sprites["pokedex"].itemCount-1)
+           end
+           @sprites["slider"].y=ycoord
+         end
+         if !@remExitFocus && Input.trigger?(Input::LEFT)
+           @remExitFocus=true
+           @sprites["pokedex"].active=false
+           @sprites["exitbtn"].selected=true
+           pbPlayCursorSE()
+         elsif @remExitFocus && (Input.trigger?(Input::RIGHT) || Input.trigger?(Input::UP))
+           @remExitFocus=false
+           @sprites["pokedex"].active=true
+           @sprites["exitbtn"].selected=false
+           pbPlayCursorSE()
+         elsif Input.trigger?(Input::B) || (@remExitFocus && Input.trigger?(Input::C))
+           pbPlayCancelSE()
+           if @searchResults
+             pbCloseSearch
+           else
+             break
+           end
+           if @remExitFocus
+             @remExitFocus=false
+             @sprites["pokedex"].active=true
+             @sprites["exitbtn"].selected=false
+           end
+         elsif !@remExitFocus && Input.trigger?(Input::C)
+           if $Trainer.seen[@sprites["pokedex"].species]
+             pbPlayDecisionSE()
+             pbDexEntry(@sprites["pokedex"].index)
+           end
+         elsif !@remExitFocus && Input.trigger?(Input::F5)
+           pbPlayDecisionSE()
+           pbDexSearch
+         end
+       end
+    }
+  end
+end
+
+# Desde el menú solo existe la Pokédex Nacional: sin selector de regiones.
+class PokemonPokedex
+  alias rem_orig_pbStartScreen pbStartScreen
+  def pbStartScreen
+    $PokemonGlobal.pokedexDex=-1 if !DEXDEPENDSONLOCATION
+    rem_orig_pbStartScreen
+  end
 end

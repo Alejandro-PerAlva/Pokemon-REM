@@ -17,11 +17,11 @@ def silver_box(im, b, fill=S.OBS, r=7):
 
 def listbg():
     im = S.base_bg()
-    S.card(im, (8, 8, 222, 376))
+    S.card(im, (8, 8, 222, 314))                                 # columna izquierda (deja hueco al botón SALIR)
     S.card(im, (232, 8, 504, 376), PANEL)
-    S.box(im, (20, 20, 210, 236), WELL, DIV, 6)                  # pozo del sprite
-    S.box(im, (20, 322, 210, 366), WELL, DIV, 6)                 # contador Vistos / Capturados
-    ImageDraw.Draw(im).line([(115, 328), (115, 360)], fill=DIV)
+    S.box(im, (20, 20, 210, 176), WELL, DIV, 6)                  # pozo del sprite
+    S.box(im, (20, 246, 210, 302), WELL, DIV, 6)                 # contador Vistos / Capturados
+    ImageDraw.Draw(im).line([(115, 254), (115, 294)], fill=DIV)
     save(im, "pokedexbg")
 
 def entrybg():

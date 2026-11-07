@@ -153,18 +153,14 @@ class PokemonMenu
              @scene.pbRefresh
           }
         else
-          if $PokemonGlobal.pokedexViable.length==1
-            $PokemonGlobal.pokedexDex=$PokemonGlobal.pokedexViable[0]
-            $PokemonGlobal.pokedexDex=-1 if $PokemonGlobal.pokedexDex==$PokemonGlobal.pokedexUnlocked.length-1
-            pbFadeOutIn(99999) {
-               scene=PokemonPokedexScene.new
-               screen=PokemonPokedex.new(scene)
-               screen.pbStartScreen
-               @scene.pbRefresh
-            }
-          else
-            pbLoadRpgxpScene(Scene_PokedexMenu.new)
-          end
+          # Solo existe la Pokédex Nacional: se abre directamente, sin selector de regiones.
+          $PokemonGlobal.pokedexDex=-1
+          pbFadeOutIn(99999) {
+             scene=PokemonPokedexScene.new
+             screen=PokemonPokedex.new(scene)
+             screen.pbStartScreen
+             @scene.pbRefresh
+          }
         end
       elsif cmdQuests>=0 && command==cmdQuests
         pbFadeOutIn(99999) { PokemonQuests_Scene.new.pbStartScene; @scene.pbRefresh }
