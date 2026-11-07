@@ -116,20 +116,39 @@ module REMEv
 
   # Aplica una definición {mapa => [ [nombre, [páginas]] ...]} a Data/MapNNN.rxdata.
   # Reemplaza los eventos cuyo nombre empiece por prefix; los demás no se tocan.
-  def self.apply(map_id, prefix, tag, defs, dry = false)
+  # CONSERVA ID y POSICIÓN de los eventos con el mismo nombre (el diseñador ya los colocó) y también sus copias
+  # (varios eventos con el mismo nombre = la misma definición repetida). Los nombres nuevos van a la primera casilla libre desde (0,0).
+  # Los eventos con el prefijo cuyo nombre ya no está en las definiciones se eliminan.
+  def self.apply(map_id, prefix, tag, defs, dry = false, renames = {})
     f = format('Data/Map%03d.rxdata', map_id); bak = f + '.bak_pre_' + tag
     File.binwrite(bak, File.binread(f)) if !File.exist?(bak) && !dry
     m = Marshal.load(File.binread(f))
     ev = m.instance_variable_get(:@events)
-    ev.delete_if { |_, e| e.instance_variable_get(:@name).to_s.start_with?(prefix) }
+    # Los nombres guardados pueden estar en otra forma Unicode (NFD) que los del generador (NFC): se comparan normalizados.
+    nn = lambda { |t| t.to_s.dup.force_encoding('UTF-8').unicode_normalize(:nfc) }
+    old = {}
+    ev.keys.sort.each do |id|
+      e = ev[id]; nm = nn.call(e.instance_variable_get(:@name))
+      next unless nm.start_with?(prefix)
+      (old[nm] ||= []) << [id, e.instance_variable_get(:@x), e.instance_variable_get(:@y)]
+    end
+    renames.each { |from, to| f2 = nn.call(from); t2 = nn.call(to); old[t2] = old.delete(f2) if old[f2] && !old[t2] }
+    maxid = [ev.keys.max || 0, old.values.flatten(1).map { |a| a[0] }.max || 0].max
+    ev.delete_if { |_, e| nn.call(e.instance_variable_get(:@name)).start_with?(prefix) }
     w = m.instance_variable_get(:@width); h = m.instance_variable_get(:@height)
     taken = {}; ev.each { |_, e| taken[[e.instance_variable_get(:@x), e.instance_variable_get(:@y)]] = true }
-    nid = (ev.keys.max || 0) + 1; slot = 0; placed = []
+    old.each_value { |l| l.each { |_, x, y| taken[[x, y]] = true } }
+    nid = maxid + 1; slot = 0; placed = []
     defs.each do |name, pages|
-      slot += 1 while taken[[slot % w, slot / w]]
-      x, y = slot % w, slot / w; raise "mapa #{map_id} sin hueco" if y >= h
-      taken[[x, y]] = true; slot += 1
-      ev[nid] = event(nid, name, x, y, pages); placed << [nid, name, x, y]; nid += 1
+      name = nn.call(name)
+      if old[name]
+        old[name].each { |id, x, y| ev[id] = event(id, name, x, y, pages); placed << [id, name, x, y] }
+      else
+        slot += 1 while taken[[slot % w, slot / w]]
+        x, y = slot % w, slot / w; raise "mapa #{map_id} sin hueco" if y >= h
+        taken[[x, y]] = true; slot += 1
+        ev[nid] = event(nid, name, x, y, pages); placed << [nid, name, x, y]; nid += 1
+      end
     end
     File.binwrite(f, Marshal.dump(m)) if !dry
     placed

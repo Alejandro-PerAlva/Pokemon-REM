@@ -1,4 +1,4 @@
-﻿# PROPUESTA (no aplicada): entradas para PBS/trainers.txt del combate tutorial con Lucián en el patio de Pueblo Albor (events: ALBOR_Lucián (patio)).
+﻿# APLICADA el 2026-11-07 en PBS/trainers.txt (18 equipos RIVAL_M «Lucián»; recompilar PBS al abrir el juego). Se conserva como referencia. Propuesta original: entradas para PBS/trainers.txt del combate tutorial con Lucián en el patio de Pueblo Albor (events: ALBOR_Lucián (patio)).
 # El evento llama a pbTrainerBattle(:RIVAL_M,"Lucián",...,partyid) con partyid = región*3 + tipo con ventaja sobre TU inicial (0 Planta, 1 Fuego, 2 Agua):
 #   tu Planta -> Lucián Fuego · tu Fuego -> Lucián Agua · tu Agua -> Lucián Planta. 18 equipos de 1 Pokémon Nv 5 (uno por inicial posible de Lucián).
 # Mientras no existan, el evento se salta el combate (aviso solo en $DEBUG). Tras añadirlas hay que recompilar los PBS.

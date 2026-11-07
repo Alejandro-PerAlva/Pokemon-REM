@@ -3,7 +3,7 @@
 # Formato: UTF-8 BOM, CRLF. [ESTADO_DE_UBICACIONES]: una línea por ubicación en orden de progresión: LOC_KEY | Nombre | Categoría | Acto | STEP(s) (tope día/noche) | MapID (estado) | Estado | Notas.
 
 [ESTADO_DE_UBICACIONES]
-PUEBLO_ALBOR | Pueblo Albor | Pueblo | I | STEP_01 (9/9) | 2 (Existing) | EVENTOS_GENERADOS | eventos hechos antes del registro (tools/events/albor_events.rb); sin snapshot
+PUEBLO_ALBOR | Pueblo Albor | Pueblo | I | STEP_01 (9/9) | 2 (Existing) | EN_REVISION | 2026-11-07 trama v2: Deportivas en casa, Pokévial en la plaza tras el 1.er combate, bandas de activación, 10 NPC nuevos, 2 consumibles, 18 equipos RIVAL_M en trainers.txt (tools/events/albor_events.rb); sin snapshot
 RUTA_01 | Ruta 1 | Ruta normal | I | STEP_02 (9/9) | 6 (Existing) | PENDIENTE | 
 PUEBLO_HELIODORO | Pueblo Heliar | Pueblo | I | STEP_03 (9/9) | 9 (Existing) | PENDIENTE | 
 GRANJA_APATITA | Granja Apato | Ruta especial | I | STEP_04 (13/13) | 12 (Existing) | PENDIENTE | 
