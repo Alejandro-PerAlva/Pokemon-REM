@@ -2960,8 +2960,11 @@ module REM_UI
 end
 
 class MoveRelearnerScene
-  # Mismo diseño que la ficha de datos del Pokémon (summary4details): huecos de movimiento a la derecha
-  # (borde del color del tipo, selector summarymovesel) y ficha de detalle del movimiento a la izquierda.
+  # Diseño de la ficha de datos del Pokémon (summary4details) en espejo: movimientos a la izquierda
+  # (borde del color del tipo, selector summarymovesel) y ficha del movimiento a la derecha.
+  # Botón SALIR con el formato de la pantalla de equipo, abajo a la derecha bajo la ficha.
+  CARDX = 276   # desplazamiento de la ficha respecto a la ficha original (que ocupa 0..236)
+
   def pbStartScene(pokemon,moves)
     @pokemon=pokemon
     @moves=moves
@@ -2971,15 +2974,23 @@ class MoveRelearnerScene
     @viewport=Viewport.new(0,0,Graphics.width,Graphics.height)
     @viewport.z=99999
     @sprites={}
-    @sprites["background"]=IconSprite.new(0,0,@viewport)
-    @sprites["background"].setBitmap("Graphics/Pictures/summary4details")
+    # fondo de la ficha de datos reflejado horizontalmente
+    src=Bitmap.new("Graphics/Pictures/summary4details")
+    mir=Bitmap.new(Graphics.width,Graphics.height)
+    for x in 0...Graphics.width
+      mir.blt(Graphics.width-1-x,0,src,Rect.new(x,0,1,Graphics.height))
+    end
+    src.dispose
+    @sprites["background"]=Sprite.new(@viewport)
+    @sprites["background"].bitmap=mir
     @sprites["overlay"]=BitmapSprite.new(Graphics.width,Graphics.height,@viewport)
     @sprites["pokeicon"]=PokemonBoxIcon.new(@pokemon,@viewport)
-    @sprites["pokeicon"].x=14
+    @sprites["pokeicon"].x=14+CARDX
     @sprites["pokeicon"].y=52
     @sprites["pokeicon"].mirror=false
     @sprites["movesel"]=MoveSelectionSprite.new(@viewport)
     @sprites["movesel"].visible=true
+    @sprites["exitbtn"]=PokeSelectionConfirmCancelSprite.new(_INTL("SALIR"),392,328,false,@viewport)
     @sprites["commands"]=Window_CommandPokemon.new(moveCommands,32)
     @sprites["commands"].x=Graphics.width
     @sprites["commands"].height=32*(VISIBLEMOVES+1)
@@ -3004,6 +3015,13 @@ class MoveRelearnerScene
     pbDrawMoveList
   end
 
+  def pbUpdate
+    pbUpdateSpriteHash(@sprites)
+    # el selector del resumen fija su x en 236: se refleja a la izquierda
+    ms=@sprites["movesel"]
+    ms.x=Graphics.width-236-ms.bitmap.width if ms && ms.bitmap
+  end
+
   def pbDrawMoveList
     bmp=@sprites["overlay"].bitmap
     bmp.clear
@@ -3011,55 +3029,58 @@ class MoveRelearnerScene
     cmds=@sprites["commands"]
     cur=@moves[cmds.index]
     md=PBMoveData.new(cur)
-    textlist=[[_INTL("MOVIMIENTOS"),18,12,0,wh,28],
-              [:c,_INTL("Tipo"),24,128,0,REM_UI::LABEL,20,90],
-              [:c,_INTL("Categoría"),24,158,0,REM_UI::LABEL,20,90],
-              [:c,_INTL("Potencia"),24,188,0,REM_UI::LABEL,20,90],
-              [:c,_INTL("Precisión"),24,218,0,REM_UI::LABEL,20,90]]
+    cx=CARDX
+    textlist=[[_INTL("RECORDAR MOVIMIENTOS"),18,12,0,wh,28,470],
+              [:c,_INTL("Tipo"),24+cx,128,0,REM_UI::LABEL,20,90],
+              [:c,_INTL("Categoría"),24+cx,158,0,REM_UI::LABEL,20,90],
+              [:c,_INTL("Potencia"),24+cx,188,0,REM_UI::LABEL,20,90],
+              [:c,_INTL("Precisión"),24+cx,218,0,REM_UI::LABEL,20,90]]
     # tipos del Pokémon
     if @pokemon.type1==@pokemon.type2
-      bmp.blt(117,78,@typebitmap.bitmap,Rect.new(0,@pokemon.type1*28,64,28))
+      bmp.blt(117+cx,78,@typebitmap.bitmap,Rect.new(0,@pokemon.type1*28,64,28))
     else
-      bmp.blt(84,78,@typebitmap.bitmap,Rect.new(0,@pokemon.type1*28,64,28))
-      bmp.blt(150,78,@typebitmap.bitmap,Rect.new(0,@pokemon.type2*28,64,28))
+      bmp.blt(84+cx,78,@typebitmap.bitmap,Rect.new(0,@pokemon.type1*28,64,28))
+      bmp.blt(150+cx,78,@typebitmap.bitmap,Rect.new(0,@pokemon.type2*28,64,28))
     end
-    # huecos de movimiento (4 visibles)
+    # huecos de movimiento (4 visibles), x reflejada: 240..495 -> 16..271
     for i in 0...VISIBLEMOVES
       mv=@moves[cmds.top_item+i]
       break if !mv
       m=PBMove.new(mv)
       y0=REM_UI::SUM_SLOT_Y0+REM_UI::SUM_SLOT_P*i
-      REM_UI.borderRect(bmp,240,y0,495,y0+REM_UI::SUM_SLOT_H-1,REM_UI.dim(REM_UI.typeColor(m.type),0.85))
+      REM_UI.borderRect(bmp,16,y0,271,y0+REM_UI::SUM_SLOT_H-1,REM_UI.dim(REM_UI.typeColor(m.type),0.85))
       cy=y0+REM_UI::SUM_SLOT_H/2
-      textlist.push([:c,PBMoves.getName(mv),258,cy,0,wh,30,190])
-      textlist.push([:c,sprintf("PP %d/%d",m.totalpp,m.totalpp),486,cy,1,wh,26,74]) if m.totalpp>0
+      textlist.push([:c,PBMoves.getName(mv),34,cy,0,wh,30,190])
+      textlist.push([:c,sprintf("PP %d/%d",m.totalpp,m.totalpp),262,cy,1,wh,26,74]) if m.totalpp>0
     end
-    REM_UI.vArrow(bmp,367,60,-1,REM_UI::SILVER) if cmds.top_item>0
-    REM_UI.vArrow(bmp,367,364,1,REM_UI::SILVER) if cmds.top_item+VISIBLEMOVES<@moves.length
-    # botón Salir (arriba a la derecha): Derecha lo selecciona, Izquierda/Abajo vuelven a la lista
-    REM_UI.borderRect(bmp,352,12,495,52,@onexit ? REM_UI::SILVER : REM_UI::NOIR_WELLB)
-    textlist.push([:c,_INTL("Salir"),423,32,2,@onexit ? wh : dm,26,120])
+    REM_UI.vArrow(bmp,143,60,-1,REM_UI::SILVER) if cmds.top_item>0
+    REM_UI.vArrow(bmp,143,364,1,REM_UI::SILVER) if cmds.top_item+VISIBLEMOVES<@moves.length
     # ficha del movimiento seleccionado
     basedamage=md.basedamage
     category=md.category
     accuracy=md.accuracy
     pw=(category==2 || basedamage<=0) ? "-" : (basedamage==1 ? "???" : sprintf("%d",basedamage))
     ac=(accuracy==0) ? "-" : sprintf("%d%%",accuracy)
-    bmp.blt(134,114,@typebitmap.bitmap,Rect.new(0,md.type*28,64,28))
-    bmp.blt(134,144,@catbitmap.bitmap,Rect.new(0,category*28,64,28))
-    textlist.push([:c,pw,166,188,2,wh,24,84])
-    textlist.push([:c,ac,166,218,2,wh,24,84])
+    bmp.blt(134+cx,114,@typebitmap.bitmap,Rect.new(0,md.type*28,64,28))
+    bmp.blt(134+cx,144,@catbitmap.bitmap,Rect.new(0,category*28,64,28))
+    textlist.push([:c,pw,166+cx,188,2,wh,24,84])
+    textlist.push([:c,ac,166+cx,218,2,wh,24,84])
     REM_UI.texts(bmp,textlist)
-    pbSetNarrowFont(bmp); bmp.font.size=21
-    lines=REM_UI.wrap(bmp,pbGetMessage(MessageTypes::MoveDescriptions,cur).to_s,186)
-    lines=lines[0,5]
+    # descripción: 4 líneas como máximo para no tocar el botón SALIR
+    pbSetNarrowFont(bmp); bmp.font.size=19
+    lines=REM_UI.wrap(bmp,pbGetMessage(MessageTypes::MoveDescriptions,cur).to_s,190)
+    if lines.length>4
+      lines=lines[0,4]
+      lines[3]=lines[3]+"..."
+    end
     dl=[]
     for i in 0...lines.length
-      dl.push([lines[i],24,252+i*23,0,wh,21])
+      dl.push([lines[i],24+cx,250+i*20,0,wh,19,196])
     end
     REM_UI.texts(bmp,dl)
     @sprites["movesel"].index=cmds.index-cmds.top_item
     @sprites["movesel"].visible=!@onexit
+    @sprites["exitbtn"].selected=@onexit
   end
 
   def pbChooseMove
@@ -3075,7 +3096,7 @@ class MoveRelearnerScene
          if Input.trigger?(Input::RIGHT) && !@onexit
            @onexit=true
            pbPlayCursorSE rescue nil
-         elsif (Input.trigger?(Input::LEFT) || Input.trigger?(Input::DOWN)) && @onexit
+         elsif (Input.trigger?(Input::LEFT) || Input.trigger?(Input::UP)) && @onexit
            @onexit=false
            pbPlayCursorSE rescue nil
          end
