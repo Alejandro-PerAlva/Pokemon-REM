@@ -3593,33 +3593,3 @@ class PokemonPokedex
     rem_orig_pbStartScreen
   end
 end
-
-# Diagnóstico: al cerrar el menú de pausa se anota el estado de los bloqueos de movimiento en
-# rem_menu_debug.txt (raíz del proyecto) y se limpian los que solo tienen sentido con el menú abierto.
-class Scene_Map
-  alias rem_orig_call_menu call_menu
-  def call_menu
-    begin
-      rem_orig_call_menu
-    ensure
-      begin
-        st=[]
-        st.push("in_menu=#{$game_temp.in_menu}")
-        st.push("miniupdate=#{$PokemonTemp ? $PokemonTemp.miniupdate : 'nil'}")
-        st.push("msgwin=#{$game_temp.message_window_showing}")
-        st.push("menu_calling=#{$game_temp.menu_calling}")
-        st.push("interp=#{$game_system.map_interpreter.running?}")
-        st.push("moveroute=#{$game_player.move_route_forcing}")
-        st.push("transfer=#{$game_temp.player_transferring}")
-        st.push("fade=#{$game_temp.fadestate}")
-        st.push("moving=#{$game_player.moving?}")
-        File.open("rem_menu_debug.txt","a"){|f| f.puts("#{Time.now.strftime('%H:%M:%S')} cierre de menú: "+st.join(" ")) }
-      rescue
-      end
-      $game_temp.in_menu=false
-      $game_temp.menu_calling=false
-      $game_temp.message_window_showing=false
-      $PokemonTemp.miniupdate=false if $PokemonTemp
-    end
-  end
-end

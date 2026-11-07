@@ -885,7 +885,7 @@ def Kernel.pbShowCommandsWithHelp(msgwindow,commands,help,cmdIfCancel=0,defaultC
   end
   msgwin.letterbyletter=oldlbl
   if !msgwindow
-    msgwin.dispose
+    Kernel.pbDisposeMessageWindow(msgwin)   # libera message_window_showing
   end
   return ret
 end
