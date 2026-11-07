@@ -1,0 +1,293 @@
+﻿# Pokémon REM — CATÁLOGO DE OVERWORLDS (sprites de personajes). Documento de trabajo para Claude: no lo lee el juego ni el Codex.
+# Lo rellena el DISEÑADOR: qué es cada sprite npcNNN (Graphics/Characters/npcNNN.png). Claude elige los NPC de los eventos SOLO entre los definidos aquí (y entre los trchar de entrenador, ver abajo); no inventa sprites ni los asigna a ojo.
+# Campos por sección [npcNNN]: Description = aspecto y vestimenta · Gender = Male/Female/Mixed · AgeGroup = Niño/Joven/Adulto/Mayor · Profession = oficio o arquetipo (pescador, panadera, anciano...) · SuggestedUse = para qué papeles encaja · Notes = lo que sea (rareza, uso exclusivo, etc.) · UsedBy = personaje o evento ya fijado (opcional).
+# Sprites de ENTRENADOR como overworld: cualquier clase de trainertypes.txt tiene su trcharNNN (NNN = ID de la clase, 000-087) y puede usarse como NPC sin combate (un evento normal con ese gráfico y sin pbTrainerBattle). Para elegirlos, vale el nombre y la descripción de la clase en trainertypes.txt.
+# Formato: texto plano en español (UTF-8 BOM, CRLF), secciones [npcNNN] y comentarios con «#».
+
+[npc001]
+Description = 
+Gender = 
+AgeGroup = 
+Profession = 
+SuggestedUse = 
+Notes = 
+UsedBy = 
+
+[npc002]
+Description = 
+Gender = 
+AgeGroup = 
+Profession = 
+SuggestedUse = 
+Notes = 
+UsedBy = 
+
+[npc003]
+Description = 
+Gender = 
+AgeGroup = 
+Profession = 
+SuggestedUse = 
+Notes = 
+UsedBy = 
+
+[npc004]
+Description = 
+Gender = 
+AgeGroup = 
+Profession = 
+SuggestedUse = 
+Notes = 
+UsedBy = 
+
+[npc005]
+Description = 
+Gender = 
+AgeGroup = 
+Profession = 
+SuggestedUse = 
+Notes = 
+UsedBy = 
+
+[npc006]
+Description = 
+Gender = 
+AgeGroup = 
+Profession = 
+SuggestedUse = 
+Notes = 
+UsedBy = 
+
+[npc007]
+Description = 
+Gender = 
+AgeGroup = 
+Profession = 
+SuggestedUse = 
+Notes = 
+UsedBy = 
+
+[npc008]
+Description = 
+Gender = 
+AgeGroup = 
+Profession = 
+SuggestedUse = 
+Notes = 
+UsedBy = 
+
+[npc009]
+Description = 
+Gender = 
+AgeGroup = 
+Profession = 
+SuggestedUse = 
+Notes = 
+UsedBy = 
+
+[npc010]
+Description = 
+Gender = 
+AgeGroup = 
+Profession = 
+SuggestedUse = 
+Notes = 
+UsedBy = 
+
+[npc011]
+Description = 
+Gender = 
+AgeGroup = 
+Profession = 
+SuggestedUse = 
+Notes = 
+UsedBy = 
+
+[npc012]
+Description = 
+Gender = 
+AgeGroup = 
+Profession = 
+SuggestedUse = 
+Notes = 
+UsedBy = 
+
+[npc013]
+Description = 
+Gender = 
+AgeGroup = 
+Profession = 
+SuggestedUse = 
+Notes = 
+UsedBy = 
+
+[npc014]
+Description = 
+Gender = 
+AgeGroup = 
+Profession = 
+SuggestedUse = 
+Notes = 
+UsedBy = 
+
+[npc015]
+Description = 
+Gender = 
+AgeGroup = 
+Profession = 
+SuggestedUse = 
+Notes = 
+UsedBy = 
+
+[npc016]
+Description = 
+Gender = 
+AgeGroup = 
+Profession = 
+SuggestedUse = 
+Notes = 
+UsedBy = 
+
+[npc017]
+Description = 
+Gender = 
+AgeGroup = 
+Profession = 
+SuggestedUse = 
+Notes = 
+UsedBy = 
+
+[npc018]
+Description = 
+Gender = 
+AgeGroup = 
+Profession = 
+SuggestedUse = 
+Notes = 
+UsedBy = 
+
+[npc019]
+Description = 
+Gender = 
+AgeGroup = 
+Profession = 
+SuggestedUse = 
+Notes = 
+UsedBy = 
+
+[npc020]
+Description = 
+Gender = 
+AgeGroup = 
+Profession = 
+SuggestedUse = 
+Notes = 
+UsedBy = 
+
+[npc021]
+Description = 
+Gender = 
+AgeGroup = 
+Profession = 
+SuggestedUse = 
+Notes = 
+UsedBy = 
+
+[npc022]
+Description = 
+Gender = 
+AgeGroup = 
+Profession = 
+SuggestedUse = 
+Notes = 
+UsedBy = 
+
+[npc023]
+Description = 
+Gender = 
+AgeGroup = 
+Profession = 
+SuggestedUse = 
+Notes = 
+UsedBy = 
+
+[npc024]
+Description = 
+Gender = 
+AgeGroup = 
+Profession = 
+SuggestedUse = 
+Notes = 
+UsedBy = 
+
+[npc025]
+Description = 
+Gender = 
+AgeGroup = 
+Profession = 
+SuggestedUse = 
+Notes = 
+UsedBy = 
+
+[npc026]
+Description = 
+Gender = 
+AgeGroup = 
+Profession = 
+SuggestedUse = 
+Notes = 
+UsedBy = 
+
+[npc027]
+Description = 
+Gender = 
+AgeGroup = 
+Profession = 
+SuggestedUse = 
+Notes = 
+UsedBy = 
+
+[npc028]
+Description = 
+Gender = 
+AgeGroup = 
+Profession = 
+SuggestedUse = 
+Notes = 
+UsedBy = 
+
+[npc029]
+Description = 
+Gender = 
+AgeGroup = 
+Profession = 
+SuggestedUse = 
+Notes = 
+UsedBy = 
+
+[npc030]
+Description = 
+Gender = 
+AgeGroup = 
+Profession = 
+SuggestedUse = 
+Notes = 
+UsedBy = 
+
+[npc031]
+Description = 
+Gender = 
+AgeGroup = 
+Profession = 
+SuggestedUse = 
+Notes = 
+UsedBy = 
+
+[npc032]
+Description = 
+Gender = 
+AgeGroup = 
+Profession = 
+SuggestedUse = 
+Notes = 
+UsedBy = 
