@@ -1180,8 +1180,6 @@ class PokemonPokedexScene
     @sprites["slider"].visible=false
     @sprites["icon"]=PokemonSprite.new(@viewport)
     @sprites["entryicon"]=PokemonSprite.new(@viewport)
-    # botón SALIR (formato del equipo) bajo la columna izquierda, centrado: columna 8..222 -> 112 px
-    @sprites["exitbtn"]=PokeSelectionConfirmCancelSprite.new(_INTL("SALIR"),59,328,false,@viewport)
     @sprites["remlist"].z=1
     @sprites["overlay"].z=1
     @sprites["icon"].z=2
@@ -1197,7 +1195,7 @@ class PokemonPokedexScene
     gender=($Trainer.formlastseen[species][0] rescue 0)
     form=($Trainer.formlastseen[species][1] rescue 0)
     @sprites["icon"].setSpeciesBitmap(species,(gender==1),form)
-    remFitSprite(@sprites["icon"],115,98,180,146)
+    remFitSprite(@sprites["icon"],115,128,184,212)
     remDrawShowcase(species,gender,form)
   end
 
@@ -1208,19 +1206,19 @@ class PokemonPokedexScene
       @dummypokemon.species=species
       @dummypokemon.setGender(gender)
       @dummypokemon.forceForm(form)
-      REM_UI.texts(bmp,[[PBSpecies.getName(species),115,177,2,REM_UI::WHITE,30,190]])
+      REM_UI.texts(bmp,[[PBSpecies.getName(species),115,246,2,REM_UI::WHITE,30,190]])
       typebmp=AnimatedBitmap.new(_INTL("Graphics/Pictures/types"))
       pt=REM_UI.pbsTypes(species) || [@dummypokemon.type1,@dummypokemon.type2]
       t1=pt[0]; t2=pt[1]
       if t1==t2
-        bmp.blt(115-32,208,typebmp.bitmap,Rect.new(0,t1*28,64,28))
+        bmp.blt(115-32,282,typebmp.bitmap,Rect.new(0,t1*28,64,28))
       else
-        bmp.blt(115-68,208,typebmp.bitmap,Rect.new(0,t1*28,64,28))
-        bmp.blt(115+4,208,typebmp.bitmap,Rect.new(0,t2*28,64,28))
+        bmp.blt(115-68,282,typebmp.bitmap,Rect.new(0,t1*28,64,28))
+        bmp.blt(115+4,282,typebmp.bitmap,Rect.new(0,t2*28,64,28))
       end
       typebmp.dispose
     else
-      REM_UI.texts(bmp,[["-----",115,177,2,REM_UI::DIM,30,190]])
+      REM_UI.texts(bmp,[["-----",115,246,2,REM_UI::DIM,30,190]])
     end
     if @searchResults
       pool=@dexlist.map{|i| i[0]}
@@ -1233,8 +1231,8 @@ class PokemonPokedexScene
       ownedno+=1 if $Trainer.owned[sp]
     end
     total=pool.length
-    REM_UI.texts(bmp,[[_INTL("Vistos"),67,251,2,REM_UI::LABEL,18,90],[sprintf("%d/%d",seenno,total),67,268,2,REM_UI::WHITE,26,90],
-       [_INTL("Capturados"),163,251,2,REM_UI::LABEL,18,90],[sprintf("%d/%d",ownedno,total),163,268,2,REM_UI::WHITE,26,90]])
+    REM_UI.texts(bmp,[[_INTL("Vistos"),67,323,2,REM_UI::LABEL,18,90],[sprintf("%d/%d",seenno,total),67,340,2,REM_UI::WHITE,26,90],
+       [_INTL("Capturados"),163,323,2,REM_UI::LABEL,18,90],[sprintf("%d/%d",ownedno,total),163,340,2,REM_UI::WHITE,26,90]])
   end
 
   # Ficha única: identidad y descripción a la izquierda; estadísticas base y evolución a la derecha.
@@ -2964,13 +2962,11 @@ end
 class MoveRelearnerScene
   # Diseño de la ficha de datos del Pokémon (summary4details) en espejo: movimientos a la izquierda
   # (borde del color del tipo, selector summarymovesel) y ficha del movimiento a la derecha.
-  # Botón SALIR con el formato de la pantalla de equipo, abajo a la derecha bajo la ficha.
   CARDX = 276   # desplazamiento de la ficha respecto a la ficha original (que ocupa 0..236)
 
   def pbStartScene(pokemon,moves)
     @pokemon=pokemon
     @moves=moves
-    @onexit=false
     moveCommands=[]
     moves.each{|i| moveCommands.push(PBMoves.getName(i)) }
     @viewport=Viewport.new(0,0,Graphics.width,Graphics.height)
@@ -2992,7 +2988,6 @@ class MoveRelearnerScene
     @sprites["pokeicon"].mirror=false
     @sprites["movesel"]=MoveSelectionSprite.new(@viewport)
     @sprites["movesel"].visible=true
-    @sprites["exitbtn"]=PokeSelectionConfirmCancelSprite.new(_INTL("SALIR"),392,328,false,@viewport)
     @sprites["commands"]=Window_CommandPokemon.new(moveCommands,32)
     @sprites["commands"].x=Graphics.width
     @sprites["commands"].height=32*(VISIBLEMOVES+1)
@@ -3013,7 +3008,6 @@ class MoveRelearnerScene
     old=cmds.index
     cmds.commands=moves.map{|i| PBMoves.getName(i) }
     cmds.index=[old,[moves.length-1,0].max].min
-    @onexit=false
     pbDrawMoveList
   end
 
@@ -3068,21 +3062,16 @@ class MoveRelearnerScene
     textlist.push([:c,pw,166+cx,188,2,wh,24,84])
     textlist.push([:c,ac,166+cx,218,2,wh,24,84])
     REM_UI.texts(bmp,textlist)
-    # descripción: 4 líneas como máximo para no tocar el botón SALIR
-    pbSetNarrowFont(bmp); bmp.font.size=19
-    lines=REM_UI.wrap(bmp,pbGetMessage(MessageTypes::MoveDescriptions,cur).to_s,190)
-    if lines.length>4
-      lines=lines[0,4]
-      lines[3]=lines[3]+"..."
-    end
+    pbSetNarrowFont(bmp); bmp.font.size=21
+    lines=REM_UI.wrap(bmp,pbGetMessage(MessageTypes::MoveDescriptions,cur).to_s,186)
+    lines=lines[0,5]
     dl=[]
     for i in 0...lines.length
-      dl.push([lines[i],24+cx,250+i*20,0,wh,19,196])
+      dl.push([lines[i],24+cx,252+i*23,0,wh,21])
     end
     REM_UI.texts(bmp,dl)
     @sprites["movesel"].index=cmds.index-cmds.top_item
-    @sprites["movesel"].visible=!@onexit
-    @sprites["exitbtn"].selected=@onexit
+    @sprites["movesel"].visible=true
   end
 
   def pbChooseMove
@@ -3091,38 +3080,36 @@ class MoveRelearnerScene
        loop do
          oldcmd=@sprites["commands"].index
          oldtop=@sprites["commands"].top_item
-         oldexit=@onexit
          Graphics.update
          Input.update
          pbUpdate
-         if Input.trigger?(Input::RIGHT) && !@onexit
-           @onexit=true
-           pbPlayCursorSE rescue nil
-         elsif (Input.trigger?(Input::LEFT) || Input.trigger?(Input::UP)) && @onexit
-           @onexit=false
-           pbPlayCursorSE rescue nil
-         end
-         if @onexit
-           @sprites["commands"].index=oldcmd   # congelado mientras el foco está en Salir
-         end
-         if @sprites["commands"].index!=oldcmd || @sprites["commands"].top_item!=oldtop || @onexit!=oldexit
+         if @sprites["commands"].index!=oldcmd || @sprites["commands"].top_item!=oldtop
            pbDrawMoveList
          end
          return 0 if Input.trigger?(Input::B)
-         if Input.trigger?(Input::C)
-           return 0 if @onexit
-           return @moves[@sprites["commands"].index]
-         end
+         return @moves[@sprites["commands"].index] if Input.trigger?(Input::C)
        end
     }
   end
 
   def pbEndScene
+    return if @remDisposed
+    @remDisposed=true
     pbFadeOutAndHide(@sprites) { pbUpdate }
     pbDisposeSpriteHash(@sprites)
     @typebitmap.dispose
     @catbitmap.dispose
     @viewport.dispose
+  end
+
+  # Si algo falla a mitad de la escena, libera el viewport (z 99999) para no dejar el juego bloqueado.
+  def pbForceDispose
+    return if @remDisposed
+    @remDisposed=true
+    (pbDisposeSpriteHash(@sprites) rescue nil)
+    (@typebitmap.dispose rescue nil)
+    (@catbitmap.dispose rescue nil)
+    (@viewport.dispose rescue nil)
   end
 end
 
@@ -3132,6 +3119,7 @@ class MoveRelearnerScreen
     moves=pbGetRelearnableMoves(pokemon)
     @scene.pbStartScene(pokemon,moves)
     learned=false
+    begin
     loop do
       move=@scene.pbChooseMove
       if move<=0
@@ -3150,6 +3138,9 @@ class MoveRelearnerScreen
           @scene.pbRefresh(moves)
         end
       end
+    end
+    ensure
+      @scene.pbForceDispose
     end
   end
 end
@@ -3584,69 +3575,6 @@ def pbRemDebugIntro
   d=REM_DEBUG_DESTINATIONS[c]
   mp=d[1].is_a?(String) ? REM_Intro.mapId(d[1]) : d[1]
   REM_Intro.fadeTransfer(mp,d[2],d[3],d[4]||2)
-end
-
-# Pokédex: botón SALIR bajo la columna izquierda. Izquierda lo selecciona; Derecha/Arriba vuelven a la lista;
-# Aceptar o Atrás con el botón seleccionado cierran la Pokédex (o la búsqueda, si hay una abierta).
-class PokemonPokedexScene
-  def pbPokedex
-    @remExitFocus=false
-    pbActivateWindow(@sprites,"pokedex"){
-       loop do
-         Graphics.update
-         Input.update
-         oldindex=@sprites["pokedex"].index
-         pbUpdate
-         if oldindex!=@sprites["pokedex"].index
-           $PokemonGlobal.pokedexIndex[pbGetSavePositionIndex]=@sprites["pokedex"].index if !@searchResults
-           iconspecies=@sprites["pokedex"].species
-           iconspecies=0 if !$Trainer.seen[iconspecies]
-           setIconBitmap(iconspecies)
-           if iconspecies>0
-             @sprites["species"].text=_ISPRINTF("<ac>{1:s}</ac>",PBSpecies.getName(iconspecies))
-           else
-             @sprites["species"].text=""
-           end
-           ycoord=62
-           if @sprites["pokedex"].itemCount>1
-             ycoord+=188.0 * @sprites["pokedex"].index/(@sprites["pokedex"].itemCount-1)
-           end
-           @sprites["slider"].y=ycoord
-         end
-         if !@remExitFocus && Input.trigger?(Input::LEFT)
-           @remExitFocus=true
-           @sprites["pokedex"].active=false
-           @sprites["exitbtn"].selected=true
-           pbPlayCursorSE()
-         elsif @remExitFocus && (Input.trigger?(Input::RIGHT) || Input.trigger?(Input::UP))
-           @remExitFocus=false
-           @sprites["pokedex"].active=true
-           @sprites["exitbtn"].selected=false
-           pbPlayCursorSE()
-         elsif Input.trigger?(Input::B) || (@remExitFocus && Input.trigger?(Input::C))
-           pbPlayCancelSE()
-           if @searchResults
-             pbCloseSearch
-           else
-             break
-           end
-           if @remExitFocus
-             @remExitFocus=false
-             @sprites["pokedex"].active=true
-             @sprites["exitbtn"].selected=false
-           end
-         elsif !@remExitFocus && Input.trigger?(Input::C)
-           if $Trainer.seen[@sprites["pokedex"].species]
-             pbPlayDecisionSE()
-             pbDexEntry(@sprites["pokedex"].index)
-           end
-         elsif !@remExitFocus && Input.trigger?(Input::F5)
-           pbPlayDecisionSE()
-           pbDexSearch
-         end
-       end
-    }
-  end
 end
 
 # Desde el menú solo existe la Pokédex Nacional: sin selector de regiones.
