@@ -11,8 +11,8 @@ Criterio rector en cada decisión: (1) la historia se desarrolla correctamente; 
 [FLUJO]
 # Estados de una ubicación (se anotan en [ESTADO_DE_UBICACIONES] de PBS/rem_registro_ubicaciones.txt):
 #   PENDIENTE → ANALIZADA → AJUSTADA → EVENTOS_GENERADOS → EN_REVISION → APROBADA (registrada)
-1. ANÁLISIS (solo lectura; estado ANALIZADA). El diseñador pide el análisis de una ubicación. Claude lee la biblia (ver [COMO_EMPEZAR]) y entrega el formato de [FORMATO_ANALISIS], que incluye las PROPUESTAS de entrenadores, objetos, NPC y (en rutas normales) fogata y relato. No modifica nada.
-2. CORRECCIONES. El diseñador responde en lenguaje natural («quita este objeto», «sube a 8 los entrenadores», «esta misión así»). No tiene que justificar nada. Puede haber varias rondas de análisis → correcciones.
+1. ANÁLISIS (solo lectura; estado ANALIZADA). El diseñador pide el análisis de una ubicación. Claude lee la biblia (ver [COMO_EMPEZAR]) y entrega el formato de [FORMATO_ANALISIS], que incluye el contexto para los entrenadores (SIN fijar su número), la propuesta de objetos y NPC y, en rutas numeradas, el relato de fogata ya asignado. No modifica nada.
+2. CORRECCIONES. El diseñador responde en lenguaje natural («quita este objeto», «esta misión así») y, en esta fase, da el NÚMERO APROXIMADO de entrenadores de la ubicación (lo decide él; Claude no lo propone antes). No tiene que justificar nada. Puede haber varias rondas de análisis → correcciones.
 3. APLICACIÓN (estado AJUSTADA). Claude aplica los cambios con [REGLAS_DE_CAMBIO], propaga a todos los archivos de [ARCHIVOS_Y_QUE_GUARDAN] y decide por sí mismo lo lógico (huecos, reubicaciones, sustituciones) manteniendo coherencia y equilibrio: lo que sale de una ubicación se recoloca en otra donde tenga sentido (no «donde primero quepa»).
 4. INFORME. Resumen de qué cambió, en qué archivos y qué decisiones tomó Claude por su cuenta (para revisión); marca lo dudoso. Solo pregunta si algo bloquea de verdad.
 5. GENERACIÓN DE EVENTOS (estado EVENTOS_GENERADOS). Con los PBS ya coherentes y la trama/ritmo cerrados, Claude genera TODOS los eventos de la ubicación y de sus submapas (reglas en PBS/rem_guia_eventos_ubicaciones.txt y [REGLAS_DE_EVENTOS]), respetando variables, interruptores y topes de nivel. Se hace sin que el diseñador lo pida expresamente cuando los pasos 1-4 están cerrados. Si el mapa aún es Provisional, se prepara el script del generador y se avisa.
@@ -38,13 +38,13 @@ MODO UBICACIÓN NUEVA: sin eventos previos. MODO UBICACIÓN YA DESARROLLADA (reb
 5. Objetos y regalos del reparto (rem_location_items): quién los da, dónde y cuándo, con el tipo de evento que implica cada uno (B/H/C/N/E/J/P/S). Propuesta de consumibles adicionales si procede ([REGLAS_DE_OBJETOS]).
 6. Tiendas y servicios (rem_shops: Poké Mart por medallas, curación, Pía).
 7. Salvajes y pesca (rem_encounters) y topes de nivel (LevelCapDay/Night del STEP; V50 y V111).
-8. PROPUESTA DE ENTRENADORES ([REGLAS_DE_ENTRENADORES]): número recomendado y por qué, tabla (n.º, clase, nombre, zona, nivel, equipo con especie y nivel, nota), curva de nivel de la ubicación, cuenta de clases y Pokémon usados y cuáles tocan según las cuentas acumuladas.
+8. ENTRENADORES ([REGLAS_DE_ENTRENADORES]): en el análisis solo el CONTEXTO (categoría y longitud del mapa, rango de nivel salvaje, tope de nivel, tamaño de equipo del acto, clases y Pokémon que tocan según las cuentas acumuladas). SIN número ni lista. Cuando el diseñador da el número aproximado en las correcciones, Claude entrega la tabla (n.º, clase, nombre, zona, nivel, equipo con especie y nivel, nota) y la curva de nivel.
 9. Variables e interruptores: macro (101-117), historia local (V121-V184), sidequest (V201-V240), jefes, herramientas, bloqueos, únicos y fogata. Qué hay que AÑADIR/QUITAR/RENOMBRAR y qué scripts los leen (REM_Events, REM_Mechanics, REM_UI).
 10. Misión local (sidequest): título, pasos y recompensa. Bloqueos y condiciones de acceso.
-11. Fogata y relato (solo las 24 rutas normales, ver [REGLAS_DE_FOGATA_Y_RELATOS]): propuesta de la historia de esa ruta, el objeto de recompensa y su encaje en el reparto.
+11. Fogata y relato (solo las 24 rutas numeradas, ver [REGLAS_DE_FOGATA_Y_RELATOS]): el relato y el objeto de esa ruta YA están asignados en rem_lore_fogatas.txt; se citan y se comprueba su encaje con el resto del reparto de la ruta.
 12. Impacto en el equilibrio global: cómo cambia el reparto acumulado de objetos, entrenadores y Pokémon si se aprueba tal cual.
 13. Incoherencias detectadas (nombres antiguos, clases eliminadas, objetos duplicados, huecos, conflictos de variables) y decisiones pendientes.
-Las propuestas (8, 11 y objetos del 5) se presentan como borrador para que el diseñador ajuste números y contenido; el resto del análisis no propone cambios, solo señala lo que no cuadra.
+Las propuestas de objetos y NPC se presentan como borrador para que el diseñador las ajuste; el resto del análisis no propone cambios, solo señala lo que no cuadra.
 
 [ARCHIVOS_Y_QUE_GUARDAN]
 rem_registro_ubicaciones.txt  Estado de cada ubicación, cuentas acumuladas y SNAPSHOT de cada ubicación aprobada (entrenadores, objetos, NPC, eventos, variables, niveles). Base de las auditorías globales.
@@ -56,7 +56,7 @@ rem_location_items.txt     Objetos por ubicación (ItemN = ID,cantidad,tipo,dón
 rem_shops.txt              Poké Marts por medallas, tiendas únicas y [PIA_MISSIONS] (premios por capturas).
 rem_variables_switches.txt Mapa de Variables e Interruptores (rangos y nombres). Reservados: Variables 1-14 y 50; Interruptores 1-58, 72, 100-101, 135, 287, 368, 400.
 rem_encounters.txt         Tablas salvajes por ubicación (Vol. 10).
-rem_lore_fogatas.txt       Las 24 historias de fogata (una por ruta normal): título, texto de narrador, objeto de recompensa e interruptor.
+rem_lore_fogatas.txt       Las 24 historias de fogata (una por ruta numerada), ya escritas y repartidas: NPC, título, texto de narrador, objeto de recompensa e interruptor.
 rem_changelog.txt          Notas de diseño de especies/habilidades/movimientos/objetos (solo si cambia el uso de un objeto).
 trainers.txt, trainertypes.txt, metadata.txt, encounters.txt   PBS del juego (los lee el motor): NO se tocan salvo orden expresa. Las propuestas de entrenadores van en proposed_trainers_<loc>.txt.
 tools/rebalance/phase1/event_arch_data.py y event_arch.json   Arquitectura de eventos que dio origen a las variables: mantener alineados con rem_variables_switches si cambia un ID o nombre.
@@ -81,7 +81,7 @@ Misiones (sidequests y misiones de Pía):
   - Las misiones de Pía son capturas acumuladas: si se cambia un premio o un umbral, se reajusta [PIA_MISSIONS] y los ItemN de tipo P del laboratorio.
 Personajes:
   - Si un personaje se añade, quita o cambia de ubicación, se actualizan CharactersPresent en rem_locations, Locations/Chronology en rem_characters, CharactersInScene en rem_story y, si afecta a la historia, el STEP.
-Fogatas y relatos: ver [REGLAS_DE_FOGATA_Y_RELATOS]; si cambia el objeto de un relato se actualiza rem_lore_fogatas.txt, las cuentas de objetos del registro y el interruptor.
+Fogatas y relatos: ver [REGLAS_DE_FOGATA_Y_RELATOS]; si cambia el objeto o el texto de un relato se actualiza rem_lore_fogatas.txt, la fila de rem_location_items de esa ruta (si ya existe) y las cuentas de objetos del registro.
 Variables e interruptores (se revisan SIEMPRE que un cambio los afecte; incluye los scripts que los usan):
   - No reutilizar reservados. Si falta un ID, usar los «Reservada_*» libres de cada bloque; si no hay, añadir un bloque nuevo al final del rango en event_arch_data.py.
   - Fuente de verdad: tools/rebalance/phase1/event_arch_data.py. Tras cambiarlo: (1) python3 tools/rebalance/phase1/build_event_architecture.py (regenera event_arch.json, rem_variables_switches.txt y tools/scripts_dump/rem_events.rb); (2) ruby tools/scripts_dump/build_system.rb (nombres en Data/System.rxdata); (3) parchear SOLO la sección REM_Events de Data/Scripts.rxdata con el nuevo rem_events.rb (inflate, sustituir, deflate).
@@ -94,14 +94,14 @@ Ubicación (nombre/clave):
 [REGLAS_DE_ENTRENADORES]
 # Todo es PROPUESTA INICIAL: el diseñador ajusta número, clases y equipos; Claude lo propaga.
 Dónde hay entrenadores: en rutas, ubicaciones especiales/mazmorras, gimnasios, Monte Azogue y Liga. NO hay combates comunes en ciudades ni pueblos (solo gimnasio, jefes y escenas de historia).
-Número inicial recomendado (por mapa de combate; las mazmorras suman sus dos mapas): Ruta normal/montaña/marina/nevada 6-8 · Ruta especial 6-10 · Lugar especial 8-12 · Gimnasio 2-4 (de la especialidad de tipos del líder, más el líder). El análisis justifica el número con la longitud del mapa, su categoría y el acto.
+Número de entrenadores: lo decide el diseñador. Claude NO lo propone en el análisis; el diseñador da un número aproximado en la fase de correcciones y entonces Claude reparte la lista. En los gimnasios, los entrenadores van con la especialidad de tipos del líder.
 Tamaño de equipo por acto (inicial): I 1-2 · II 2-3 · III 3-4 · IV 4-5 · V 5-6. Los jefes, rivales y líderes siguen sus propios equipos (rem_characters: Team; marcadores [PENDIENTE DE ASIGNACIÓN]).
 Curva de nivel: ningún Pokémon de entrenador supera LevelCapDay del STEP de la ubicación (LevelCapNight en combates nocturnos), y los entrenadores van de menos a más a lo largo del recorrido: los primeros de la ruta rondan el nivel salvaje de la zona, los últimos se acercan al tope sin llegar al nivel del jefe del paso. La tabla del análisis muestra mínimo, media y máximo por ubicación.
 Clases: solo las 64 comunes + fijos de trainertypes.txt; cada clase mantiene su especialidad de tipos y su acto natural (la nota de cada clase está en COMMON de tools/rebalance/build_trainertypes.py); ninguna clase debe quedar con menos de 3 ubicaciones en total; no repetir más de 2 veces la misma clase en un mismo mapa salvo que el diseñador lo pida.
 Variedad de Pokémon: sin repetir especie dentro de un mismo equipo; evolución acorde al nivel (línea completa si el nivel la alcanza); especies disponibles ya en el juego (salvajes de la zona o anteriores, o evoluciones de ellas); equilibrio de tipos por clase con alguna sorpresa; los Pokémon de un acto no se agotan en la primera ubicación del acto.
 Cuenta acumulada ("cuántos han salido"): el registro lleva por especie cuántas veces la usan entrenadores aprobados y dónde. Al proponer, Claude prioriza las especies menos usadas que encajen con la clase y el acto, y avisa de las que ya superan la media. Lo mismo para clases de entrenador.
 Equipos y entrada al juego: cada entrenador se escribe en proposed_trainers_<loc>.txt con el formato de trainers.txt (TIPO / Nombre[,id] / n.º de Pokémon / ESPECIE,nivel) y el evento llama a pbTrainerBattle. Mientras no esté en trainers.txt el evento se salta el combate. Llevar las entradas a PBS/trainers.txt solo con orden expresa del diseñador.
-Registro de combates: cada entrenador lleva un identificador estable (LOC_KEY + n.º) usado en el evento, el archivo de propuesta y el registro.
+Registro de combates: cada entrenador lleva un identificador estable (LOC_KEY + n.º) usado en el evento, el archivo de propuesta y el registro. Los entrenadores NO se añaden a ninguna ubicación hasta que el diseñador haya dado el número en las correcciones.
 
 [REGLAS_DE_OBJETOS]
 Fuente: rem_location_items.txt. Cada fila implica un evento según su tipo:
@@ -127,15 +127,15 @@ Funcionalidad: variables y interruptores reales; nunca se salta el tope de nivel
 Detalle técnico completo (funciones disponibles, Ruby 1.8, variables): PBS/rem_guia_eventos_ubicaciones.txt.
 
 [REGLAS_DE_FOGATA_Y_RELATOS]
-Alcance: las 24 rutas numeradas, RUTA_01 a RUTA_24 (11 normales + 5 de montaña + 4 marinas + 4 nevadas; NO las 8 rutas especiales ni los lugares especiales), tal como lista rem_lore_fogatas.txt. Una fogata por ruta, un relato por ruta (24 relatos en total).
+Alcance: las 24 rutas numeradas, RUTA_01 a RUTA_24 (11 normales + 5 de montaña + 4 marinas + 4 nevadas; NO las 8 rutas especiales ni los lugares especiales). Una fogata por ruta y UNA sola historia por fogata: los 24 relatos ya están escritos y asignados en rem_lore_fogatas.txt (NPC, título, texto, objeto).
 Evento de fogata (placeholders: rem_campfire_off y rem_campfire_on):
   - De DÍA: solo la fogata apagada; no hay nadie.
   - De NOCHE (PBDayNight.isNight?): la fogata está encendida y un NPC junto a ella pregunta «¿Quieres escuchar mi historia?». Si el jugador acepta, el relato se cuenta con l.narrate (narrador, sin caja).
   - El relato puede escucharse TODAS las veces que se quiera y la fogata sale TODAS las noches. El objeto de recompensa se entrega SOLO la primera vez: interruptor Fogata_Regalo_<LOC> (uno por ruta, 24 en total, bloque nuevo de event_arch_data.py).
   - La ruta marina coloca la fogata en un muelle o islote; la nevada, en un refugio o claro.
-Relatos: 24 anécdotas de lore de la región SIN relación con la trama principal pero sí con la formación de Oniria (costumbres, leyendas, oficios, lugares, antepasados), cada una con tono de narrador, entre 6 y 12 mensajes. Deben ser coherentes entre sí y con los PBS (nombres actuales, biología de los Pokémon). El análisis de cada ruta normal propone su relato (título, resumen, objeto) y, al aprobarla, se guarda íntegro en rem_lore_fogatas.txt.
-Recompensa: un objeto útil de reparto equilibrado (consumible o de utilidad; no clave ni MT), elegido por Claude según el acto y las cuentas del registro; aparece como fila N/E en rem_location_items de esa ruta.
-Implementación: la librería incorporará REMEv.campfire(...) cuando se genere la primera fogata; hasta entonces se escribe con páginas condicionales y un evento de proceso paralelo que sincroniza día/noche.
+Relatos: 24 anécdotas de lore de la región SIN relación con la trama principal pero sí con la formación de Oniria; ya escritas (6 mensajes de narrador cada una). Cuando se procesa la ruta no se redacta nada: se crea el evento del NPC con su saludo y se enlaza el relato; se hace cuadrar con las notas de la ruta y se avisa si choca con algo.
+Recompensa: ya asignada en rem_lore_fogatas.txt (Reward = ITEM,cantidad; consumibles y utilidades, sin objetos clave ni MT, creciendo con el acto). Al procesar la ruta se añade como fila N en rem_location_items y se da de alta su interruptor Fogata_Regalo_RutaNN (event_arch_data.py).
+Implementación: sin script nuevo ni función especial; se hace con eventos normales (fogata apagada/encendida y NPC por página, con el día/noche resuelto en una condición de script con pbRemIsNight?). Los relatos se cuentan con l.narrate.
 
 [REGISTRO_Y_VISTO_BUENO]
 Archivo: PBS/rem_registro_ubicaciones.txt. Se rellena SOLO al recibir el visto bueno explícito del diseñador para esa ubicación.

@@ -1,292 +1,436 @@
 ﻿# Pokémon REM — Relatos de fogata (24, uno por ruta numerada). Documento de TRABAJO (no lo lee el juego). Reglas en PBS/rem_workflow_ubicaciones.txt ([REGLAS_DE_FOGATA_Y_RELATOS]).
 # Cada ruta numerada tiene una fogata: de día apagada y sin nadie; de noche encendida con un NPC que cuenta una anécdota de la formación de la región, sin relación con la trama principal.
-# El relato se puede oír siempre; el objeto Reward solo la primera vez (interruptor Switch). El texto de Story se escribe en el análisis de cada ruta y se guarda aquí al aprobarla.
-# Formato: [RELATO_NN] con «Clave = Valor». Story = un mensaje de narrador por línea (6-12). Status = PENDIENTE | PROPUESTO | APROBADO.
+# Los 24 relatos YA ESTÁN escritos y repartidos: al procesar una ruta se crea un evento normal de NPC (sin script especial) que los cuenta. El relato se puede oír siempre; el objeto Reward solo la primera vez (interruptor Switch, que se da de alta al procesar la ruta).
+# Formato: [RELATO_NN] con «Clave = Valor». Story = un mensaje de narrador (sin caja) por línea, repetida. Greeting = frase del NPC al empezar. Status = ESCRITO (listo para el evento) | EN_EVENTO (evento generado) | APROBADO (visto bueno de la ruta).
 
 [RELATO_01]
 LocationKey = RUTA_01
 Name = Ruta 1
 Category = Ruta normal
 Act = I
-Title =
-NpcName =
-Reward =
+Title = La piedra de las despedidas
+Npc = Bernarda | Anciana viajera
+Greeting = Siéntate un rato, anda. Tengo una historia de este camino.
+Reward = POTION,3
 Switch = Fogata_Regalo_Ruta01
-Status = PENDIENTE
-Story =
+Status = ESCRITO
+Story = Cuentan que, antes de que existiera el camino, la llanura que hoy llamamos Ruta 1 era solo hierba alta y viento.
+Story = Los primeros vecinos de Albor salían al amanecer a buscar agua y volvían siguiendo su propio rastro de hierba aplastada.
+Story = Una mañana, un niño se perdió entre las colinas de caliza. Sus padres no dejaron de llamarlo, y su voz rebotó de loma en loma hasta que él pudo seguirla.
+Story = Desde entonces, quien parte deja una piedra blanca junto al camino, y quien regresa coloca otra encima para que nadie vuelva a perderse.
+Story = Hoy las piedras forman una hilera que se pierde de vista. Dicen que cada una guarda el eco de alguien que esperaba al otro lado.
+Story = Por eso en la Ruta 1 nadie pasa sin tocar una. Es la costumbre más antigua de Oniria.
 
 [RELATO_02]
 LocationKey = RUTA_02
 Name = Ruta 2
 Category = Ruta normal
 Act = I
-Title =
-NpcName =
-Reward =
+Title = Los pasos de la abuela
+Npc = Tomás | Barquero de ribera
+Greeting = Con el fresco de la noche se cuentan mejor las cosas del río.
+Reward = ORANBERRY,3
 Switch = Fogata_Regalo_Ruta02
-Status = PENDIENTE
-Story =
+Status = ESCRITO
+Story = El valle de la Ruta 2 no tuvo caminos hasta que tuvo abuelas. Eso dice mi gente.
+Story = Los riachuelos cambiaban de sitio con cada lluvia, y cruzar significaba mojarse hasta las rodillas, o algo peor si pasaba una corriente.
+Story = Una abuela, cansada de llevar la cesta en alto, empezó a dejar una piedra plana en cada vado. Una al día, sin decir nada a nadie.
+Story = Al cabo de un año había un sendero de piedras por el que un niño podía cruzar sin mojarse los pies.
+Story = Los Pokémon de agua se acostumbraron a ellas, y aún hoy se asoman a mirar quién las pisa, como si esperasen verla volver.
+Story = Las llamamos «los pasos de la abuela». Cada vez que se hunde una, alguien del valle pone otra en su lugar.
 
 [RELATO_03]
 LocationKey = RUTA_03
 Name = Ruta 3
 Category = Ruta de montaña
 Act = I
-Title =
-NpcName =
-Reward =
+Title = La vela del minero
+Npc = Rosendo | Espeleólogo veterano
+Greeting = Las cuevas tienen buena memoria. Esta es una de las cosas que recuerdan.
+Reward = ESCAPEROPE,2
 Switch = Fogata_Regalo_Ruta03
-Status = PENDIENTE
-Story =
+Status = ESCRITO
+Story = Dicen que las estalactitas de esta cueva son velas. Velas de cera pálida, tan viejas que nadie recuerda quién las encendió.
+Story = Hace mucho, unos mineros se internaron por los corredores de caliza y no encontraban la salida. Solo tenían una vela para los tres.
+Story = La encendieron y la fueron cuidando por turnos, hablando bajito para no gastar aire. Cada gota que caía del techo parecía contar el tiempo.
+Story = Cuando por fin vieron la luz del día, comprobaron que la vela casi no se había consumido. Alguien había estado soplando por ellos sin que lo notaran.
+Story = Los mineros nunca supieron quién fue. Desde entonces, dejan una vela encendida a la entrada de cada galería y no la apagan hasta que todos han vuelto.
+Story = Y por eso yo, antes de entrar, siempre saludo a la oscuridad. Nunca se sabe quién la está cuidando.
 
 [RELATO_04]
 LocationKey = RUTA_04
 Name = Ruta 4
 Category = Ruta normal
 Act = I
-Title =
-NpcName =
-Reward =
+Title = El camino de las marcas
+Npc = Casilda | Cantera retirada
+Greeting = Pasa, pasa. Esta ruta tiene más historia de la que parece.
+Reward = REPEL,3
 Switch = Fogata_Regalo_Ruta04
-Status = PENDIENTE
-Story =
+Status = ESCRITO
+Story = Las colinas de la Ruta 4 están cubiertas de cantos rodados de cuarcita. Cada uno tiene una forma distinta, como si alguien los hubiera pulido a mano.
+Story = Antes del camino, cada familia que pasaba por aquí marcaba un canto con un trazo propio: un círculo, una raya, un triángulo.
+Story = Los dejaban en fila a un lado del sendero para saber, a la vuelta, si todos habían regresado. Si faltaba una marca, nadie seguía caminando.
+Story = Con los años la fila se hizo tan larga que acabó siendo el propio camino. Las marcas sirvieron de linde y de calendario.
+Story = Hoy ya nadie recuerda qué familia era cada una, pero todavía se encuentra gente que reconoce su trazo y se queda un rato mirándolo.
+Story = Si ves un canto con una marca que te suene, no lo muevas. Quizá sea el de alguien de tu familia.
 
 [RELATO_05]
 LocationKey = RUTA_05
 Name = Ruta 5
 Category = Ruta normal
 Act = I
-Title =
-NpcName =
-Reward =
+Title = El pozo que caminaba
+Npc = Yusuf | Nómada del campamento
+Greeting = Los de mi gente solo contamos historias de noche, cuando el desierto escucha.
+Reward = ETHER,1
 Switch = Fogata_Regalo_Ruta05
-Status = PENDIENTE
-Story =
+Status = ESCRITO
+Story = Mi abuelo decía que el agua de esta ruta camina. Que cada estación aparece en un sitio distinto, y que hay que saber seguirla.
+Story = Los primeros nómadas cavaban pozos al azar, y la mayoría estaban secos. Hasta que un anciano se fijó en que los Pokémon marcaban el camino.
+Story = Los Pokémon de tierra seca se iban hacia donde la arena estaba más fría y sus huellas se hundían más hondo. Allí cavaron. Y el agua estaba allí.
+Story = Desde entonces, cuando una familia llega al campamento nuevo, deja primero que sus Pokémon exploren. No se cava hasta que ellos se quedan quietos.
+Story = Algunos dicen que el pozo se mueve porque el agua busca compañía. Yo creo que simplemente nos enseñó a fijarnos mejor.
+Story = Sea como sea, desde entonces ninguno de los nuestros ha pasado sed.
 
 [RELATO_06]
 LocationKey = RUTA_06
 Name = Ruta 6
 Category = Ruta normal
 Act = II
-Title =
-NpcName =
-Reward =
+Title = Los muros bajos
+Npc = Eufemia | Pastora de la llanura
+Greeting = Ven, ven. El viento amaina de noche y las historias se oyen mejor.
+Reward = SUPERPOTION,2
 Switch = Fogata_Regalo_Ruta06
-Status = PENDIENTE
-Story =
+Status = ESCRITO
+Story = En la Ruta 6 las tormentas de arena llegan sin avisar. Vienen del este, rojas y espesas, y se tragan el horizonte en un parpadeo.
+Story = Una pastora llevaba su rebaño por aquí cuando la tormenta la sorprendió. No tenía dónde refugiarse, solo unas rocas bajas.
+Story = Hizo que los animales se acostaran tras ellas y se tumbó con ellos, tapándose la cara con el pañuelo. Aguantaron toda la noche.
+Story = Al amanecer la arena había cubierto el suelo, pero no la sombra de las rocas. Allí, intacto, dormía todo el rebaño.
+Story = Desde entonces la gente de la llanura levanta muros bajos de piedra suelta, a la altura de una persona tumbada. No frenan el viento, pero salvan vidas.
+Story = Esos muros son la primera arquitectura de Oniria. Y aún hay quien jura que la tormenta los respeta.
 
 [RELATO_07]
 LocationKey = RUTA_07
 Name = Ruta 7
 Category = Ruta normal
 Act = II
-Title =
-NpcName =
-Reward =
+Title = Un árbol por cada niño
+Npc = Gonzalo | Hortelano jubilado
+Greeting = Siéntate al fresco. La historia de estos árboles se cuenta despacio.
+Reward = GREATBALL,4
 Switch = Fogata_Regalo_Ruta07
-Status = PENDIENTE
-Story =
+Status = ESCRITO
+Story = Los campos de la Ruta 7 están bordeados de árboles sobre suelo calizo. Mucha gente cree que se plantaron para dar sombra.
+Story = La verdad es más sencilla. Hace generaciones, cada familia plantaba un árbol al nacer un hijo, junto al camino, para que lo viera crecer.
+Story = Con el tiempo, cada árbol se convirtió en el cumpleaños de alguien. El que pasaba por aquí sabía cuántos niños había en cada casa.
+Story = Los árboles más viejos ya no tienen dueño, pero nadie se atreve a talarlos. Se dice que quien lo hace pierde el sentido de la orientación.
+Story = Los pájaros anidan en las ramas porque se fían de las manos que los plantaron. Y los Pokémon que viven aquí cuidan de ellos sin que nadie se lo pida.
+Story = Así que, si te toca pasar bajo uno, saluda con un gesto. Es de buena educación.
 
 [RELATO_08]
 LocationKey = RUTA_08
 Name = Ruta 8
 Category = Ruta normal
 Act = II
-Title =
-NpcName =
-Reward =
+Title = Por qué los arces se ponen rojos
+Npc = Ludovica | Panadera ambulante
+Greeting = Con un buen pan se cuenta una buena historia. Siéntate.
+Reward = SITRUSBERRY,2
 Switch = Fogata_Regalo_Ruta08
-Status = PENDIENTE
-Story =
+Status = ESCRITO
+Story = Entre las mesetas de arenisca roja de la Ruta 8 hay un valle de arces. Cada otoño se visten de rojo, y la gente se ha preguntado siempre por qué.
+Story = Mi abuela contaba que los arces eran verdes todo el año, hasta que una vez el viento del desierto llegó hasta aquí y cubrió el valle de polvo rojo.
+Story = Los arces se asustaron al verse manchados. Pero un viajero que pasaba les dijo: «No es suciedad. Es aviso para quienes vienen detrás».
+Story = Desde entonces, cada año, los arces se tiñen antes de que el viento del este llegue. Así el caminante sabe que más allá empieza el desierto.
+Story = Los de aquí lo tenemos claro: el que cruza el valle en otoño se lleva agua de más. Los arces nunca se equivocan.
+Story = Que te sirva de consejo, viajero. Y de pan, si quieres un trozo.
 
 [RELATO_09]
 LocationKey = RUTA_09
 Name = Ruta 9
 Category = Ruta normal
 Act = II
-Title =
-NpcName =
-Reward =
+Title = El barro que guardaba nombres
+Npc = Candelaria | Recolectora de hierbas
+Greeting = Hay que sentarse antes de hablar de este sitio. El suelo aquí se mueve.
+Reward = SUPERREPEL,3
 Switch = Fogata_Regalo_Ruta09
-Status = PENDIENTE
-Story =
+Status = ESCRITO
+Story = Al final de la Ruta 9 el valle se vuelve húmedo y el camino se pierde en un barrizal que parece no tener fondo.
+Story = Hace mucho, los vecinos clavaban estacas de madera para marcar el paso seguro. Cada estaca llevaba tallado el nombre de quien la había puesto.
+Story = Con las lluvias el barro se llevó las estacas, pero no los nombres. Unas semanas después, en el mismo lugar, brotó un musgo verde con forma de letras.
+Story = Los más viejos leen en él los nombres de sus antepasados. Se dice que el musgo crece donde el camino todavía es firme.
+Story = Así que, si ves musgo con letras, pisa donde crece y no te desvíes. Han sido muchas manos las que marcaron ese paso.
+Story = Yo siempre dejo una hierba junto al musgo cuando paso. Por si alguno de ellos tiene sed.
 
 [RELATO_10]
 LocationKey = RUTA_10
 Name = Ruta 10
 Category = Ruta de montaña
 Act = III
-Title =
-NpcName =
-Reward =
+Title = El eco más viejo
+Npc = Aurelio | Guía de galerías
+Greeting = Las cuevas hablan, pero hay que callarse para entenderlas.
+Reward = ETHER,2
 Switch = Fogata_Regalo_Ruta10
-Status = PENDIENTE
-Story =
+Status = ESCRITO
+Story = En los corredores de la Ruta 10 hay un eco que no devuelve lo que dices. Devuelve lo que se dijo hace mucho, con la voz de quien lo dijo.
+Story = Los primeros mineros lo descubrieron una tarde, cuando alguien gritó «¿hay alguien ahí?» y una voz contestó: «Aquí estamos, no tengáis miedo».
+Story = Creyeron que era un derrumbe lejano. Pero la voz repitió la misma frase siempre que alguien gritaba lo mismo, y siempre con el mismo tono tranquilo.
+Story = Entonces comprendieron que la cueva, como los viejos, guarda lo que más le importa: las palabras que sirvieron de guía.
+Story = Por eso los guías de galerías gritamos una frase amable al entrar. Hay que dejar buen recuerdo, que algún día el eco nos devolverá.
+Story = Dicen que mi voz ya está allí. Yo no la he oído, pero me alegra saberlo.
 
 [RELATO_11]
 LocationKey = RUTA_11
 Name = Ruta 11
 Category = Ruta nevada
 Act = III
-Title =
-NpcName =
-Reward =
+Title = El primer copo
+Npc = Brunilda | Leñadora del refugio
+Greeting = Acércate al fuego. El frío cuenta mejor sus cosas junto a las llamas.
+Reward = ICEHEAL,3
 Switch = Fogata_Regalo_Ruta11
-Status = PENDIENTE
-Story =
+Status = ESCRITO
+Story = Hubo un tiempo en que en Oniria no nevaba. Los picos más altos eran de granito oscuro y la niebla lo cubría todo.
+Story = Una noche, mientras el Pueblo Casitero dormía, cayó el primer copo. Nadie lo vio caer, pero a la mañana el camino estaba blanco.
+Story = Los niños salieron a mirar y encontraron huellas pequeñas, como de un Pokémon desconocido, que se perdían hacia lo alto del paso.
+Story = Los mayores siguieron el rastro hasta una roca resguardada del viento y levantaron un refugio. Nadie sabe por qué, pero les pareció lo correcto.
+Story = Hoy, el refugio sigue allí. Cada viajero que pasa deja leña seca para el siguiente, aunque no lo conozca ni vaya a verlo nunca.
+Story = Eso es lo que significa la nieve para nosotros: alguien pasó antes, y alguien pasará después.
 
 [RELATO_12]
 LocationKey = RUTA_12
 Name = Ruta 12
 Category = Ruta marina
 Act = III
-Title =
-NpcName =
-Reward =
+Title = Las tablas de los pescadores
+Npc = Nicanor | Pescador de altura
+Greeting = Las olas hablan poco. Yo, en cambio, suelo hablar demasiado.
+Reward = DIVEBALL,3
 Switch = Fogata_Regalo_Ruta12
-Status = PENDIENTE
-Story =
+Status = ESCRITO
+Story = Las plataformas de madera de la Ruta 12 no las construyó un ingeniero. Las construyeron los pescadores, tabla a tabla.
+Story = Cada vez que un barco volvía de faena, el capitán traía un listón de su propia nave y lo clavaba en el islote más cercano.
+Story = Con los años, los islotes de basalto se fueron uniendo con pasarelas. Cada tabla lleva marcado el nombre de un barco, y los barcos se leen como un callejero.
+Story = Cuando un barco se pierde en el mar, su tabla sigue en la plataforma y nadie la arranca, ni siquiera cuando se pudre.
+Story = Se la deja descansar al sol hasta que cae sola al agua. Dicen que entonces el barco regresa, aunque sea como espuma.
+Story = Por eso, aquí, uno nunca camina sin cuidar dónde pisa. Es cuestión de respeto.
 
 [RELATO_13]
 LocationKey = RUTA_13
 Name = Ruta 13
 Category = Ruta marina
 Act = III
-Title =
-NpcName =
-Reward =
+Title = La red que nunca se terminó
+Npc = Rafaela | Tejedora de redes
+Greeting = Mi historia es larga, como las redes. Pero te la contaré con gusto.
+Reward = PEARL,1
 Switch = Fogata_Regalo_Ruta13
-Status = PENDIENTE
-Story =
+Status = ESCRITO
+Story = Entre las rocas altas de la Ruta 13 cuelgan redes viejas a la deriva, rotas por el tiempo. Una de ellas, dicen, no se rompió nunca.
+Story = Una mujer empezó a tejerla el día en que su marido salió a pescar y no volvió. Decidió que no la acabaría hasta que él regresase.
+Story = Cada nudo era un día. Cada vez que un barco pasaba, le preguntaba por él. Y cada vez, alguien le traía un hilo nuevo de una tierra distinta.
+Story = La red creció tanto que cubrió una roca entera. Los Pokémon de agua se enredaban en ella y ella los liberaba con cuidado, uno a uno.
+Story = Un día dejó de tejer. Nadie sabe si el marido volvió o si ella simplemente comprendió que ya había tejido bastante.
+Story = Los pescadores dicen que, si encuentras una red completa, no hay que cortarla. Ya está terminada.
 
 [RELATO_14]
 LocationKey = RUTA_14
 Name = Ruta 14
 Category = Ruta normal
 Act = III
-Title =
-NpcName =
-Reward =
+Title = Las pasarelas que no se encontraron
+Npc = Eustaquio | Carpintero costero
+Greeting = Escucha, que esto es una de las historias más graciosas de la costa.
+Reward = NESTBALL,4
 Switch = Fogata_Regalo_Ruta14
-Status = PENDIENTE
-Story =
+Status = ESCRITO
+Story = Las pasarelas de madera de la Ruta 14 se construyeron desde dos lados a la vez. Unos desde el oeste, otros desde el este.
+Story = Los dos pueblos se pusieron de acuerdo en el plano, pero no en la medida del pie. Cada uno usaba el de su alcalde.
+Story = Cuando por fin las dos mitades se acercaron, descubrieron que no encajaban. Faltaba un hueco de tres palmos, ni más ni menos.
+Story = Nadie quiso admitir el error. Se pusieron a discutir sobre quién había medido mal, y la discusión duró tanto que terminó la estación de lluvias.
+Story = Al final se colocó una tabla suelta en el medio, y se pintó una raya en el suelo donde cada pueblo debe saludar al otro.
+Story = Todavía hoy, el que cruza por esa tabla saluda en voz alta. Si nadie contesta, se considera mala suerte.
 
 [RELATO_15]
 LocationKey = RUTA_15
 Name = Ruta 15
 Category = Ruta normal
 Act = III
-Title =
-NpcName =
-Reward =
+Title = La lámpara de turba
+Npc = Genoveva | Farolera del bosque húmedo
+Greeting = Quien conoce las luces del camino siempre encuentra a alguien con quien hablar.
+Reward = FULLHEAL,2
 Switch = Fogata_Regalo_Ruta15
-Status = PENDIENTE
-Story =
+Status = ESCRITO
+Story = En los bosques húmedos de la Ruta 15 la turba arde despacio y da un humo espeso. Los primeros vecinos la quemaban para espantar los mosquitos.
+Story = Una noche de niebla, una niña vio que el humo formaba un hilo claro entre los árboles. Lo siguió y encontró a su padre, que se había perdido.
+Story = Desde entonces, en cada recodo del sendero hay una lámpara de turba sobre un poste. Se enciende al caer la tarde y se deja arder hasta el amanecer.
+Story = Cada poste tiene un nombre, y cada nombre es el de alguien que volvió a casa gracias a la luz de otro.
+Story = Soy la farolera de esta zona. Mi trabajo es llevar la turba y el aceite, y comprobar que no falte ninguna lámpara.
+Story = No sé quién me enseñó este oficio. Creo que fue el propio camino.
 
 [RELATO_16]
 LocationKey = RUTA_16
 Name = Ruta 16
 Category = Ruta normal
 Act = III
-Title =
-NpcName =
-Reward =
+Title = Las nubes que se sientan
+Npc = Ildefonso | Leñador de bosque viejo
+Greeting = Aquí arriba las cosas se cuentan despacio, como se mueven las nubes.
+Reward = REVIVE,1
 Switch = Fogata_Regalo_Ruta16
-Status = PENDIENTE
-Story =
+Status = ESCRITO
+Story = En el paso boscoso de la Ruta 16 las nubes bajan casi hasta el suelo y se quedan enredadas entre las ramas. Mucha gente cree que es solo niebla.
+Story = Los leñadores sabemos que no. Las nubes se sientan a descansar, igual que nosotros, cuando llevan demasiado tiempo caminando.
+Story = El árbol más viejo del paso es su asiento favorito. Es tan alto que las nubes se apoyan en él como en el respaldo de una silla.
+Story = Una vez, un aprendiz propuso talarlo. El maestro le dijo que antes de hacerlo preguntara a las nubes dónde se sentarían después.
+Story = El aprendiz no supo qué contestar, y el árbol sigue en pie. De vez en cuando, cuando las nubes se van, se oye un suspiro entre las hojas.
+Story = Es lo que se oye cuando algo agradece que le hayan guardado el sitio.
 
 [RELATO_17]
 LocationKey = RUTA_17
 Name = Ruta 17
 Category = Ruta nevada
 Act = IV
-Title =
-NpcName =
-Reward =
+Title = La cuerda del primero
+Npc = Olegario | Guía de alta montaña
+Greeting = Las montañas no tienen prisa. Nosotros tampoco la tendremos esta noche.
+Reward = HYPERPOTION,2
 Switch = Fogata_Regalo_Ruta17
-Status = PENDIENTE
-Story =
+Status = ESCRITO
+Story = La Ruta 17 trepa entre cumbres de cuarcita y nieve acumulada. Hoy hay senderos señalados, pero al principio todo era roca y dudas.
+Story = El primero que cruzó el paso lo hizo atado a una cuerda de cáñamo, con el otro extremo anudado a un árbol del valle. Si caía, el árbol tiraría de él.
+Story = Llegó arriba y no sabía cómo avisar a los de abajo. Así que sacudió la cuerda tres veces. Abajo, alguien respondió con otras tres.
+Story = Desde entonces, los guías atamos una cuerda en cada paso difícil, y quien llega primero tira tres veces. Quien espera abajo responde.
+Story = Es nuestro modo de decir «estoy bien» sin gastar aliento. En la montaña, el aliento es lo más caro que hay.
+Story = Si algún día cruzas el paso y notas un tirón en la cuerda, no te asustes. Es solo alguien que te da la bienvenida.
 
 [RELATO_18]
-LocationKey = RUTA_19
-Name = Ruta 19
-Category = Ruta nevada
-Act = IV
-Title =
-NpcName =
-Reward =
-Switch = Fogata_Regalo_Ruta19
-Status = PENDIENTE
-Story =
-
-[RELATO_19]
 LocationKey = RUTA_18
 Name = Ruta 18
 Category = Ruta nevada
 Act = IV
-Title =
-NpcName =
-Reward =
+Title = Las pizarras del camino
+Npc = Fermina | Maestra itinerante
+Greeting = Siempre llevo conmigo una tiza, por si algún viajero necesita recordar algo.
+Reward = PPUP,1
 Switch = Fogata_Regalo_Ruta18
-Status = PENDIENTE
-Story =
+Status = ESCRITO
+Story = El camino helado de la Ruta 18 está hecho de pizarra, y la pizarra se parte en láminas finas, lisas, perfectas para escribir.
+Story = Una maestra itinerante que cruzaba la colina descubrió que sus alumnos no podían llevar el cuaderno por el frío. Les dio trozos de pizarra y tiza.
+Story = Escribieron sus lecciones sobre las láminas y las dejaron apoyadas en las rocas del camino, para que el siguiente grupo las leyera.
+Story = Con el tiempo, cada viajero empezó a dejar su propia pizarra: un aviso, una canción, un consejo, un dibujo. El camino se convirtió en un libro abierto.
+Story = Si caminas con atención, encontrarás pizarras que dicen cosas muy sabias y otras que dicen tonterías. Las dos son igual de valiosas.
+Story = Yo me quedo con las tonterías. Las sabias ya las conozco.
+
+[RELATO_19]
+LocationKey = RUTA_19
+Name = Ruta 19
+Category = Ruta nevada
+Act = IV
+Title = El bosque que dormía de pie
+Npc = Hilario | Leñador de invierno
+Greeting = Baja la voz, que los árboles duermen, y no hay que despertarlos.
+Reward = LEPPABERRY,2
+Switch = Fogata_Regalo_Ruta19
+Status = ESCRITO
+Story = En el bosque nevado de la Ruta 19, los árboles duermen de pie. Eso es algo que todo leñador de invierno aprende a respetar.
+Story = Con la primera nevada, los troncos se quedan quietos, las ramas se cargan de blanco y el silencio es tan denso que se oye el propio corazón.
+Story = Una vez, un leñador novato llegó hachando y gritando. Los árboles no se movieron, pero la nieve de las ramas cayó toda de golpe sobre él.
+Story = No le hicieron daño. Le dejaron enterrado hasta la cintura y se rieron a su manera: con un crujido largo, bajo, que recorrió el bosque entero.
+Story = Desde entonces, nos acercamos cantando bajito. No es un conjuro, es una cortesía: avisamos de que estamos aquí, sin molestar.
+Story = Y los árboles, a su modo, también cantan. Pero eso no se oye con los oídos.
 
 [RELATO_20]
 LocationKey = RUTA_20
 Name = Ruta 20
 Category = Ruta de montaña
 Act = IV
-Title =
-NpcName =
-Reward =
+Title = El cristal que aprendió a escuchar
+Npc = Ágata | Tallista de cristales
+Greeting = Hay cosas en estas cuevas que solo cuentan quienes saben esperar.
+Reward = MAXREPEL,2
 Switch = Fogata_Regalo_Ruta20
-Status = PENDIENTE
-Story =
+Status = ESCRITO
+Story = Las cuevas de la Ruta 20 están llenas de cristales que crecen muy despacio, un grano de luz cada siglo, más o menos.
+Story = Un ermitaño se instaló aquí hace mucho. Pasaba los días sentado ante una pared de roca, sin hablar con nadie, escuchando el goteo.
+Story = Con los años, el cristal que crecía frente a él fue tomando una forma curiosa: una especie de oreja, grande y transparente, orientada hacia donde se sentaba.
+Story = Cuando el ermitaño murió, el cristal siguió creciendo. Hoy, si te acercas y hablas bajito, el cristal devuelve tus palabras con un tono más suave.
+Story = Los tallistas no lo tocamos. Es el único cristal de la cueva que no se talla, porque ya está terminado.
+Story = Dicen que escucha mejor que cualquier persona. Yo creo que simplemente sigue esperando a que alguien le cuente algo.
 
 [RELATO_21]
 LocationKey = RUTA_21
 Name = Ruta 21
 Category = Ruta de montaña
 Act = IV
-Title =
-NpcName =
-Reward =
+Title = El puente que cantaba
+Npc = Telesforo | Constructor de pasarelas
+Greeting = Mi oficio hace ruido, pero mis historias, no. Escucha.
+Reward = MAXETHER,1
 Switch = Fogata_Regalo_Ruta21
-Status = PENDIENTE
-Story =
+Status = ESCRITO
+Story = Las pasarelas colgantes de la Ruta 21 suenan cuando sopla el viento. No chirrían: cantan, con notas largas y claras.
+Story = El primer constructor era un músico sin trabajo. Cuando le encargaron el puente, lo hizo con tablas de distintos grosores, sin saber qué iba a pasar.
+Story = La primera ventolera hizo sonar cada tabla con un tono diferente. Todo el valle se quedó callado, escuchando.
+Story = Desde entonces, cada pasarela de la zona se construye afinada. Los maestros la prueban soplando con un fuelle, y la ajustan hasta que suene como debe.
+Story = El viento cambia con la estación, y con él la canción. Los vecinos reconocen el mes por la melodía del puente.
+Story = Y los viajeros, cuando la oyen, saben que están cerca de casa.
 
 [RELATO_22]
 LocationKey = RUTA_22
 Name = Ruta 22
 Category = Ruta de montaña
 Act = V
-Title =
-NpcName =
-Reward =
+Title = La senda recta
+Npc = Gaspar | Agrimensor jubilado
+Greeting = Cuando uno se pasa la vida midiendo, aprende que también hay que contar historias.
+Reward = MAXREVIVE,1
 Switch = Fogata_Regalo_Ruta22
-Status = PENDIENTE
-Story =
+Status = ESCRITO
+Story = La Ruta 22 es tan recta que parece trazada con regla. En un terreno tan abrupto, es casi una ofensa a la geografía.
+Story = Un agrimensor testarudo se empeñó en que el camino no tuviera ni una curva. Nadie le hizo caso, pero él continuó solo, piedra a piedra.
+Story = Cada día cargaba las gravas con una carretilla, y cada noche comprobaba la línea con una cuerda tensa. Tardó muchos años.
+Story = Cuando terminó, el camino era inútil: no iba a ninguna parte que no se pudiera alcanzar por otro lado más corto.
+Story = Pero un invierno, una tormenta cerró todos los demás pasos. Quedó la senda recta, la única que no se perdía bajo la nieve.
+Story = Esa es la lección que me dejó. Lo que parece inútil hoy puede ser lo único que quede mañana.
 
 [RELATO_23]
 LocationKey = RUTA_23
 Name = Ruta 23
 Category = Ruta marina
 Act = V
-Title =
-NpcName =
-Reward =
+Title = La campana de la niebla
+Npc = Anselmo | Vigía del muelle
+Greeting = Cuando la niebla cierra el horizonte, solo quedan las campanas y las historias.
+Reward = BIGPEARL,1
 Switch = Fogata_Regalo_Ruta23
-Status = PENDIENTE
-Story =
+Status = ESCRITO
+Story = En las aguas de la Ruta 23 la niebla se cierra a veces tan densa que un barco no ve su propia proa. Los antiguos pescadores tuvieron que inventar algo.
+Story = Colgaron una campana en una boya, junto a un bajío peligroso. Cada familia tenía su propio toque, y cada toque significaba «estoy aquí».
+Story = La campana no calmaba la niebla, pero guiaba. Quien oía su toque sabía que no estaba solo, y eso bastaba para no perder la calma.
+Story = Cuando la boya se hundió con una tormenta, los pescadores siguieron tocando de memoria, cada uno desde su barco, en un rincón del agua.
+Story = Hoy no queda ninguna boya con campana, pero todas las barcas llevan una. Se toca al salir y al volver, y también cuando la niebla aprieta.
+Story = Por si acaso alguien, en algún lugar, necesita saber que no está solo.
 
 [RELATO_24]
 LocationKey = RUTA_24
 Name = Ruta 24
 Category = Ruta marina
 Act = V
-Title =
-NpcName =
-Reward =
+Title = El farero que contaba las olas
+Npc = Evaristo | Farero retirado
+Greeting = Las olas llevan cuenta de todo. Yo solo aprendí a contar con ellas.
+Reward = ELIXIR,2
 Switch = Fogata_Regalo_Ruta24
-Status = PENDIENTE
-Story =
+Status = ESCRITO
+Story = Hubo un farero que vivía solo, al borde de las aguas negras y frías de la Ruta 24. Tenía una costumbre: contar las olas.
+Story = Cada noche, desde el ocaso hasta el alba, contaba las olas que rompían contra el basalto. No por manía, sino para saber cuándo cambiaba el tiempo.
+Story = Con los años descubrió que cada tormenta venía anunciada por una ola más larga que las demás. La contó, la anotó y la avisó a los barcos.
+Story = Salvó a muchos. Pero cuando le preguntaban cómo lo hacía, solo respondía: «Es que escucho cómo respira el mar».
+Story = Cuando el farero murió, nadie supo de dónde sacaba esa paciencia. Pero encontraron un cuaderno con todas las olas contadas, página tras página.
+Story = Dicen que el mar, al leerlo, entendió por fin que alguien lo había estado cuidando.

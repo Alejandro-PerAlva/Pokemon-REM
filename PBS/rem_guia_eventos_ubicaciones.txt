@@ -28,8 +28,8 @@ Para cada ubicación, a partir de los PBS:
   g) Combates (jefes, rivales, entrenadores): pbTrainerBattle con tipos/IDs del PBS. Si el entrenador no existe en trainers.txt, el evento comprueba pbLoadTrainer y se salta el combate; la propuesta de entradas va en un fichero proposed_trainers_<loc>.txt (no se toca trainers.txt).
   h) Hito de progresión: al terminar la escena clave, pbAdvanceMilestone(n) y las variables macro (101-117) se actualizan con las funciones de REM_Events; no escribirlas a mano.
   i) Ambientación: NPC con diálogos por estado (1-2 líneas por NPC si no aportan historia), con variedad de voces y eventos «tontos» que premian la exploración, coherentes con la descripción de la ubicación (ver [REGLAS_DE_EVENTOS] del workflow).
-  j) Fogata y relato (solo rutas numeradas): fogata apagada de día; de noche, NPC que cuenta el relato de rem_lore_fogatas.txt con narrador sin caja; objeto solo la primera vez (interruptor Fogata_Regalo_*). Gráficos rem_campfire_off / rem_campfire_on.
-  k) Entrenadores de la propuesta aprobada (proposed_trainers_<loc>.txt): un evento por entrenador con pbTrainerBattle y su identificador estable; nivel ≤ tope de la ubicación.
+  j) Fogata y relato (solo rutas numeradas): eventos normales; fogata apagada de día y sin NPC; de noche, fogata encendida y NPC que cuenta el relato ya escrito en rem_lore_fogatas.txt con narrador sin caja (se puede oír siempre); el objeto solo la primera vez (interruptor Fogata_Regalo_*). Gráficos rem_campfire_off / rem_campfire_on.
+  k) Entrenadores de la lista acordada con el diseñador (proposed_trainers_<loc>.txt): un evento por entrenador con pbTrainerBattle y su identificador estable; nivel ≤ tope de la ubicación. Sin número acordado no se crean.
 
 [CONVENCIONES_TECNICAS]
 - Texto: l.say("...") genera Kernel.pbMessage(_INTL("...")); escribir \PN, \c[1], \se[ItemGet] con UNA barra en el .rb (la librería escapa). Máx. ~200 caracteres por mensaje.
