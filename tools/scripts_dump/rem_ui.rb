@@ -3021,9 +3021,9 @@ class MoveRelearnerScene
       bmp.stretch_blt(Rect.new(28,y+42,44,18),@catbitmap.bitmap,Rect.new(0,md.category*28,64,28))
       pw=md.basedamage<=1 ? (md.basedamage==1 ? "???" : "---") : sprintf("%d",md.basedamage)
       ac=md.accuracy==0 ? "---" : sprintf("%d",md.accuracy)
-      REM_UI.texts(bmp,[[:c,_INTL("Pot. {1}",pw),82,y+51,0,sel ? W : dm,16,70],
-                        [:c,_INTL("Prec. {1}",ac),150,y+51,0,sel ? W : dm,16,70],
-                        [:c,_INTL("PP {1}",md.totalpp),240,y+20,1,sel ? W : dm,16,60]])
+      REM_UI.texts(bmp,[[:c,_INTL("Pot. {1}",pw),82,y+51,0,sel ? wh : dm,16,70],
+                        [:c,_INTL("Prec. {1}",ac),150,y+51,0,sel ? wh : dm,16,70],
+                        [:c,_INTL("PP {1}",md.totalpp),240,y+20,1,sel ? wh : dm,16,60]])
     end
     REM_UI.vArrow(bmp,134,48,-1,REM_UI::SILVER) if cmds.top_item>0
     REM_UI.vArrow(bmp,134,372,1,REM_UI::SILVER) if cmds.top_item+VISIBLEMOVES<@moves.length
