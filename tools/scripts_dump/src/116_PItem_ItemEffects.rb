@@ -18,7 +18,6 @@ def pbRepel(item,steps)
   else
     Kernel.pbMessage(_INTL("{1} ha usado {2}.",$Trainer.name,PBItems.getName(item)))
     $PokemonGlobal.repel=steps
-    $PokemonGlobal.instance_variable_set(:@remLastRepel,item)
     return 3
   end
 end
@@ -51,17 +50,9 @@ Events.onStepTaken+=proc {
        $PokemonGlobal.repel-=1
        if $PokemonGlobal.repel<=0
          Kernel.pbMessage(_INTL("El Repelente dejó de tener efecto..."))
-         last=$PokemonGlobal.instance_variable_get(:@remLastRepel)
-         ret=0
-         for it in [last,getID(PBItems,:REPEL),getID(PBItems,:SUPERREPEL),getID(PBItems,:MAXREPEL)]
-           if it && it>0 && $PokemonBag.pbQuantity(it)>0
-             ret=it
-             break
-           end
-         end
-         if ret>0 && Kernel.pbConfirmMessage(_INTL("¿Quieres utilizar otro Repelente?"))
-           pbUseItem($PokemonBag,ret)
-         end
+         ret=pbChooseItemFromList(_INTL("¿Quieres utilizar otro Repelente?"),1,
+            :REPEL,:SUPERREPEL,:MAXREPEL)
+         pbUseItem($PokemonBag,ret) if ret>0
        end
      end
    end
