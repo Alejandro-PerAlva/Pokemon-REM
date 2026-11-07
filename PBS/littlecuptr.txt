@@ -451,21 +451,21 @@ EndSpeechLose="Man, I lost!"
 Name=GLOROB
 PokemonNos=5,11,19,38,52,59,62,63,67,74,76,81,84,97,99,102,105,106,108
 BeginSpeech=Here I come!
-Type=MEDIUM
+Type=PSYCHIC_F
 EndSpeechWin="Yes, I won!"
 [065]
 EndSpeechLose="Man, I lost!"
 Name=REG
 PokemonNos=14,22,32,37,50,66,76,84,115
 BeginSpeech=Here I come!
-Type=MEDIUM
+Type=PSYCHIC_F
 EndSpeechWin="Yes, I won!"
 [066]
 EndSpeechLose="Man, I lost!"
 Name=GRAVIUS
 PokemonNos=0,3,10,24,30,31,34,35,36,42,48,73,74,78,88,91,96,97,106,114,121
 BeginSpeech=Here I come!
-Type=MEDIUM
+Type=PSYCHIC_F
 EndSpeechWin="Yes, I won!"
 [067]
 EndSpeechLose="Man, I lost!"
@@ -794,14 +794,14 @@ EndSpeechLose="Man, I lost!"
 Name=LIBSOLD
 PokemonNos=133,141,142,146,158,165,185,192,194,195,203,220,221,223,225
 BeginSpeech=Here I come!
-Type=PUNKGUY
+Type=ROUGHNECK
 EndSpeechWin="Yes, I won!"
 [114]
 EndSpeechLose="Man, I lost!"
 Name=SIU
 PokemonNos=180,181,201,210,219,223,237
 BeginSpeech=Here I come!
-Type=PUNKGUY
+Type=ROUGHNECK
 EndSpeechWin="Yes, I won!"
 [115]
 EndSpeechLose="Man, I lost!"

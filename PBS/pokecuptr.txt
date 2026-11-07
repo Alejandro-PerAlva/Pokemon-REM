@@ -815,14 +815,14 @@ EndSpeechLose="Man, I lost!"
 Name=ROTIUS
 PokemonNos=125,130,150,154,156,170,171,172,199,218,234
 BeginSpeech=Here I come!
-Type=PUNKGUY
+Type=ROUGHNECK
 EndSpeechWin="Yes, I won!"
 [117]
 EndSpeechLose="Man, I lost!"
 Name=BOD
 PokemonNos=121,127,138,146,153,156,165,168,177,178,182,184,195,199,215,240
 BeginSpeech=Here I come!
-Type=PUNKGUY
+Type=ROUGHNECK
 EndSpeechWin="Yes, I won!"
 [118]
 EndSpeechLose="Man, I lost!"
