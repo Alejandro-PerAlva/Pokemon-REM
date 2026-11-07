@@ -5325,7 +5325,7 @@ Note = Ajustes del Vol. 3: precisión (sube).
 Note = Retipado de ataque (Vol. 3): Normal → Volador.
 
 [MOVE_BODYSLAM]
-Note = Vol. 5: pasa a enseñarse como MT36 (repertorio clásico de 100 MT; antes no era MT).
+Note = Vol. 5: pasó a enseñarse como MT36; después la MT36 se cambió por Poder Oculto, así que Golpe Cuerpo deja de ser MT (sigue aprendiéndose por nivel/crianza).
 
 [MOVE_HYPERFANG]
 Note = Efecto modificado (Vol. 3): antes «Ataque con finos colmillos. Puede causar retroceso.»; ahora «Muerde con unos colmillos enormes y poderosos. Puede bajar el Ataque del objetivo.»
@@ -7390,8 +7390,8 @@ Note = Repertorio clásico de 100 MT (Vol. 5/Vol. 9 §4): MT35 enseña Beso Dren
 Note = Reparto (Isla Sueño, Objeto oculto): Ayuda previa al Gimnasio 4 (Lucha): Beso Drenaje (Hada) golpea a Lucha y cura.
 
 [ITEM_TM36]
-Note = Repertorio clásico de 100 MT (Vol. 5/Vol. 9 §4): MT36 enseña Golpe Cuerpo (en vanilla enseñaba Bomba Lodo).
-Note = Reparto (Pueblo Casitero, Regalo de PNJ): Golpe Cuerpo: regalo del capataz; fuerza minera.
+Note = Repertorio clásico de 100 MT (Vol. 5/Vol. 9 §4): MT36 enseña Poder Oculto (cambio de Golpe Cuerpo; en vanilla enseñaba Bomba Lodo). Todos los Pokémon (#001-#721) la aprenden.
+Note = Reparto (Pueblo Casitero, Regalo de PNJ): Poder Oculto: regalo del capataz; el poder escondido de la mina.
 
 [ITEM_TM37]
 Note = Repertorio clásico de 100 MT (Vol. 5/Vol. 9 §4): MT37 enseña Vozarrón (en vanilla enseñaba Tormenta Arena).

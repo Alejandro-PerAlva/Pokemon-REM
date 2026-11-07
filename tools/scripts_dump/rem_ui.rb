@@ -789,8 +789,8 @@ class PokemonSummaryScene
   end
 
   # Borde de color del tipo + contenido de un hueco de ataque (compartido por la página 4 y la vista de detalle).
-  def remDrawMoveSlot(overlay,move,y0,textlist)
-    REM_UI.borderRect(overlay,240,y0,495,y0+REM_UI::SUM_SLOT_H-1,move.id>0 ? REM_UI.dim(REM_UI.typeColor(move.type),0.85) : Color.new(46,52,68))
+  def remDrawMoveSlot(overlay,move,y0,textlist,pokemon=nil)
+    REM_UI.borderRect(overlay,240,y0,495,y0+REM_UI::SUM_SLOT_H-1,move.id>0 ? REM_UI.dim(REM_UI.typeColor(pbRemMoveType(move.id,pokemon)),0.85) : Color.new(46,52,68))
     cy=y0+REM_UI::SUM_SLOT_H/2
     if move.id>0
       textlist.push([:c,PBMoves.getName(move.id),258,cy,0,REM_UI::WHITE,30,190])
@@ -811,7 +811,7 @@ class PokemonSummaryScene
     textlist=[]
     for i in 0...4
       m=pokemon.moves[i]
-      remDrawMoveSlot(overlay,m,REM_UI::SUM_SLOT_Y0+REM_UI::SUM_SLOT_P*i,textlist) if m
+      remDrawMoveSlot(overlay,m,REM_UI::SUM_SLOT_Y0+REM_UI::SUM_SLOT_P*i,textlist,pokemon) if m
     end
     REM_UI.texts(overlay,textlist)
   end
@@ -823,13 +823,14 @@ class PokemonSummaryScene
     @sprites["pokeicon"].visible=true
     movedata=PBMoveData.new(moveid)
     basedamage=movedata.basedamage
-    category=movedata.category
+    category=pbRemMoveCategory(moveid,pokemon)
+    movetype=pbRemMoveType(moveid,pokemon)
     accuracy=movedata.accuracy
     overlay=drawMoveSelection(pokemon,moveToLearn)
     pw=(category==2 || basedamage<=0) ? "-" : (basedamage==1 ? "???" : sprintf("%d",basedamage))
     ac=(accuracy==0) ? "-" : sprintf("%d%%",accuracy)
     # filas 114,144,174,204 (28 px): Tipo, Categoría, Potencia, Precisión
-    overlay.blt(134,114,@typebitmap.bitmap,Rect.new(0,movedata.type*28,64,28))
+    overlay.blt(134,114,@typebitmap.bitmap,Rect.new(0,movetype*28,64,28))
     icons=AnimatedBitmap.new("Graphics/Pictures/category")
     overlay.blt(134,144,icons.bitmap,Rect.new(0,category*28,64,28))
     icons.dispose
@@ -870,7 +871,7 @@ class PokemonSummaryScene
       else
         moveobject=pokemon.moves[i]
       end
-      remDrawMoveSlot(overlay,moveobject,y0,textlist) if moveobject
+      remDrawMoveSlot(overlay,moveobject,y0,textlist,pokemon) if moveobject
       y0+=pitch
     end
     REM_UI.texts(overlay,textlist)
@@ -3051,7 +3052,7 @@ class MoveRelearnerScene
       break if !mv
       m=PBMove.new(mv)
       y0=REM_UI::SUM_SLOT_Y0+REM_UI::SUM_SLOT_P*i
-      REM_UI.borderRect(bmp,16,y0,271,y0+REM_UI::SUM_SLOT_H-1,REM_UI.dim(REM_UI.typeColor(m.type),0.85))
+      REM_UI.borderRect(bmp,16,y0,271,y0+REM_UI::SUM_SLOT_H-1,REM_UI.dim(REM_UI.typeColor(pbRemMoveType(mv,@pokemon)),0.85))
       cy=y0+REM_UI::SUM_SLOT_H/2
       textlist.push([:c,PBMoves.getName(mv),34,cy,0,wh,30,190])
       textlist.push([:c,sprintf("PP %d/%d",m.totalpp,m.totalpp),262,cy,1,wh,26,74]) if m.totalpp>0
@@ -3060,11 +3061,11 @@ class MoveRelearnerScene
     REM_UI.vArrow(bmp,143,364,1,REM_UI::SILVER) if cmds.top_item+VISIBLEMOVES<@moves.length
     # ficha del movimiento seleccionado
     basedamage=md.basedamage
-    category=md.category
+    category=pbRemMoveCategory(cur,@pokemon)
     accuracy=md.accuracy
     pw=(category==2 || basedamage<=0) ? "-" : (basedamage==1 ? "???" : sprintf("%d",basedamage))
     ac=(accuracy==0) ? "-" : sprintf("%d%%",accuracy)
-    bmp.blt(134+cx,114,@typebitmap.bitmap,Rect.new(0,md.type*28,64,28))
+    bmp.blt(134+cx,114,@typebitmap.bitmap,Rect.new(0,pbRemMoveType(cur,@pokemon)*28,64,28))
     bmp.blt(134+cx,144,@catbitmap.bitmap,Rect.new(0,category*28,64,28))
     textlist.push([:c,pw,166+cx,188,2,wh,24,84])
     textlist.push([:c,ac,166+cx,218,2,wh,24,84])
@@ -3612,4 +3613,21 @@ def pbRemEditNickname(pkmn)
   newname=newname.to_s.strip
   pkmn.name=(newname=="") ? speciesname : newname
   return true
+end
+
+#===============================================================================
+# Poder Oculto (función 0x90): en fichas de un Pokémon el tipo es el que le toca por sus IV y la
+# categoría es física si su Ataque supera a su Ataque Especial (si no, especial). En PBS/MT figura
+# como Normal y Especial. Para el resto de movimientos devuelven los datos normales.
+#===============================================================================
+def pbRemMoveType(moveid,pokemon=nil)
+  md=PBMoveData.new(moveid)
+  return pbHiddenPower(pokemon.iv)[0] if md.function==0x90 && pokemon && pokemon.iv
+  return md.type
+end
+
+def pbRemMoveCategory(moveid,pokemon=nil)
+  md=PBMoveData.new(moveid)
+  return (pokemon.attack>pokemon.spatk ? 0 : 1) if md.function==0x90 && pokemon
+  return md.category
 end

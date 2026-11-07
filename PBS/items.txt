@@ -227,7 +227,7 @@
 320,TM33,MT33,MT33s,4,3000,"Ataca y le quita al objetivo el objeto que lleve. Si el agresor lleva un objeto, no robará el del objetivo.",3,0,0,THIEF
 321,TM34,MT34,MT34s,4,4000,"Enfurece al objetivo para que solo use movimientos de ataque durante tres turnos.",3,0,0,TAUNT
 322,TM35,MT35,MT35s,4,4000,"Absorbe PS del objetivo con un beso y restaura su propia energía en una cantidad igual o superior a la mitad del daño infligido.",3,0,0,DRAININGKISS
-323,TM36,MT36,MT36s,4,6000,"Salta sobre el objetivo con todo su peso. Puede paralizar.",3,0,0,BODYSLAM
+323,TM36,MT36,MT36s,4,6000,"Tipo según los IV de quien lo usa; físico si tiene más Atq que Atq. Esp., si no especial. En la MT: Normal, especial.",3,0,0,HIDDENPOWER
 324,TM37,MT37,MT37s,4,6000,"Grito desgarrador que inflige daño al objetivo. Puede confundir al objetivo.",3,0,0,HYPERVOICE
 325,TM38,MT38,MT38s,4,6000,"Puñetazo ardiente. Puede quemar.",3,0,0,FIREPUNCH
 326,TM39,MT39,MT39s,4,8000,"Ataca con una gran ráfaga de fuego que puede causar quemaduras.",3,0,0,FLAMETHROWER

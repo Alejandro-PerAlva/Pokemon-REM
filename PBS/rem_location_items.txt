@@ -155,7 +155,7 @@ Item18 = FAIRYFEATHER,1,B,Cuadrante O · en la casa del veterano,
 
 # Pueblo Casitero - 17 filas
 [PUEBLO_CASITERITA]
-Item1 = TM36,1,N,Mercado Minero · capataz,Golpe Cuerpo: regalo del capataz; fuerza minera.
+Item1 = TM36,1,N,Mercado Minero · capataz,Poder Oculto: regalo del capataz; el poder escondido de la mina.
 Item2 = TM51,1,S,Mercado Minero · puesto del boticario,Veneno X: stock único del boticario minero.
 Item3 = ROCKYHELMET,1,S,Mercado Minero · armero,Casco Dentado: stock único a 7 000.
 Item4 = THICKCLUB,1,H,Galería iluminada · entre los huesos de mineral,Hueso Grueso (Cubone / Marowak).

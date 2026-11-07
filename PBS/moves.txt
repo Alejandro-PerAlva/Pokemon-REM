@@ -330,7 +330,7 @@
 330,FLAIL,Azote,098,1,NORMAL,Physical,100,15,0,00,0,abef,"Ataque frenético. Cuantos menos PS tenga el usuario, más daño produce."
 331,FRUSTRATION,Frustración,08A,1,DARK,Physical,100,20,0,00,0,abef,"Cuanto menor sea la amistad con el Entrenador, más poderoso será este ataque."
 332,GUILLOTINE,Guillotina,0FB,110,DARK,Physical,100,5,0,00,0,abe,"Corta al objetivo con unas pinzas afiladísimas. Suele ser crítico, pero el usuario sufre 1/3 del daño causado."
-333,HIDDENPOWER,Poder Oculto,090,70,NORMAL,Special,100,15,0,00,0,bef,"Ataque único cuyo tipo y potencia varían según el agresor."
+333,HIDDENPOWER,Poder Oculto,090,70,NORMAL,Special,100,15,0,00,0,bef,"Tipo según los IV de quien lo usa; físico si tiene más Atq que Atq. Esp., si no especial. En la MT: Normal, especial."
 334,HORNDRILL,Perforador,0A9,100,NORMAL,Physical,90,5,0,00,0,abe,"Taladra al objetivo con el cuerno, ignorando los cambios de Defensa y Evasión que haya sufrido."
 335,NATURALGIFT,Don Natural,096,1,GRASS,Physical,100,15,0,00,0,be,"La Baya que lleva presta su fuerza para atacar. El tipo de ataque y su fuerza dependen de la Baya."
 336,PRESENT,Presente,094,1,FAIRY,Physical,95,15,0,00,0,be,"Regalo con bomba trampa. A veces restaura los PS."

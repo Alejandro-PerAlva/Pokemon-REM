@@ -3914,7 +3914,38 @@ end
 # (Poder Oculto/Hidden Power)
 ################################################################################
 class PokeBattle_Move_090 < PokeBattle_Move
+  # REM: el tipo sale de los IV del usuario y la categoría es física si su Ataque supera a su
+  # Ataque Especial (si no, especial). En PBS figura como Normal/Especial (es lo que muestra la MT).
+  # Pokémon en combate que tiene este movimiento (para menús y fichas fuera del cálculo de daño).
+  def pbHpOwner
+    return nil if !@battle
+    for b in @battle.battlers
+      next if !b
+      for m in b.moves
+        return b if m.equal?(self)
+      end
+    end
+    return nil
+  end
+
+  def type
+    b=@hpUser || pbHpOwner
+    return pbHiddenPower(b.iv)[0] if b
+    return @type
+  end
+
+  def pbIsPhysical?(type)
+    b=@hpUser || pbHpOwner
+    return false if !b
+    return b.attack>b.spatk
+  end
+
+  def pbIsSpecial?(type)
+    return !pbIsPhysical?(type)
+  end
+
   def pbModifyType(type,attacker,opponent)
+    @hpUser=attacker
     hp=pbHiddenPower(attacker.iv)
     type=hp[0]
     return type
