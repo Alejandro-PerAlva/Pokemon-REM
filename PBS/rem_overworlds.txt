@@ -1,293 +1,165 @@
 ﻿# Pokémon REM — CATÁLOGO DE OVERWORLDS (sprites de personajes). Documento de trabajo para Claude: no lo lee el juego ni el Codex.
 # Lo rellena el DISEÑADOR: qué es cada sprite npcNNN (Graphics/Characters/npcNNN.png). Claude elige los NPC de los eventos SOLO entre los definidos aquí (y entre los trchar de entrenador, ver abajo); no inventa sprites ni los asigna a ojo.
-# Campos por sección [npcNNN]: Description = aspecto y vestimenta · Gender = Male/Female/Mixed · AgeGroup = Niño/Joven/Adulto/Mayor · Profession = oficio o arquetipo (pescador, panadera, anciano...) · SuggestedUse = para qué papeles encaja · Notes = lo que sea (rareza, uso exclusivo, etc.) · UsedBy = personaje o evento ya fijado (opcional).
+# Campos por sección [npcNNN]: Name = lo que es (p. ej. Pescador, Anciana, Niño) · Description = descripción breve · Gender = Male/Female/Mixed.
 # Sprites de ENTRENADOR como overworld: cualquier clase de trainertypes.txt tiene su trcharNNN (NNN = ID de la clase, 000-087) y puede usarse como NPC sin combate (un evento normal con ese gráfico y sin pbTrainerBattle). Para elegirlos, vale el nombre y la descripción de la clase en trainertypes.txt.
 # Formato: texto plano en español (UTF-8 BOM, CRLF), secciones [npcNNN] y comentarios con «#».
 
 [npc001]
+Name = 
 Description = 
 Gender = 
-AgeGroup = 
-Profession = 
-SuggestedUse = 
-Notes = 
-UsedBy = 
 
 [npc002]
+Name = 
 Description = 
 Gender = 
-AgeGroup = 
-Profession = 
-SuggestedUse = 
-Notes = 
-UsedBy = 
 
 [npc003]
+Name = 
 Description = 
 Gender = 
-AgeGroup = 
-Profession = 
-SuggestedUse = 
-Notes = 
-UsedBy = 
 
 [npc004]
+Name = 
 Description = 
 Gender = 
-AgeGroup = 
-Profession = 
-SuggestedUse = 
-Notes = 
-UsedBy = 
 
 [npc005]
+Name = 
 Description = 
 Gender = 
-AgeGroup = 
-Profession = 
-SuggestedUse = 
-Notes = 
-UsedBy = 
 
 [npc006]
+Name = 
 Description = 
 Gender = 
-AgeGroup = 
-Profession = 
-SuggestedUse = 
-Notes = 
-UsedBy = 
 
 [npc007]
+Name = 
 Description = 
 Gender = 
-AgeGroup = 
-Profession = 
-SuggestedUse = 
-Notes = 
-UsedBy = 
 
 [npc008]
+Name = 
 Description = 
 Gender = 
-AgeGroup = 
-Profession = 
-SuggestedUse = 
-Notes = 
-UsedBy = 
 
 [npc009]
+Name = 
 Description = 
 Gender = 
-AgeGroup = 
-Profession = 
-SuggestedUse = 
-Notes = 
-UsedBy = 
 
 [npc010]
+Name = 
 Description = 
 Gender = 
-AgeGroup = 
-Profession = 
-SuggestedUse = 
-Notes = 
-UsedBy = 
 
 [npc011]
+Name = 
 Description = 
 Gender = 
-AgeGroup = 
-Profession = 
-SuggestedUse = 
-Notes = 
-UsedBy = 
 
 [npc012]
+Name = 
 Description = 
 Gender = 
-AgeGroup = 
-Profession = 
-SuggestedUse = 
-Notes = 
-UsedBy = 
 
 [npc013]
+Name = 
 Description = 
 Gender = 
-AgeGroup = 
-Profession = 
-SuggestedUse = 
-Notes = 
-UsedBy = 
 
 [npc014]
+Name = 
 Description = 
 Gender = 
-AgeGroup = 
-Profession = 
-SuggestedUse = 
-Notes = 
-UsedBy = 
 
 [npc015]
+Name = 
 Description = 
 Gender = 
-AgeGroup = 
-Profession = 
-SuggestedUse = 
-Notes = 
-UsedBy = 
 
 [npc016]
+Name = 
 Description = 
 Gender = 
-AgeGroup = 
-Profession = 
-SuggestedUse = 
-Notes = 
-UsedBy = 
 
 [npc017]
+Name = 
 Description = 
 Gender = 
-AgeGroup = 
-Profession = 
-SuggestedUse = 
-Notes = 
-UsedBy = 
 
 [npc018]
+Name = 
 Description = 
 Gender = 
-AgeGroup = 
-Profession = 
-SuggestedUse = 
-Notes = 
-UsedBy = 
 
 [npc019]
+Name = 
 Description = 
 Gender = 
-AgeGroup = 
-Profession = 
-SuggestedUse = 
-Notes = 
-UsedBy = 
 
 [npc020]
+Name = 
 Description = 
 Gender = 
-AgeGroup = 
-Profession = 
-SuggestedUse = 
-Notes = 
-UsedBy = 
 
 [npc021]
+Name = 
 Description = 
 Gender = 
-AgeGroup = 
-Profession = 
-SuggestedUse = 
-Notes = 
-UsedBy = 
 
 [npc022]
+Name = 
 Description = 
 Gender = 
-AgeGroup = 
-Profession = 
-SuggestedUse = 
-Notes = 
-UsedBy = 
 
 [npc023]
+Name = 
 Description = 
 Gender = 
-AgeGroup = 
-Profession = 
-SuggestedUse = 
-Notes = 
-UsedBy = 
 
 [npc024]
+Name = 
 Description = 
 Gender = 
-AgeGroup = 
-Profession = 
-SuggestedUse = 
-Notes = 
-UsedBy = 
 
 [npc025]
+Name = 
 Description = 
 Gender = 
-AgeGroup = 
-Profession = 
-SuggestedUse = 
-Notes = 
-UsedBy = 
 
 [npc026]
+Name = 
 Description = 
 Gender = 
-AgeGroup = 
-Profession = 
-SuggestedUse = 
-Notes = 
-UsedBy = 
 
 [npc027]
+Name = 
 Description = 
 Gender = 
-AgeGroup = 
-Profession = 
-SuggestedUse = 
-Notes = 
-UsedBy = 
 
 [npc028]
+Name = 
 Description = 
 Gender = 
-AgeGroup = 
-Profession = 
-SuggestedUse = 
-Notes = 
-UsedBy = 
 
 [npc029]
+Name = 
 Description = 
 Gender = 
-AgeGroup = 
-Profession = 
-SuggestedUse = 
-Notes = 
-UsedBy = 
 
 [npc030]
+Name = 
 Description = 
 Gender = 
-AgeGroup = 
-Profession = 
-SuggestedUse = 
-Notes = 
-UsedBy = 
 
 [npc031]
+Name = 
 Description = 
 Gender = 
-AgeGroup = 
-Profession = 
-SuggestedUse = 
-Notes = 
-UsedBy = 
 
 [npc032]
+Name = 
 Description = 
 Gender = 
-AgeGroup = 
-Profession = 
-SuggestedUse = 
-Notes = 
-UsedBy = 
