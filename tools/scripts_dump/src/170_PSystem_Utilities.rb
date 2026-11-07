@@ -835,7 +835,7 @@ module ItemStorageHelper
         items[i]=[item,[qty,maxPerSlot].min]
         qty-=items[i][1]
         if sorting
-          items.sort! if POCKETAUTOSORT[$ItemData[item][ITEMPOCKET]]
+          pbRemSortPocket(items) if POCKETAUTOSORT[$ItemData[item][ITEMPOCKET]]
         end
         return true if qty==0
       elsif itemslot[0]==item && itemslot[1]<maxPerSlot

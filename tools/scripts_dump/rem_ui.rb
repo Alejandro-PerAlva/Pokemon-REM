@@ -1671,6 +1671,37 @@ def pbGetPocket(item)
   return p
 end
 
+# Orden alfabético de la mochila (por nombre, sin acentos, ñ tras n, números en orden natural: MT2 < MT10).
+$rem_itemsortkeys={}
+def pbRemItemSortKey(id)
+  k=$rem_itemsortkeys[id]
+  return k if k
+  name=(PBItems.getName(id) rescue "")
+  name=name.to_s.downcase
+  [["á","a"],["é","e"],["í","i"],["ó","o"],["ú","u"],["ü","u"],
+   ["Á","a"],["É","e"],["Í","i"],["Ó","o"],["Ú","u"],["Ü","u"],["Ñ","n~"],["ñ","n~"]].each{|a,b| name=name.gsub(a,b)}
+  name=name.gsub(/\d+/){|m| sprintf("%05d",m.to_i)}
+  $rem_itemsortkeys[id]=name
+  return name
+end
+
+def pbRemSortPocket(pocket)
+  return pocket if !pocket || pocket.length<2
+  pocket.compact!
+  sorted=true
+  for i in 1...pocket.length
+    if (pbRemItemSortKey(pocket[i-1][0])<=>pbRemItemSortKey(pocket[i][0]))>0
+      sorted=false; break
+    end
+  end
+  return pocket if sorted
+  pocket.sort!{|a,b|
+    c=(pbRemItemSortKey(a[0])<=>pbRemItemSortKey(b[0]))
+    c==0 ? (a[0]<=>b[0]) : c
+  }
+  return pocket
+end
+
 class PokemonBag
   alias rem_orig_pockets pockets
   def pockets
@@ -1690,6 +1721,9 @@ class PokemonBag
         end
       end
       ps[k].clear
+    end
+    for pk in 1...ps.length
+      pbRemSortPocket(ps[pk])   # siempre alfabético, también tras añadir, cambiar o cargar partida
     end
     return ps
   end
@@ -2843,20 +2877,25 @@ end
 # EVOLUCIÓN: la animación llamaba a sprite.pbHasType? sobre un SpriteMetafile (ese método es global
 # y privado) y provocaba NoMethodError al evolucionar. Se reescribe con un destello plateado y fondo noir.
 #===============================================================================
-class REM_NoirPlane < Plane      # fondo obsidiana con rejilla tenue (mosaico de 16 px)
+# Fondo obsidiana con rejilla tenue (cada 16 px). Es un Sprite del tamaño de la pantalla (no un Plane) para que
+# se escale exactamente igual que el resto de la interfaz en x1, x2 y Completa.
+class REM_NoirPlane < Sprite
   def initialize(viewport=nil)
     super(viewport)
-    bmp=Bitmap.new(16,16)
-    bmp.fill_rect(0,0,16,16,Color.new(14,16,21))
-    bmp.fill_rect(0,0,16,1,Color.new(19,22,29)); bmp.fill_rect(0,0,1,16,Color.new(19,22,29))
+    w=Graphics.width; h=Graphics.height
+    bmp=Bitmap.new(w,h)
+    bmp.fill_rect(0,0,w,h,Color.new(14,16,21))
+    line=Color.new(19,22,29)
+    x=0; while x<w; bmp.fill_rect(x,0,1,h,line); x+=16; end
+    y=0; while y<h; bmp.fill_rect(0,y,w,1,line); y+=16; end
     self.bitmap=bmp
+    self.x=0; self.y=0
     self.z=0
   end
   def dispose
     self.bitmap.dispose if self.bitmap && !self.bitmap.disposed?
     super
   end
-  def update; end
 end
 
 class PokemonEvolutionScene

@@ -159,7 +159,7 @@ def pbPocketNames; return ["",
 ]; end
 MAXPOCKETSIZE  = [0,-1,-1,-1,-1,-1,-1,-1,-1]
 BAGMAXPERSLOT  = 99
-POCKETAUTOSORT = [0,false,false,false,true,true,false,false,false]
+POCKETAUTOSORT = [0,true,true,true,true,true,true,true,true]   # REM: todos los bolsillos se ordenan solos (alfabético)
 BERRYPOCKET    = 5
 
 #===============================================================================
