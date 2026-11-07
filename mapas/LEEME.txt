@@ -6,4 +6,4 @@
 #   1) adaptar la historia al diseño si hace falta (pisos de una casa, ríos, puentes, desniveles, distancias);
 #   2) situar bandas de activación, NPC y objetos en su casilla (x,y) según la cuadrícula, y calcular las rutas de movimiento de personajes y jugador.
 #      El diseñador siempre puede ajustar a mano; cada evento conserva además su comentario de ubicación.
-# Si una ubicación no tiene capturas, Claude trabaja con el mapa del juego (tools/render_ascii.rb) y lo avisa.
+# Las capturas con cuadrícula se aportan SIEMPRE, de cada mapa y submapa; si faltan, Claude las pide antes de generar eventos.
