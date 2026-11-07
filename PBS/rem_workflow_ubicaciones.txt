@@ -11,7 +11,7 @@ Criterio rector en cada decisión: (1) la historia se desarrolla correctamente; 
 [FLUJO]
 # Estados de una ubicación (se anotan en [ESTADO_DE_UBICACIONES] de PBS/rem_registro_ubicaciones.txt):
 #   PENDIENTE → ANALIZADA → AJUSTADA → EVENTOS_GENERADOS → EN_REVISION → APROBADA (registrada)
-1. ANÁLISIS (solo lectura; estado ANALIZADA). El diseñador pide el análisis de una ubicación. Claude lee la biblia (ver [COMO_EMPEZAR]) y entrega el formato de [FORMATO_ANALISIS], que incluye el contexto para los entrenadores (SIN fijar su número), la propuesta de objetos y NPC y, en rutas numeradas, el relato de fogata ya asignado. No modifica nada.
+1. ANÁLISIS (solo lectura; estado ANALIZADA). El diseñador pide el análisis de una ubicación. Claude lee la biblia (ver [COMO_EMPEZAR]) y entrega el formato de [FORMATO_ANALISIS], que incluye el contexto para los entrenadores (SIN fijar su número), la propuesta de objetos y NPC y, en rutas numeradas, el relato de fogata ya asignado. No modifica nada. ANTES de analizar, si existe la carpeta mapas/<MapID>/ (capturas del diseño ya hecho del mapa y sus submapas), Claude las mira y ADAPTA la historia al diseño cuando haga falta: el análisis incluye el apartado «Diseño del mapa».
 2. CORRECCIONES. El diseñador responde en lenguaje natural («quita este objeto», «esta misión así») y, en esta fase, da el NÚMERO APROXIMADO de entrenadores de la ubicación (lo decide él; Claude no lo propone antes). No tiene que justificar nada. Puede haber varias rondas de análisis → correcciones.
 3. APLICACIÓN (estado AJUSTADA). Claude aplica los cambios con [REGLAS_DE_CAMBIO], propaga a todos los archivos de [ARCHIVOS_Y_QUE_GUARDAN] y decide por sí mismo lo lógico (huecos, reubicaciones, sustituciones) manteniendo coherencia y equilibrio: lo que sale de una ubicación se recoloca en otra donde tenga sentido (no «donde primero quepa»).
 4. INFORME. Resumen de qué cambió, en qué archivos y qué decisiones tomó Claude por su cuenta (para revisión); marca lo dudoso. Solo pregunta si algo bloquea de verdad.
@@ -26,7 +26,8 @@ Orden de lectura obligatorio para cualquier ubicación (no se pide contexto adic
   2. rem_locations.txt (ficha), rem_progression.txt (STEP(s) de la ubicación: topes de nivel, objetos clave, hitos), rem_story.txt ([CHAPTER_xx] de la ubicación), rem_characters.txt (personajes y cronología).
   3. rem_location_items.txt (objetos), rem_shops.txt (tiendas y Pía), rem_encounters.txt (salvajes y nivel), rem_variables_switches.txt (variables), rem_lore_fogatas.txt (si es ruta normal).
   4. rem_guia_eventos_ubicaciones.txt (convenciones de eventos y estado) y, si existen, tools/events/<loc>_events.rb y proposed_trainers_<loc>.txt.
-  5. Mapas del juego: MapID de la ficha y submapas (interiores desde los eventos de traslado y metadata.txt). Se inspeccionan con tools/render_ascii.rb y los volcados de tools/mocks.rb.
+  5. Capturas de diseño: mapas/<MapID>/ (una subcarpeta por mapa y submapa; imágenes del diseño ya hecho). Si existen, se leen ANTES de todo lo demás para saber qué estructuras, caminos, entradas y lugares hay; la historia se adapta al diseño si es necesario y los eventos se sitúan con ellas (sin fijar coordenadas).
+  6. Mapas del juego: MapID de la ficha y submapas (interiores desde los eventos de traslado y metadata.txt). Se inspeccionan con tools/render_ascii.rb y los volcados de tools/mocks.rb.
 MODO UBICACIÓN NUEVA: sin eventos previos. MODO UBICACIÓN YA DESARROLLADA (rebalanceo/ajuste): la ubicación ya tiene eventos (propios o de la historia). Claude debe VINCULARLOS: listar los eventos existentes de cada mapa y submapa (nombre, qué hacen, variables/objetos/combates que usan), cruzarlos con los PBS (cuáles implementan la historia, cuáles son ambientación, cuáles sobran o chocan) y señalar discrepancias en el análisis. Nunca se modifican ni borran eventos existentes sin orden expresa; solo se añaden los nuevos con el prefijo de la ubicación y se propone qué retirar o ajustar.
 
 [FORMATO_ANALISIS]
@@ -44,6 +45,7 @@ MODO UBICACIÓN NUEVA: sin eventos previos. MODO UBICACIÓN YA DESARROLLADA (reb
 11. Fogata y relato (solo las 24 rutas numeradas, ver [REGLAS_DE_FOGATA_Y_RELATOS]): el relato y el objeto de esa ruta YA están asignados en rem_lore_fogatas.txt; se citan y se comprueba su encaje con el resto del reparto de la ruta.
 12. Impacto en el equilibrio global: cómo cambia el reparto acumulado de objetos, entrenadores y Pokémon si se aprueba tal cual.
 13. Incoherencias detectadas (nombres antiguos, clases eliminadas, objetos duplicados, huecos, conflictos de variables) y decisiones pendientes.
+14. Diseño del mapa (solo si hay capturas en mapas/<MapID>/): estructuras y lugares que se ven (casas, entradas, caminos, plaza, agua, salidas), cómo encaja cada escena, bloqueo y NPC con ellos, dónde convienen bandas de activación y qué parte de la historia habría que adaptar al diseño. Sin coordenadas: se describe por lugares.
 Las propuestas de objetos y NPC se presentan como borrador para que el diseñador las ajuste; el resto del análisis no propone cambios, solo señala lo que no cuadra.
 
 [ARCHIVOS_Y_QUE_GUARDAN]
@@ -56,7 +58,8 @@ rem_location_items.txt     Objetos por ubicación (ItemN = ID,cantidad,tipo,dón
 rem_shops.txt              Poké Marts por medallas, tiendas únicas y [PIA_MISSIONS] (premios por capturas).
 rem_variables_switches.txt Mapa de Variables e Interruptores (rangos y nombres). Reservados: Variables 1-14 y 50; Interruptores 1-58, 72, 100-101, 135, 287, 368, 400.
 rem_encounters.txt         Tablas salvajes por ubicación (Vol. 10).
-rem_lore_fogatas.txt       Las 24 historias de fogata (una por ruta numerada), ya escritas y repartidas: NPC, título, texto de narrador, objeto de recompensa e interruptor.
+mapas/<MapID>/             Capturas del diseño de cada mapa y submapa que aporta el diseñador (solo lectura): sirven para adaptar la historia al diseño y situar mejor los eventos.
+rem_lore_fogatas.txt       Las 24 historias de fogata (una por ruta numerada), ya escritas y repartidas: NPC, título, texto del relato (lo cuenta el NPC), objeto de recompensa e interruptor.
 rem_changelog.txt          Notas de diseño de especies/habilidades/movimientos/objetos (solo si cambia el uso de un objeto).
 trainers.txt, trainertypes.txt, metadata.txt, encounters.txt   PBS del juego (los lee el motor): NO se tocan salvo orden expresa. Las propuestas de entrenadores van en proposed_trainers_<loc>.txt.
 tools/rebalance/phase1/event_arch_data.py y event_arch.json   Arquitectura de eventos que dio origen a las variables: mantener alineados con rem_variables_switches si cambia un ID o nombre.
@@ -116,13 +119,13 @@ Equilibrio: el análisis compara los objetos de la ubicación con la media de su
 
 [REGLAS_DE_EVENTOS]
 Diálogos:
-  - Narrador: sin caja de diálogo (fondo transparente). Función de la librería: l.narrate("texto"). Sirve para descripciones, escenas y la voz del relato de fogata.
+  - SIN NARRADOR (decisión del diseñador, vale para toda ubicación presente y futura): en el juego NO existe la voz del narrador. No se usan l.narrate, ni $game_message.background=2, ni textos «sin nombre» que narren la escena (provocan errores). Lo que en la biblia (rem_story) es narración se reparte así: lo dice un personaje con l.speak, o se resume en un mensaje breve y neutro con l.say (cartel, aviso del sistema, descripción de un objeto), o se resuelve con movimiento y [MOVIMIENTO].
   - Personajes: «Nombre:» en negrita seguido del texto → l.speak("Nombre","texto") genera <b>Nombre:</b> texto. Los NPC sin nombre usan su oficio («Pescador:», «Anciana:»).
   - Género del jugador: es relevante. Usar \PN para el nombre y, cuando cambie el trato o la escena, l.gender(lambda{...}, lambda{...}) (chico / chica); si la frase se puede escribir en neutro, mejor. Todos los diálogos que dependan del género se escriben en ambas versiones.
   - Calidad: diálogos correctos y naturales, con sentido, voz propia por personaje y variedad entre NPC; máximo ~200 caracteres por mensaje.
 Variedad y ambientación: cada ubicación tiene gente y pequeños eventos «tontos» que premian la exploración (carteles, objetos inspeccionables, Pokémon que reaccionan, curiosidades, atajos con consumibles) coherentes con la descripción de la ubicación y con la historia. Las personas con las que se habla no tienen por qué dar nada.
-Escenas por zona: lo que ocurre al pisar o cruzar un punto (llegadas, presentaciones, avisos, entregas) se implementa con BANDAS de activación (eventos «Banda ...», contacto con el jugador, ver rem_guia_eventos_ubicaciones.txt), no con NPC que haya que hablar; el NPC con sprite queda como plan B con la misma escena. Los diálogos nuevos usan SIEMPRE l.narrate (narrador) y l.speak (personaje); el texto de los capítulos de rem_story manda.
-  Orden y colocación: todos los eventos de la ubicación, de todos sus mapas y submapas, se añaden EN FILA desde la esquina (0,0) del mapa en orden de lectura; el diseñador los coloca. Cada evento lleva un comentario «[UBICACIÓN] ...» con dónde debe ir.
+Escenas por zona (decisión narrativa): siempre que se pueda, lo que ocurre al pisar o cruzar un punto o al ENTRAR en un lugar (llegadas, presentaciones, avisos, entregas, escenas, bloqueos) se implementa con BANDAS de activación («baldosas»: eventos «Banda ...» sin gráfico y de contacto con el jugador, ver rem_guia_eventos_ubicaciones.txt) o con eventos de entrada al mapa/habitación, y NO con NPC al que haya que hablar: así se evitan errores (escenas que no se disparan, orden roto, saltarse la escena). Solo hablan los NPC de ambientación, tiendas, misiones o información opcional. Un personaje con sprite puede quedar como plan B con la misma escena. Los diálogos nuevos usan l.speak (personaje) y l.say (texto neutro, ver SIN NARRADOR); el texto de los capítulos de rem_story manda.
+  Orden y colocación: los eventos de la ubicación, de todos sus mapas y submapas, se añaden EN FILA desde la esquina (0,0) del mapa en orden de lectura; el diseñador los coloca (y se conservan ID y posición si ya los colocó). Cada evento lleva un comentario «[UBICACIÓN] ...» con dónde debe ir, descrito RESPECTO A LAS ESTRUCTURAS Y LUGARES del diseño del mapa (capturas en mapas/<MapID>/: «ante la puerta del laboratorio», «en el camino junto al olmo»), nunca con coordenadas. Si hay capturas, la propuesta de dónde situar bandas, NPC y objetos se razona sobre ellas.
 Movimientos: si un evento (o el jugador) debe moverse en la escena, se describe en un comentario «[MOVIMIENTO] ...» dentro del evento; los empujones funcionales (p. ej. de un bloqueo) sí usan pbMoveRoute en script.
 Funcionalidad: variables y interruptores reales; nunca se salta el tope de nivel (V50/V111); los hitos usan pbAdvanceMilestone; los combates, los objetos y las misiones siguen [REGLAS_DE_ENTRENADORES] y [REGLAS_DE_OBJETOS]; lo que dependa de algo inexistente se protege con rescue/condición y se anota como pendiente.
 Detalle técnico completo (funciones disponibles, Ruby 1.8, variables): PBS/rem_guia_eventos_ubicaciones.txt.
@@ -131,12 +134,12 @@ Detalle técnico completo (funciones disponibles, Ruby 1.8, variables): PBS/rem_
 Alcance: las 24 rutas numeradas, RUTA_01 a RUTA_24 (11 normales + 5 de montaña + 4 marinas + 4 nevadas; NO las 8 rutas especiales ni los lugares especiales). Una fogata por ruta y UNA sola historia por fogata: los 24 relatos ya están escritos y asignados en rem_lore_fogatas.txt (NPC, título, texto, objeto).
 Evento de fogata (placeholders: rem_campfire_off y rem_campfire_on):
   - De DÍA: solo la fogata apagada; no hay nadie.
-  - De NOCHE (PBDayNight.isNight?): la fogata está encendida y un NPC junto a ella pregunta «¿Quieres escuchar mi historia?». Si el jugador acepta, el relato se cuenta con l.narrate (narrador, sin caja).
+  - De NOCHE (PBDayNight.isNight?): la fogata está encendida y un NPC junto a ella pregunta «¿Quieres escuchar mi historia?». Si el jugador acepta, el NPC cuenta el relato con l.speak, en varios mensajes seguidos (sin narrador).
   - El relato puede escucharse TODAS las veces que se quiera y la fogata sale TODAS las noches. El objeto de recompensa se entrega SOLO la primera vez: interruptor Fogata_Regalo_<LOC> (uno por ruta, 24 en total, bloque nuevo de event_arch_data.py).
   - La ruta marina coloca la fogata en un muelle o islote; la nevada, en un refugio o claro.
-Relatos: 24 anécdotas de lore de la región SIN relación con la trama principal pero sí con la formación de Oniria; ya escritas (6 mensajes de narrador cada una). Cuando se procesa la ruta no se redacta nada: se crea el evento del NPC con su saludo y se enlaza el relato; se hace cuadrar con las notas de la ruta y se avisa si choca con algo.
+Relatos: 24 anécdotas de lore de la región SIN relación con la trama principal pero sí con la formación de Oniria; ya escritas (6 mensajes cada una). Cuando se procesa la ruta no se redacta nada: se crea el evento del NPC con su saludo y se enlaza el relato; se hace cuadrar con las notas de la ruta y se avisa si choca con algo.
 Recompensa: ya asignada en rem_lore_fogatas.txt (Reward = ITEM,cantidad) y ya añadida como fila nueva de tipo N («Fogata nocturna · NPC») en rem_location_items de cada ruta, sin tocar las filas existentes (MT y objetos de combate ya repartidos). Su valor CRECE con el acto: de noche los salvajes son más fuertes y al final del juego llegar a la fogata es duro (Acto I pociones y balls; II-III curas y revivir; IV-V curas totales, Revive Máx. y Elixir Máx.). Solo consumibles: nada de objetos clave, MT ni objetos importantes nuevos. El diseñador ajustará el reparto al llegar a cada ruta. Pendiente al procesar la ruta: dar de alta el interruptor Fogata_Regalo_RutaNN (event_arch_data.py).
-Implementación: sin script nuevo ni función especial; se hace con eventos normales (fogata apagada/encendida y NPC por página, con el día/noche resuelto en una condición de script con pbRemIsNight?). Los relatos se cuentan con l.narrate.
+Implementación: sin script nuevo ni función especial; se hace con eventos normales (fogata apagada/encendida y NPC por página, con el día/noche resuelto en una condición de script con pbRemIsNight?). Los relatos los cuenta el NPC con l.speak (sin narrador).
 
 [REGISTRO_Y_VISTO_BUENO]
 Archivo: PBS/rem_registro_ubicaciones.txt. Se rellena SOLO al recibir el visto bueno explícito del diseñador para esa ubicación.
@@ -154,7 +157,7 @@ Auditoría global: con las ubicaciones registradas Claude puede revisar de un ti
 - Los archivos conservan formato: UTF-8 con BOM, CRLF, claves «Clave = Valor».
 - Eventos: tools/events/check_events.rb PREFIJO_ <mapas> da 0 errores; los eventos originales y los tiles de cada mapa son idénticos a la copia .bak_pre_<tag>; la ubicación figura en [ESTADO_DE_UBICACIONES] del registro y de la guía de eventos.
 - Los eventos usan solo variables/interruptores existentes, y los estados V121-V184/V201-V240 que usan están descritos en la cabecera del script de la ubicación.
-- Diálogos: narrador sin caja, «Nombre:» en negrita, versión chico/chica donde cambie el trato.
+- Diálogos: sin narrador, «Nombre:» en negrita (l.speak), versión chico/chica donde cambie el trato; escenas por zona con bandas de activación siempre que se pueda.
 - Si algo no se puede arreglar sin decisión del diseñador, queda anotado en el informe.
 
 [NOTAS_IMPORTANTES]
@@ -166,5 +169,4 @@ Auditoría global: con las ubicaciones registradas Claude puede revisar de un ti
 
 [REGISTRO_DE_DECISIONES]
 # Se anota aquí, por fecha, cada ajuste de diseño aplicado (formato: AAAA-MM-DD | ubicación | cambio | archivos tocados).
-2026-11-06 | PUEBLO_ALBOR | Tijeras fuera de Albor (las da Ismael en Ciudad Calaita tras la Medalla 2); Pokévial: 1 carga al salir de casa, 2 con 3 medallas y 3 con 6 medallas (Amparo); sidequest «El Pokémon del pozo» (premio: Antiparalizador); sin tienda; el Padre es el punto de curación; Ladera Porfiral pasa a «El cinturón del chatarrero» (Cinta Experta) | rem_location_items, rem_locations, rem_progression, rem_shops, rem_characters, rem_story, rem_changelog, rem_variables_switches (695), tools/rebalance/phase1/event_arch_data.py, event_arch.json, tools/scripts_dump/rem_events.rb
-2026-11-06 | PUEBLO_ALBOR | Eventos creados en Data/Map002-005 (prefijo ALBOR_; 43 eventos): despertar, Amparo (3 páginas), Padre, despedida con Pokévial, escena del laboratorio, 18 iniciales, Pía (mapa, caramelo, misiones, hitos), Lucián/Guiomar, duelo tutorial, bloqueos, pozo y anciano, carteles y NPC de casas | tools/events/albor_events.rb, rem_event_lib.rb, check_events.rb, proposed_trainers_albor.txt
+2026-11-07 | GLOBAL | Sin narrador en el juego (ni l.narrate ni textos de narración); capturas de mapa en mapas/<MapID>/ para adaptar la historia y situar eventos por lugares; escenas por zona con bandas de activación siempre que se pueda | rem_workflow_ubicaciones, rem_guia_eventos_ubicaciones
