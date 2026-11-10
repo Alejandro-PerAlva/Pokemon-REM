@@ -397,6 +397,296 @@ class PokeBattle_Scene
   end
 end
 
+# Hint "Tecla D: info" en el menú de comandos principal
+class CommandMenuDisplay
+  alias rem_tactical_init initialize
+  def initialize(viewport=nil)
+    rem_tactical_init(viewport)
+    @remHint = BitmapSprite.new(240, 24, viewport)
+    @remHint.x = 4
+    @remHint.y = Graphics.height - 24
+    @remHint.z = (@window.z rescue 100) + 2
+    pbSetNarrowFont(@remHint.bitmap)
+    @remHint.bitmap.font.size = 20
+    pbDrawTextPositions(@remHint.bitmap, [[_INTL("Tecla D: info"), 220, 2, 2, REM_UI::SILVER, REM_UI::INK]])
+  end
+
+  alias rem_tactical_visible= visible=
+  def visible=(value)
+    self.rem_tactical_visible = value
+    @remHint.visible = value if @remHint && !@remHint.disposed?
+  end
+
+  alias rem_tactical_dispose dispose
+  def dispose
+    @remHint.dispose if @remHint && !@remHint.disposed?
+    rem_tactical_dispose
+  end
+end
+
+#===============================================================================
+# INFORMACIÓN TÁCTICA DE COMBATE NOIR (Tecla D en menú de comandos)
+# Tarjetas flotantes simultáneas para Jugador y Rival con Stats, Barreras y Clima
+#===============================================================================
+module REM_TacticalUI
+  BASE   = Color.new(255, 255, 255)
+  DIM    = REM_UI::SILVER
+  SHADOW = REM_UI::INK
+  
+  COLOR_NEUTRAL = Color.new(140, 145, 155)
+  COLOR_BOOST   = Color.new(110, 195, 255)
+  COLOR_DROP    = Color.new(255, 110, 110)
+
+  STAT_NAMES = ["ATK", "DEF", "SPA", "SPD", "VEL", "PRC", "EVA"]
+  STAT_IDS = [
+    PBStats::ATTACK, PBStats::DEFENSE, PBStats::SPATK,
+    PBStats::SPDEF, PBStats::SPEED, PBStats::ACCURACY, PBStats::EVASION
+  ]
+
+  def self.drawStatsRow(bmp, battler, y_names, y_vals)
+    x_centers = [24, 55, 86, 117, 148, 179, 210]
+    pbSetNarrowFont(bmp)
+    bmp.font.size = 15
+    for i in 0...7
+      pbDrawTextPositions(bmp, [[STAT_NAMES[i], x_centers[i], y_names, 2, DIM, SHADOW]])
+    end
+    bmp.font.size = 18
+    for i in 0...7
+      stg = (battler.stages && battler.stages[STAT_IDS[i]]) ? battler.stages[STAT_IDS[i]] : 0
+      if stg == 0
+        txt = "-"
+        col = COLOR_NEUTRAL
+      elsif stg > 0
+        txt = "+#{stg}"
+        col = COLOR_BOOST
+      else
+        txt = "#{stg}"
+        col = COLOR_DROP
+      end
+      pbDrawTextPositions(bmp, [[txt, x_centers[i], y_vals, 2, col, SHADOW]])
+    end
+  end
+
+  def self.getSideEffectsList(battle, side_idx)
+    res = []
+    return res if !battle.sides || !battle.sides[side_idx]
+    side = battle.sides[side_idx].effects
+    return res if !side
+
+    res.push(_INTL("Reflejo ({1}T)", side[PBEffects::Reflect])) if side[PBEffects::Reflect] && side[PBEffects::Reflect] > 0
+    res.push(_INTL("Pant.Luz ({1}T)", side[PBEffects::LightScreen])) if side[PBEffects::LightScreen] && side[PBEffects::LightScreen] > 0
+    res.push(_INTL("Velo Aurora ({1}T)", side[PBEffects::AuroraVeil])) if defined?(PBEffects::AuroraVeil) && side[PBEffects::AuroraVeil] && side[PBEffects::AuroraVeil] > 0
+    res.push(_INTL("Viento Afín ({1}T)", side[PBEffects::Tailwind])) if side[PBEffects::Tailwind] && side[PBEffects::Tailwind] > 0
+    res.push(_INTL("Velo Sagrado ({1}T)", side[PBEffects::Safeguard])) if side[PBEffects::Safeguard] && side[PBEffects::Safeguard] > 0
+    res.push(_INTL("Neblina ({1}T)", side[PBEffects::Mist])) if side[PBEffects::Mist] && side[PBEffects::Mist] > 0
+    res.push(_INTL("Arcoíris ({1}T)", side[PBEffects::Rainbow])) if side[PBEffects::Rainbow] && side[PBEffects::Rainbow] > 0
+    res.push(_INTL("Mar Llamas ({1}T)", side[PBEffects::SeaOfFire])) if side[PBEffects::SeaOfFire] && side[PBEffects::SeaOfFire] > 0
+    res.push(_INTL("Pantano ({1}T)", side[PBEffects::Swamp])) if side[PBEffects::Swamp] && side[PBEffects::Swamp] > 0
+
+    res.push(_INTL("Trampa Rocas")) if side[PBEffects::StealthRock]
+    res.push(_INTL("Púas (x{1})", side[PBEffects::Spikes])) if side[PBEffects::Spikes] && side[PBEffects::Spikes] > 0
+    res.push(_INTL("Púas Tóx. (x{1})", side[PBEffects::ToxicSpikes])) if side[PBEffects::ToxicSpikes] && side[PBEffects::ToxicSpikes] > 0
+    res.push(_INTL("Red Viscosa")) if side[PBEffects::StickyWeb]
+
+    return res
+  end
+
+  def self.getGlobalEnvironmentText(battle)
+    parts = []
+    w_dur = battle.weatherduration > 0 ? " (#{battle.weatherduration}T)" : ""
+    case battle.weather
+    when PBWeather::SUNNYDAY    then parts.push(_INTL("Sol{1}", w_dur))
+    when PBWeather::RAINDANCE   then parts.push(_INTL("Lluvia{1}", w_dur))
+    when PBWeather::SANDSTORM   then parts.push(_INTL("T.Arena{1}", w_dur))
+    when PBWeather::HAIL        then parts.push(_INTL("Granizo{1}", w_dur))
+    when PBWeather::HEAVYRAIN   then parts.push(_INTL("Diluvio{1}", w_dur))
+    when PBWeather::HARSHSUN    then parts.push(_INTL("Sol Abrasador{1}", w_dur))
+    when PBWeather::STRONGWINDS then parts.push(_INTL("Turbulencias{1}", w_dur))
+    when (defined?(PBWeather::SHADOWSKY) && PBWeather::SHADOWSKY) then parts.push(_INTL("Cielo Oscuro{1}", w_dur))
+    end
+
+    if battle.field && battle.field.effects
+      f = battle.field.effects
+      parts.push(_INTL("C.Eléctrico ({1}T)", f[PBEffects::ElectricTerrain])) if f[PBEffects::ElectricTerrain] && f[PBEffects::ElectricTerrain] > 0
+      parts.push(_INTL("C.Hierba ({1}T)", f[PBEffects::GrassyTerrain])) if f[PBEffects::GrassyTerrain] && f[PBEffects::GrassyTerrain] > 0
+      parts.push(_INTL("C.Niebla ({1}T)", f[PBEffects::MistyTerrain])) if f[PBEffects::MistyTerrain] && f[PBEffects::MistyTerrain] > 0
+      parts.push(_INTL("C.Psíquico ({1}T)", f[PBEffects::PsychicTerrain])) if defined?(PBEffects::PsychicTerrain) && f[PBEffects::PsychicTerrain] && f[PBEffects::PsychicTerrain] > 0
+      
+      parts.push(_INTL("Espacio Raro ({1}T)", f[PBEffects::TrickRoom])) if f[PBEffects::TrickRoom] && f[PBEffects::TrickRoom] > 0
+      parts.push(_INTL("Gravedad ({1}T)", f[PBEffects::Gravity])) if f[PBEffects::Gravity] && f[PBEffects::Gravity] > 0
+      parts.push(_INTL("Zona Mágica ({1}T)", f[PBEffects::MagicRoom])) if f[PBEffects::MagicRoom] && f[PBEffects::MagicRoom] > 0
+      parts.push(_INTL("Zona Extraña ({1}T)", f[PBEffects::WonderRoom])) if f[PBEffects::WonderRoom] && f[PBEffects::WonderRoom] > 0
+    end
+
+    if parts.empty?
+      return _INTL("Clima despejado / Sin terreno")
+    else
+      return parts.join(" | ")
+    end
+  end
+
+  def self.drawFoeCard(bmp, bg, battler, battle, has_multiple)
+    bmp.clear
+    bmp.blt(0, 0, bg, Rect.new(0, 0, 240, 124))
+    return if !battler || !battler.pokemon
+
+    pbSetNarrowFont(bmp)
+    bmp.font.size = 20
+    name_str = battler.name
+    name_str += " (◀▶)" if has_multiple
+    textpos = [[name_str, 12, 6, 0, BASE, SHADOW]]
+    case battler.displayGender
+    when 0 then textpos.push([_INTL("♂"), 12 + bmp.text_size(name_str).width + 3, 6, 0, Color.new(110, 170, 255), SHADOW])
+    when 1 then textpos.push([_INTL("♀"), 12 + bmp.text_size(name_str).width + 3, 6, 0, Color.new(255, 120, 160), SHADOW])
+    end
+    textpos.push([_INTL("Nv{1}", battler.level), 228, 6, 1, BASE, SHADOW])
+    pbDrawTextPositions(bmp, textpos)
+
+    drawStatsRow(bmp, battler, 32, 48)
+
+    pbSetNarrowFont(bmp)
+    bmp.font.size = 14
+    pbDrawTextPositions(bmp, [[_INTL("Efectos & Trampas Rival:"), 12, 74, 0, DIM, SHADOW]])
+    
+    effects = getSideEffectsList(battle, 1)
+    bmp.font.size = 15
+    if effects.empty?
+      pbDrawTextPositions(bmp, [[_INTL("Sin barreras ni trampas"), 12, 94, 0, COLOR_NEUTRAL, SHADOW]])
+    else
+      line1 = effects[0..2].join(", ")
+      pbDrawTextPositions(bmp, [[line1, 12, 92, 0, BASE, SHADOW]])
+      if effects.length > 3
+        line2 = effects[3..5].join(", ")
+        pbDrawTextPositions(bmp, [[line2, 12, 106, 0, BASE, SHADOW]])
+      end
+    end
+  end
+
+  def self.drawPlayerCard(bmp, bg, battler, battle, has_multiple)
+    bmp.clear
+    bmp.blt(0, 0, bg, Rect.new(0, 0, 240, 164))
+    return if !battler || !battler.pokemon
+
+    pbSetNarrowFont(bmp)
+    bmp.font.size = 20
+    name_str = battler.name
+    name_str += " (◀▶)" if has_multiple
+    textpos = [[name_str, 12, 6, 0, BASE, SHADOW]]
+    case battler.displayGender
+    when 0 then textpos.push([_INTL("♂"), 12 + bmp.text_size(name_str).width + 3, 6, 0, Color.new(110, 170, 255), SHADOW])
+    when 1 then textpos.push([_INTL("♀"), 12 + bmp.text_size(name_str).width + 3, 6, 0, Color.new(255, 120, 160), SHADOW])
+    end
+    textpos.push([_INTL("Nv{1} ({2}/{3})", battler.level, battler.hp, battler.totalhp), 228, 6, 1, BASE, SHADOW])
+    pbDrawTextPositions(bmp, textpos)
+
+    drawStatsRow(bmp, battler, 32, 48)
+
+    pbSetNarrowFont(bmp)
+    bmp.font.size = 14
+    pbDrawTextPositions(bmp, [[_INTL("Barreras & Trampas Aliadas:"), 12, 74, 0, DIM, SHADOW]])
+    
+    effects = getSideEffectsList(battle, 0)
+    bmp.font.size = 15
+    if effects.empty?
+      pbDrawTextPositions(bmp, [[_INTL("Sin barreras ni trampas"), 12, 92, 0, COLOR_NEUTRAL, SHADOW]])
+    else
+      line1 = effects[0..2].join(", ")
+      pbDrawTextPositions(bmp, [[line1, 12, 92, 0, BASE, SHADOW]])
+      if effects.length > 3
+        line2 = effects[3..5].join(", ")
+        pbDrawTextPositions(bmp, [[line2, 12, 104, 0, BASE, SHADOW]])
+      end
+    end
+
+    bmp.font.size = 14
+    pbDrawTextPositions(bmp, [[_INTL("Entorno / Clima & Campo:"), 12, 122, 0, DIM, SHADOW]])
+    bmp.font.size = 15
+    global_text = getGlobalEnvironmentText(battle)
+    pbDrawTextPositions(bmp, [[global_text, 12, 140, 0, COLOR_BOOST, SHADOW]])
+  end
+end
+
+class PokeBattle_Scene
+  def pbRemTacticalInfo(player_index = 0)
+    player_battlers = []
+    foe_battlers = []
+    
+    [0, 2].each do |i|
+      b = @battle.battlers[i]
+      player_battlers.push(b) if b && b.pokemon
+    end
+    [1, 3].each do |i|
+      b = @battle.battlers[i]
+      foe_battlers.push(b) if b && b.pokemon
+    end
+    
+    return if player_battlers.empty? || foe_battlers.empty?
+    
+    p_idx = 0
+    f_idx = 0
+    
+    vp = Viewport.new(0, 0, Graphics.width, Graphics.height)
+    vp.z = 99999
+    
+    sp_player = BitmapSprite.new(240, 164, vp)
+    sp_player.x = 8
+    sp_player.y = 114
+    
+    sp_foe = BitmapSprite.new(240, 124, vp)
+    sp_foe.x = 264
+    sp_foe.y = 14
+    
+    bg_player = pbBitmap("Graphics/Pictures/battleTacticalPlayer")
+    bg_foe = pbBitmap("Graphics/Pictures/battleTacticalFoe")
+    
+    refresh_cards = proc do
+      REM_TacticalUI.drawPlayerCard(sp_player.bitmap, bg_player, player_battlers[p_idx], @battle, player_battlers.length > 1)
+      REM_TacticalUI.drawFoeCard(sp_foe.bitmap, bg_foe, foe_battlers[f_idx], @battle, foe_battlers.length > 1)
+    end
+    
+    refresh_cards.call
+    
+    loop do
+      Graphics.update
+      Input.update
+      pbUpdateSceneMap if defined?(pbUpdateSceneMap)
+      
+      if Input.trigger?(Input::Z) || Input.trigger?(Input::B) || Input.trigger?(Input::C)
+        pbPlayCancelSE()
+        break
+      end
+      
+      if Input.trigger?(Input::LEFT) || Input.trigger?(Input::RIGHT)
+        if player_battlers.length > 1
+          pbPlayCursorSE()
+          p_idx = (p_idx + 1) % player_battlers.length
+          refresh_cards.call
+        elsif foe_battlers.length > 1
+          pbPlayCursorSE()
+          f_idx = (f_idx + 1) % foe_battlers.length
+          refresh_cards.call
+        end
+      elsif Input.trigger?(Input::UP) || Input.trigger?(Input::DOWN)
+        if foe_battlers.length > 1
+          pbPlayCursorSE()
+          f_idx = (f_idx + 1) % foe_battlers.length
+          refresh_cards.call
+        elsif player_battlers.length > 1
+          pbPlayCursorSE()
+          p_idx = (p_idx + 1) % player_battlers.length
+          refresh_cards.call
+        end
+      end
+    end
+    
+    sp_player.bitmap.dispose
+    sp_player.dispose
+    sp_foe.bitmap.dispose
+    sp_foe.dispose
+    vp.dispose
+  end
+end
+
 #===============================================================================
 # CALIBRACIÓN DE SPRITES DE COMBATE: plataformas y fondos conservan sus coordenadas nativas; cada sprite se apoya por su arte real (se descuenta el margen transparente inferior
 # que mide BitmapWrapperEX), de modo que nada queda hundido ni flotando.
