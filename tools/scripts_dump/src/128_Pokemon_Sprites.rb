@@ -409,8 +409,33 @@ end
 
 def pbPositionPokemonSprite(sprite,left,top)
   if sprite.bitmap && !sprite.bitmap.disposed?
-    sprite.x=left+(128-sprite.bitmap.width)/2
-    sprite.y=top+(128-sprite.bitmap.height)/2
+    w=sprite.bitmap.width
+    h=sprite.bitmap.height
+    if left==49 && top==140 # Pantalla de Datos / Resumen (Summary)
+      cx=114; cy=204; maxw=172; maxh=150
+      z=[1.0, maxw.to_f/w, maxh.to_f/h].min
+      sprite.zoom_x=z; sprite.zoom_y=z
+      sprite.x=(cx-(w*z)/2.0).round
+      sprite.y=(cy-(h*z)/2.0).round
+    elsif left==52 && top==100 # Pokédex Lista (116-64, 164-64)
+      cx=115; cy=128; maxw=174; maxh=196
+      z=[1.0, maxw.to_f/w, maxh.to_f/h].min
+      sprite.zoom_x=z; sprite.zoom_y=z
+      sprite.x=(cx-(w*z)/2.0).round
+      sprite.y=(cy-(h*z)/2.0).round
+    elsif left==40 && top==70 # Pokédex Ficha Detallada
+      cx=115; cy=206; maxw=186; maxh=182
+      z=[1.0, maxw.to_f/w, maxh.to_f/h].min
+      sprite.zoom_x=z; sprite.zoom_y=z
+      sprite.x=(cx-(w*z)/2.0).round
+      sprite.y=(cy-(h*z)/2.0).round
+    else
+      maxdim=128
+      z=[1.0, maxdim.to_f/w, maxdim.to_f/h].min
+      sprite.zoom_x=z; sprite.zoom_y=z
+      sprite.x=left+((maxdim-(w*z))/2.0).round
+      sprite.y=top+((maxdim-(h*z))/2.0).round
+    end
   else
     sprite.x=left
     sprite.y=top

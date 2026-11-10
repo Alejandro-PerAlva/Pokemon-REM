@@ -51,7 +51,7 @@ Ford
 1
 MACHOP,19
 #-------------------
-FISHERMAN
+FISHERMAN_M
 Andrew
 2
 MAGIKARP,14

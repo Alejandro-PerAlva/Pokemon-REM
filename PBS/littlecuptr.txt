@@ -3,14 +3,14 @@ EndSpeechLose="Man, I lost!"
 Name=MATAS
 PokemonNos=36,38,42,43,56,76,78,91,94,105,108,115
 BeginSpeech=Here I come!
-Type=BUGCATCHER
+Type=BUGCATCHER_M
 EndSpeechWin="Yes, I won!"
 [001]
 EndSpeechLose="Man, I lost!"
 Name=KUIO
 PokemonNos=14,26,33,34,35,37,41,47,52,71,74,101,107,109,114
 BeginSpeech=Here I come!
-Type=BUGCATCHER
+Type=BUGCATCHER_M
 EndSpeechWin="Yes, I won!"
 [002]
 EndSpeechLose="Man, I lost!"
@@ -122,21 +122,21 @@ EndSpeechLose="Man, I lost!"
 Name=KLILA
 PokemonNos=2,4,8,11,24,28,38,43,63,67,80,89,95,96,105,109,111,122
 BeginSpeech=Here I come!
-Type=TUBER_F
+Type=CYCLIST_F
 EndSpeechWin="Yes, I won!"
 [018]
 EndSpeechLose="Man, I lost!"
 Name=GRUN
 PokemonNos=2,15,29,50,52,58,65,77,83,97,104,110
 BeginSpeech=Here I come!
-Type=TUBER_M
+Type=CYCLIST_M
 EndSpeechWin="Yes, I won!"
 [019]
 EndSpeechLose="Man, I lost!"
 Name=ZOKIZ
 PokemonNos=37,50,52,64,77,92,94,106,110,113,121
 BeginSpeech=Here I come!
-Type=TUBER_M
+Type=CYCLIST_M
 EndSpeechWin="Yes, I won!"
 [020]
 EndSpeechLose="Man, I lost!"
@@ -185,35 +185,35 @@ EndSpeechLose="Man, I lost!"
 Name=SIJUB
 PokemonNos=0,1,18,26,35,41,49,57,77,78,83,85,87,110,119,121
 BeginSpeech=Here I come!
-Type=FISHERMAN
+Type=FISHERMAN_M
 EndSpeechWin="Yes, I won!"
 [027]
 EndSpeechLose="Man, I lost!"
 Name=GAFITO
 PokemonNos=2,13,23,31,44,60,61,62,64,66,93,98,101,102,108,116
 BeginSpeech=Here I come!
-Type=FISHERMAN
+Type=FISHERMAN_M
 EndSpeechWin="Yes, I won!"
 [028]
 EndSpeechLose="Man, I lost!"
 Name=KUITO
 PokemonNos=3,7,13,16,26,30,61,69,73,114
 BeginSpeech=Here I come!
-Type=FISHERMAN
+Type=FISHERMAN_M
 EndSpeechWin="Yes, I won!"
 [029]
 EndSpeechLose="Man, I lost!"
 Name=DEIUS
 PokemonNos=14,31,37,52,53,55,63,72,79,90,108,119
 BeginSpeech=Here I come!
-Type=FISHERMAN
+Type=FISHERMAN_M
 EndSpeechWin="Yes, I won!"
 [030]
 EndSpeechLose="Man, I lost!"
 Name=ZOMS
 PokemonNos=1,15,16,29,35,44,52,56,65,95,98,99,104,109
 BeginSpeech=Here I come!
-Type=FISHERMAN
+Type=FISHERMAN_M
 EndSpeechWin="Yes, I won!"
 [031]
 EndSpeechLose="Man, I lost!"
@@ -360,77 +360,77 @@ EndSpeechLose="Man, I lost!"
 Name=ASOSTA
 PokemonNos=7,28,29,50,60,61,68,83,87,107,109
 BeginSpeech=Here I come!
-Type=PAINTER
+Type=JUGGLER
 EndSpeechWin="Yes, I won!"
 [052]
 EndSpeechLose="Man, I lost!"
 Name=IPTECHA
 PokemonNos=9,30,40,46,52,56,82,91,98,103,116,119
 BeginSpeech=Here I come!
-Type=PAINTER
+Type=JUGGLER
 EndSpeechWin="Yes, I won!"
 [053]
 EndSpeechLose="Man, I lost!"
 Name=GLEEGITO
 PokemonNos=1,11,18,39,63,78,83,110,112,115,119
 BeginSpeech=Here I come!
-Type=POKEMONRANGER
+Type=POKEMONRANGER_M
 EndSpeechWin="Yes, I won!"
 [054]
 EndSpeechLose="Man, I lost!"
 Name=DATU
 PokemonNos=18,26,28,49,81,85,89,91,97,101,118
 BeginSpeech=Here I come!
-Type=POKEMONRANGER
+Type=POKEMONRANGER_M
 EndSpeechWin="Yes, I won!"
 [055]
 EndSpeechLose="Man, I lost!"
 Name=ZOB
 PokemonNos=24,27,34,40,42,69,78,87,91,99,100,116,117,118
 BeginSpeech=Here I come!
-Type=POKEMONRANGER
+Type=POKEMONRANGER_M
 EndSpeechWin="Yes, I won!"
 [056]
 EndSpeechLose="Man, I lost!"
 Name=DIRAK
 PokemonNos=20,22,47,52,55,56,60,74,82,93,121
 BeginSpeech=Here I come!
-Type=POKEMONRANGER
+Type=POKEMONRANGER_M
 EndSpeechWin="Yes, I won!"
 [057]
 EndSpeechLose="Man, I lost!"
 Name=LIG
 PokemonNos=12,20,30,45,47,53,60,80,87,89,90,103,111
 BeginSpeech=Here I come!
-Type=POKEMONRANGER
+Type=POKEMONRANGER_M
 EndSpeechWin="Yes, I won!"
 [058]
 EndSpeechLose="Man, I lost!"
 Name=LAE
 PokemonNos=23,25,28,33,35,36,42,51,55,58,66,77,79,98,105,110,115
 BeginSpeech=Here I come!
-Type=POKEMONRANGER
+Type=POKEMONRANGER_M
 EndSpeechWin="Yes, I won!"
 [059]
 EndSpeechLose="Man, I lost!"
 Name=ENKA
 PokemonNos=3,7,9,13,31,53,57,62,118,121
 BeginSpeech=Here I come!
-Type=AROMALADY
+Type=PARASOLLADY
 EndSpeechWin="Yes, I won!"
 [060]
 EndSpeechLose="Man, I lost!"
 Name=ENDRA
 PokemonNos=10,25,27,30,37,66,68,70,82,83,103,110,122
 BeginSpeech=Here I come!
-Type=AROMALADY
+Type=PARASOLLADY
 EndSpeechWin="Yes, I won!"
 [061]
 EndSpeechLose="Man, I lost!"
 Name=THULI
 PokemonNos=27,37,39,54,94,104,110,113
 BeginSpeech=Here I come!
-Type=AROMALADY
+Type=PARASOLLADY
 EndSpeechWin="Yes, I won!"
 [062]
 EndSpeechLose="Man, I lost!"
@@ -493,14 +493,14 @@ EndSpeechLose="Man, I lost!"
 Name=ROLD
 PokemonNos=167,199,212,231,233,242
 BeginSpeech=Here I come!
-Type=BUGCATCHER
+Type=BUGCATCHER_M
 EndSpeechWin="Yes, I won!"
 [071]
 EndSpeechLose="Man, I lost!"
 Name=RITAT
 PokemonNos=131,133,145,146,149,156,160,177,200,205,206,227
 BeginSpeech=Here I come!
-Type=BUGCATCHER
+Type=BUGCATCHER_M
 EndSpeechWin="Yes, I won!"
 [072]
 EndSpeechLose="Man, I lost!"
@@ -717,77 +717,77 @@ EndSpeechLose="Man, I lost!"
 Name=DIN
 PokemonNos=126,129,147,163,168,187,201,203,233,241,244
 BeginSpeech=Here I come!
-Type=ENGINEER
+Type=ENGINEER_M
 EndSpeechWin="Yes, I won!"
 [103]
 EndSpeechLose="Man, I lost!"
 Name=JUBB
 PokemonNos=124,130,143,147,154,179,183,215,228,235
 BeginSpeech=Here I come!
-Type=POKEMONRANGER
+Type=POKEMONRANGER_M
 EndSpeechWin="Yes, I won!"
 [104]
 EndSpeechLose="Man, I lost!"
 Name=KIV
 PokemonNos=130,135,139,144,184,202,203,208,226,228,229,236
 BeginSpeech=Here I come!
-Type=POKEMONRANGER
+Type=POKEMONRANGER_M
 EndSpeechWin="Yes, I won!"
 [105]
 EndSpeechLose="Man, I lost!"
 Name=BOB
 PokemonNos=136,144,145,149,165,167,198,220,242
 BeginSpeech=Here I come!
-Type=POKEMONRANGER
+Type=POKEMONRANGER_M
 EndSpeechWin="Yes, I won!"
 [106]
 EndSpeechLose="Man, I lost!"
 Name=ORA
 PokemonNos=136,145,152,168,169,170,173,176,180,187,196,202,229,230
 BeginSpeech=Here I come!
-Type=POKEMONRANGER
+Type=POKEMONRANGER_M
 EndSpeechWin="Yes, I won!"
 [107]
 EndSpeechLose="Man, I lost!"
 Name=ANDRA
 PokemonNos=124,158,161,165,168,189,212
 BeginSpeech=Here I come!
-Type=POKEMONRANGER
+Type=POKEMONRANGER_M
 EndSpeechWin="Yes, I won!"
 [108]
 EndSpeechLose="Man, I lost!"
 Name=DILA
 PokemonNos=131,151,154,159,175,185,189,207,221,230
 BeginSpeech=Here I come!
-Type=POKEMONRANGER
+Type=POKEMONRANGER_M
 EndSpeechWin="Yes, I won!"
 [109]
 EndSpeechLose="Man, I lost!"
 Name=SKEND
 PokemonNos=123,138,146,153,155,160,171,175,183,184,213,228,231,238
 BeginSpeech=Here I come!
-Type=RUINMANIAC
+Type=HIKER
 EndSpeechWin="Yes, I won!"
 [110]
 EndSpeechLose="Man, I lost!"
 Name=GRUUSEL
 PokemonNos=130,137,144,161,174,175,179,190,197,218,230,239
 BeginSpeech=Here I come!
-Type=RUINMANIAC
+Type=HIKER
 EndSpeechWin="Yes, I won!"
 [111]
 EndSpeechLose="Man, I lost!"
 Name=LIU
 PokemonNos=123,133,139,140,151,171,186,193,209,229,231,232,241
 BeginSpeech=Here I come!
-Type=RUINMANIAC
+Type=HIKER
 EndSpeechWin="Yes, I won!"
 [112]
 EndSpeechLose="Man, I lost!"
 Name=MONS
 PokemonNos=170,171,173,174,183,191,194,198,202,210,221,222
 BeginSpeech=Here I come!
-Type=RUINMANIAC
+Type=HIKER
 EndSpeechWin="Yes, I won!"
 [113]
 EndSpeechLose="Man, I lost!"
@@ -829,119 +829,119 @@ EndSpeechLose="Man, I lost!"
 Name=OUB
 PokemonNos=137,142,144,149,179,182,189,191,195,197,209,214,223,227,233,237,245
 BeginSpeech=Here I come!
-Type=ENGINEER
+Type=ENGINEER_M
 EndSpeechWin="Yes, I won!"
 [119]
 EndSpeechLose="Man, I lost!"
 Name=OUBSAM
 PokemonNos=146,162,167,180,181,197,204,205,206,245
 BeginSpeech=Here I come!
-Type=ENGINEER
+Type=ENGINEER_M
 EndSpeechWin="Yes, I won!"
 [120]
 EndSpeechLose="Man, I lost!"
 Name=ENE
 PokemonNos=133,158,175,176,192,201,232,233,241
 BeginSpeech=Here I come!
-Type=ENGINEER
+Type=ENGINEER_M
 EndSpeechWin="Yes, I won!"
 [121]
 EndSpeechLose="Man, I lost!"
 Name=AGORTA
 PokemonNos=156,171,175,200,208,237,239
 BeginSpeech=Here I come!
-Type=POKEMONRANGER
+Type=POKEMONRANGER_M
 EndSpeechWin="Yes, I won!"
 [122]
 EndSpeechLose="Man, I lost!"
 Name=ALA
 PokemonNos=124,136,143,146,152,168,170,180,197,198,200,213,215,223,244,245
 BeginSpeech=Here I come!
-Type=POKEMONRANGER
+Type=POKEMONRANGER_M
 EndSpeechWin="Yes, I won!"
 [123]
 EndSpeechLose="Man, I lost!"
 Name=INUPA
 PokemonNos=127,136,147,154,168,172,189,194,203,219,226,236,237
 BeginSpeech=Here I come!
-Type=POKEMONRANGER
+Type=POKEMONRANGER_M
 EndSpeechWin="Yes, I won!"
 [124]
 EndSpeechLose="Man, I lost!"
 Name=ECONDRA
 PokemonNos=131,147,152,153,155,159,164,168,200,241,243
 BeginSpeech=Here I come!
-Type=POKEMONRANGER
+Type=POKEMONRANGER_M
 EndSpeechWin="Yes, I won!"
 [125]
 EndSpeechLose="Man, I lost!"
 Name=AKTILI
 PokemonNos=126,134,148,150,151,153,157,161,168,180,192,206,216,222,236,242
 BeginSpeech=Here I come!
-Type=POKEMONRANGER
+Type=POKEMONRANGER_M
 EndSpeechWin="Yes, I won!"
 [126]
 EndSpeechLose="Man, I lost!"
 Name=ICHA
 PokemonNos=142,144,147,158,160,161,164,165,171,176,179,188,213,219,231,234
 BeginSpeech=Here I come!
-Type=POKEMONRANGER
+Type=POKEMONRANGER_M
 EndSpeechWin="Yes, I won!"
 [127]
 EndSpeechLose="Man, I lost!"
 Name=CHONG
 PokemonNos=165,184,188,191,215,221,232
 BeginSpeech=Here I come!
-Type=POKEMONRANGER
+Type=POKEMONRANGER_M
 EndSpeechWin="Yes, I won!"
 [128]
 EndSpeechLose="Man, I lost!"
 Name=PROBACS
 PokemonNos=150,158,173,182,183,186,192,216,217,221,232,234,235,238
 BeginSpeech=Here I come!
-Type=POKEMONRANGER
+Type=POKEMONRANGER_M
 EndSpeechWin="Yes, I won!"
 [129]
 EndSpeechLose="Man, I lost!"
 Name=MOU
 PokemonNos=143,150,172,185,195,199,211,216,224,225,226,241
 BeginSpeech=Here I come!
-Type=POKEMONRANGER
+Type=POKEMONRANGER_M
 EndSpeechWin="Yes, I won!"
 [130]
 EndSpeechLose="Man, I lost!"
 Name=NESSIKA
 PokemonNos=126,133,157,168,192,210,211,221,222,241
 BeginSpeech=Here I come!
-Type=PAINTER
+Type=JUGGLER
 EndSpeechWin="Yes, I won!"
 [131]
 EndSpeechLose="Man, I lost!"
 Name=ARESTA
 PokemonNos=126,140,142,150,175,189,192,235,240
 BeginSpeech=Here I come!
-Type=PAINTER
+Type=JUGGLER
 EndSpeechWin="Yes, I won!"
 [132]
 EndSpeechLose="Man, I lost!"
 Name=OLILI
 PokemonNos=124,132,137,147,156,165,188,190,208,220,221
 BeginSpeech=Here I come!
-Type=PAINTER
+Type=JUGGLER
 EndSpeechWin="Yes, I won!"
 [133]
 EndSpeechLose="Man, I lost!"
 Name=RESTA
 PokemonNos=123,125,139,174,178,182,189,195,198,216,233,238
 BeginSpeech=Here I come!
-Type=PAINTER
+Type=JUGGLER
 EndSpeechWin="Yes, I won!"
 [134]
 EndSpeechLose="Man, I lost!"
 Name=ONDRA
 PokemonNos=251,267,271,295,308,309,318,321,327,333,335,351,364,365
 BeginSpeech=Here I come!
-Type=PAINTER
+Type=JUGGLER
 EndSpeechWin="Yes, I won!"
 [135]
 EndSpeechLose="Man, I lost!"
@@ -1214,14 +1214,14 @@ EndSpeechLose="Man, I lost!"
 Name=RAKT
 PokemonNos=252,255,258,259,262,266,270,279,301,306,309,315,323,328,329,332,342,354
 BeginSpeech=Here I come!
-Type=TAMER
+Type=ROUGHNECK
 EndSpeechWin="Yes, I won!"
 [174]
 EndSpeechLose="Man, I lost!"
 Name=MAH
 PokemonNos=260,275,308,310,317,329,331,333,336,350,356,362,363
 BeginSpeech=Here I come!
-Type=TAMER
+Type=ROUGHNECK
 EndSpeechWin="Yes, I won!"
 [175]
 EndSpeechLose="Man, I lost!"

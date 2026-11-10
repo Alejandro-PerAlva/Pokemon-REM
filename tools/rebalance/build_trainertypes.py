@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """Genera PBS/trainertypes.txt (24 fijos + 64 comunes = 88), los placeholders
 Graphics/Characters/trainerXXX.png que falten y los audios placeholder de los
-24 primeros puestos. Fuente unica de la lista: TYPES (abajo).
+24 primeros puestos. Fuente única de la lista: TYPES (abajo).
 
-Uso: python3 tools/rebalance/build_trainertypes.py   (desde la raiz del proyecto)
-No sobrescribe PNG existentes (trainer000.png) ni audios existentes.
+Uso: python3 tools/rebalance/build_trainertypes.py   (desde la raíz del proyecto)
+No sobrescribe PNG existentes de fijos ni audios existentes.
 """
 import math, os, struct, wave, sys
 from PIL import Image, ImageDraw, ImageFont
@@ -52,92 +52,82 @@ FIXED = [
 ACCENTS = {"Lider": "Líder", "Lider Supremo": "Líder Supremo"}
 
 COMMON = [  # simbolo, nombre, dinero, genero, nota (tipos / bioma)
+    # Acto I: Novatos, escuela y primeras rutas
     ("YOUNGSTER", "Joven", 16, "Male", "Normal; pradera/pueblo; Acto I"),
     ("LASS", "Chica", 16, "Female", "Normal; pradera/pueblo; Acto I"),
     ("SCHOOLBOY", "Colegial", 16, "Male", "Normal/Bicho/Psiquico; ciudad"),
     ("SCHOOLGIRL", "Colegiala", 16, "Female", "Normal/Bicho/Psiquico; ciudad"),
     ("CAMPER", "Campista", 16, "Male", "Normal/Planta/Bicho; bosque/granja"),
     ("PICNICKER", "Excursionista", 16, "Female", "Normal/Planta/Bicho; bosque/granja"),
-    ("BUGCATCHER", "Cazabichos", 16, "Male", "Bicho; bosque temprano"),
+    ("BUGCATCHER_M", "Cazabichos", 16, "Male", "Bicho; bosque temprano"),
+    ("BUGCATCHER_F", "Cazabichos", 16, "Female", "Bicho; bosque temprano"),
+    # Actos I-II: Aves, parques y crianza
     ("BIRDKEEPER", "Cazapájaros", 32, "Male", "Volador; montana/pradera"),
-    ("POKEFAN_M", "Pokéfan", 32, "Male", "Normal/Hada; pueblo/reserva"),
-    ("POKEFAN_F", "Pokéfan", 32, "Female", "Normal/Hada; pueblo/reserva"),
+    ("PARASOLLADY", "Dama Parasol", 40, "Female", "Planta/Hada; pradera/reserva"),
+    ("AROMALADY", "Chica Aroma", 32, "Female", "Planta/Hada/Veneno; jardines y praderas"),
+    ("BREEDER_M", "Criador", 48, "Male", "Normal/Hada; granja/pueblo"),
+    ("BREEDER_F", "Criadora", 48, "Female", "Normal/Hada; granja/pueblo"),
+    ("POKEMONRANGER_M", "Pokémon Ranger", 60, "Male", "Planta/Bicho/Normal; bosque/reserva"),
+    ("POKEMONRANGER_F", "Pokémon Ranger", 60, "Female", "Planta/Bicho/Normal; bosque/reserva"),
+    # Actos II-III: Rutas largas, montaña, minas y cuevas
     ("BACKPACKER_M", "Mochilero", 32, "Male", "Normal/Roca/Planta; rutas largas"),
     ("BACKPACKER_F", "Mochilera", 32, "Female", "Normal/Roca/Planta; rutas largas"),
     ("HIKER", "Montañero", 32, "Male", "Roca/Tierra/Lucha; cueva/montana"),
+    ("WORKER", "Obrero", 32, "Male", "Acero/Tierra; central y minas"),
+    ("MINER", "Minero", 32, "Male", "Roca/Tierra/Acero; interior de minas y galerias"),
+    ("POKEMANIAC", "Poké Maniaco", 64, "Male", "Normal/Roca/Veneno; cueva/pantano"),
+    ("BURGLAR", "Ladrón", 88, "Male", "Siniestro/Veneno; ruinas/cueva"),
+    ("SUPERNERD", "Friki", 48, "Male", "Electrico/Veneno/Psiquico; ruinas"),
+    # Actos II-III: Costa, mar y playas
+    ("FISHERMAN_M", "Pescador", 32, "Male", "Agua; muelles/orillas"),
+    ("FISHERMAN_F", "Pescadora", 32, "Female", "Agua; muelles/orillas"),
     ("SWIMMER_M", "Nadador", 16, "Male", "Agua; costas y lagos"),
     ("SWIMMER_F", "Nadadora", 16, "Female", "Agua; costas y lagos"),
-    ("FISHERMAN", "Pescador", 32, "Male", "Agua; muelles/orillas"),
     ("SAILOR", "Marinero", 32, "Male", "Agua/Lucha; puertos, islas"),
-    ("SCUBADIVER", "Buceador", 32, "Male", "Agua; gruta Azurita, rutas marinas"),
-    ("TUBER_M", "Playero", 4, "Male", "Agua; playa"),
-    ("TUBER_F", "Playera", 4, "Female", "Agua; playa"),
-    ("BLACKBELT", "Karateka", 32, "Male", "Lucha; calzada/montana"),
-    ("CRUSHGIRL", "Luchadora", 24, "Female", "Lucha; calzada/montana"),
-    ("SCIENTIST", "Científico", 48, "Male", "Electrico/Acero/Veneno; industrial"),
-    ("ENGINEER", "Ingeniero", 48, "Male", "Electrico/Acero; industrial"),
-    ("WORKER", "Obrero", 32, "Male", "Acero/Tierra; central y minas"),
-    ("SUPERNERD", "Friki", 48, "Male", "Electrico/Veneno/Psiquico; ruinas"),
-    ("GUITARIST", "Guitarrista", 32, "Male", "Electrico/Normal/Siniestro; ciudad/playa"),
-    ("ROCKER", "Rockero", 24, "Male", "Electrico/Siniestro/Fuego; ciudad"),
+    ("BEAUTY", "Bella", 56, "Female", "Normal/Agua/Hada; playa/ciudad"),
+    # Actos III-IV: Industria, tecnología, ocio, música y mantenimiento
+    ("SCIENTIST_M", "Científico", 48, "Male", "Electrico/Acero/Veneno; industrial"),
+    ("SCIENTIST_F", "Científica", 48, "Female", "Electrico/Acero/Veneno; industrial"),
+    ("ENGINEER_M", "Mecánico", 48, "Male", "Electrico/Acero; industrial"),
+    ("ENGINEER_F", "Mecánica", 48, "Female", "Electrico/Acero; industrial"),
+    ("MUSICIAN", "Músico", 32, "Male", "Normal/Volador/Sonido; calles, parques y puentes"),
+    ("DANCER", "Bailarín", 32, "Male", "Fuego/Fantasma/Normal; teatro/ciudad"),
+    ("JUGGLER", "Malabarista", 32, "Male", "Fantasma/Psiquico; puente/templo"),
+    ("GAMER", "Jugón", 32, "Male", "Electrico/Normal; recreativas/ciudad"),
+    ("JANITOR", "Conserje", 32, "Male", "Veneno/Agua/Normal; edificios, oficinas y pasillos"),
+    ("CYCLIST_M", "Ciclista", 32, "Male", "Electrico/Volador/Normal; rutas largas, carreteras y puentes"),
+    ("CYCLIST_F", "Ciclista", 32, "Female", "Electrico/Volador/Normal; rutas largas, carreteras y puentes"),
+    # Actos III-IV: Mística, templos, sombras y sigilo
     ("PSYCHIC_M", "Psíquico", 32, "Male", "Psiquico/Fantasma; templo/cristal"),
     ("PSYCHIC_F", "Psíquica", 32, "Female", "Psiquico/Fantasma; templo/cristal"),
-    ("HEXMANIAC", "Bruja", 32, "Female", "Fantasma/Psiquico/Siniestro; bosque, isla"),
-    ("SKIER_M", "Esquiador", 32, "Male", "Hielo; nieve"),
-    ("SKIER_F", "Esquiadora", 32, "Female", "Hielo; nieve"),
-    ("TAMER", "Domador", 40, "Male", "Normal/Siniestro/Lucha; desierto/reserva"),
-    ("DRAGONTAMER", "Domadragón", 60, "Male", "Dragon; final del juego"),
-    ("RUINMANIAC", "Arqueólogo", 48, "Male", "Tierra/Roca/Psiquico; ruinas, desierto"),
-    ("POKEMANIAC", "Poké Maniaco", 64, "Male", "Normal/Roca/Veneno; cueva/pantano"),
-    ("JUGGLER", "Malabarista", 32, "Male", "Fantasma/Psiquico; puente/templo"),
-    ("BURGLAR", "Ladrón", 88, "Male", "Siniestro/Veneno; ruinas/cueva"),
-    ("GAMBLER", "Apostador", 72, "Male", "Normal/Siniestro; ciudad"),
-    ("KINDLER", "Escupefuego", 32, "Male", "Fuego; volcan"),
-    ("GENTLEMAN", "Caballero", 72, "Male", "Normal/Hada/Psiquico; ciudad"),
-    ("LADY", "Dama", 160, "Female", "Normal/Hada/Psiquico; ciudad"),
-    ("BEAUTY", "Bella", 56, "Female", "Normal/Agua/Hada; playa"),
-    ("AROMALADY", "Chica Aroma", 32, "Female", "Planta/Veneno/Hada; bosque/pantano"),
-    ("PARASOLLADY", "Dama Parasol", 40, "Female", "Planta/Hada; pradera/reserva"),
-    ("BREEDER_M", "Criador", 48, "Male", "Normal/Hada; granja/pueblo"),
-    ("BREEDER_F", "Criadora", 48, "Female", "Normal/Hada; granja/pueblo"),
+    ("HEXMANIAC", "Bruja", 32, "Female", "Fantasma/Psiquico/Siniestro; bosque/templo"),
+    ("NINJA_M", "Ninja", 32, "Male", "Veneno/Siniestro/Bicho; bosques/sombras"),
+    ("NINJA_F", "Ninja", 32, "Female", "Veneno/Siniestro/Bicho; bosques/sombras"),
+    # Actos III-IV: Sociedad, afición, arte, servicio y alta alcurnia
+    ("DOCTOR", "Doctor", 48, "Male", "Normal/Hada/Psiquico; ciudad"),
+    ("NURSE", "Enfermera", 48, "Female", "Normal/Hada/Psiquico; ciudad"),
+    ("POKEFAN_M", "Pokéfán", 48, "Male", "Normal/Hada/Bebe; ciudades y parques"),
+    ("POKEFAN_F", "Pokéfán", 48, "Female", "Normal/Hada/Bebe; ciudades y parques"),
+    ("PAINTER", "Pintor", 32, "Male", "Normal/Psiquico/Color; galerias y ciudades"),
+    ("POLICEMAN", "Policía", 48, "Male", "Siniestro/Normal; ciudad, patrullas"),
+    ("MAID", "Sirvienta", 32, "Female", "Fantasma/Normal; mansiones/hoteles"),
+    ("GENTLEMAN", "Caballero", 72, "Male", "Normal/Hada/Psiquico; ciudad/lujo"),
+    ("LADY", "Dama", 160, "Female", "Normal/Hada/Psiquico; ciudad/lujo"),
+    ("RICHBOY_M", "Niño Bien", 80, "Male", "Normal/Acero/Dragon; mansiones/resort"),
+    ("RICHBOY_F", "Joven Rica", 80, "Female", "Normal/Acero/Dragon; mansiones/resort"),
+    # Actos IV-V: Combate marcial, bandas callejeras y élite (recta final)
+    ("BLACKBELT", "Karateka", 32, "Male", "Lucha; dojo/montana"),
+    ("CRUSHGIRL", "Luchadora", 24, "Female", "Lucha; dojo/montana"),
+    ("ROUGHNECK", "Matón", 40, "Male", "Siniestro/Lucha; callejones/guaridas"),
+    ("BIKER", "Motorista", 32, "Male", "Veneno/Fuego/Siniestro; carreteras, poligonos y callejones"),
     ("COOLTRAINER_M", "Entre. Guay", 60, "Male", "Mixto; calzada/ciudad"),
     ("COOLTRAINER_F", "Entre. Guay", 60, "Female", "Mixto; calzada/ciudad"),
     ("VETERAN_M", "Veterano", 72, "Male", "Mixto; recta final"),
     ("VETERAN_F", "Veterana", 72, "Female", "Mixto; recta final"),
-    ("DOCTOR", "Doctor", 48, "Male", "Normal/Hada/Psiquico; ciudad"),
-    ("NURSE", "Enfermera", 48, "Female", "Normal/Hada/Psiquico; ciudad"),
-    ("SAGE", "Sabio", 48, "Male", "Psiquico/Fantasma; templo"),
-    ("POKEMONRANGER", "Guardabosques", 60, "Male", "Planta/Bicho/Normal; bosque/reserva"),
-    ("MAID", "Sirvienta", 32, "Female", "Fantasma/Normal; villas y ruinas"),
-    ("RANCHER", "Ganadero", 32, "Male", "Normal/Tierra; granja/estepa"),
-    ("WAITER", "Camarero", 32, "Male", "Normal/Hada; ciudad/pueblo"),
-    ("WAITRESS", "Camarera", 32, "Female", "Normal/Hada; ciudad/pueblo"),
-    ("PAINTER", "Pintor", 16, "Male", "Normal/Psiquico/Hada; ciudad/reserva"),
-    ("ROUGHNECK", "Matón", 40, "Male", "Siniestro/Lucha; ciudad, calzada"),
-    ("CHEF", "Cocinero", 48, "Male", "Fuego/Normal; ciudad industrial"),
-    ("POLICEMAN", "Policía", 48, "Male", "Siniestro/Normal; ciudad, entorno Morfeo"),
 ]
-ORDER = [
-    # Novatos y rurales (Actos I-III)
-    'YOUNGSTER', 'LASS', 'SCHOOLBOY', 'SCHOOLGIRL', 'CAMPER', 'PICNICKER', 'BUGCATCHER', 'BIRDKEEPER',
-    # Campo y crianza
-    'POKEFAN_M', 'POKEFAN_F', 'RANCHER', 'PARASOLLADY', 'BREEDER_M', 'BREEDER_F', 'AROMALADY', 'POKEMONRANGER',
-    # Camino, cueva y ruinas
-    'BACKPACKER_M', 'BACKPACKER_F', 'HIKER', 'RUINMANIAC', 'POKEMANIAC', 'BURGLAR',
-    # Agua
-    'SWIMMER_M', 'SWIMMER_F', 'FISHERMAN', 'TUBER_M', 'TUBER_F', 'BEAUTY', 'SAILOR', 'SCUBADIVER',
-    # Industrial, musica y arte
-    'SCIENTIST', 'ENGINEER', 'WORKER', 'SUPERNERD', 'GUITARIST', 'ROCKER', 'PAINTER', 'JUGGLER',
-    # Mistico
-    'PSYCHIC_M', 'PSYCHIC_F', 'HEXMANIAC', 'MAID', 'SAGE',
-    # Civil y alta sociedad
-    'DOCTOR', 'NURSE', 'WAITER', 'WAITRESS', 'CHEF', 'POLICEMAN', 'GAMBLER', 'GENTLEMAN', 'LADY',
-    # Nieve y fuego
-    'SKIER_M', 'SKIER_F', 'KINDLER',
-    # Combate y elite (Actos IV-V)
-    'BLACKBELT', 'CRUSHGIRL', 'TAMER', 'ROUGHNECK', 'COOLTRAINER_M', 'COOLTRAINER_F', 'VETERAN_M', 'VETERAN_F', 'DRAGONTAMER',
-]
-COMMON.sort(key=lambda t: ORDER.index(t[0]))  # orden por familias, de Acto I a final; sin dobles
+
+ORDER = [t[0] for t in COMMON]
+
 assert len(FIXED) == 24 and len(COMMON) == 64 and len(COMMON) % 8 == 0
 assert len({t[0] for t in FIXED + COMMON}) == 88
 assert sorted(ORDER) == sorted(t[0] for t in COMMON)
@@ -153,7 +143,7 @@ for j, (sym, name, money, gen, note) in enumerate(COMMON):
 
 # --- PBS ---------------------------------------------------------------------
 def write_pbs():
-    lines = ["﻿# Consulta la documentación de la wiki para aprender a modificar este archivo.",
+    lines = ["\ufeff# Consulta la documentación de la wiki para aprender a modificar este archivo.",
              "# Generado por tools/rebalance/build_trainertypes.py: 24 fijos (000-023) + 64 comunes (024-087) = 88.",
              "# Formato: ID,Símbolo,Nombre,DineroBase,MúsicaCombate,MEVictoria,MEIntro,Género,Habilidad,CódigosHab"]
     for i, sym, name, money, gen, audio, note, kind in ALL:
@@ -175,7 +165,10 @@ def col(sym):
     return (90, 100, 120)
 
 def font(sz):
-    return ImageFont.truetype("/System/Library/Fonts/Supplemental/Arial Unicode.ttf", sz)
+    for p in ("arial.ttf", "/System/Library/Fonts/Supplemental/Arial Unicode.ttf", "DejaVuSans.ttf"):
+        try: return ImageFont.truetype(p, sz)
+        except: pass
+    return ImageFont.load_default()
 
 def wrap(draw, text, f, width):
     words, out, cur = text.split(), [], ""
@@ -235,19 +228,77 @@ def make_wav(path, freq, secs):
             fr += struct.pack("<h", int(1500 * math.sin(2 * math.pi * cyc * k / n)))
         w.writeframes(bytes(fr))
 
+def compile_data():
+    import rubymarshal.reader, rubymarshal.writer
+    import zlib
+
+    dat_records = []
+    names = []
+    g_map = {"Male": 0, "Female": 1, "Mixed": 2}
+    for i, sym, name, money, gen, audio, note, kind in ALL:
+        bgm = audio[0].encode("utf-8") if audio[0] else None
+        me = audio[1].encode("utf-8") if audio[1] else None
+        n_bytes = name.encode("utf-8")
+        names.append(n_bytes)
+        rec = [i, sym.encode("utf-8"), n_bytes, money, bgm, me, None, g_map.get(gen, 0), money, None]
+        dat_records.append(rec)
+
+    with open(os.path.join(ROOT, "Data", "trainertypes.dat"), "wb") as f:
+        rubymarshal.writer.write(f, dat_records)
+
+    const_path = os.path.join(ROOT, "Data", "Constants.rxdata")
+    with open(const_path, "rb") as f:
+        consts = rubymarshal.reader.load(f)
+
+    code = "class PBTrainers\r\n"
+    for i, sym, name, money, gen, audio, note, kind in ALL:
+        code += "%s=%d\r\n" % (sym, i)
+    code += "\r\ndef self.getName(id)\r\nreturn pbGetMessage(MessageTypes::TrainerTypes,id)\r\nend"
+    code += "\r\ndef self.getCount\r\nreturn %d\r\nend" % len(ALL)
+    code += "\r\ndef self.maxValue\r\nreturn %d\r\nend\r\nend" % (len(ALL) - 1)
+
+    for item in consts:
+        if item[1] == b'PBTrainers':
+            item[2] = zlib.compress(code.encode("utf-8"))
+
+    with open(const_path, "wb") as f:
+        rubymarshal.writer.write(f, consts)
+
+    msg_path = os.path.join(ROOT, "Data", "messages.dat")
+    with open(msg_path, "rb") as f:
+        messages = rubymarshal.reader.load(f)
+    messages[13] = names
+    with open(msg_path, "wb") as f:
+        rubymarshal.writer.write(f, messages)
+
+    print("Data compilado: trainertypes.dat, Constants.rxdata, messages.dat")
+
 def main():
     write_pbs()
     chars = os.path.join(ROOT, "Graphics", "Characters")
     made, kept = [], []
     for i, sym, name, money, gen, audio, note, kind in ALL:
         p = os.path.join(chars, "trainer%03d.png" % i)
-        if os.path.exists(p) and not (kind == 'common' and '--regen-commons' in sys.argv): kept.append(p); continue
+        if os.path.exists(p):
+            try:
+                with Image.open(p) as test_im:
+                    if test_im.size != (180, 180):
+                        kept.append(p)
+                        continue
+            except: pass
         make_png(p, i, sym, name); made.append(p)
     regen = "--regen-commons" in sys.argv
     ch_made = []
     for i, sym, name, money, gen, audio, note, kind in ALL:   # overworld del entrenador
         p = os.path.join(chars, "trchar%03d.png" % i)
-        if os.path.exists(p) and not (kind == "common" and regen): continue
+        if os.path.exists(p):
+            try:
+                with Image.open(p) as test_im:
+                    if test_im.size != (256, 256):
+                        continue
+            except: pass
+            if not regen and i not in [57, 58, 59, 60, 61, 62, 63, 71, 72, 73]:
+                continue
         make_char_png(p, "%03d" % i, col(sym)); ch_made.append(p)
     npc_made = []
     for n in range(1, 33):                                    # 32 NPC sin nombre (3 digitos: el motor usa %03d)
@@ -264,6 +315,7 @@ def main():
         p = os.path.join(ROOT, "Audio", "ME", me + ".wav")
         if not any(os.path.exists(os.path.join(ROOT, "Audio", "ME", me + e)) for e in (".wav", ".ogg", ".mid", ".mp3")):
             make_wav(p, 330 if me.endswith("Lider") else 392, 2.5); audio_made.append(p)
+    compile_data()
     print("PBS escrito: %d tipos" % len(ALL))
     print("PNG nuevos: %d | respetados: %s" % (len(made), [os.path.basename(x) for x in kept]))
     print("Audio nuevo: %s" % [os.path.relpath(x, ROOT) for x in audio_made])

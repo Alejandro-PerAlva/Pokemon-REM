@@ -12,49 +12,49 @@ Description = Mujer de unos 40 años, delantal y gesto cálido. Madre del protag
 Gender = Female
 
 [npc002]
-Name = Pía (ayudante del Profesor)
-Description = Joven aplicada con bata de laboratorio. Atiende el mostrador del laboratorio de Albor: entrega de iniciales, misiones y hitos de captura.
-Gender = Female
-
-[npc003]
 Name = El Padre
 Description = Hombre de aspecto sereno y ropa sobria. Punto de curación de Pueblo Albor, que no tiene Centro Pokémon.
 Gender = Male
 
+[npc003]
+Name = Pía (ayudante del Profesor)
+Description = Joven aplicada con bata de laboratorio. Atiende el mostrador del laboratorio de Albor: entrega de iniciales, misiones y hitos de captura.
+Gender = Female
+
 [npc004]
-Name = Telmo (el Viejo Pescador)
-Description = Anciano de rostro curtido, jersey de lana y pipa apagada. Presencia el duelo de la Ruta 12, regala la caña en Pueblo Nácar y lleva a la Isla Obsidiana.
-Gender = Male
-
-[npc005]
-Name = Hortensia (la Guardería)
-Description = Anciana de pelo recogido y delantal. Dueña de la guardería de la Granja Apatita; activa la mecánica de crianza y los huevos.
-Gender = Female
-
-[npc006]
-Name = Conservadora del Museo de Fósiles
-Description = Mujer con bata y gafas, aire de científica de campo. Revive los fósiles en el museo de Pueblo Casiterita.
-Gender = Female
-
-[npc007]
-Name = Don Prodigio (Intercambio Prodigio)
-Description = Hombre de edad media, aire excéntrico y atuendo llamativo. Gestiona el Intercambio Prodigio (wonder trade) del juego.
-Gender = Male
-
-[npc008]
 Name = Enfermera del Centro Pokémon
 Description = Mujer con uniforme de enfermera y cofia. Cura al equipo en los Centros Pokémon y atiende el PC.
 Gender = Female
 
-[npc009]
+[npc005]
 Name = Dependiente (Poké Mart)
 Description = Hombre con uniforme y gorra de tienda. Atiende el mostrador de los Poké Mart y de las tiendas especiales.
 Gender = Male
 
-[npc010]
+[npc006]
 Name = Dependienta (Poké Mart)
 Description = Mujer con uniforme y gorra de tienda. Atiende el mostrador de los Poké Mart y de las tiendas especiales.
 Gender = Female
+
+[npc007]
+Name = Hortensia (la Guardería)
+Description = Anciana de pelo recogido y delantal. Dueña de la guardería de la Granja Apatita; activa la mecánica de crianza y los huevos.
+Gender = Female
+
+[npc008]
+Name = Telmo (el Viejo Pescador)
+Description = Anciano de rostro curtido, jersey de lana y pipa apagada. Presencia el duelo de la Ruta 12, regala la caña en Pueblo Nácar y lleva a la Isla Obsidiana.
+Gender = Male
+
+[npc009]
+Name = Conservadora del Museo de Fósiles
+Description = Mujer con bata y gafas, aire de científica de campo. Revive los fósiles en el museo de Pueblo Casiterita.
+Gender = Female
+
+[npc010]
+Name = Don Prodigio (Intercambio Prodigio)
+Description = Hombre de edad media, aire excéntrico y atuendo llamativo. Gestiona el Intercambio Prodigio (wonder trade) del juego.
+Gender = Male
 
 [npc011]
 Name = Acampador de fogata

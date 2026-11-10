@@ -95,12 +95,14 @@ module Graphics
     elsif dc==""
       @@transition=FadeTransition.new(duration)
     else 
-      ret=false
+      @@transition=FadeTransition.new(duration)
     end
     Graphics.frame_reset if ret
     return ret
   end
 end
+
+
 
 
 
@@ -587,7 +589,7 @@ end
 class FadeTransition
   def initialize(numframes)
     @duration=numframes
-    @numframes=numframes
+    @numframes=[numframes,1].max
     @disposed=false
     if @duration<=0
       @disposed=true
@@ -595,16 +597,13 @@ class FadeTransition
     end
     @viewport = Viewport.new(0,0,Graphics.width,Graphics.height)
     @viewport.z = 99999
-    @sprite = BitmapSprite.new(Graphics.width,Graphics.height,@viewport)
-    @sprite.bitmap.fill_rect(0,0,Graphics.width,Graphics.height,Color.new(0,0,0))
-    @sprite.opacity=0
+    @viewport.color = Color.new(0,0,0,0)
   end
 
   def disposed?; @disposed; end
 
   def dispose
     return if disposed?
-    @sprite.dispose if @sprite
     @viewport.dispose if @viewport
     @disposed=true
   end
@@ -614,7 +613,7 @@ class FadeTransition
     if @duration==0
       dispose
     else
-      @sprite.opacity=(@duration-1)*255/@numframes
+      @viewport.color.alpha=((@numframes-@duration+1)*255/@numframes)
       @duration-=1
     end
   end

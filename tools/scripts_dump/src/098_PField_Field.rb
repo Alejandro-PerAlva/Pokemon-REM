@@ -527,67 +527,15 @@ def pbBattleAnimation(bgm=nil,trainerid=-1,trainername="")
   handled=pbBattleAnimationOverride(viewport,trainerid,trainername)
   # Default battle intro animation
   if !handled
-    if Sprite.method_defined?(:wave_amp) && rand(15)==0
-      viewport.color=Color.new(0,0,0,255)
-      sprite = Sprite.new
-      bitmap=Graphics.snap_to_bitmap
-      bm=bitmap.clone
-      sprite.z=99999
-      sprite.bitmap = bm
-      sprite.wave_speed=500
-      for i in 0..25
-        sprite.opacity-=10
-        sprite.wave_amp+=60
-        sprite.update
-        sprite.wave_speed+=30
-        2.times do
-          Graphics.update
-        end
-      end
-      bitmap.dispose
-      bm.dispose
-      sprite.dispose
-    elsif Bitmap.method_defined?(:radial_blur) && rand(15)==0
-      viewport.color=Color.new(0,0,0,255)
-      sprite = Sprite.new
-      bitmap=Graphics.snap_to_bitmap
-      bm=bitmap.clone
-      sprite.z=99999
-      sprite.bitmap = bm
-      for i in 0..15
-        bm.radial_blur(i,2)
-        sprite.opacity-=15
-        2.times do
-          Graphics.update
-        end
-      end
-      bitmap.dispose
-      bm.dispose
-      sprite.dispose
-    elsif rand(10)==0 # Custom transition method
-      scroll=["ScrollDown","ScrollLeft","ScrollRight","ScrollUp",
-              "ScrollDownRight","ScrollDownLeft","ScrollUpRight","ScrollUpLeft"]
-      Graphics.freeze
-      viewport.color=Color.new(0,0,0,255)
-      Graphics.transition(50,sprintf("Graphics/Transitions/%s",scroll[rand(scroll.length)]))
-    else
-      transitions=[
-         # Transitions with graphic files
-         "021-Normal01","022-Normal02",
-         "Battle","battle1","battle2","battle3","battle4",
-         "computertr","computertrclose",
-         "hexatr","hexatrc","hexatzr",
-         "Image1","Image2","Image3","Image4",
-         # Custom transition methods
-         "Splash","Random_stripe_v","Random_stripe_h",
-         "RotatingPieces","ShrinkingPieces",
-         "BreakingGlass","Mosaic","zoomin"
-      ]
-      rnd=rand(transitions.length)
-      Graphics.freeze
-      viewport.color=Color.new(0,0,0,255)
-      Graphics.transition(40,sprintf("Graphics/Transitions/%s",transitions[rnd]))
+    # Transicion limpia a pantalla completa sin efectos de zoom
+    viewport.color = Color.new(0, 0, 0, 0)
+    16.times do |i|
+      viewport.color.alpha = ((i + 1) * 255 / 16)
+      Graphics.update
+      Input.update
+      pbUpdateSceneMap
     end
+    viewport.color.alpha = 255
     5.times do
       Graphics.update
       Input.update

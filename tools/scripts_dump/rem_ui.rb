@@ -435,16 +435,116 @@ class PokemonBattlerSprite
   end
 end
 
+# Reajuste manual y calibrado para sprites (traseros y frontales) cuya anatomía
+# (colas finas, extremidades estrechas o fotogramas desfasados) los dejaba flotando sobre la plataforma.
+REM_BATTLER_Y_OFFSET_BACK = {
+  715 => 66,  # Noivern: cola de 1px tocaba el fondo, cuerpo quedaba 66px flotando
+  635 => 39,  # Hydreigon: cola tocaba fondo
+  283 => 24,  # Surskit: patas finas
+  281 => 24,  # Kirlia
+  575 => 24,  # Gothorita
+  41  => 21,  # Zubat
+  268 => 21,  # Cascoon
+  338 => 18,  # Solrock
+  367 => 18,  # Huntail
+  567 => 18,  # Archeops
+  142 => 15,  # Aerodactyl
+  146 => 15,  # Moltres
+  212 => 15,  # Scizor
+  223 => 15,  # Remoraid
+  318 => 15,  # Carvanha
+  319 => 15,  # Sharpedo
+  334 => 15,  # Altaria
+  382 => 15,  # Kyogre
+  452 => 15,  # Drapion
+  584 => 15,  # Vanilluxe
+  708 => 15,  # Phantump
+  717 => 15,  # Yveltal
+  15  => 12,  # Beedrill
+  73  => 12,  # Tentacruel
+  129 => 12,  # Magikarp
+  131 => 12,  # Lapras
+  237 => 12,  # Hitmontop
+  249 => 12,  # Lugia
+  266 => 12,  # Silcoon
+  308 => 12,  # Medicham
+  378 => 12,  # Regice
+  414 => 12,  # Mothim
+  468 => 12,  # Togekiss
+  479 => 12,  # Rotom
+  525 => 12,  # Boldore
+  545 => 12,  # Scolipede
+  589 => 12,  # Escavalier
+  596 => 12,  # Galvantula
+  609 => 12,  # Chandelure
+  42  => 9,   # Golbat
+  47  => 9,   # Parasect
+  49  => 9,   # Venomoth
+  82  => 9,   # Magneton
+  92  => 9,   # Gastly
+  128 => 9,   # Tauros
+  130 => 9,   # Gyarados
+  167 => 9,   # Spinarak
+  168 => 9,   # Ariados
+  245 => 9,   # Suicune
+  290 => 9,   # Nincada
+  301 => 9,   # Delcatty
+  304 => 9,   # Aron
+  315 => 9,   # Roselia
+  325 => 9,   # Spoink
+  376 => 9,   # Metagross
+  380 => 9,   # Latias
+  493 => 9,   # Arceus
+  558 => 9,   # Crustle
+  565 => 9,   # Carracosta
+  579 => 9,   # Reuniclus
+  592 => 9,   # Frillish
+  601 => 9,   # Klinklang
+  643 => 9,   # Reshiram
+  666 => 9,   # Vivillon
+  680 => 9,   # Doublade
+  681 => 9,   # Aegislash
+  716 => 9,   # Xerneas
+  720 => 9    # Hoopa
+}
+
+REM_BATTLER_Y_OFFSET_FRONT = {
+  715 => 38,  # Noivern
+  283 => 20,  # Surskit
+  268 => 14,  # Cascoon
+  128 => 12,  # Tauros
+  615 => 12,  # Cryogonal
+  47  => 10,  # Parasect
+  266 => 10,  # Silcoon
+  626 => 10,  # Bouffalant
+  628 => 10,  # Braviary
+  212 => 8,   # Scizor
+  281 => 8,   # Kirlia
+  319 => 8,   # Sharpedo
+  485 => 8,   # Heatran
+  542 => 8,   # Leavanny
+  575 => 8,   # Gothorita
+  584 => 8,   # Vanilluxe
+  589 => 8,   # Escavalier
+  609 => 8,   # Chandelure
+  709 => 8    # Trevenant
+}
+
 alias rem_orig_adjustBattleSpriteY adjustBattleSpriteY
 def adjustBattleSpriteY(sprite,species,index,metrics=nil)
   ret=rem_orig_adjustBattleSpriteY(sprite,species,index,metrics)
   ret+=sprite.remTrimY if sprite.respond_to?(:remTrimY)
-  if (index==1 || index==3) && sprite.respond_to?(:remTopTrim) && sprite.bitmap
-    base=(index==3) ? PokeBattle_SceneConstants::FOEBATTLERD2_Y : PokeBattle_SceneConstants::FOEBATTLER_Y
-    top=base+ret+sprite.remTopTrim
-    ret+=[4-top,24].min if top<4   # arte más alto que el hueco: se baja hasta 24 px, el resto queda recortado
+  if index==0 || index==2
+    ret+=(REM_BATTLER_Y_OFFSET_BACK[species] || 0)
+    ret-=3   # pies del jugador casi sobre el centro de la plataforma
+  elsif index==1 || index==3
+    ret+=(REM_BATTLER_Y_OFFSET_FRONT[species] || 0)
+    if sprite.respond_to?(:remTopTrim) && sprite.bitmap
+      base=(index==3) ? PokeBattle_SceneConstants::FOEBATTLERD2_Y : PokeBattle_SceneConstants::FOEBATTLER_Y
+      top=base+ret+sprite.remTopTrim
+      ret+=[4-top,24].min if top<4   # arte más alto que el hueco: se baja hasta 24 px, el resto queda recortado
+    end
   end
-  ret-=3 if index==0 || index==2   # pies del jugador casi sobre el centro de la plataforma
   return ret
 end
 
@@ -601,8 +701,21 @@ end
 
 class PokemonSummaryScene
 
+  # Ajusta y centra el sprite en la tarjeta de datos para que ninguna especie desborde su recuadro
+  def remFitSummarySprite(sprite)
+    return if !sprite || !sprite.bitmap || sprite.bitmap.disposed?
+    w=sprite.bitmap.width; h=sprite.bitmap.height
+    return if w<=0 || h<=0
+    cx=114; cy=204; maxw=172; maxh=150
+    z=[1.0, maxw*1.0/w, maxh*1.0/h].min
+    sprite.zoom_x=z; sprite.zoom_y=z
+    sprite.x=(cx-(w*z)/2.0).round
+    sprite.y=(cy-(h*z)/2.0).round
+  end
+
   # Tarjeta izquierda común a todas las páginas: bola, nombre, género, nivel, estado, sprite, marcas, objeto y franja de tipo.
   def remDrawCard(pokemon,title,egg=false)
+    remFitSummarySprite(@sprites["pokemon"]) if @sprites && @sprites["pokemon"]
     overlay=@sprites["overlay"].bitmap
     overlay.clear
     imagepos=[]
@@ -1126,13 +1239,13 @@ class PokemonPokedexScene
 
   # Centra un sprite animado en (cx,cy) y lo reduce si su fotograma no cabe en maxw x maxh.
   def remFitSprite(sprite,cx,cy,maxw,maxh)
-    sprite.zoom_x=1.0; sprite.zoom_y=1.0
-    return if !sprite.bitmap || sprite.bitmap.disposed?
+    return if !sprite || !sprite.bitmap || sprite.bitmap.disposed?
     w=sprite.bitmap.width; h=sprite.bitmap.height
-    z=[1.0,maxw*1.0/w,maxh*1.0/h].min
+    return if w<=0 || h<=0
+    z=[1.0, maxw.to_f/w, maxh.to_f/h].min
     sprite.zoom_x=z; sprite.zoom_y=z
-    sprite.x=(cx-(w*z)/2).round
-    sprite.y=(cy-(h*z)/2).round
+    sprite.x=(cx-(w*z)/2.0).round
+    sprite.y=(cy-(h*z)/2.0).round
   end
 
   def pbStartScene
@@ -1196,7 +1309,7 @@ class PokemonPokedexScene
     gender=($Trainer.formlastseen[species][0] rescue 0)
     form=($Trainer.formlastseen[species][1] rescue 0)
     @sprites["icon"].setSpeciesBitmap(species,(gender==1),form)
-    remFitSprite(@sprites["icon"],115,128,184,212)
+    remFitSprite(@sprites["icon"],115,128,174,196)
     remDrawShowcase(species,gender,form)
   end
 
@@ -1332,7 +1445,7 @@ class PokemonPokedexScene
       @remBranch=false
       @sprites["entryicon"].visible=true
       @sprites["entryicon"].setSpeciesBitmap(species,(gender==1),form)
-      remFitSprite(@sprites["entryicon"],115,206,198,196)
+      remFitSprite(@sprites["entryicon"],115,206,186,182)
     end
     pbPlayCry(@dummypokemon) if !@remSkipCry
   end

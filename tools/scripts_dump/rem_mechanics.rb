@@ -96,17 +96,45 @@ end
 
 #-------------------------------------------------------------------------------
 # 3. COMBATE DOMINANTE 2v1 (jugador + aliado IA contra 1 salvaje)
+#    Y RESTAURACIÓN DE CONSUMIBLES TRAS COMBATE (QoL)
 #   pbDominantBattle(:ONIX,40,:LANCE,"Lance",0,:hp_x2)   -> true si gana
 #   boost_mode: :hp_x2 | :all_x15 | :all_x2
 #-------------------------------------------------------------------------------
 class PokeBattle_Battle
+  attr_accessor :remBattleInitialItems
+
+  def remRestorePartyItems
+    return if !@remBattleInitialItems || !$Trainer || !$Trainer.party
+    for pkmn in $Trainer.party
+      next if !pkmn
+      orig = @remBattleInitialItems[pkmn]
+      if orig && orig > 0 && pkmn.item == 0
+        pkmn.setItem(orig)
+        PBDebug.log("[REM Item Restore] #{pkmn.name} recupero #{PBItems.getName(orig)} tras el combate") rescue nil
+      end
+    end
+  end
+
   alias rem_orig_pbStartBattle pbStartBattle
   def pbStartBattle(canlose=false)
     if $PokemonTemp && $PokemonTemp.remDominantMode
       @doublebattle=true                  # 1 + aliado vs 1 Dominante
       @cantescape=true                    # prohibido huir
     end
-    ret=rem_orig_pbStartBattle(canlose)
+    # Snapshot de objetos equipados del equipo antes de comenzar la batalla
+    @remBattleInitialItems = {}
+    if $Trainer && $Trainer.party
+      for pkmn in $Trainer.party
+        next if !pkmn
+        @remBattleInitialItems[pkmn] = pkmn.item if pkmn.item > 0
+      end
+    end
+    begin
+      ret = rem_orig_pbStartBattle(canlose)
+    ensure
+      # Restaura consumibles (bayas, bandas focus, etc.) si se gastaron o desarmaron
+      remRestorePartyItems
+    end
     return ret
   end
 end

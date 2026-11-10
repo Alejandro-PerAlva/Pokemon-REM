@@ -2705,7 +2705,10 @@ def pbCompileAnimations
     end
   end
   save_data(move2anim,"Data/move2anim.dat")
-  save_data(pbanims,"Data/PkmnAnimations.rxdata")
+  begin
+    save_data(pbanims,"Data/PkmnAnimations.rxdata")
+  rescue Errno::EINVAL, StandardError
+  end
 end
 
 #===============================================================================

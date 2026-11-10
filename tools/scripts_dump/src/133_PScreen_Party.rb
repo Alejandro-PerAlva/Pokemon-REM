@@ -1852,15 +1852,7 @@ class PokemonScreen
       # Build the commands
       commands[cmdSummary=commands.length]      = _INTL("Datos")
       commands[cmdDebug=commands.length]        = _INTL("Depurador") if $DEBUG
-      for i in 0...pkmn.moves.length
-        move=pkmn.moves[i]
-        # Check for hidden moves and add any that were found
-        if !pkmn.isEgg? && (isConst?(move.id,PBMoves,:MILKDRINK) ||
-                            isConst?(move.id,PBMoves,:SOFTBOILED) ||
-                            HiddenMoveHandlers.hasHandler(move.id))
-          commands[cmdMoves[i]=commands.length] = PBMoves.getName(move.id)
-        end
-      end
+      # REM: Desactivados los movimientos de campo en el menu del equipo Pokemon
       commands[cmdSwitch=commands.length]       = _INTL("Mover") if @party.length>1
       if !pkmn.isEgg?
         if pkmn.mail
@@ -1868,7 +1860,7 @@ class PokemonScreen
         else
           commands[cmdItem=commands.length]     = _INTL("Objeto")
         end
-        commands[cmdNick=commands.length]       = _INTL("Mote")
+        commands[cmdNick=commands.length]       = _INTL("Apodo")
       end
       commands[commands.length]                 = _INTL("Salir")
       command=@scene.pbShowCommands(_INTL("¿Qué hacer con {1}?",pkmn.name),commands)
