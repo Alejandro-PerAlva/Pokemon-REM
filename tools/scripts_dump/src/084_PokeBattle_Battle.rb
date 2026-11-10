@@ -2609,9 +2609,7 @@ class PokeBattle_Battle
 #==================================================================
     if !@opponent
       if @party2.length==1
-        if @doublebattle
-          raise _INTL("Sólo se permiten dos Pokémon salvajes en una batalla doble")
-        end
+        # Combates 2vs1 (Boss / Dominantes): se permite 1 Pokémon salvaje contra 2 del jugador en batalla doble
         wildpoke=@party2[0]
         @battlers[1].pbInitialize(wildpoke,0,false)
         @peer.pbOnEnteringBattle(self,wildpoke)
