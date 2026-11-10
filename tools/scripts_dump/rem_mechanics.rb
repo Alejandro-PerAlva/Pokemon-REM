@@ -585,3 +585,146 @@ class Game_Map
     end
   end
 end
+
+#===============================================================================
+# Menú de Banco de Pruebas (Testing de Sistemas de la Auditoría)
+#===============================================================================
+def pbDebugTestingMenu
+  loop do
+    hora_str = sprintf("%02d:%02d", pbGetTimeNow.hour, pbGetTimeNow.min)
+    noche_str = pbRemIsNight? ? "Noche (x1.5 Lv)" : "Día"
+    congelado_str = ($PokemonGlobal && $PokemonGlobal.remTimeFrozen) ? " [Tiempo Congelado]" : ""
+    
+    cmd = Kernel.pbMessage(
+      _INTL("BANCO DE PRUEBAS REM\\nHora: {1} ({2}){3}\\n¿Qué sistema deseas verificar?", hora_str, noche_str, congelado_str),
+      [
+        _INTL("1. Tiempo Irreal (Día/Noche)"),
+        _INTL("2. Combate 2vs1 (Jefe Snorlax)"),
+        _INTL("3. Don Prodigio (Wonder Trade BST)"),
+        _INTL("4. Quest Markers (Info & Icono)"),
+        _INTL("5. Preparar Equipo y Objetos"),
+        _INTL("Salir")
+      ]
+    )
+    
+    case cmd
+    when 0 # 1. Tiempo Irreal
+      sub = Kernel.pbMessage(
+        _INTL("TIEMPO IRREAL\\n¿Qué acción deseas ejecutar?"),
+        [
+          _INTL("Alternar Día / Noche (Forzar)"),
+          _INTL("Avanzar 3 horas"),
+          _INTL("Congelar / Descongelar tiempo"),
+          _INTL("Volver")
+        ]
+      )
+      case sub
+      when 0
+        pbToggleDayNight(true)
+        Kernel.pbMessage(_INTL("Estado cambiado a: {1}.", pbRemIsNight? ? "Noche" : "Día"))
+      when 1
+        skipToHour((pbGetTimeNow.hour + 3) % 24)
+        Kernel.pbMessage(_INTL("Hora avanzada a las {1}.", sprintf("%02d:00", pbGetTimeNow.hour)))
+      when 2
+        $PokemonGlobal.remTimeFrozen = !$PokemonGlobal.remTimeFrozen
+        Kernel.pbMessage(_INTL("Tiempo {1}.", $PokemonGlobal.remTimeFrozen ? "CONGELADO" : "DESCONGELADO"))
+      end
+      
+    when 1 # 2. Combate 2vs1
+      if !$Trainer || $Trainer.pokemonCount == 0
+        Kernel.pbMessage(_INTL("No tienes Pokémon para combatir. Añadiendo a Lucario de prueba..."))
+        pbAddPokemon(:LUCARIO, 20) if hasConst?(PBSpecies, :LUCARIO)
+      end
+      Kernel.pbMessage(_INTL("Iniciando combate 2vs1 de prueba contra Jefe Snorlax..."))
+      pbBossFight(:SNORLAX, 15, 0, nil, true, false)
+      Kernel.pbMessage(_INTL("Combate finalizado. Los consumibles usados se han restaurado automáticamente."))
+      
+    when 2 # 3. Don Prodigio
+      if !$Trainer || $Trainer.pokemonCount == 0
+        Kernel.pbMessage(_INTL("Necesitas al menos 1 Pokémon en el equipo para intercambiar. Añadiendo a Eevee..."))
+        pbAddPokemon(:EEVEE, 15) if hasConst?(PBSpecies, :EEVEE)
+      end
+      pbDonProdigio
+      
+    when 3 # 4. Quest Markers
+      Kernel.pbMessage(_INTL("QUEST MARKERS:\\nEl icono que flota sobre la cabeza de este NPC es un Quest Marker animado cargado desde Graphics/Pictures/Quest Markers/blue.png.\\n\\nSe activa colocando en la primera línea del evento un comentario con la sintaxis:\\nquest_marker [archivo]\\n[opacidad 0-255]\\n[rebote true/false]\\n[parpadeo true/false]"))
+      
+    when 4 # 5. Preparar Equipo y Objetos
+      pbAddPokemon(:LUCARIO, 25) if hasConst?(PBSpecies, :LUCARIO)
+      pbAddPokemon(:GRENINJA, 25) if hasConst?(PBSpecies, :GRENINJA)
+      $PokemonBag.pbStoreItem(:SITRUSBERRY, 5) if hasConst?(PBItems, :SITRUSBERRY)
+      $PokemonBag.pbStoreItem(:POKEBALL, 10) if hasConst?(PBItems, :POKEBALL)
+      Kernel.pbMessage(_INTL("¡Equipo de prueba (Lucario, Greninja), Bayas Zidra y Poké Balls añadidos!"))
+      
+    else
+      break
+    end
+  end
+end
+
+# Inyección dinámica del NPC de prueba en la Habitación del Jugador (Mapa 3, Pueblo Albor)
+def pbRemEnsureTesterEvent
+  return false if !$game_map || $game_map.map_id != 3
+  return false if $game_map.events.has_key?(14) # Ya existe físicamente en Data/Map003.rxdata
+  if !$game_map.events.has_key?(999)
+    rpg_ev = RPG::Event.new(33, 9)
+    rpg_ev.id = 999
+    rpg_ev.x = 33
+    rpg_ev.y = 9
+    rpg_ev.name = "Tester"
+    
+    p0 = RPG::Event::Page.new
+    p0.condition = RPG::Event::Page::Condition.new
+    p0.trigger = 0 # Action button
+    p0.through = false
+    
+    p0.graphic.character_name = "npc008"
+    p0.graphic.direction = 8 # Mirando hacia arriba, hacia el jugador en (33, 8)
+    p0.graphic.pattern = 0
+    p0.graphic.opacity = 255
+    p0.graphic.blend_type = 0
+    
+    p0.list = [
+      RPG::EventCommand.new(108, 0, ["quest_marker blue"]),
+      RPG::EventCommand.new(108, 0, ["255"]),
+      RPG::EventCommand.new(108, 0, ["true"]),
+      RPG::EventCommand.new(108, 0, ["false"]),
+      RPG::EventCommand.new(355, 0, ["pbDebugTestingMenu"]),
+      RPG::EventCommand.new(0, 0, [])
+    ]
+    rpg_ev.pages = [p0]
+    
+    ev = Game_Event.new(3, rpg_ev, $game_map)
+    $game_map.events[999] = ev
+    return true
+  end
+  return false
+end
+
+class Game_Map
+  alias rem_setup_debug_tester setup
+  def setup(map_id)
+    rem_setup_debug_tester(map_id)
+    pbRemEnsureTesterEvent if map_id == 3
+  end
+end
+
+class Scene_Map
+  alias rem_createSpritesets_debug createSpritesets
+  def createSpritesets
+    pbRemEnsureTesterEvent
+    rem_createSpritesets_debug
+  end
+
+  alias rem_update_debug_tester update
+  def update
+    if $game_map && $game_map.map_id == 3 && !$game_map.events.has_key?(999)
+      if pbRemEnsureTesterEvent
+        disposeSpritesets
+        createSpritesets
+      end
+    end
+    rem_update_debug_tester
+  end
+end
+

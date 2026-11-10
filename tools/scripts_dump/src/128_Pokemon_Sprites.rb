@@ -418,13 +418,19 @@ def pbPositionPokemonSprite(sprite,left,top)
       sprite.x=(cx-(w*z)/2.0).round
       sprite.y=(cy-(h*z)/2.0).round
     elsif left==52 && top==100 # Pokédex Lista (116-64, 164-64)
-      cx=115; cy=128; maxw=174; maxh=196
+      cx=118; cy=172; maxw=160; maxh=170
       z=[1.0, maxw.to_f/w, maxh.to_f/h].min
       sprite.zoom_x=z; sprite.zoom_y=z
       sprite.x=(cx-(w*z)/2.0).round
       sprite.y=(cy-(h*z)/2.0).round
     elsif left==40 && top==70 # Pokédex Ficha Detallada
-      cx=115; cy=206; maxw=186; maxh=182
+      cx=115; cy=170; maxw=180; maxh=120
+      z=[1.0, maxw.to_f/w, maxh.to_f/h].min
+      sprite.zoom_x=z; sprite.zoom_y=z
+      sprite.x=(cx-(w*z)/2.0).round
+      sprite.y=(cy-(h*z)/2.0).round
+    elsif left==74 && top==96 # Pokédex Formas Frontal
+      cx=138; cy=160; maxw=128; maxh=128
       z=[1.0, maxw.to_f/w, maxh.to_f/h].min
       sprite.zoom_x=z; sprite.zoom_y=z
       sprite.x=(cx-(w*z)/2.0).round
