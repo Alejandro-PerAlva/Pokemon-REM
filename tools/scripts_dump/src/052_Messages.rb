@@ -184,13 +184,6 @@ def pbCsvField!(str)
     end
     ret.gsub!(/\s+$/,"")
   end
-  if defined?(NameBox)
-    if auto_namebox
-      NameBox.dispose
-    else
-      NameBox.hide
-    end
-  end
   return ret
 end
 
@@ -1289,6 +1282,12 @@ def Kernel.pbMessageDisplay(msgwindow,message,letterbyletter=true,commandProc=ni
   text=message.clone
   msgback=nil
   linecount=(Graphics.height>400) ? 3 : 2
+  auto_namebox = false
+  if text =~ /\\nm\[([^\]]+)\]/i
+    NameBox.load($1) if defined?(NameBox)
+    auto_namebox = true
+    text.sub!(/\\nm\[([^\]]+)\]/i, "")
+  end
   ### Text replacement
   text.gsub!(/\\\\/,"\5")
   if $game_actors
@@ -1313,12 +1312,6 @@ def Kernel.pbMessageDisplay(msgwindow,message,letterbyletter=true,commandProc=ni
   text.gsub!(/\\[Bb]/,"<c2=6546675A>")
   text.gsub!(/\\[Rr]/,"<c2=043C675A>")
   text.gsub!(/\\1/,"\1")
-  auto_namebox = false
-  if text =~ /\\\[Nn][Mm]\[([^\]]+)\]/i
-    NameBox.load($1) if defined?(NameBox)
-    auto_namebox = true
-    text.gsub!(/\\\[Nn][Mm]\[([^\]]+)\]/i, "")
-  end
   colortag=""
   isDarkSkin=isDarkWindowskin(msgwindow.windowskin)
   if ($game_message && $game_message.background>0) ||
@@ -1561,6 +1554,13 @@ def Kernel.pbMessageDisplay(msgwindow,message,letterbyletter=true,commandProc=ni
       Input.update
       pbUpdateSceneMap
       msgwindow.update
+    end
+  end
+  if defined?(NameBox)
+    if auto_namebox
+      NameBox.dispose
+    else
+      NameBox.hide
     end
   end
   return ret

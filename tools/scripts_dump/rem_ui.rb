@@ -3847,7 +3847,8 @@ module NameBox
   NPCCOLORS = {
     "Rival" => [Color.new(255, 110, 110), Color.new(20, 20, 25)],
     "Madre" => [Color.new(255, 160, 200), Color.new(20, 20, 25)],
-    "Profesor" => [Color.new(110, 180, 255), Color.new(20, 20, 25)]
+    "Profesor" => [Color.new(110, 180, 255), Color.new(20, 20, 25)],
+    "Inspector Tester" => [Color.new(120, 205, 255), Color.new(15, 17, 23)]
   }
 
   def self.load(name, autoDispose = false)
@@ -3865,8 +3866,8 @@ module NameBox
   def self.show(msgwindow)
     if @namebox && msgwindow
       @namebox.viewport = msgwindow.viewport
-      @namebox.z = msgwindow.z + 1
-      @namebox.x = msgwindow.x + 16
+      @namebox.z = msgwindow.z + 10
+      @namebox.x = msgwindow.x + 14
       if msgwindow.y == 0
         @namebox.y = msgwindow.height - 4
       else
