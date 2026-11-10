@@ -3852,14 +3852,14 @@ module NameBox
   }
 
   def self.load(name, autoDispose = false)
-    @currentName = name
-    @autoDispose = autoDispose
     dispose
-    @namebox = Window_AdvancedTextPokemon.new(name)
+    @currentName = name.to_s
+    @autoDispose = autoDispose
+    @namebox = Window_AdvancedTextPokemon.new(@currentName)
     @namebox.visible = false
     skin = MessageConfig.pbGetSpeechFrame() rescue nil
     @namebox.setSkin(skin) if skin
-    @namebox.resizeToFit(name, Graphics.width)
+    @namebox.resizeToFit(@currentName, Graphics.width)
     setTextColor()
   end
 
@@ -3895,7 +3895,7 @@ module NameBox
   end
 
   def self.setTextColor()
-    if @namebox
+    if @namebox && @currentName
       if NPCCOLORS[@currentName]
         colors = NPCCOLORS[@currentName]
       else
@@ -3904,7 +3904,7 @@ module NameBox
       end
       @namebox.baseColor = colors[0]
       @namebox.shadowColor = colors[1]
-      @namebox.text = @currentName
+      @namebox.text = @currentName.to_s
     end
   end
 end
