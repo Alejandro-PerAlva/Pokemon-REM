@@ -3830,3 +3830,80 @@ def pbRemMoveCategory(moveid,pokemon=nil)
   return (pokemon.attack>pokemon.spatk ? 0 : 1) if md.function==0x90 && pokemon
   return md.category
 end
+
+
+#===============================================================================
+# NAMEBOX BEZIER (Portado de Pokémon Berilo - Bezier, adaptado al estilo Noir)
+# Muestra un elegante cuadro con el nombre del interlocutor encima del diálogo.
+# Sintaxis en mensaje: "\nm[Nombre]Texto del diálogo"
+# O llamada por script: NameBox.load("Nombre") ... NameBox.dispose
+#===============================================================================
+module NameBox
+  @namebox = nil
+  @currentName = nil
+  @autoDispose = false
+
+  # Colores opcionales para personajes clave
+  NPCCOLORS = {
+    "Rival" => [Color.new(255, 110, 110), Color.new(20, 20, 25)],
+    "Madre" => [Color.new(255, 160, 200), Color.new(20, 20, 25)],
+    "Profesor" => [Color.new(110, 180, 255), Color.new(20, 20, 25)]
+  }
+
+  def self.load(name, autoDispose = false)
+    @currentName = name
+    @autoDispose = autoDispose
+    dispose
+    @namebox = Window_AdvancedTextPokemon.new(name)
+    @namebox.visible = false
+    skin = MessageConfig.pbGetSpeechFrame() rescue nil
+    @namebox.setSkin(skin) if skin
+    @namebox.resizeToFit(name, Graphics.width)
+    setTextColor()
+  end
+
+  def self.show(msgwindow)
+    if @namebox && msgwindow
+      @namebox.viewport = msgwindow.viewport
+      @namebox.z = msgwindow.z + 1
+      @namebox.x = msgwindow.x + 16
+      if msgwindow.y == 0
+        @namebox.y = msgwindow.height - 4
+      else
+        @namebox.y = [msgwindow.y - @namebox.height + 4, 0].max
+      end
+      @namebox.visible = true
+    end
+  end
+
+  def self.hide
+    @namebox.visible = false if @namebox
+  end
+
+  def self.dispose
+    if @namebox
+      @namebox.dispose rescue nil
+      @namebox = nil
+    end
+    @currentName = nil
+    @autoDispose = false
+  end
+
+  def self.isEnabled?
+    return @namebox != nil
+  end
+
+  def self.setTextColor()
+    if @namebox
+      if NPCCOLORS[@currentName]
+        colors = NPCCOLORS[@currentName]
+      else
+        # Blanco puro con sombra profunda Noir
+        colors = [Color.new(245, 245, 250), Color.new(15, 17, 23)]
+      end
+      @namebox.baseColor = colors[0]
+      @namebox.shadowColor = colors[1]
+      @namebox.text = @currentName
+    end
+  end
+end

@@ -603,7 +603,8 @@ def pbDebugTestingMenu
         _INTL("3. Don Prodigio (Wonder Trade BST)"),
         _INTL("4. Poke al equipo (Captura con equipo lleno)"),
         _INTL("5. Quest Markers (Info e Icono)"),
-        _INTL("6. Preparar Equipo y Objetos"),
+        _INTL("6. NameBox Bezier (Test diálogo con nombre)"),
+        _INTL("7. Preparar Equipo y Objetos"),
         _INTL("Salir")
       ]
     )
@@ -687,7 +688,11 @@ def pbDebugTestingMenu
     when 4 # 5. Quest Markers
       Kernel.pbMessage(_INTL("QUEST MARKERS:\\nEl icono que flota sobre la cabeza de este NPC es un Quest Marker animado cargado desde Graphics/Pictures/Quest Markers/blue.png.\\n\\nSe activa colocando en la primera línea del evento un comentario con la sintaxis:\\nquest_marker [archivo]\\n[opacidad 0-255]\\n[rebote true/false]\\n[parpadeo true/false]"))
       
-    when 5 # 6. Preparar Equipo y Objetos
+    when 5 # 6. NameBox Bezier
+      Kernel.pbMessage(_INTL("\\nm[Inspector Tester]¡Saludos, agente!\\nEste cuadro superior con mi nombre es el NameBox Bezier integrado con la estética Noir de Pokémon REM."))
+      Kernel.pbMessage(_INTL("\\nm[Inspector Tester]Funciona tanto con la etiqueta \\nm[Nombre] en diálogos, como mediante NameBox.load(\"Nombre\") en eventos de RPG Maker XP."))
+      
+    when 6 # 7. Preparar Equipo y Objetos
       pbAddPokemon(:LUCARIO, 25) if hasConst?(PBSpecies, :LUCARIO)
       pbAddPokemon(:GRENINJA, 25) if hasConst?(PBSpecies, :GRENINJA)
       $PokemonBag.pbStoreItem(:SITRUSBERRY, 5) if hasConst?(PBItems, :SITRUSBERRY)
