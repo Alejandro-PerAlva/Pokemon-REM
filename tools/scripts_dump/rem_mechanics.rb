@@ -599,10 +599,11 @@ def pbDebugTestingMenu
       _INTL("BANCO DE PRUEBAS REM\\nHora: {1} ({2}){3}\\n¿Qué sistema deseas verificar?", hora_str, noche_str, congelado_str),
       [
         _INTL("1. Tiempo Irreal (Día/Noche)"),
-        _INTL("2. Combate 2vs1 (Jefe Snorlax)"),
+        _INTL("2. Combate 2vs1 (Con selector de Aura)"),
         _INTL("3. Don Prodigio (Wonder Trade BST)"),
-        _INTL("4. Quest Markers (Info & Icono)"),
-        _INTL("5. Preparar Equipo y Objetos"),
+        _INTL("4. Poke al equipo (Captura con equipo lleno)"),
+        _INTL("5. Quest Markers (Info e Icono)"),
+        _INTL("6. Preparar Equipo y Objetos"),
         _INTL("Salir")
       ]
     )
@@ -630,13 +631,38 @@ def pbDebugTestingMenu
         Kernel.pbMessage(_INTL("Tiempo {1}.", $PokemonGlobal.remTimeFrozen ? "CONGELADO" : "DESCONGELADO"))
       end
       
-    when 1 # 2. Combate 2vs1
-      if !$Trainer || $Trainer.pokemonCount == 0
-        Kernel.pbMessage(_INTL("No tienes Pokémon para combatir. Añadiendo a Lucario de prueba..."))
-        pbAddPokemon(:LUCARIO, 20) if hasConst?(PBSpecies, :LUCARIO)
+    when 1 # 2. Combate 2vs1 con selector de Aura
+      if !$Trainer || $Trainer.pokemonCount < 2
+        Kernel.pbMessage(_INTL("Para un combate 2vs1 necesitas al menos 2 Pokémon. Añadiendo equipo de prueba..."))
+        pbAddPokemon(:LUCARIO, 25) if hasConst?(PBSpecies, :LUCARIO)
+        pbAddPokemon(:GRENINJA, 25) if hasConst?(PBSpecies, :GRENINJA)
+        for p in $Trainer.party; p.heal; end
       end
-      Kernel.pbMessage(_INTL("Iniciando combate 2vs1 de prueba contra Jefe Snorlax..."))
-      pbBossFight(:SNORLAX, 15, 0, nil, true, false)
+      aura_opts = [
+        _INTL("1. Normal (Estadísticas base Nv25)"),
+        _INTL("2. Aura Dominante PS x2 (Doble vida)"),
+        _INTL("3. Aura Dominante Total x1.5 (+50% stats)"),
+        _INTL("4. Aura Dominante Total x2.0 (+100% stats)")
+      ]
+      aura_sel = Kernel.pbMessage(_INTL("¿Qué modificador de estadísticas deseas aplicar al Jefe?"), aura_opts, 0)
+      boost = case aura_sel
+      when 1 then :hp_x2
+      when 2 then :all_x15
+      when 3 then :all_x2
+      else nil
+      end
+      species = hasConst?(PBSpecies, :URSALUNA) ? :URSALUNA : :SNORLAX
+      Kernel.pbMessage(_INTL("Iniciando combate 2vs1 contra {1} Nv25...", PBSpecies.getName(species)))
+      if boost
+        $PokemonTemp.remDominantMode = boost
+        begin
+          pbBossFight(species, 25, 0, nil, false, false)
+        ensure
+          $PokemonTemp.remDominantMode = nil
+        end
+      else
+        pbBossFight(species, 25, 0, nil, false, false)
+      end
       Kernel.pbMessage(_INTL("Combate finalizado. Los consumibles usados se han restaurado automáticamente."))
       
     when 2 # 3. Don Prodigio
@@ -646,16 +672,25 @@ def pbDebugTestingMenu
       end
       pbDonProdigio
       
-    when 3 # 4. Quest Markers
+    when 3 # 4. Poke al equipo (Test con equipo de 6)
+      while $Trainer.party.length < 6
+        pbAddPokemon(:PIKACHU, 10) if hasConst?(PBSpecies, :PIKACHU)
+      end
+      Kernel.pbMessage(_INTL("Tu equipo ahora tiene 6 Pokémon completos.\\nSe te entregará un Eevee para probar el sistema 'Poke al equipo'."))
+      eevee = PokeBattle_Pokemon.new(:EEVEE, 15, $Trainer) rescue nil
+      if eevee
+        pbStorePokemon(eevee)
+      end
+      
+    when 4 # 5. Quest Markers
       Kernel.pbMessage(_INTL("QUEST MARKERS:\\nEl icono que flota sobre la cabeza de este NPC es un Quest Marker animado cargado desde Graphics/Pictures/Quest Markers/blue.png.\\n\\nSe activa colocando en la primera línea del evento un comentario con la sintaxis:\\nquest_marker [archivo]\\n[opacidad 0-255]\\n[rebote true/false]\\n[parpadeo true/false]"))
       
-    when 4 # 5. Preparar Equipo y Objetos
+    when 5 # 6. Preparar Equipo y Objetos
       pbAddPokemon(:LUCARIO, 25) if hasConst?(PBSpecies, :LUCARIO)
       pbAddPokemon(:GRENINJA, 25) if hasConst?(PBSpecies, :GRENINJA)
       $PokemonBag.pbStoreItem(:SITRUSBERRY, 5) if hasConst?(PBItems, :SITRUSBERRY)
-      $PokemonBag.pbStoreItem(:POKEBALL, 10) if hasConst?(PBItems, :POKEBALL)
-      Kernel.pbMessage(_INTL("¡Equipo de prueba (Lucario, Greninja), Bayas Zidra y Poké Balls añadidos!"))
-      
+      $PokemonBag.pbStoreItem(:POKEBALL, 20) if hasConst?(PBItems, :POKEBALL)
+      Kernel.pbMessage(_INTL("¡Equipo de prueba, Bayas Zidra y 20 Poké Balls añadidas!"))
     else
       break
     end
@@ -728,3 +763,200 @@ class Scene_Map
   end
 end
 
+
+
+#===============================================================================
+# 6. POKE AL EQUIPO (Jonas930 / Clara - Portado de Pokémon Berilo)
+# Si el equipo está lleno (6) y capturas o recibes un Pokémon, permite
+# enviarlo al equipo eligiendo qué miembro enviar al PC en su lugar.
+#===============================================================================
+module PokeBattle_BattleCommon
+  def pbStorePokemon(pokemon)
+    if !(pokemon.isShadow? rescue false)
+      if pbDisplayConfirm(_INTL("¿Quieres ponerle un mote a {1}?", pokemon.name))
+        species = PBSpecies.getName(pokemon.species)
+        nickname = @scene.pbNameEntry(_INTL("¿Mote de {1}?", species), pokemon)
+        pokemon.name = nickname if nickname != ""
+      end
+    end
+    if self.pbPlayer.party.length < 6
+      self.pbPlayer.party[self.pbPlayer.party.length] = pokemon
+      return
+    else
+      pokemon2 = -1
+      if pbDisplayConfirm(_INTL("¿Te gustaría añadir a {1} a tu equipo?", pokemon.name))
+        pbDisplayPaused(_INTL("Selecciona un Pokémon para enviar al PC."))
+        pbChoosePokemon(1, 2)
+        poke = pbGet(1)
+        if poke != -1
+          pokemon2 = pokemon
+          pokemon = self.pbPlayer.party[poke]
+          if pbRemovePokemonAt(poke)
+            self.pbPlayer.party[self.pbPlayer.party.length] = pokemon2
+          else
+            Kernel.pbMessage(_INTL("{1} no puede intercambiarse", pokemon.name))
+            return
+          end
+        end
+      end
+      oldcurbox = @peer.pbCurrentBox()
+      storedbox = @peer.pbStorePokemon(self.pbPlayer, pokemon)
+      creator = @peer.pbGetStorageCreator()
+      return if storedbox < 0
+      curboxname = @peer.pbBoxName(oldcurbox)
+      boxname = @peer.pbBoxName(storedbox)
+      if storedbox != oldcurbox
+        if creator
+          pbDisplayPaused(_INTL("La caja \"{1}\" del PC de {2} está llena.", curboxname, creator))
+        else
+          pbDisplayPaused(_INTL("La caja \"{1}\" del PC de Alguien está llena.", curboxname))
+        end
+        pbDisplayPaused(_INTL("{1} fue transferido a la caja \"{2}\".", pokemon.name, boxname))
+      else
+        if creator
+          pbDisplayPaused(_INTL("{1} fue transferido a la PC de {2}.", pokemon.name, creator))
+        else
+          pbDisplayPaused(_INTL("{1} fue transferido a la PC de Alguien.", pokemon.name))
+        end
+        pbDisplayPaused(_INTL("Fue guardado en la caja \"{1}\".", boxname))
+      end
+      if pokemon2 != -1
+        pbSEPlay("PokemonGet")
+        if pokemon2.isEgg?
+          pbDisplayPaused(_INTL("¡Has añadido el huevo a tu equipo!"))
+        else
+          pbDisplayPaused(_INTL("¡{1} se une al equipo!\1", pokemon2.name))
+        end
+      end
+    end
+  end
+end
+
+def pbStorePokemon(pokemon)
+  if pbBoxesFull?
+    Kernel.pbMessage(_INTL("¡No hay más espacio para Pokémon!\1"))
+    Kernel.pbMessage(_INTL("¡Las cajas del PC están llenas!"))
+    return false
+  end
+  pokemon.pbRecordFirstMoves
+  if $Trainer.party.length < 6
+    $Trainer.party[$Trainer.party.length] = pokemon
+    return true
+  else
+    pokemon2 = -1
+    ret = false
+    if pokemon.isEgg?
+      ret = Kernel.pbConfirmMessageSerious(_INTL("¿Te gustaría añadir el huevo a tu equipo?"))
+    else
+      ret = Kernel.pbConfirmMessageSerious(_INTL("¿Te gustaría añadir a {1} a tu equipo?", pokemon.name))
+    end
+    if ret
+      Kernel.pbMessage(_INTL("Selecciona un Pokémon para enviar al PC."))
+      pbChoosePokemon(1, 2)
+      poke = pbGet(1)
+      if poke != -1
+        pokemon2 = pokemon
+        pokemon = $Trainer.party[poke]
+        if pbRemovePokemonAt(poke)
+          $Trainer.party[$Trainer.party.length] = pokemon2
+        else
+          Kernel.pbMessage(_INTL("{1} no puede salir del equipo", pokemon.name))
+          return false
+        end
+      end
+    end
+    ret = false
+    oldcurbox = $PokemonStorage.currentBox
+    storedbox = $PokemonStorage.pbStoreCaught(pokemon)
+    curboxname = $PokemonStorage[oldcurbox].name
+    boxname = $PokemonStorage[storedbox].name
+    creator = nil
+    creator = Kernel.pbGetStorageCreator if $PokemonGlobal.seenStorageCreator
+    pokeName = pokemon.isEgg? ? _INTL("El huevo") : pokemon.name
+    if storedbox != oldcurbox
+      if creator
+        Kernel.pbMessage(_INTL("La caja \"{1}\" del PC de {2} está llena.", curboxname, creator))
+      else
+        Kernel.pbMessage(_INTL("La caja \"{1}\" del PC de Alguien está llena.", curboxname))
+      end
+      Kernel.pbMessage(_INTL("{1} fue transferido a la caja \"{2}\".", pokeName, boxname))
+    else
+      if creator
+        Kernel.pbMessage(_INTL("{1} fue transferido a la PC de {2}.", pokeName, creator))
+      else
+        Kernel.pbMessage(_INTL("{1} fue transferido a la PC de Alguien.", pokeName))
+      end
+      Kernel.pbMessage(_INTL("Fue guardado en la caja \"{1}\".", boxname))
+      ret = true
+    end
+    if pokemon2 != -1
+      pbSEPlay("PokemonGet")
+      if pokemon2.isEgg?
+        Kernel.pbMessage(_INTL("¡Has añadido el huevo a tu equipo!"))
+      else
+        Kernel.pbMessage(_INTL("¡{1} se une al equipo!\1", pokeName))
+      end
+      ret = true
+    end
+  end
+  return ret
+end
+
+#===============================================================================
+# 7. MENOS LAG - OPTIMIZACIÓN BUSH DEPTH (Portado de Realidea / Essentials v19)
+# Evita recalcular hierba alta y profundidad en cada frame gráfico inútilmente.
+# Solo lo recalcula al iniciar o terminar un paso.
+#===============================================================================
+class Game_Character
+  def bush_depth
+    return @bush_depth || 0
+  end
+
+  def calculate_bush_depth
+    if @tile_id > 0 || @always_on_top || jumping?
+      @bush_depth = 0
+    else
+      deep_bush = regular_bush = false
+      xbehind = @x + (@direction == 4 ? 1 : @direction == 6 ? -1 : 0)
+      ybehind = @y + (@direction == 8 ? 1 : @direction == 2 ? -1 : 0)
+      this_map = (self.map.valid?(@x, @y)) ? [self.map, @x, @y] : $MapFactory.getNewMap(@x, @y)
+      if this_map && this_map[0].deepBush?(this_map[1], this_map[2]) && self.map.deepBush?(xbehind, ybehind)
+        @bush_depth = Game_Map::TILEHEIGHT
+      elsif this_map && this_map[0].bush?(this_map[1], this_map[2])
+        @bush_depth = 12
+      else
+        @bush_depth = 0
+      end
+    end
+  end
+
+  alias rem_hotfixes_update update
+  def update
+    @stopped_last_frame = @stopped_this_frame
+    rem_hotfixes_update
+  end
+
+  alias rem_hotfixes_update_move update_move
+  def update_move
+    rem_hotfixes_update_move
+    if !jumping?
+      calculate_bush_depth
+      @stopped_this_frame = true
+    elsif !@moved_last_frame || @stopped_last_frame
+      calculate_bush_depth
+      @stopped_this_frame = false
+    end
+  end
+
+  alias rem_hotfixes_update_stop update_stop
+  def update_stop
+    rem_hotfixes_update_stop
+    @stopped_this_frame = false
+  end
+end
+
+class Game_Player < Game_Character
+  def bush_depth
+    return @bush_depth || 0
+  end
+end
