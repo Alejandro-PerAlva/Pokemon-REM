@@ -651,17 +651,19 @@ def pbDebugTestingMenu
       when 3 then :all_x2
       else nil
       end
-      species = hasConst?(PBSpecies, :URSALUNA) ? :URSALUNA : :SNORLAX
-      Kernel.pbMessage(_INTL("Iniciando combate 2vs1 contra {1} Nv25...", PBSpecies.getName(species)))
+      species_sym = hasConst?(PBSpecies, :URSALUNA) ? :URSALUNA : :SNORLAX
+      species_id = getID(PBSpecies, species_sym)
+      species_name = PBSpecies.getName(species_id)
+      Kernel.pbMessage(_INTL("Iniciando combate 2vs1 contra {1} Nv25...", species_name))
       if boost
         $PokemonTemp.remDominantMode = boost
         begin
-          pbBossFight(species, 25, 0, nil, false, false)
+          pbBossFight(species_id, 25, 0, nil, false, false)
         ensure
           $PokemonTemp.remDominantMode = nil
         end
       else
-        pbBossFight(species, 25, 0, nil, false, false)
+        pbBossFight(species_id, 25, 0, nil, false, false)
       end
       Kernel.pbMessage(_INTL("Combate finalizado. Los consumibles usados se han restaurado automáticamente."))
       
