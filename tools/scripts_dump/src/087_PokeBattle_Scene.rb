@@ -2357,6 +2357,10 @@ class PokeBattle_Scene
         pbPlayCursorSE()
         cw.index+=2
       end
+      if Input.trigger?(Input::X) || Input.trigger?(Input::A)
+        pbPlayDecisionSE()
+        pbShowBattleInfo(@battle) if defined?(pbShowBattleInfo)
+      end
       if Input.trigger?(Input::C)   # Confirm choice
         pbPlayDecisionSE()
         ret=cw.index
@@ -2400,6 +2404,10 @@ class PokeBattle_Scene
         pbPlayCursorSE() if cw.setIndex(cw.index-2)
       elsif Input.trigger?(Input::DOWN) &&  (cw.index&2)==0
         pbPlayCursorSE() if cw.setIndex(cw.index+2)
+      end
+      if Input.trigger?(Input::X) || Input.trigger?(Input::A)
+        pbPlayDecisionSE()
+        pbShowBattleInfo(@battle) if defined?(pbShowBattleInfo)
       end
       if Input.trigger?(Input::C)   # Confirm choice
         ret=cw.index
