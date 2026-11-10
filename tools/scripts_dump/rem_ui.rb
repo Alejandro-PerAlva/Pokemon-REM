@@ -3867,11 +3867,12 @@ module NameBox
     if @namebox && msgwindow
       @namebox.viewport = msgwindow.viewport
       @namebox.z = msgwindow.z + 10
-      @namebox.x = msgwindow.x + 14
+      # Acoplado estilo pestaña de dossier policial Noir
+      @namebox.x = msgwindow.x + 12
       if msgwindow.y == 0
-        @namebox.y = msgwindow.height - 4
+        @namebox.y = msgwindow.height - 14
       else
-        @namebox.y = [msgwindow.y - @namebox.height + 4, 0].max
+        @namebox.y = [msgwindow.y - @namebox.height + 14, 0].max
       end
       @namebox.visible = true
     end
