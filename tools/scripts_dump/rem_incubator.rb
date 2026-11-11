@@ -222,8 +222,10 @@ class REM_EggHatcher_Scene
     bmp.fill_rect(0, 0, bmp.width, bmp.height, Color.new(14, 16, 22))
 
     # Trama sutil de fondo
-    for y in (0...bmp.height).step(4)
+    y = 0
+    while y < bmp.height
       bmp.fill_rect(0, y, bmp.width, 1, Color.new(18, 22, 30))
+      y += 4
     end
 
     silver = defined?(REM_UI::SILVER) ? REM_UI::SILVER : Color.new(214, 219, 228)
