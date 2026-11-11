@@ -402,46 +402,51 @@ class CommandMenuDisplay
   alias rem_tactical_init initialize
   def initialize(viewport=nil)
     rem_tactical_init(viewport)
-    # Ancho ampliado y altura completa para @msgbox para que nunca corte texto
-    @msgbox.x = 10
-    @msgbox.y = Graphics.height - 96 + 2
-    @msgbox.width = 240
-    @msgbox.height = 96
+    @msgbox.visible = false if @msgbox
     
-    # Línea 2 separada e independiente para Tecla D: info
-    @remHint = BitmapSprite.new(246, 26, viewport)
-    @remHint.x = 0
-    @remHint.y = Graphics.height - 34
-    @remHint.z = (@window.z rescue 100) + 2
-    pbSetNarrowFont(@remHint.bitmap)
-    @remHint.bitmap.font.size = 18
-    pbDrawTextPositions(@remHint.bitmap, [[_INTL("Tecla D: info"), 123, 2, 2, REM_UI::SILVER, REM_UI::INK]])
+    # Sprite completo para el texto del cuadro de comandos (Línea 1 y Línea 2 centradas horizontalmente)
+    @remTextSprite = BitmapSprite.new(246, 96, viewport)
+    @remTextSprite.x = 0
+    @remTextSprite.y = Graphics.height - 96
+    @remTextSprite.z = (@window.z rescue 100) + 2
+    @currentPrompt = ""
   end
 
   alias rem_tactical_visible= visible=
   def visible=(value)
     self.rem_tactical_visible = value
-    @remHint.visible = value if @remHint && !@remHint.disposed?
+    @msgbox.visible = false if @msgbox
+    @remTextSprite.visible = value if @remTextSprite && !@remTextSprite.disposed?
   end
 
   alias rem_tactical_dispose dispose
   def dispose
-    @remHint.dispose if @remHint && !@remHint.disposed?
+    @remTextSprite.dispose if @remTextSprite && !@remTextSprite.disposed?
     rem_tactical_dispose
   end
 
   def setTexts(value)
-    if @msgbox
-      @msgbox.text = value[0]
-      if @msgbox.contents
-        pbSetNarrowFont(@msgbox.contents)
-        @msgbox.contents.font.size = 24
-        @msgbox.contents.clear
-        # Dibuja la pregunta "¿Qué hará <Pokemon>?" siempre en la línea 1 sin romper
-        drawTextEx(@msgbox.contents, 0, 4, @msgbox.contents.width, 1,
-           value[0].gsub(/\r/, ""), @msgbox.baseColor, @msgbox.shadowColor)
-      end
+    @msgbox.text = value[0] if @msgbox
+    @msgbox.visible = false if @msgbox
+    @currentPrompt = value[0] || ""
+    
+    if @remTextSprite && !@remTextSprite.disposed?
+      bmp = @remTextSprite.bitmap
+      bmp.clear
+      
+      base_col = (PokeBattle_SceneConstants::MESSAGEBASECOLOR rescue nil) || Color.new(255, 255, 255)
+      shadow_col = (PokeBattle_SceneConstants::MESSAGESHADOWCOLOR rescue nil) || REM_UI::INK
+      
+      # Línea 1: ¿Qué hará <Pokemon>? (Centrado horizontalmente a x=123)
+      pbSetNarrowFont(bmp)
+      bmp.font.size = 24
+      pbDrawTextPositions(bmp, [[@currentPrompt, 123, 16, 2, base_col, shadow_col]])
+      
+      # Línea 2: Tecla D: info (Centrado horizontalmente a x=123)
+      bmp.font.size = 18
+      pbDrawTextPositions(bmp, [[_INTL("Tecla D: info"), 123, 52, 2, REM_UI::SILVER, REM_UI::INK]])
     end
+    
     commands = []
     for i in 1..4
       commands.push(value[i]) if value[i] && value[i] != nil
