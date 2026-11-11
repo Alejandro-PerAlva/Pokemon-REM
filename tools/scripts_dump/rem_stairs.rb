@@ -259,20 +259,21 @@ class Game_Event
   end
   
   def get_stair_data
-    return if !is_stair_event?
-    return if !@list
+    return [0, 0, 0, 1, 16] if !is_stair_event? || !@list
+    xincline = 0
+    yincline = 0
+    ypos = 0
+    yheight = 1
+    offset = 16
     for cmd in @list
-      if cmd.code == 108
+      if cmd.code == 108 || cmd.code == 408
         if cmd.parameters[0] =~ /Slope:\s*([+-]?\d+)x([+-]?\d+)/i
           xincline, yincline = $1.to_i, $2.to_i
-        elsif cmd.parameters[0] =~ /Width: (\d+)\/(\d+)/
+        elsif cmd.parameters[0] =~ /Width:\s*(\d+)\/(\d+)/i
           ypos, yheight = $1.to_i, $2.to_i
-        elsif cmd.parameters[0] =~ /Offset: (\d+)px/
+        elsif cmd.parameters[0] =~ /Offset:\s*(\d+)px/i
           offset = $1.to_i
         end
-      end
-      if xincline && yincline && ypos && yheight && offset
-        return [xincline, yincline, ypos, yheight, offset]
       end
     end
     return [xincline, yincline, ypos, yheight, offset]
@@ -404,6 +405,11 @@ class Game_Character
   end
   
   def slope(x, y, ypos = 0, yheight = 1, begin_offset = 0)
+    x = x || 0
+    y = y || 0
+    ypos = ypos || 0
+    yheight = yheight || 1
+    begin_offset = begin_offset || 16
     @stair_current_slope = [x, y, ypos, yheight, begin_offset] # Bezier: Guarda el slope para eventos dependientes
     @stair_start_x = self.is_a?(Game_Player) ? @x : (@real_x / Game_Map.realResX).round
     @stair_start_y = self.is_a?(Game_Player) ? @y : (@real_y / Game_Map.realResY).round
