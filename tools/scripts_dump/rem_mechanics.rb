@@ -594,46 +594,85 @@ def pbDebugTestingMenu
     hora_str = sprintf("%02d:%02d", pbGetTimeNow.hour, pbGetTimeNow.min)
     noche_str = pbRemIsNight? ? "Noche (x1.5 Lv)" : "Día"
     congelado_str = ($PokemonGlobal && $PokemonGlobal.remTimeFrozen) ? " [Tiempo Congelado]" : ""
+    has_inc = ($PokemonBag && $PokemonBag.pbHasItem?(:INCUBADORA)) ? "Sí" : "No"
+    egg = $PokemonGlobal ? $PokemonGlobal.egg : nil
+    egg_str = egg ? (egg.eggsteps == 0 ? "¡Listo para abrir!" : "#{egg.eggsteps} pasos") : "Vacía"
     
     cmd = Kernel.pbMessage(
-      _INTL("BANCO DE PRUEBAS REM\\nHora: {1} ({2}){3}\\n¿Qué sistema deseas verificar?", hora_str, noche_str, congelado_str),
+      _INTL("BANCO DE PRUEBAS REM\\nIncubadora: {1} | Huevo: {2}\\n¿Qué sistema deseas verificar?", has_inc, egg_str),
       [
-        _INTL("1. Tiempo Irreal (Día/Noche)"),
-        _INTL("2. Combate 2vs1 (Con selector de Aura)"),
-        _INTL("3. Don Prodigio (Wonder Trade BST)"),
-        _INTL("4. Poke al equipo (Captura con equipo lleno)"),
-        _INTL("5. Quest Markers (Info e Icono)"),
-        _INTL("6. NameBox Bezier (Test diálogo con nombre)"),
-        _INTL("7. BattleMoreInfo (Combate táctico tecla A/X)"),
-        _INTL("8. Preparar Equipo y Objetos"),
+        _INTL("1. Incubadora Noir (Huevo, pasos y entrega)"),
+        _INTL("2. Equipar Objetos a Pokémon (Icono bajo PS)"),
+        _INTL("3. Combate 2vs1 (Selector de Aura)"),
+        _INTL("4. Tiempo Irreal (Día/Noche)"),
+        _INTL("5. Preparar / Curar Equipo"),
         _INTL("Salir")
       ]
     )
     
     case cmd
-    when 0 # 1. Tiempo Irreal
-      sub = Kernel.pbMessage(
-        _INTL("TIEMPO IRREAL\\n¿Qué acción deseas ejecutar?"),
+    when 0 # 1. Pruebas de Incubadora
+      inc_cmd = Kernel.pbMessage(
+        _INTL("INCUBADORA NOIR\\nIncubadora: {1} | Huevo: {2}\\nSelecciona una acción:", has_inc, egg_str),
         [
-          _INTL("Alternar Día / Noche (Forzar)"),
-          _INTL("Avanzar 3 horas"),
-          _INTL("Congelar / Descongelar tiempo"),
+          _INTL("Dar / Quitar Objeto Incubadora"),
+          _INTL("Simular Entrega de Huevo (pbGenerateEgg)"),
+          _INTL("Fijar Pasos a 0 (Probar botón [C] Eclosionar)"),
+          _INTL("Fijar Pasos a 10 (Probar caminar para completar)"),
+          _INTL("Vaciar Incubadora"),
           _INTL("Volver")
         ]
       )
-      case sub
+      case inc_cmd
       when 0
-        pbToggleDayNight(true)
-        Kernel.pbMessage(_INTL("Estado cambiado a: {1}.", pbRemIsNight? ? "Noche" : "Día"))
+        if $PokemonBag.pbHasItem?(:INCUBADORA)
+          $PokemonBag.pbDeleteItem(:INCUBADORA)
+          Kernel.pbMessage(_INTL("Incubadora retirada de la mochila."))
+        else
+          $PokemonBag.pbStoreItem(:INCUBADORA, 1)
+          Kernel.pbMessage(_INTL("¡Incubadora añadida a los Objetos Clave de la mochila!"))
+        end
       when 1
-        skipToHour((pbGetTimeNow.hour + 3) % 24)
-        Kernel.pbMessage(_INTL("Hora avanzada a las {1}.", sprintf("%02d:00", pbGetTimeNow.hour)))
+        spec = hasConst?(PBSpecies, :RIOLU) ? :RIOLU : (hasConst?(PBSpecies, :TOGEPI) ? :TOGEPI : :EEVEE)
+        Kernel.pbMessage(_INTL("Un personaje te ofrece un Huevo de {1}...", PBSpecies.getName(getID(PBSpecies, spec))))
+        res = pbGenerateEgg(spec, _INTL("Entregado por el Inspector Tester"))
+        Kernel.pbMessage(_INTL("Resultado de la entrega: {1}", res ? "Aceptado y guardado en Incubadora" : "Cancelado / Rechazado"))
       when 2
-        $PokemonGlobal.remTimeFrozen = !$PokemonGlobal.remTimeFrozen
-        Kernel.pbMessage(_INTL("Tiempo {1}.", $PokemonGlobal.remTimeFrozen ? "CONGELADO" : "DESCONGELADO"))
+        if $PokemonGlobal && $PokemonGlobal.egg
+          $PokemonGlobal.egg.eggsteps = 0
+          Kernel.pbMessage(_INTL("Pasos fijados a 0.\\n¡Abre el menú de Pokémon o la mochila para ver el aviso y abrir el huevo con [C]!"))
+        else
+          Kernel.pbMessage(_INTL("No hay ningún Huevo en la Incubadora."))
+        end
+      when 3
+        if $PokemonGlobal && $PokemonGlobal.egg
+          $PokemonGlobal.egg.eggsteps = 10
+          Kernel.pbMessage(_INTL("Pasos fijados a 10.\\nDa 10 pasos en el mapa para que se complete la incubación."))
+        else
+          Kernel.pbMessage(_INTL("No hay ningún Huevo en la Incubadora."))
+        end
+      when 4
+        $PokemonGlobal.egg = nil
+        Kernel.pbMessage(_INTL("Incubadora vaciada."))
       end
-      
-    when 1 # 2. Combate 2vs1 con selector de Aura
+
+    when 1 # 2. Equipar Objetos a Pokémon
+      while $Trainer.party.length < 3
+        pbAddPokemon(:LUCARIO, 25) if hasConst?(PBSpecies, :LUCARIO)
+        pbAddPokemon(:GRENINJA, 25) if hasConst?(PBSpecies, :GRENINJA)
+        pbAddPokemon(:CHARIZARD, 25) if hasConst?(PBSpecies, :CHARIZARD)
+      end
+      # Equipar objetos variados
+      items = [:CHOICEBAND, :LEFTOVERS, :SITRUSBERRY, :ASSAULTVEST, :LIFEORB, :EXPSHARE]
+      $Trainer.party.each_with_index do |pkmn, i|
+        it = items[i % items.length]
+        if hasConst?(PBItems, it)
+          pkmn.setItem(getID(PBItems, it))
+        end
+      end
+      Kernel.pbMessage(_INTL("¡Objetos equipados en tu equipo (Cinta Elegida, Restos, Baya Zidra...)!\\nAbre el menú de Pokémon para comprobar que sus iconos se muestran alineados justo debajo de 'PS'."))
+
+    when 2 # 3. Combate 2vs1 con selector de Aura
       if !$Trainer || $Trainer.pokemonCount < 2
         Kernel.pbMessage(_INTL("Para un combate 2vs1 necesitas al menos 2 Pokémon. Añadiendo equipo de prueba..."))
         pbAddPokemon(:LUCARIO, 25) if hasConst?(PBSpecies, :LUCARIO)
@@ -668,81 +707,36 @@ def pbDebugTestingMenu
         pbBossFight(species_id, 25, 0, nil, false, false)
       end
       Kernel.pbMessage(_INTL("Combate finalizado. Los consumibles usados se han restaurado automáticamente."))
-      
-    when 2 # 3. Don Prodigio
-      if !$Trainer || $Trainer.pokemonCount == 0
-        Kernel.pbMessage(_INTL("Necesitas al menos 1 Pokémon en el equipo para intercambiar. Añadiendo a Eevee..."))
-        pbAddPokemon(:EEVEE, 15) if hasConst?(PBSpecies, :EEVEE)
-      end
-      pbDonProdigio
-      
-    when 3 # 4. Poke al equipo (Test con equipo de 6)
-      while $Trainer.party.length < 6
-        pbAddPokemon(:PIKACHU, 10) if hasConst?(PBSpecies, :PIKACHU)
-      end
-      Kernel.pbMessage(_INTL("Tu equipo ahora tiene 6 Pokémon completos.\\nSe te entregará un Eevee para probar el sistema 'Poke al equipo'."))
-      eevee = PokeBattle_Pokemon.new(:EEVEE, 15, $Trainer) rescue nil
-      if eevee
-        pbStorePokemon(eevee)
-      end
-      
-    when 4 # 5. Quest Markers
-      Kernel.pbMessage(_INTL("QUEST MARKERS:\\nEl icono que flota sobre la cabeza de este NPC es un Quest Marker animado cargado desde Graphics/Pictures/Quest Markers/blue.png.\\n\\nSe activa colocando en la primera línea del evento un comentario con la sintaxis:\\nquest_marker [archivo]\\n[opacidad 0-255]\\n[rebote true/false]\\n[parpadeo true/false]"))
-      
-    when 5 # 6. NameBox Bezier
-      Kernel.pbMessage(_INTL("\\nm[Inspector Tester]¡Saludos, agente!\\nEste cuadro superior con mi nombre es el NameBox Bezier integrado con la estética Noir de Pokémon REM."))
-      Kernel.pbMessage(_INTL("\\nm[Inspector Tester]Funciona tanto con la etiqueta \\nm[Nombre] en diálogos, como mediante NameBox.load(\"Nombre\") en eventos de RPG Maker XP."))
-      
-    when 6 # 7. Información Táctica en Combate (Tecla D)
-      if !$Trainer || $Trainer.pokemonCount == 0
-        pbAddPokemon(:LUCARIO, 25) if hasConst?(PBSpecies, :LUCARIO)
-      end
-      if $Trainer.party.length < 2
-        pbAddPokemon(:GRENINJA, 25) if hasConst?(PBSpecies, :GRENINJA)
-      end
-      
-      # Equipar movimientos tácticos en el equipo del jugador
-      if $Trainer && $Trainer.party.length > 0
-        p1 = $Trainer.party[0]
-        p1.moves[0] = PBMove.new(getID(PBMoves, :STEALTHROCK)) if hasConst?(PBMoves, :STEALTHROCK)
-        p1.moves[1] = PBMove.new(getID(PBMoves, :TORMENT)) if hasConst?(PBMoves, :TORMENT)
-        p1.moves[2] = PBMove.new(getID(PBMoves, :REFLECT)) if hasConst?(PBMoves, :REFLECT)
-        p1.moves[3] = PBMove.new(getID(PBMoves, :CONFUSERAY)) if hasConst?(PBMoves, :CONFUSERAY)
-        if $Trainer.party.length > 1
-          p2 = $Trainer.party[1]
-          p2.moves[0] = PBMove.new(getID(PBMoves, :LEECHSEED)) if hasConst?(PBMoves, :LEECHSEED)
-          p2.moves[1] = PBMove.new(getID(PBMoves, :SUNNYDAY)) if hasConst?(PBMoves, :SUNNYDAY)
-          p2.moves[2] = PBMove.new(getID(PBMoves, :TAILWIND)) if hasConst?(PBMoves, :TAILWIND)
-          p2.moves[3] = PBMove.new(getID(PBMoves, :SPIKES)) if hasConst?(PBMoves, :SPIKES)
-        end
-      end
-      
-      Kernel.pbMessage(_INTL("\\nm[Inspector Tester]INFORMACIÓN TÁCTICA (Tecla D):\\n\\nEn el menú de combate (Luchar, Mochila...), presiona la tecla D para desplegar las tarjetas tácticas sobre tu Pokémon y el rival."))
-      Kernel.pbMessage(_INTL("\\nm[Inspector Tester]Tu equipo y el rival cuentan con movimientos tácticos (Trampa Rocas, Tormento, Reflejo, Rayo Confuso, Drenadoras, Sol...) para probar las tablas dinámicas."))
 
-      foe_sym = hasConst?(PBSpecies, :CORVIKNIGHT) ? :CORVIKNIGHT : (hasConst?(PBSpecies, :PIDGEOT) ? :PIDGEOT : :PIDGEY)
-      wild_pkmn = pbGenerateWildPokemon(getID(PBSpecies, foe_sym), 25)
-      wild_pkmn.moves[0] = PBMove.new(getID(PBMoves, :TORMENT)) if hasConst?(PBMoves, :TORMENT)
-      wild_pkmn.moves[1] = PBMove.new(getID(PBMoves, :CONFUSERAY)) if hasConst?(PBMoves, :CONFUSERAY)
-      wild_pkmn.moves[2] = PBMove.new(getID(PBMoves, :REFLECT)) if hasConst?(PBMoves, :REFLECT)
-      wild_pkmn.moves[3] = PBMove.new(getID(PBMoves, :STEALTHROCK)) if hasConst?(PBMoves, :STEALTHROCK)
+    when 3 # 4. Tiempo Irreal
+      sub = Kernel.pbMessage(
+        _INTL("TIEMPO IRREAL\\n¿Qué acción deseas ejecutar?"),
+        [
+          _INTL("Alternar Día / Noche (Forzar)"),
+          _INTL("Avanzar 3 horas"),
+          _INTL("Congelar / Descongelar tiempo"),
+          _INTL("Volver")
+        ]
+      )
+      case sub
+      when 0
+        pbToggleDayNight(true)
+        Kernel.pbMessage(_INTL("Estado cambiado a: {1}.", pbRemIsNight? ? "Noche" : "Día"))
+      when 1
+        skipToHour((pbGetTimeNow.hour + 3) % 24)
+        Kernel.pbMessage(_INTL("Hora avanzada a las {1}.", sprintf("%02d:00", pbGetTimeNow.hour)))
+      when 2
+        $PokemonGlobal.remTimeFrozen = !$PokemonGlobal.remTimeFrozen
+        Kernel.pbMessage(_INTL("Tiempo {1}.", $PokemonGlobal.remTimeFrozen ? "CONGELADO" : "DESCONGELADO"))
+      end
 
-      scene = pbNewBattleScene
-      battle = PokeBattle_Battle.new(scene, $Trainer.party, [wild_pkmn], $Trainer, nil)
-      battle.internalbattle = true
-      pbPrepareBattle(battle)
-      pbBattleAnimation(pbGetWildBattleBGM(wild_pkmn.species)) {
-        pbSceneStandby {
-          battle.pbStartBattle(false)
-        }
-      }
-      
-    when 7 # 8. Preparar Equipo y Objetos
-      pbAddPokemon(:LUCARIO, 25) if hasConst?(PBSpecies, :LUCARIO)
-      pbAddPokemon(:GRENINJA, 25) if hasConst?(PBSpecies, :GRENINJA)
+    when 4 # 5. Preparar / Curar Equipo
+      if $Trainer && $Trainer.party
+        for p in $Trainer.party; p.heal; end
+      end
       $PokemonBag.pbStoreItem(:SITRUSBERRY, 5) if hasConst?(PBItems, :SITRUSBERRY)
       $PokemonBag.pbStoreItem(:POKEBALL, 20) if hasConst?(PBItems, :POKEBALL)
-      Kernel.pbMessage(_INTL("¡Equipo de prueba, Bayas Zidra y 20 Poké Balls añadidas!"))
+      Kernel.pbMessage(_INTL("¡Equipo curado al 100%! Bayas Zidra y 20 Poké Balls añadidas a la mochila."))
     else
       break
     end

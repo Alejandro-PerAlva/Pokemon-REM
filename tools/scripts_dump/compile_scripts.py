@@ -2,7 +2,7 @@
 """Compila e inserta todas las secciones personalizadas REM en Data/Scripts.rxdata usando rubymarshal.
 Mantiene el orden correcto justo antes de la sección 'Main'.
 """
-import os, zlib
+import os, zlib, glob
 import rubymarshal.reader as r
 import rubymarshal.writer as w
 import rubymarshal.classes as rc
@@ -13,6 +13,18 @@ if not os.path.exists(rx_path):
 
 data = open(rx_path, "rb").read()
 scripts = r.loads(data)
+
+# 1. Parchear secciones de src/ si existen y han cambiado
+for idx, s in enumerate(scripts):
+    matches = glob.glob(f"tools/scripts_dump/src/{idx:03d}_*.rb")
+    if matches:
+        with open(matches[0], "rb") as f:
+            src_bytes = f.read()
+        cur_decomp = zlib.decompress(s[2])
+        if src_bytes != cur_decomp:
+            s[2] = zlib.compress(src_bytes)
+            s_name = s[1].text if hasattr(s[1], "text") else str(s[1])
+            print(f"Parcheada seccion base {idx}: {s_name}")
 
 rem_names = [
     "REM_Rebalance",
