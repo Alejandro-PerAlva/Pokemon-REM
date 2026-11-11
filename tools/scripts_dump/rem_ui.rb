@@ -402,14 +402,21 @@ class CommandMenuDisplay
   alias rem_tactical_init initialize
   def initialize(viewport=nil)
     rem_tactical_init(viewport)
-    @remHint = BitmapSprite.new(246, 30, viewport)
+    # Estándar fijo de 2 líneas separadas:
+    # Línea 1: ¿Qué hará <Pokemon>? (con ancho completo para nombres largos)
+    @msgbox.x = 8
+    @msgbox.y = Graphics.height - 96 + 12
+    @msgbox.width = 240
+    @msgbox.height = 34
+    
+    # Línea 2: Tecla D: info centrada debajo
+    @remHint = BitmapSprite.new(246, 26, viewport)
     @remHint.x = 0
-    @remHint.y = Graphics.height - 44
+    @remHint.y = Graphics.height - 34
     @remHint.z = (@window.z rescue 100) + 2
     pbSetNarrowFont(@remHint.bitmap)
     @remHint.bitmap.font.size = 18
-    # Centrado horizontal y verticalmente debajo de "¿Qué hará <Pokemon>?"
-    pbDrawTextPositions(@remHint.bitmap, [[_INTL("Tecla D: info"), 123, 6, 2, REM_UI::SILVER, REM_UI::INK]])
+    pbDrawTextPositions(@remHint.bitmap, [[_INTL("Tecla D: info"), 123, 2, 2, REM_UI::SILVER, REM_UI::INK]])
   end
 
   alias rem_tactical_visible= visible=
@@ -423,11 +430,24 @@ class CommandMenuDisplay
     @remHint.dispose if @remHint && !@remHint.disposed?
     rem_tactical_dispose
   end
+
+  def setTexts(value)
+    if @msgbox && @msgbox.contents
+      pbSetNarrowFont(@msgbox.contents)
+      @msgbox.contents.font.size = 24
+    end
+    @msgbox.text = value[0]
+    commands = []
+    for i in 1..4
+      commands.push(value[i]) if value[i] && value[i] != nil
+    end
+    @window.commands = commands
+  end
 end
 
 #===============================================================================
 # INFORMACIÓN TÁCTICA DE COMBATE NOIR DINÁMICA (Tecla D en menú de comandos)
-# Tarjetas auto-redimensionables para Jugador y Rival (Solo lo activo, Stats fijas)
+# Tarjetas auto-redimensionables con formato tabla (ESTADOS, BARRERAS & TRAMPAS, TERRENO)
 #===============================================================================
 module REM_TacticalUI
   BASE   = Color.new(255, 255, 255)
@@ -437,16 +457,6 @@ module REM_TacticalUI
   COLOR_NEUTRAL = Color.new(140, 145, 155)
   COLOR_BOOST   = Color.new(110, 195, 255)
   COLOR_DROP    = Color.new(255, 110, 110)
-
-  # Colores temáticos de píldoras
-  PILL_VOLATILE_BG     = Color.new(42, 28, 54, 235)
-  PILL_VOLATILE_BORDER = Color.new(135, 85, 165, 220)
-  
-  PILL_SIDE_BG         = Color.new(22, 38, 56, 235)
-  PILL_SIDE_BORDER     = Color.new(70, 120, 165, 220)
-  
-  PILL_ENV_BG          = Color.new(36, 42, 28, 235)
-  PILL_ENV_BORDER      = Color.new(130, 145, 75, 220)
 
   STAT_NAMES = ["ATK", "DEF", "SPA", "SPD", "VEL", "PRC", "EVA"]
   STAT_IDS = [
@@ -499,97 +509,103 @@ module REM_TacticalUI
     end
   end
 
-  # Dibuja una píldora con nombre de efecto y turnos
-  def self.drawPill(bmp, text, x, y, bg_col, border_col)
+  # Dibuja una celda de la tabla: Nombre a la izquierda, Turnos / - / xN a la derecha
+  def self.drawTableCell(bmp, name, tag, x, y, w, h)
+    bmp.fill_rect(x + 2, y, w - 4, h, Color.new(24, 30, 44, 230))
+    bmp.fill_rect(x, y + 2, w, h - 4, Color.new(24, 30, 44, 230))
+    bmp.set_pixel(x + 1, y + 1, Color.new(24, 30, 44, 230))
+    bmp.set_pixel(x + w - 2, y + 1, Color.new(24, 30, 44, 230))
+    bmp.set_pixel(x + 1, y + h - 2, Color.new(24, 30, 44, 230))
+    bmp.set_pixel(x + w - 2, y + h - 2, Color.new(24, 30, 44, 230))
+    
+    border_col = Color.new(52, 68, 92, 180)
+    bmp.fill_rect(x + 2, y, w - 4, 1, border_col)
+    bmp.fill_rect(x + 2, y + h - 1, w - 4, 1, border_col)
+    bmp.fill_rect(x, y + 2, 1, h - 4, border_col)
+    bmp.fill_rect(x + w - 1, y + 2, 1, h - 4, border_col)
+
     pbSetNarrowFont(bmp)
     bmp.font.size = 14
-    tw = bmp.text_size(text).width
-    pw = tw + 10
-    ph = 18
-    bmp.fill_rect(x + 2, y, pw - 4, ph, bg_col)
-    bmp.fill_rect(x, y + 2, pw, ph - 4, bg_col)
-    bmp.set_pixel(x + 1, y + 1, bg_col)
-    bmp.set_pixel(x + pw - 2, y + 1, bg_col)
-    bmp.set_pixel(x + 1, y + ph - 2, bg_col)
-    bmp.set_pixel(x + pw - 2, y + ph - 2, bg_col)
-    
-    bmp.fill_rect(x + 2, y, pw - 4, 1, border_col)
-    bmp.fill_rect(x + 2, y + ph - 1, pw - 4, 1, border_col)
-    bmp.fill_rect(x, y + 2, 1, ph - 4, border_col)
-    bmp.fill_rect(x + pw - 1, y + 2, 1, ph - 4, border_col)
+    pbDrawTextPositions(bmp, [[name, x + 5, y + 1, 0, BASE, SHADOW]])
 
-    pbDrawTextPositions(bmp, [[text, x + pw / 2, y + 1, 2, BASE, SHADOW]])
-    return pw
+    tag_col = if tag.include?("T")
+                Color.new(110, 205, 255) # Turnos restantes (Cian)
+              elsif tag.include?("x")
+                Color.new(255, 215, 80)  # Capas / Stacks (Dorado)
+              else
+                Color.new(160, 165, 175) # Permanente / Infinito (Plata)
+              end
+    pbDrawTextPositions(bmp, [[tag, x + w - 6, y + 1, 1, tag_col, SHADOW]])
   end
 
-  # Lista de estados volátiles activos del Pokémon
+  # Lista de estados volátiles del Pokémon: [ [nombre, tag], ... ]
   def self.getVolatilesList(battler)
     res = []
     return res if !battler || !battler.effects
     eff = battler.effects
-    res.push(_INTL("Confusión ({1}T)", eff[PBEffects::Confusion])) if eff[PBEffects::Confusion] && eff[PBEffects::Confusion] > 0
-    res.push(_INTL("Enamorado")) if eff[PBEffects::Attract] && eff[PBEffects::Attract] >= 0
-    res.push(_INTL("Tormento")) if eff[PBEffects::Torment]
-    res.push(_INTL("Mofa ({1}T)", eff[PBEffects::Taunt])) if eff[PBEffects::Taunt] && eff[PBEffects::Taunt] > 0
-    res.push(_INTL("Otra Vez ({1}T)", eff[PBEffects::Encore])) if eff[PBEffects::Encore] && eff[PBEffects::Encore] > 0
-    res.push(_INTL("Drenadoras")) if eff[PBEffects::LeechSeed] && eff[PBEffects::LeechSeed] >= 0
-    res.push(_INTL("Maldición")) if eff[PBEffects::Curse]
-    res.push(_INTL("Anulación ({1}T)", eff[PBEffects::Disable])) if eff[PBEffects::Disable] && eff[PBEffects::Disable] > 0
-    res.push(_INTL("Somnoliento")) if eff[PBEffects::Yawn] && eff[PBEffects::Yawn] > 0
-    res.push(_INTL("Canto Mortal ({1}T)", eff[PBEffects::PerishSong])) if eff[PBEffects::PerishSong] && eff[PBEffects::PerishSong] > 0
-    res.push(_INTL("Sustituto")) if eff[PBEffects::Substitute] && eff[PBEffects::Substitute] > 0
-    res.push(_INTL("Embargo ({1}T)", eff[PBEffects::Embargo])) if eff[PBEffects::Embargo] && eff[PBEffects::Embargo] > 0
-    res.push(_INTL("Anticura ({1}T)", eff[PBEffects::HealBlock])) if eff[PBEffects::HealBlock] && eff[PBEffects::HealBlock] > 0
+    res.push([_INTL("Confusión"), "#{eff[PBEffects::Confusion]}T"]) if eff[PBEffects::Confusion] && eff[PBEffects::Confusion] > 0
+    res.push([_INTL("Enamorado"), "-"]) if eff[PBEffects::Attract] && eff[PBEffects::Attract] >= 0
+    res.push([_INTL("Tormento"), "-"]) if eff[PBEffects::Torment]
+    res.push([_INTL("Mofa"), "#{eff[PBEffects::Taunt]}T"]) if eff[PBEffects::Taunt] && eff[PBEffects::Taunt] > 0
+    res.push([_INTL("Otra Vez"), "#{eff[PBEffects::Encore]}T"]) if eff[PBEffects::Encore] && eff[PBEffects::Encore] > 0
+    res.push([_INTL("Drenadoras"), "-"]) if eff[PBEffects::LeechSeed] && eff[PBEffects::LeechSeed] >= 0
+    res.push([_INTL("Maldición"), "-"]) if eff[PBEffects::Curse]
+    res.push([_INTL("Anulación"), "#{eff[PBEffects::Disable]}T"]) if eff[PBEffects::Disable] && eff[PBEffects::Disable] > 0
+    res.push([_INTL("Somnoliento"), "-"]) if eff[PBEffects::Yawn] && eff[PBEffects::Yawn] > 0
+    res.push([_INTL("Canto Mortal"), "#{eff[PBEffects::PerishSong]}T"]) if eff[PBEffects::PerishSong] && eff[PBEffects::PerishSong] > 0
+    res.push([_INTL("Sustituto"), "-"]) if eff[PBEffects::Substitute] && eff[PBEffects::Substitute] > 0
+    res.push([_INTL("Embargo"), "#{eff[PBEffects::Embargo]}T"]) if eff[PBEffects::Embargo] && eff[PBEffects::Embargo] > 0
+    res.push([_INTL("Anticura"), "#{eff[PBEffects::HealBlock]}T"]) if eff[PBEffects::HealBlock] && eff[PBEffects::HealBlock] > 0
     return res
   end
 
-  # Lista de barreras y trampas activas del bando
+  # Lista de barreras y trampas activas del bando: [ [nombre, tag], ... ]
   def self.getSideEffectsList(battle, side_idx)
     res = []
     return res if !battle.sides || !battle.sides[side_idx]
     side = battle.sides[side_idx].effects
     return res if !side
-    res.push(_INTL("Reflejo ({1}T)", side[PBEffects::Reflect])) if side[PBEffects::Reflect] && side[PBEffects::Reflect] > 0
-    res.push(_INTL("Pant. Luz ({1}T)", side[PBEffects::LightScreen])) if side[PBEffects::LightScreen] && side[PBEffects::LightScreen] > 0
-    res.push(_INTL("Velo Aurora ({1}T)", side[PBEffects::AuroraVeil])) if defined?(PBEffects::AuroraVeil) && side[PBEffects::AuroraVeil] && side[PBEffects::AuroraVeil] > 0
-    res.push(_INTL("Viento Afín ({1}T)", side[PBEffects::Tailwind])) if side[PBEffects::Tailwind] && side[PBEffects::Tailwind] > 0
-    res.push(_INTL("Velo Sagrado ({1}T)", side[PBEffects::Safeguard])) if side[PBEffects::Safeguard] && side[PBEffects::Safeguard] > 0
-    res.push(_INTL("Neblina ({1}T)", side[PBEffects::Mist])) if side[PBEffects::Mist] && side[PBEffects::Mist] > 0
-    res.push(_INTL("Trampa Rocas")) if side[PBEffects::StealthRock]
-    res.push(_INTL("Púas (x{1})", side[PBEffects::Spikes])) if side[PBEffects::Spikes] && side[PBEffects::Spikes] > 0
-    res.push(_INTL("Púas Tóx. (x{1})", side[PBEffects::ToxicSpikes])) if side[PBEffects::ToxicSpikes] && side[PBEffects::ToxicSpikes] > 0
-    res.push(_INTL("Red Viscosa")) if side[PBEffects::StickyWeb]
+    res.push([_INTL("Reflejo"), "#{side[PBEffects::Reflect]}T"]) if side[PBEffects::Reflect] && side[PBEffects::Reflect] > 0
+    res.push([_INTL("Pant. Luz"), "#{side[PBEffects::LightScreen]}T"]) if side[PBEffects::LightScreen] && side[PBEffects::LightScreen] > 0
+    res.push([_INTL("Velo Aurora"), "#{side[PBEffects::AuroraVeil]}T"]) if defined?(PBEffects::AuroraVeil) && side[PBEffects::AuroraVeil] && side[PBEffects::AuroraVeil] > 0
+    res.push([_INTL("Viento Afín"), "#{side[PBEffects::Tailwind]}T"]) if side[PBEffects::Tailwind] && side[PBEffects::Tailwind] > 0
+    res.push([_INTL("Velo Sagrado"), "#{side[PBEffects::Safeguard]}T"]) if side[PBEffects::Safeguard] && side[PBEffects::Safeguard] > 0
+    res.push([_INTL("Neblina"), "#{side[PBEffects::Mist]}T"]) if side[PBEffects::Mist] && side[PBEffects::Mist] > 0
+    res.push([_INTL("Trampa Rocas"), "-"]) if side[PBEffects::StealthRock]
+    res.push([_INTL("Púas"), "x#{side[PBEffects::Spikes]}"]) if side[PBEffects::Spikes] && side[PBEffects::Spikes] > 0
+    res.push([_INTL("Púas Tóx."), "x#{side[PBEffects::ToxicSpikes]}"]) if side[PBEffects::ToxicSpikes] && side[PBEffects::ToxicSpikes] > 0
+    res.push([_INTL("Red Viscosa"), "-"]) if side[PBEffects::StickyWeb]
     return res
   end
 
-  # Lista de clima, terrenos y entorno global
+  # Lista de clima, terrenos y entorno global: [ [nombre, tag], ... ]
   def self.getEnvironmentList(battle)
     res = []
     return res if !battle
     w = battle.weather || 0
     w_dur = battle.weatherduration || 0
-    dur_str = w_dur > 0 ? " (#{w_dur}T)" : ""
+    dur_str = w_dur > 0 ? "#{w_dur}T" : "-"
     case w
     when PBWeather::SUNNYDAY, PBWeather::HARSHSUN
-      res.push(_INTL("Sol{1}", dur_str))
+      res.push([_INTL("Día Soleado"), dur_str])
     when PBWeather::RAINDANCE, PBWeather::HEAVYRAIN
-      res.push(_INTL("Lluvia{1}", dur_str))
+      res.push([_INTL("Danza Lluvia"), dur_str])
     when PBWeather::SANDSTORM
-      res.push(_INTL("Torm. Arena{1}", dur_str))
+      res.push([_INTL("Torm. Arena"), dur_str])
     when PBWeather::HAIL
-      res.push(_INTL("Granizo{1}", dur_str))
+      res.push([_INTL("Granizo"), dur_str])
     end
     f = (battle.field && battle.field.effects) ? battle.field.effects : []
-    res.push(_INTL("Campo Eléctrico ({1}T)", f[PBEffects::ElectricTerrain])) if f[PBEffects::ElectricTerrain] && f[PBEffects::ElectricTerrain] > 0
-    res.push(_INTL("Campo de Hierba ({1}T)", f[PBEffects::GrassyTerrain])) if f[PBEffects::GrassyTerrain] && f[PBEffects::GrassyTerrain] > 0
-    res.push(_INTL("Campo de Niebla ({1}T)", f[PBEffects::MistyTerrain])) if f[PBEffects::MistyTerrain] && f[PBEffects::MistyTerrain] > 0
-    res.push(_INTL("Campo Psíquico ({1}T)", f[PBEffects::PsychicTerrain])) if defined?(PBEffects::PsychicTerrain) && f[PBEffects::PsychicTerrain] && f[PBEffects::PsychicTerrain] > 0
-    res.push(_INTL("Espacio Raro ({1}T)", f[PBEffects::TrickRoom])) if f[PBEffects::TrickRoom] && f[PBEffects::TrickRoom] > 0
-    res.push(_INTL("Gravedad ({1}T)", f[PBEffects::Gravity])) if f[PBEffects::Gravity] && f[PBEffects::Gravity] > 0
+    res.push([_INTL("Campo Eléc."), "#{f[PBEffects::ElectricTerrain]}T"]) if f[PBEffects::ElectricTerrain] && f[PBEffects::ElectricTerrain] > 0
+    res.push([_INTL("Campo Hierba"), "#{f[PBEffects::GrassyTerrain]}T"]) if f[PBEffects::GrassyTerrain] && f[PBEffects::GrassyTerrain] > 0
+    res.push([_INTL("Campo Niebla"), "#{f[PBEffects::MistyTerrain]}T"]) if f[PBEffects::MistyTerrain] && f[PBEffects::MistyTerrain] > 0
+    res.push([_INTL("Campo Psíq."), "#{f[PBEffects::PsychicTerrain]}T"]) if defined?(PBEffects::PsychicTerrain) && f[PBEffects::PsychicTerrain] && f[PBEffects::PsychicTerrain] > 0
+    res.push([_INTL("Espacio Raro"), "#{f[PBEffects::TrickRoom]}T"]) if f[PBEffects::TrickRoom] && f[PBEffects::TrickRoom] > 0
+    res.push([_INTL("Gravedad"), "#{f[PBEffects::Gravity]}T"]) if f[PBEffects::Gravity] && f[PBEffects::Gravity] > 0
     return res
   end
 
-  # Calcula la altura exacta que necesita la tarjeta según sus secciones activas
+  # Calcula la altura exacta necesaria según las filas de la tabla
   def self.calcCardHeight(sections)
     h = 42 # Fila fija de estadísticas (ATK..EVA)
     return h if sections.empty?
@@ -597,23 +613,14 @@ module REM_TacticalUI
     sections.each do |sec_info|
       items = sec_info[1]
       next if items.empty?
-      h += 16 # Subheader + divisor
-      cur_x = 10
-      line_count = 1
-      items.each do |item|
-        pw = (item.length * 7) + 12
-        if cur_x + pw > 225
-          cur_x = 10
-          line_count += 1
-        end
-        cur_x += pw + 4
-      end
-      h += line_count * 21 + 3
+      h += 17 # Subheader + divisor
+      num_rows = (items.length + 1) / 2
+      h += num_rows * 20 + 3
     end
     return h
   end
 
-  # Dibuja la tarjeta completa (marco dinámico + stats + secciones activas)
+  # Dibuja la tarjeta completa con formato tabla de 2 columnas
   def self.drawDynamicCard(bmp, battler, sections, total_h)
     bmp.clear
     drawNoirFrame(bmp, 240, total_h)
@@ -623,7 +630,7 @@ module REM_TacticalUI
     drawStatsRow(bmp, battler, 6, 22)
 
     cur_y = 42
-    sections.each do |title, items, bg_col, border_col|
+    sections.each do |title, items|
       next if items.empty?
 
       # Línea divisoria
@@ -636,18 +643,17 @@ module REM_TacticalUI
       pbDrawTextPositions(bmp, [[title, 10, cur_y, 0, DIM, SHADOW]])
       cur_y += 14
 
-      # Píldoras con wrap automático
-      cur_x = 10
-      items.each do |item|
-        pw = (bmp.text_size(item).width rescue (item.length * 7)) + 10
-        if cur_x + pw > 225
-          cur_x = 10
-          cur_y += 21
-        end
-        drawPill(bmp, item, cur_x, cur_y, bg_col, border_col)
-        cur_x += pw + 4
+      # Tabla de 2 columnas
+      cell_w = 106
+      items.each_with_index do |entry, idx|
+        c = idx % 2
+        r = idx / 2
+        item_x = 10 + c * (cell_w + 8)
+        item_y = cur_y + r * 20
+        drawTableCell(bmp, entry[0], entry[1], item_x, item_y, cell_w, 18)
       end
-      cur_y += 21 + 3
+      num_rows = (items.length + 1) / 2
+      cur_y += num_rows * 20 + 3
     end
   end
 end
@@ -709,36 +715,36 @@ class PokeBattle_Scene
       # 1. Actualizar oscurecimiento de battleboxes en pantalla
       pbRemUpdateDataBoxesHighlight(p_bat, f_bat)
 
-      # 2. Obtener efectos activos del Jugador
+      # 2. Secciones del Jugador
       p_volatiles = REM_TacticalUI.getVolatilesList(p_bat)
       p_sides     = REM_TacticalUI.getSideEffectsList(@battle, 0)
       p_env       = REM_TacticalUI.getEnvironmentList(@battle)
 
       p_sections = []
-      p_sections.push([_INTL("ESTADOS VOLÁTILES"), p_volatiles, REM_TacticalUI::PILL_VOLATILE_BG, REM_TacticalUI::PILL_VOLATILE_BORDER]) if !p_volatiles.empty?
-      p_sections.push([_INTL("BARRERAS & TRAMPAS ALIADAS"), p_sides, REM_TacticalUI::PILL_SIDE_BG, REM_TacticalUI::PILL_SIDE_BORDER]) if !p_sides.empty?
-      p_sections.push([_INTL("ENTORNO GLOBAL (CLIMA / CAMPO)"), p_env, REM_TacticalUI::PILL_ENV_BG, REM_TacticalUI::PILL_ENV_BORDER]) if !p_env.empty?
+      p_sections.push([_INTL("ESTADOS"), p_volatiles]) if !p_volatiles.empty?
+      p_sections.push([_INTL("BARRERAS & TRAMPAS"), p_sides]) if !p_sides.empty?
+      p_sections.push([_INTL("TERRENO"), p_env]) if !p_env.empty?
 
       p_height = REM_TacticalUI.calcCardHeight(p_sections)
       sp_player.bitmap.dispose if sp_player.bitmap && !sp_player.bitmap.disposed?
       sp_player.bitmap = Bitmap.new(240, p_height)
       sp_player.x = 8
-      sp_player.y = 284 - p_height # Crece hacia arriba anclado sobre el menú
+      sp_player.y = 284 - p_height
       REM_TacticalUI.drawDynamicCard(sp_player.bitmap, p_bat, p_sections, p_height)
 
-      # 3. Obtener efectos activos del Rival
+      # 3. Secciones del Rival
       f_volatiles = REM_TacticalUI.getVolatilesList(f_bat)
       f_sides     = REM_TacticalUI.getSideEffectsList(@battle, 1)
 
       f_sections = []
-      f_sections.push([_INTL("ESTADOS VOLÁTILES"), f_volatiles, REM_TacticalUI::PILL_VOLATILE_BG, REM_TacticalUI::PILL_VOLATILE_BORDER]) if !f_volatiles.empty?
-      f_sections.push([_INTL("BARRERAS & TRAMPAS RIVAL"), f_sides, REM_TacticalUI::PILL_SIDE_BG, REM_TacticalUI::PILL_SIDE_BORDER]) if !f_sides.empty?
+      f_sections.push([_INTL("ESTADOS"), f_volatiles]) if !f_volatiles.empty?
+      f_sections.push([_INTL("BARRERAS & TRAMPAS"), f_sides]) if !f_sides.empty?
 
       f_height = REM_TacticalUI.calcCardHeight(f_sections)
       sp_foe.bitmap.dispose if sp_foe.bitmap && !sp_foe.bitmap.disposed?
       sp_foe.bitmap = Bitmap.new(240, f_height)
       sp_foe.x = 264
-      sp_foe.y = 14 # Crece hacia abajo anclado arriba a la derecha
+      sp_foe.y = 14
       REM_TacticalUI.drawDynamicCard(sp_foe.bitmap, f_bat, f_sections, f_height)
     end
     
@@ -777,7 +783,6 @@ class PokeBattle_Scene
       end
     end
     
-    # Restaurar opacidad y tono normal de las databoxes
     pbRemRestoreDataBoxesHighlight
     
     sp_player.bitmap.dispose if sp_player.bitmap && !sp_player.bitmap.disposed?

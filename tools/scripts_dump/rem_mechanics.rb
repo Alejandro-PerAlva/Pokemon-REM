@@ -697,10 +697,45 @@ def pbDebugTestingMenu
       if !$Trainer || $Trainer.pokemonCount == 0
         pbAddPokemon(:LUCARIO, 25) if hasConst?(PBSpecies, :LUCARIO)
       end
+      if $Trainer.party.length < 2
+        pbAddPokemon(:GRENINJA, 25) if hasConst?(PBSpecies, :GRENINJA)
+      end
+      
+      # Equipar movimientos tácticos en el equipo del jugador
+      if $Trainer && $Trainer.party.length > 0
+        p1 = $Trainer.party[0]
+        p1.moves[0] = PBMove.new(getID(PBMoves, :STEALTHROCK)) if hasConst?(PBMoves, :STEALTHROCK)
+        p1.moves[1] = PBMove.new(getID(PBMoves, :TORMENT)) if hasConst?(PBMoves, :TORMENT)
+        p1.moves[2] = PBMove.new(getID(PBMoves, :REFLECT)) if hasConst?(PBMoves, :REFLECT)
+        p1.moves[3] = PBMove.new(getID(PBMoves, :CONFUSERAY)) if hasConst?(PBMoves, :CONFUSERAY)
+        if $Trainer.party.length > 1
+          p2 = $Trainer.party[1]
+          p2.moves[0] = PBMove.new(getID(PBMoves, :LEECHSEED)) if hasConst?(PBMoves, :LEECHSEED)
+          p2.moves[1] = PBMove.new(getID(PBMoves, :SUNNYDAY)) if hasConst?(PBMoves, :SUNNYDAY)
+          p2.moves[2] = PBMove.new(getID(PBMoves, :TAILWIND)) if hasConst?(PBMoves, :TAILWIND)
+          p2.moves[3] = PBMove.new(getID(PBMoves, :SPIKES)) if hasConst?(PBMoves, :SPIKES)
+        end
+      end
+      
       Kernel.pbMessage(_INTL("\\nm[Inspector Tester]INFORMACIÓN TÁCTICA (Tecla D):\\n\\nEn el menú de combate (Luchar, Mochila...), presiona la tecla D para desplegar las tarjetas tácticas sobre tu Pokémon y el rival."))
-      Kernel.pbMessage(_INTL("\\nm[Inspector Tester]Muestra modificadores de stats (+1 a +6), barreras, trampas, clima, turnos restantes y terreno, sin pausar el combate ni pantallas intermedias."))
+      Kernel.pbMessage(_INTL("\\nm[Inspector Tester]Tu equipo y el rival cuentan con movimientos tácticos (Trampa Rocas, Tormento, Reflejo, Rayo Confuso, Drenadoras, Sol...) para probar las tablas dinámicas."))
+
       foe_sym = hasConst?(PBSpecies, :CORVIKNIGHT) ? :CORVIKNIGHT : (hasConst?(PBSpecies, :PIDGEOT) ? :PIDGEOT : :PIDGEY)
-      pbWildBattle(getID(PBSpecies, foe_sym), 25)
+      wild_pkmn = pbGenerateWildPokemon(getID(PBSpecies, foe_sym), 25)
+      wild_pkmn.moves[0] = PBMove.new(getID(PBMoves, :TORMENT)) if hasConst?(PBMoves, :TORMENT)
+      wild_pkmn.moves[1] = PBMove.new(getID(PBMoves, :CONFUSERAY)) if hasConst?(PBMoves, :CONFUSERAY)
+      wild_pkmn.moves[2] = PBMove.new(getID(PBMoves, :REFLECT)) if hasConst?(PBMoves, :REFLECT)
+      wild_pkmn.moves[3] = PBMove.new(getID(PBMoves, :STEALTHROCK)) if hasConst?(PBMoves, :STEALTHROCK)
+
+      scene = pbNewBattleScene
+      battle = PokeBattle_Battle.new(scene, $Trainer.party, [wild_pkmn], $Trainer, nil)
+      battle.internalbattle = true
+      pbPrepareBattle(battle)
+      pbBattleAnimation(pbGetWildBattleBGM(wild_pkmn.species)) {
+        pbSceneStandby {
+          battle.pbStartBattle(false)
+        }
+      }
       
     when 7 # 8. Preparar Equipo y Objetos
       pbAddPokemon(:LUCARIO, 25) if hasConst?(PBSpecies, :LUCARIO)
