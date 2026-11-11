@@ -263,14 +263,8 @@ class Game_Event
     return if !@list
     for cmd in @list
       if cmd.code == 108
-        if cmd.parameters[0] =~ /Slope: (\d+)x(\d+)/
+        if cmd.parameters[0] =~ /Slope:\s*([+-]?\d+)x([+-]?\d+)/i
           xincline, yincline = $1.to_i, $2.to_i
-        elsif cmd.parameters[0] =~ /Slope: -(\d+)x(\d+)/
-          xincline, yincline = -$1.to_i, $2.to_i
-        elsif cmd.parameters[0] =~ /Slope: (\d+)x-(\d+)/
-          xincline, yincline = $1.to_i, -$2.to_i
-        elsif cmd.parameters[0] =~ /Slope: -(\d+)x-(\d+)/
-          xincline, yincline = -$1.to_i, -$2.to_i
         elsif cmd.parameters[0] =~ /Width: (\d+)\/(\d+)/
           ypos, yheight = $1.to_i, $2.to_i
         elsif cmd.parameters[0] =~ /Offset: (\d+)px/
