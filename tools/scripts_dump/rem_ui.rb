@@ -402,14 +402,13 @@ class CommandMenuDisplay
   alias rem_tactical_init initialize
   def initialize(viewport=nil)
     rem_tactical_init(viewport)
-    # Estándar fijo de 2 líneas separadas:
-    # Línea 1: ¿Qué hará <Pokemon>? (con ancho completo para nombres largos)
-    @msgbox.x = 8
-    @msgbox.y = Graphics.height - 96 + 12
+    # Ancho ampliado y altura completa para @msgbox para que nunca corte texto
+    @msgbox.x = 10
+    @msgbox.y = Graphics.height - 96 + 2
     @msgbox.width = 240
-    @msgbox.height = 34
+    @msgbox.height = 96
     
-    # Línea 2: Tecla D: info centrada debajo
+    # Línea 2 separada e independiente para Tecla D: info
     @remHint = BitmapSprite.new(246, 26, viewport)
     @remHint.x = 0
     @remHint.y = Graphics.height - 34
@@ -432,11 +431,17 @@ class CommandMenuDisplay
   end
 
   def setTexts(value)
-    if @msgbox && @msgbox.contents
-      pbSetNarrowFont(@msgbox.contents)
-      @msgbox.contents.font.size = 24
+    if @msgbox
+      @msgbox.text = value[0]
+      if @msgbox.contents
+        pbSetNarrowFont(@msgbox.contents)
+        @msgbox.contents.font.size = 24
+        @msgbox.contents.clear
+        # Dibuja la pregunta "¿Qué hará <Pokemon>?" siempre en la línea 1 sin romper
+        drawTextEx(@msgbox.contents, 0, 4, @msgbox.contents.width, 1,
+           value[0].gsub(/\r/, ""), @msgbox.baseColor, @msgbox.shadowColor)
+      end
     end
-    @msgbox.text = value[0]
     commands = []
     for i in 1..4
       commands.push(value[i]) if value[i] && value[i] != nil
@@ -447,7 +452,7 @@ end
 
 #===============================================================================
 # INFORMACIÓN TÁCTICA DE COMBATE NOIR DINÁMICA (Tecla D en menú de comandos)
-# Tarjetas auto-redimensionables con formato tabla (ESTADOS, BARRERAS & TRAMPAS, TERRENO)
+# Tarjetas auto-redimensionables con formato tabla (CAMBIOS DE ESTADO, CAMPO, TERRENO)
 #===============================================================================
 module REM_TacticalUI
   BASE   = Color.new(255, 255, 255)
@@ -463,6 +468,45 @@ module REM_TacticalUI
     PBStats::ATTACK, PBStats::DEFENSE, PBStats::SPATK,
     PBStats::SPDEF, PBStats::SPEED, PBStats::ACCURACY, PBStats::EVASION
   ]
+
+  # Colores temáticos representativos para el marco de cada efecto
+  EFFECT_COLORS = {
+    "Púas Tóx."     => Color.new(180, 70, 220),  # Morado veneno
+    "Púas"          => Color.new(195, 150, 65),  # Marrón acero/púa
+    "Trampa Rocas"  => Color.new(215, 155, 60),  # Naranja roca
+    "Red Viscosa"   => Color.new(155, 200, 45),  # Verde bicho
+    "Reflejo"       => Color.new(250, 110, 170), # Rosa psíquico
+    "Pant. Luz"     => Color.new(250, 210, 60),  # Amarillo luz
+    "Velo Aurora"   => Color.new(100, 220, 240), # Cian aurora
+    "Viento Afín"   => Color.new(110, 195, 245), # Azul viento
+    "Velo Sagrado"  => Color.new(210, 230, 255), # Blanco sagrado
+    "Neblina"       => Color.new(160, 185, 215), # Azul niebla
+    "Confusión"     => Color.new(195, 115, 230), # Púrpura confuso
+    "Enamorado"     => Color.new(255, 115, 160), # Rosa atracción
+    "Tormento"      => Color.new(230, 70, 70),   # Rojo oscuro tormento
+    "Mofa"          => Color.new(245, 125, 50),  # Naranja mofa
+    "Otra Vez"      => Color.new(245, 200, 50),  # Amarillo encore
+    "Drenadoras"    => Color.new(85, 215, 85),   # Verde planta
+    "Maldición"     => Color.new(140, 95, 195),  # Fantasma
+    "Anulación"     => Color.new(220, 85, 170),  # Magenta
+    "Somnoliento"   => Color.new(125, 145, 225), # Azul sueño
+    "Canto Mortal"  => Color.new(240, 60, 80),   # Rojo fatal
+    "Sustituto"     => Color.new(85, 195, 125),  # Verde sustituto
+    "Embargo"       => Color.new(180, 100, 180), # Siniestro
+    "Anticura"      => Color.new(215, 75, 75),   # Rojo bloqueo
+    "Día Soleado"   => Color.new(255, 135, 40),  # Naranja sol
+    "Sol Abrasador" => Color.new(255, 105, 30),  # Naranja fuego
+    "Danza Lluvia"  => Color.new(60, 155, 255),  # Azul lluvia
+    "Diluvio"       => Color.new(40, 125, 245),  # Azul mar
+    "Torm. Arena"   => Color.new(220, 180, 75),  # Ocre arena
+    "Granizo"       => Color.new(115, 225, 245), # Cian hielo
+    "Campo Eléc."   => Color.new(255, 230, 50),  # Amarillo eléctrico
+    "Campo Hierba"  => Color.new(85, 225, 95),   # Verde hierba
+    "Campo Niebla"  => Color.new(240, 145, 210), # Rosa hada
+    "Campo Psíq."   => Color.new(205, 100, 245), # Violeta psíquico
+    "Espacio Raro"  => Color.new(50, 225, 195),  # Teal dimensión
+    "Gravedad"      => Color.new(120, 105, 225)  # Índigo gravedad
+  }
 
   # Dibuja el marco biselado Noir del tamaño exacto necesario
   def self.drawNoirFrame(bmp, w, h)
@@ -509,32 +553,39 @@ module REM_TacticalUI
     end
   end
 
-  # Dibuja una celda de la tabla: Nombre a la izquierda, Turnos / - / xN a la derecha
+  # Dibuja una celda de la tabla: Marco de color temático, Nombre a la izquierda, Turnos a la derecha
   def self.drawTableCell(bmp, name, tag, x, y, w, h)
-    bmp.fill_rect(x + 2, y, w - 4, h, Color.new(24, 30, 44, 230))
-    bmp.fill_rect(x, y + 2, w, h - 4, Color.new(24, 30, 44, 230))
-    bmp.set_pixel(x + 1, y + 1, Color.new(24, 30, 44, 230))
-    bmp.set_pixel(x + w - 2, y + 1, Color.new(24, 30, 44, 230))
-    bmp.set_pixel(x + 1, y + h - 2, Color.new(24, 30, 44, 230))
-    bmp.set_pixel(x + w - 2, y + h - 2, Color.new(24, 30, 44, 230))
+    # Fondo sutil oscuro
+    bmp.fill_rect(x + 2, y, w - 4, h, Color.new(22, 26, 36, 235))
+    bmp.fill_rect(x, y + 2, w, h - 4, Color.new(22, 26, 36, 235))
+    bmp.set_pixel(x + 1, y + 1, Color.new(22, 26, 36, 235))
+    bmp.set_pixel(x + w - 2, y + 1, Color.new(22, 26, 36, 235))
+    bmp.set_pixel(x + 1, y + h - 2, Color.new(22, 26, 36, 235))
+    bmp.set_pixel(x + w - 2, y + h - 2, Color.new(22, 26, 36, 235))
     
-    border_col = Color.new(52, 68, 92, 180)
+    # Borde con color temático representativo de este efecto
+    border_col = EFFECT_COLORS[name] || Color.new(70, 90, 120)
     bmp.fill_rect(x + 2, y, w - 4, 1, border_col)
     bmp.fill_rect(x + 2, y + h - 1, w - 4, 1, border_col)
     bmp.fill_rect(x, y + 2, 1, h - 4, border_col)
     bmp.fill_rect(x + w - 1, y + 2, 1, h - 4, border_col)
 
+    # Nombre del efecto a la izquierda
     pbSetNarrowFont(bmp)
     bmp.font.size = 14
-    pbDrawTextPositions(bmp, [[name, x + 5, y + 1, 0, BASE, SHADOW]])
+    pbDrawTextPositions(bmp, [[name, x + 6, y + 1, 0, BASE, SHADOW]])
 
-    tag_col = if tag.include?("T")
-                Color.new(110, 205, 255) # Turnos restantes (Cian)
+    # Tag: Si queda 1T aparece en ROJO de alerta; si >1T en cian; stacks en dorado; infinito en plata
+    tag_col = if tag == "1T"
+                Color.new(255, 80, 80)   # 1 turno restante -> ROJO de aviso
+              elsif tag.include?("T")
+                Color.new(110, 205, 255) # Turnos normales -> Cian
               elsif tag.include?("x")
-                Color.new(255, 215, 80)  # Capas / Stacks (Dorado)
+                Color.new(255, 215, 80)  # Capas de trampas -> Dorado
               else
-                Color.new(160, 165, 175) # Permanente / Infinito (Plata)
+                Color.new(160, 165, 175) # Efecto permanente / infinito -> Plata tenue
               end
+    # Alineado a la derecha dentro de la celda
     pbDrawTextPositions(bmp, [[tag, x + w - 6, y + 1, 1, tag_col, SHADOW]])
   end
 
@@ -715,14 +766,14 @@ class PokeBattle_Scene
       # 1. Actualizar oscurecimiento de battleboxes en pantalla
       pbRemUpdateDataBoxesHighlight(p_bat, f_bat)
 
-      # 2. Secciones del Jugador
+      # 2. Secciones del Jugador: CAMBIOS DE ESTADO, CAMPO ALIADO, TERRENO
       p_volatiles = REM_TacticalUI.getVolatilesList(p_bat)
       p_sides     = REM_TacticalUI.getSideEffectsList(@battle, 0)
       p_env       = REM_TacticalUI.getEnvironmentList(@battle)
 
       p_sections = []
-      p_sections.push([_INTL("ESTADOS"), p_volatiles]) if !p_volatiles.empty?
-      p_sections.push([_INTL("BARRERAS & TRAMPAS"), p_sides]) if !p_sides.empty?
+      p_sections.push([_INTL("CAMBIOS DE ESTADO"), p_volatiles]) if !p_volatiles.empty?
+      p_sections.push([_INTL("CAMPO ALIADO"), p_sides]) if !p_sides.empty?
       p_sections.push([_INTL("TERRENO"), p_env]) if !p_env.empty?
 
       p_height = REM_TacticalUI.calcCardHeight(p_sections)
@@ -732,13 +783,13 @@ class PokeBattle_Scene
       sp_player.y = 284 - p_height
       REM_TacticalUI.drawDynamicCard(sp_player.bitmap, p_bat, p_sections, p_height)
 
-      # 3. Secciones del Rival
+      # 3. Secciones del Rival: CAMBIOS DE ESTADO, CAMPO RIVAL
       f_volatiles = REM_TacticalUI.getVolatilesList(f_bat)
       f_sides     = REM_TacticalUI.getSideEffectsList(@battle, 1)
 
       f_sections = []
-      f_sections.push([_INTL("ESTADOS"), f_volatiles]) if !f_volatiles.empty?
-      f_sections.push([_INTL("BARRERAS & TRAMPAS"), f_sides]) if !f_sides.empty?
+      f_sections.push([_INTL("CAMBIOS DE ESTADO"), f_volatiles]) if !f_volatiles.empty?
+      f_sections.push([_INTL("CAMPO RIVAL"), f_sides]) if !f_sides.empty?
 
       f_height = REM_TacticalUI.calcCardHeight(f_sections)
       sp_foe.bitmap.dispose if sp_foe.bitmap && !sp_foe.bitmap.disposed?
