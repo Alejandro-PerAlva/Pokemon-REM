@@ -800,14 +800,14 @@ class PokeBattle_Scene
       # 1. Actualizar oscurecimiento de battleboxes en pantalla
       pbRemUpdateDataBoxesHighlight(p_bat, f_bat)
 
-      # 2. Secciones del Jugador: CAMBIOS DE ESTADO, CAMPO ALIADO, TERRENO
+      # 2. Secciones del Jugador: ESTADO, CAMPO, TERRENO
       p_volatiles = REM_TacticalUI.getVolatilesList(p_bat)
       p_sides     = REM_TacticalUI.getSideEffectsList(@battle, 0)
       p_env       = REM_TacticalUI.getEnvironmentList(@battle)
 
       p_sections = []
-      p_sections.push([_INTL("CAMBIOS DE ESTADO"), p_volatiles]) if !p_volatiles.empty?
-      p_sections.push([_INTL("CAMPO ALIADO"), p_sides]) if !p_sides.empty?
+      p_sections.push([_INTL("ESTADO"), p_volatiles]) if !p_volatiles.empty?
+      p_sections.push([_INTL("CAMPO"), p_sides]) if !p_sides.empty?
       p_sections.push([_INTL("TERRENO"), p_env]) if !p_env.empty?
 
       p_height = REM_TacticalUI.calcCardHeight(p_sections)
@@ -817,13 +817,13 @@ class PokeBattle_Scene
       sp_player.y = 284 - p_height
       REM_TacticalUI.drawDynamicCard(sp_player.bitmap, p_bat, p_sections, p_height)
 
-      # 3. Secciones del Rival: CAMBIOS DE ESTADO, CAMPO RIVAL
+      # 3. Secciones del Rival: ESTADO, CAMPO
       f_volatiles = REM_TacticalUI.getVolatilesList(f_bat)
       f_sides     = REM_TacticalUI.getSideEffectsList(@battle, 1)
 
       f_sections = []
-      f_sections.push([_INTL("CAMBIOS DE ESTADO"), f_volatiles]) if !f_volatiles.empty?
-      f_sections.push([_INTL("CAMPO RIVAL"), f_sides]) if !f_sides.empty?
+      f_sections.push([_INTL("ESTADO"), f_volatiles]) if !f_volatiles.empty?
+      f_sections.push([_INTL("CAMPO"), f_sides]) if !f_sides.empty?
 
       f_height = REM_TacticalUI.calcCardHeight(f_sections)
       sp_foe.bitmap.dispose if sp_foe.bitmap && !sp_foe.bitmap.disposed?
