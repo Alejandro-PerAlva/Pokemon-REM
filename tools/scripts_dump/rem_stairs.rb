@@ -479,6 +479,18 @@ class Game_Character
     end
   end
   
+  def update_pattern
+    return if @lock_pattern if defined?(@lock_pattern)
+    if @anime_count && @anime_count > 18 - @move_speed * 3
+      if !@step_anime && @stop_count && @stop_count > 0
+        @pattern = @original_pattern
+      else
+        @pattern = (@pattern + 1) % 4
+      end
+      @anime_count = 0
+    end
+  end
+
   alias stair_update_pattern update_pattern
   def update_pattern
     if self == $game_player && $DisableScrollCounter == 2
