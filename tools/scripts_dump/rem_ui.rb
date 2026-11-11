@@ -402,13 +402,14 @@ class CommandMenuDisplay
   alias rem_tactical_init initialize
   def initialize(viewport=nil)
     rem_tactical_init(viewport)
-    @remHint = BitmapSprite.new(240, 24, viewport)
-    @remHint.x = 4
+    @remHint = BitmapSprite.new(246, 24, viewport)
+    @remHint.x = 0
     @remHint.y = Graphics.height - 24
     @remHint.z = (@window.z rescue 100) + 2
     pbSetNarrowFont(@remHint.bitmap)
-    @remHint.bitmap.font.size = 20
-    pbDrawTextPositions(@remHint.bitmap, [[_INTL("Tecla D: info"), 220, 2, 2, REM_UI::SILVER, REM_UI::INK]])
+    @remHint.bitmap.font.size = 18
+    # Alineado a la derecha con margen de seguridad interior (alignment 1 = right-align)
+    pbDrawTextPositions(@remHint.bitmap, [[_INTL("Tecla D: info"), 236, 3, 1, REM_UI::SILVER, REM_UI::INK]])
   end
 
   alias rem_tactical_visible= visible=
@@ -426,7 +427,7 @@ end
 
 #===============================================================================
 # INFORMACIÓN TÁCTICA DE COMBATE NOIR (Tecla D en menú de comandos)
-# Tarjetas flotantes simultáneas para Jugador y Rival con Stats, Barreras y Clima
+# Tarjetas flotantes simultáneas para Jugador y Rival con Iconos Activos/Inactivos
 #===============================================================================
 module REM_TacticalUI
   BASE   = Color.new(255, 255, 255)
@@ -442,6 +443,23 @@ module REM_TacticalUI
     PBStats::ATTACK, PBStats::DEFENSE, PBStats::SPATK,
     PBStats::SPDEF, PBStats::SPEED, PBStats::ACCURACY, PBStats::EVASION
   ]
+
+  # Dibuja un badge de estado: apagado en gris (#3D4452) o encendido en color vivo
+  def self.drawBadge(bmp, icon_idx, x, y, active, tag = nil)
+    sheet = pbBitmap("Graphics/Pictures/tactical_icons")
+    return if !sheet || sheet.disposed?
+    src_rect = Rect.new(icon_idx * 24, active ? 20 : 0, 24, 20)
+    bmp.blt(x, y, sheet, src_rect)
+    if active && tag
+      nx = x + 14
+      ny = y - 4
+      bmp.fill_rect(nx, ny, 11, 11, Color.new(10, 12, 18, 240))
+      bmp.fill_rect(nx + 1, ny + 1, 9, 9, Color.new(24, 30, 44, 240))
+      pbSetNarrowFont(bmp)
+      bmp.font.size = 12
+      pbDrawTextPositions(bmp, [[tag.to_s, nx + 5, ny - 1, 2, BASE, SHADOW]])
+    end
+  end
 
   def self.drawStatsRow(bmp, battler, y_names, y_vals)
     x_centers = [24, 55, 86, 117, 148, 179, 210]
@@ -467,142 +485,160 @@ module REM_TacticalUI
     end
   end
 
-  def self.getSideEffectsList(battle, side_idx)
-    res = []
-    return res if !battle.sides || !battle.sides[side_idx]
+  # Dibuja los estados volátiles del Pokémon (Confusión, Enamorado, Maldición, Drenadoras, Mofa, Encore)
+  def self.drawVolatileStates(bmp, battler, y)
+    effects = battler.effects
+    return if !effects
+
+    x_list = [12, 49, 86, 123, 160, 197]
+
+    # 0: CONF (Confusión)
+    conf_act = effects[PBEffects::Confusion] && effects[PBEffects::Confusion] > 0
+    drawBadge(bmp, 0, x_list[0], y, conf_act, conf_act ? "#{effects[PBEffects::Confusion]}" : nil)
+
+    # 1: AMOR (Atracción / Enamorado)
+    att_act = effects[PBEffects::Attract] && effects[PBEffects::Attract] >= 0
+    drawBadge(bmp, 1, x_list[1], y, att_act, nil)
+
+    # 2: MALD (Maldición)
+    curse_act = effects[PBEffects::Curse] ? true : false
+    drawBadge(bmp, 2, x_list[2], y, curse_act, nil)
+
+    # 3: DREN (Drenadoras)
+    leech_act = effects[PBEffects::LeechSeed] && effects[PBEffects::LeechSeed] >= 0
+    drawBadge(bmp, 3, x_list[3], y, leech_act, nil)
+
+    # 4: MOFA (Taunt)
+    taunt_act = effects[PBEffects::Taunt] && effects[PBEffects::Taunt] > 0
+    drawBadge(bmp, 4, x_list[4], y, taunt_act, taunt_act ? "#{effects[PBEffects::Taunt]}" : nil)
+
+    # 5: ENCO (Encore / Otra Vez)
+    enco_act = effects[PBEffects::Encore] && effects[PBEffects::Encore] > 0
+    drawBadge(bmp, 5, x_list[5], y, enco_act, enco_act ? "#{effects[PBEffects::Encore]}" : nil)
+  end
+
+  # Dibuja barreras de bando y hazards (Reflejo, Luz, Aurora, Viento, Rocas, Púas, Púas Tóx, Red)
+  def self.drawSideAndHazards(bmp, battle, side_idx, y)
+    return if !battle.sides || !battle.sides[side_idx]
     side = battle.sides[side_idx].effects
-    return res if !side
+    return if !side
 
-    res.push(_INTL("Reflejo ({1}T)", side[PBEffects::Reflect])) if side[PBEffects::Reflect] && side[PBEffects::Reflect] > 0
-    res.push(_INTL("Pant.Luz ({1}T)", side[PBEffects::LightScreen])) if side[PBEffects::LightScreen] && side[PBEffects::LightScreen] > 0
-    res.push(_INTL("Velo Aurora ({1}T)", side[PBEffects::AuroraVeil])) if defined?(PBEffects::AuroraVeil) && side[PBEffects::AuroraVeil] && side[PBEffects::AuroraVeil] > 0
-    res.push(_INTL("Viento Afín ({1}T)", side[PBEffects::Tailwind])) if side[PBEffects::Tailwind] && side[PBEffects::Tailwind] > 0
-    res.push(_INTL("Velo Sagrado ({1}T)", side[PBEffects::Safeguard])) if side[PBEffects::Safeguard] && side[PBEffects::Safeguard] > 0
-    res.push(_INTL("Neblina ({1}T)", side[PBEffects::Mist])) if side[PBEffects::Mist] && side[PBEffects::Mist] > 0
-    res.push(_INTL("Arcoíris ({1}T)", side[PBEffects::Rainbow])) if side[PBEffects::Rainbow] && side[PBEffects::Rainbow] > 0
-    res.push(_INTL("Mar Llamas ({1}T)", side[PBEffects::SeaOfFire])) if side[PBEffects::SeaOfFire] && side[PBEffects::SeaOfFire] > 0
-    res.push(_INTL("Pantano ({1}T)", side[PBEffects::Swamp])) if side[PBEffects::Swamp] && side[PBEffects::Swamp] > 0
+    x_list = [6, 35, 64, 93, 122, 151, 180, 209]
 
-    res.push(_INTL("Trampa Rocas")) if side[PBEffects::StealthRock]
-    res.push(_INTL("Púas (x{1})", side[PBEffects::Spikes])) if side[PBEffects::Spikes] && side[PBEffects::Spikes] > 0
-    res.push(_INTL("Púas Tóx. (x{1})", side[PBEffects::ToxicSpikes])) if side[PBEffects::ToxicSpikes] && side[PBEffects::ToxicSpikes] > 0
-    res.push(_INTL("Red Viscosa")) if side[PBEffects::StickyWeb]
+    # 6: REFL (Reflejo)
+    refl_act = side[PBEffects::Reflect] && side[PBEffects::Reflect] > 0
+    drawBadge(bmp, 6, x_list[0], y, refl_act, refl_act ? "#{side[PBEffects::Reflect]}" : nil)
 
-    return res
+    # 7: LUZ (Pantalla Luz)
+    luz_act = side[PBEffects::LightScreen] && side[PBEffects::LightScreen] > 0
+    drawBadge(bmp, 7, x_list[1], y, luz_act, luz_act ? "#{side[PBEffects::LightScreen]}" : nil)
+
+    # 8: AUR (Velo Aurora)
+    aur_act = defined?(PBEffects::AuroraVeil) && side[PBEffects::AuroraVeil] && side[PBEffects::AuroraVeil] > 0
+    drawBadge(bmp, 8, x_list[2], y, aur_act, aur_act ? "#{side[PBEffects::AuroraVeil]}" : nil)
+
+    # 9: VIEN (Viento Afín)
+    vien_act = side[PBEffects::Tailwind] && side[PBEffects::Tailwind] > 0
+    drawBadge(bmp, 9, x_list[3], y, vien_act, vien_act ? "#{side[PBEffects::Tailwind]}" : nil)
+
+    # 10: ROCA (Trampa Rocas)
+    roca_act = side[PBEffects::StealthRock] ? true : false
+    drawBadge(bmp, 10, x_list[4], y, roca_act, nil)
+
+    # 11: PUAS (Púas)
+    puas_val = side[PBEffects::Spikes] || 0
+    drawBadge(bmp, 11, x_list[5], y, puas_val > 0, puas_val > 0 ? "#{puas_val}" : nil)
+
+    # 12: TOX (Púas Tóxicas)
+    tox_val = side[PBEffects::ToxicSpikes] || 0
+    drawBadge(bmp, 12, x_list[6], y, tox_val > 0, tox_val > 0 ? "#{tox_val}" : nil)
+
+    # 13: RED (Red Viscosa)
+    red_act = side[PBEffects::StickyWeb] ? true : false
+    drawBadge(bmp, 13, x_list[7], y, red_act, nil)
   end
 
-  def self.getGlobalEnvironmentText(battle)
-    parts = []
-    w_dur = battle.weatherduration > 0 ? " (#{battle.weatherduration}T)" : ""
-    case battle.weather
-    when PBWeather::SUNNYDAY    then parts.push(_INTL("Sol{1}", w_dur))
-    when PBWeather::RAINDANCE   then parts.push(_INTL("Lluvia{1}", w_dur))
-    when PBWeather::SANDSTORM   then parts.push(_INTL("T.Arena{1}", w_dur))
-    when PBWeather::HAIL        then parts.push(_INTL("Granizo{1}", w_dur))
-    when PBWeather::HEAVYRAIN   then parts.push(_INTL("Diluvio{1}", w_dur))
-    when PBWeather::HARSHSUN    then parts.push(_INTL("Sol Abrasador{1}", w_dur))
-    when PBWeather::STRONGWINDS then parts.push(_INTL("Turbulencias{1}", w_dur))
-    when (defined?(PBWeather::SHADOWSKY) && PBWeather::SHADOWSKY) then parts.push(_INTL("Cielo Oscuro{1}", w_dur))
-    end
+  # Dibuja entorno global: Clima, Terrenos y Trick Room (Solo en tarjeta del Jugador)
+  def self.drawGlobalEnvironment(bmp, battle, y)
+    x_list = [6, 31, 56, 81, 107, 132, 157, 182, 208]
+    w = battle.weather || 0
+    w_dur = battle.weatherduration || 0
 
-    if battle.field && battle.field.effects
-      f = battle.field.effects
-      parts.push(_INTL("C.Eléctrico ({1}T)", f[PBEffects::ElectricTerrain])) if f[PBEffects::ElectricTerrain] && f[PBEffects::ElectricTerrain] > 0
-      parts.push(_INTL("C.Hierba ({1}T)", f[PBEffects::GrassyTerrain])) if f[PBEffects::GrassyTerrain] && f[PBEffects::GrassyTerrain] > 0
-      parts.push(_INTL("C.Niebla ({1}T)", f[PBEffects::MistyTerrain])) if f[PBEffects::MistyTerrain] && f[PBEffects::MistyTerrain] > 0
-      parts.push(_INTL("C.Psíquico ({1}T)", f[PBEffects::PsychicTerrain])) if defined?(PBEffects::PsychicTerrain) && f[PBEffects::PsychicTerrain] && f[PBEffects::PsychicTerrain] > 0
-      
-      parts.push(_INTL("Espacio Raro ({1}T)", f[PBEffects::TrickRoom])) if f[PBEffects::TrickRoom] && f[PBEffects::TrickRoom] > 0
-      parts.push(_INTL("Gravedad ({1}T)", f[PBEffects::Gravity])) if f[PBEffects::Gravity] && f[PBEffects::Gravity] > 0
-      parts.push(_INTL("Zona Mágica ({1}T)", f[PBEffects::MagicRoom])) if f[PBEffects::MagicRoom] && f[PBEffects::MagicRoom] > 0
-      parts.push(_INTL("Zona Extraña ({1}T)", f[PBEffects::WonderRoom])) if f[PBEffects::WonderRoom] && f[PBEffects::WonderRoom] > 0
-    end
+    # 14..17: Climas (SOL, LLUV, AREN, GRAN)
+    sol_act  = (w == PBWeather::SUNNYDAY || w == PBWeather::HARSHSUN)
+    lluv_act = (w == PBWeather::RAINDANCE || w == PBWeather::HEAVYRAIN)
+    aren_act = (w == PBWeather::SANDSTORM)
+    gran_act = (w == PBWeather::HAIL)
 
-    if parts.empty?
-      return _INTL("Clima despejado / Sin terreno")
-    else
-      return parts.join(" | ")
-    end
+    drawBadge(bmp, 14, x_list[0], y, sol_act, sol_act && w_dur > 0 ? "#{w_dur}" : nil)
+    drawBadge(bmp, 15, x_list[1], y, lluv_act, lluv_act && w_dur > 0 ? "#{w_dur}" : nil)
+    drawBadge(bmp, 16, x_list[2], y, aren_act, aren_act && w_dur > 0 ? "#{w_dur}" : nil)
+    drawBadge(bmp, 17, x_list[3], y, gran_act, gran_act && w_dur > 0 ? "#{w_dur}" : nil)
+
+    # 18..21: Terrenos (ELEC, HIER, NIEB, PSIQ)
+    f = (battle.field && battle.field.effects) ? battle.field.effects : []
+    elec_val = f[PBEffects::ElectricTerrain] || 0
+    hier_val = f[PBEffects::GrassyTerrain] || 0
+    nieb_val = f[PBEffects::MistyTerrain] || 0
+    psiq_val = (defined?(PBEffects::PsychicTerrain) && f[PBEffects::PsychicTerrain]) ? f[PBEffects::PsychicTerrain] : 0
+
+    drawBadge(bmp, 18, x_list[4], y, elec_val > 0, elec_val > 0 ? "#{elec_val}" : nil)
+    drawBadge(bmp, 19, x_list[5], y, hier_val > 0, hier_val > 0 ? "#{hier_val}" : nil)
+    drawBadge(bmp, 20, x_list[6], y, nieb_val > 0, nieb_val > 0 ? "#{nieb_val}" : nil)
+    drawBadge(bmp, 21, x_list[7], y, psiq_val > 0, psiq_val > 0 ? "#{psiq_val}" : nil)
+
+    # 22: TRIC (Espacio Raro / Trick Room)
+    tric_val = f[PBEffects::TrickRoom] || 0
+    drawBadge(bmp, 22, x_list[8], y, tric_val > 0, tric_val > 0 ? "#{tric_val}" : nil)
   end
 
+  # Dibuja la tarjeta del Rival (240x124, arriba a la derecha)
   def self.drawFoeCard(bmp, bg, battler, battle, has_multiple)
     bmp.clear
     bmp.blt(0, 0, bg, Rect.new(0, 0, 240, 124))
     return if !battler || !battler.pokemon
 
-    pbSetNarrowFont(bmp)
-    bmp.font.size = 20
-    name_str = battler.name
-    name_str += " (◀▶)" if has_multiple
-    textpos = [[name_str, 12, 6, 0, BASE, SHADOW]]
-    case battler.displayGender
-    when 0 then textpos.push([_INTL("♂"), 12 + bmp.text_size(name_str).width + 3, 6, 0, Color.new(110, 170, 255), SHADOW])
-    when 1 then textpos.push([_INTL("♀"), 12 + bmp.text_size(name_str).width + 3, 6, 0, Color.new(255, 120, 160), SHADOW])
-    end
-    textpos.push([_INTL("Nv{1}", battler.level), 228, 6, 1, BASE, SHADOW])
-    pbDrawTextPositions(bmp, textpos)
+    # Fila 1: Estadísticas (y=6 a 40)
+    drawStatsRow(bmp, battler, 6, 22)
 
-    drawStatsRow(bmp, battler, 32, 48)
-
+    # Fila 2: Estados Volátiles (y=44 a 78)
     pbSetNarrowFont(bmp)
-    bmp.font.size = 14
-    pbDrawTextPositions(bmp, [[_INTL("Efectos & Trampas Rival:"), 12, 74, 0, DIM, SHADOW]])
-    
-    effects = getSideEffectsList(battle, 1)
-    bmp.font.size = 15
-    if effects.empty?
-      pbDrawTextPositions(bmp, [[_INTL("Sin barreras ni trampas"), 12, 94, 0, COLOR_NEUTRAL, SHADOW]])
-    else
-      line1 = effects[0..2].join(", ")
-      pbDrawTextPositions(bmp, [[line1, 12, 92, 0, BASE, SHADOW]])
-      if effects.length > 3
-        line2 = effects[3..5].join(", ")
-        pbDrawTextPositions(bmp, [[line2, 12, 106, 0, BASE, SHADOW]])
-      end
-    end
+    bmp.font.size = 13
+    sub1 = has_multiple ? _INTL("ESTADOS ({1}) ◀▶", battler.name) : _INTL("ESTADOS VOLÁTILES")
+    pbDrawTextPositions(bmp, [[sub1, 12, 44, 0, DIM, SHADOW]])
+    drawVolatileStates(bmp, battler, 58)
+
+    # Fila 3: Barreras de Bando & Trampas del Rival (y=84 a 120)
+    bmp.font.size = 13
+    pbDrawTextPositions(bmp, [[_INTL("BARRERAS & TRAMPAS RIVAL"), 12, 84, 0, DIM, SHADOW]])
+    drawSideAndHazards(bmp, battle, 1, 98) # Bando 1 = Rival
   end
 
+  # Dibuja la tarjeta del Jugador (240x164, abajo a la izquierda)
   def self.drawPlayerCard(bmp, bg, battler, battle, has_multiple)
     bmp.clear
     bmp.blt(0, 0, bg, Rect.new(0, 0, 240, 164))
     return if !battler || !battler.pokemon
 
+    # Fila 1: Estadísticas (y=6 a 40)
+    drawStatsRow(bmp, battler, 6, 22)
+
+    # Fila 2: Estados Volátiles (y=44 a 78)
     pbSetNarrowFont(bmp)
-    bmp.font.size = 20
-    name_str = battler.name
-    name_str += " (◀▶)" if has_multiple
-    textpos = [[name_str, 12, 6, 0, BASE, SHADOW]]
-    case battler.displayGender
-    when 0 then textpos.push([_INTL("♂"), 12 + bmp.text_size(name_str).width + 3, 6, 0, Color.new(110, 170, 255), SHADOW])
-    when 1 then textpos.push([_INTL("♀"), 12 + bmp.text_size(name_str).width + 3, 6, 0, Color.new(255, 120, 160), SHADOW])
-    end
-    textpos.push([_INTL("Nv{1} ({2}/{3})", battler.level, battler.hp, battler.totalhp), 228, 6, 1, BASE, SHADOW])
-    pbDrawTextPositions(bmp, textpos)
+    bmp.font.size = 13
+    sub1 = has_multiple ? _INTL("ESTADOS ({1}) ◀▶", battler.name) : _INTL("ESTADOS VOLÁTILES")
+    pbDrawTextPositions(bmp, [[sub1, 12, 44, 0, DIM, SHADOW]])
+    drawVolatileStates(bmp, battler, 58)
 
-    drawStatsRow(bmp, battler, 32, 48)
+    # Fila 3: Barreras de Bando & Trampas Aliadas (y=84 a 120)
+    bmp.font.size = 13
+    pbDrawTextPositions(bmp, [[_INTL("BARRERAS & TRAMPAS ALIADAS"), 12, 84, 0, DIM, SHADOW]])
+    drawSideAndHazards(bmp, battle, 0, 98) # Bando 0 = Jugador
 
-    pbSetNarrowFont(bmp)
-    bmp.font.size = 14
-    pbDrawTextPositions(bmp, [[_INTL("Barreras & Trampas Aliadas:"), 12, 74, 0, DIM, SHADOW]])
-    
-    effects = getSideEffectsList(battle, 0)
-    bmp.font.size = 15
-    if effects.empty?
-      pbDrawTextPositions(bmp, [[_INTL("Sin barreras ni trampas"), 12, 92, 0, COLOR_NEUTRAL, SHADOW]])
-    else
-      line1 = effects[0..2].join(", ")
-      pbDrawTextPositions(bmp, [[line1, 12, 92, 0, BASE, SHADOW]])
-      if effects.length > 3
-        line2 = effects[3..5].join(", ")
-        pbDrawTextPositions(bmp, [[line2, 12, 104, 0, BASE, SHADOW]])
-      end
-    end
-
-    bmp.font.size = 14
-    pbDrawTextPositions(bmp, [[_INTL("Entorno / Clima & Campo:"), 12, 122, 0, DIM, SHADOW]])
-    bmp.font.size = 15
-    global_text = getGlobalEnvironmentText(battle)
-    pbDrawTextPositions(bmp, [[global_text, 12, 140, 0, COLOR_BOOST, SHADOW]])
+    # Fila 4: Entorno Global - Climas, Terrenos y Trick Room (y=124 a 160)
+    bmp.font.size = 13
+    pbDrawTextPositions(bmp, [[_INTL("ENTORNO GLOBAL (CLIMA / CAMPO)"), 12, 124, 0, DIM, SHADOW]])
+    drawGlobalEnvironment(bmp, battle, 138)
   end
 end
 
