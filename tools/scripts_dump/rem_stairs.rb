@@ -560,6 +560,7 @@ class Game_Character
           @real_y = endy * Game_Map.realResY
           @view_offset_y = 0 if SMOOTH_SCROLLING && self.is_a?(Game_Player)
           clear_stair_data
+          $game_player.check_event_trigger_here([1, 2]) if self.is_a?(Game_Player)
           return stair_screen_y
         end
       elsif @real_x / Game_Map::XSUBPIXEL.to_f >= @stair_start_x * Game_Map::TILEWIDTH &&
@@ -598,6 +599,7 @@ class Game_Character
           @real_y = endy * Game_Map.realResY
           @view_offset_y = 0 if SMOOTH_SCROLLING && self.is_a?(Game_Player)
           clear_stair_data
+          $game_player.check_event_trigger_here([1, 2]) if self.is_a?(Game_Player)
           return stair_screen_y
         end
       else
