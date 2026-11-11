@@ -404,7 +404,7 @@ class CommandMenuDisplay
     rem_tactical_init(viewport)
     @msgbox.visible = false if @msgbox
     
-    # Sprite completo para el texto del cuadro de comandos (Línea 1 y Línea 2 centradas horizontalmente)
+    # Sprite para el bloque de texto centrado vertical y horizontalmente en el recuadro (246x96)
     @remTextSprite = BitmapSprite.new(246, 96, viewport)
     @remTextSprite.x = 0
     @remTextSprite.y = Graphics.height - 96
@@ -437,14 +437,14 @@ class CommandMenuDisplay
       base_col = (PokeBattle_SceneConstants::MESSAGEBASECOLOR rescue nil) || Color.new(255, 255, 255)
       shadow_col = (PokeBattle_SceneConstants::MESSAGESHADOWCOLOR rescue nil) || REM_UI::INK
       
-      # Línea 1: ¿Qué hará <Pokemon>? (Centrado horizontalmente a x=123)
+      # Línea 1: ¿Qué hará <Pokemon>? (Más grande, tamaño 28, centrado verticalmente a y=24)
       pbSetNarrowFont(bmp)
-      bmp.font.size = 24
-      pbDrawTextPositions(bmp, [[@currentPrompt, 123, 16, 2, base_col, shadow_col]])
+      bmp.font.size = 28
+      pbDrawTextPositions(bmp, [[@currentPrompt, 123, 24, 2, base_col, shadow_col]])
       
-      # Línea 2: Tecla D: info (Centrado horizontalmente a x=123)
-      bmp.font.size = 18
-      pbDrawTextPositions(bmp, [[_INTL("Tecla D: info"), 123, 52, 2, REM_UI::SILVER, REM_UI::INK]])
+      # Línea 2: Tecla D: info (Texto de ayuda justo debajo a y=58, tamaño 17)
+      bmp.font.size = 17
+      pbDrawTextPositions(bmp, [[_INTL("Tecla D: info"), 123, 58, 2, REM_UI::SILVER, REM_UI::INK]])
     end
     
     commands = []
@@ -457,7 +457,7 @@ end
 
 #===============================================================================
 # INFORMACIÓN TÁCTICA DE COMBATE NOIR DINÁMICA (Tecla D en menú de comandos)
-# Tarjetas auto-redimensionables con formato tabla (CAMBIOS DE ESTADO, CAMPO, TERRENO)
+# Tarjetas auto-redimensionables con formato tabla
 #===============================================================================
 module REM_TacticalUI
   BASE   = Color.new(255, 255, 255)
@@ -499,6 +499,19 @@ module REM_TacticalUI
     "Sustituto"     => Color.new(85, 195, 125),  # Verde sustituto
     "Embargo"       => Color.new(180, 100, 180), # Siniestro
     "Anticura"      => Color.new(215, 75, 75),   # Rojo bloqueo
+    "Atrapado"      => Color.new(225, 110, 45),   # Naranja trapeado
+    "Mal de Ojo"    => Color.new(135, 90, 185),  # Púrpura bloqueo
+    "Foco Energía"  => Color.new(250, 145, 40),  # Naranja crítico
+    "Aguzar"        => Color.new(255, 170, 50),  # Dorado crítico asegurado
+    "Levitón"       => Color.new(100, 205, 235), # Cian levitación
+    "Acua Aro"      => Color.new(70, 165, 245),  # Azul agua
+    "Arraigo"       => Color.new(90, 215, 90),   # Verde arraigo
+    "Mismo Destino" => Color.new(215, 60, 120),  # Rosa oscuro destino
+    "Bilis"         => Color.new(140, 190, 60),  # Verde oliva anula habilidad
+    "Mordaza"       => Color.new(170, 70, 90),   # Borgoña bloqueo sonido
+    "Antiaéreo"     => Color.new(160, 120, 70),  # Pardo tierra
+    "Telequinesia"  => Color.new(180, 140, 235), # Lavanda telequinesia
+    "Alboroto"      => Color.new(240, 160, 50),  # Naranja sonido
     "Día Soleado"   => Color.new(255, 135, 40),  # Naranja sol
     "Sol Abrasador" => Color.new(255, 105, 30),  # Naranja fuego
     "Danza Lluvia"  => Color.new(60, 155, 255),  # Azul lluvia
@@ -560,7 +573,6 @@ module REM_TacticalUI
 
   # Dibuja una celda de la tabla: Marco de color temático, Nombre a la izquierda, Turnos a la derecha
   def self.drawTableCell(bmp, name, tag, x, y, w, h)
-    # Fondo sutil oscuro
     bmp.fill_rect(x + 2, y, w - 4, h, Color.new(22, 26, 36, 235))
     bmp.fill_rect(x, y + 2, w, h - 4, Color.new(22, 26, 36, 235))
     bmp.set_pixel(x + 1, y + 1, Color.new(22, 26, 36, 235))
@@ -568,29 +580,25 @@ module REM_TacticalUI
     bmp.set_pixel(x + 1, y + h - 2, Color.new(22, 26, 36, 235))
     bmp.set_pixel(x + w - 2, y + h - 2, Color.new(22, 26, 36, 235))
     
-    # Borde con color temático representativo de este efecto
     border_col = EFFECT_COLORS[name] || Color.new(70, 90, 120)
     bmp.fill_rect(x + 2, y, w - 4, 1, border_col)
     bmp.fill_rect(x + 2, y + h - 1, w - 4, 1, border_col)
     bmp.fill_rect(x, y + 2, 1, h - 4, border_col)
     bmp.fill_rect(x + w - 1, y + 2, 1, h - 4, border_col)
 
-    # Nombre del efecto a la izquierda
     pbSetNarrowFont(bmp)
     bmp.font.size = 14
     pbDrawTextPositions(bmp, [[name, x + 6, y + 1, 0, BASE, SHADOW]])
 
-    # Tag: Si queda 1T aparece en ROJO de alerta; si >1T en cian; stacks en dorado; infinito en plata
     tag_col = if tag == "1T"
-                Color.new(255, 80, 80)   # 1 turno restante -> ROJO de aviso
+                Color.new(255, 80, 80)   # 1 turno restante -> ROJO de alerta
               elsif tag.include?("T")
                 Color.new(110, 205, 255) # Turnos normales -> Cian
               elsif tag.include?("x")
                 Color.new(255, 215, 80)  # Capas de trampas -> Dorado
               else
-                Color.new(160, 165, 175) # Efecto permanente / infinito -> Plata tenue
+                Color.new(160, 165, 175) # Permanente -> Plata
               end
-    # Alineado a la derecha dentro de la celda
     pbDrawTextPositions(bmp, [[tag, x + w - 6, y + 1, 1, tag_col, SHADOW]])
   end
 
@@ -599,6 +607,8 @@ module REM_TacticalUI
     res = []
     return res if !battler || !battler.effects
     eff = battler.effects
+    
+    # Estados volátiles principales
     res.push([_INTL("Confusión"), "#{eff[PBEffects::Confusion]}T"]) if eff[PBEffects::Confusion] && eff[PBEffects::Confusion] > 0
     res.push([_INTL("Enamorado"), "-"]) if eff[PBEffects::Attract] && eff[PBEffects::Attract] >= 0
     res.push([_INTL("Tormento"), "-"]) if eff[PBEffects::Torment]
@@ -612,6 +622,25 @@ module REM_TacticalUI
     res.push([_INTL("Sustituto"), "-"]) if eff[PBEffects::Substitute] && eff[PBEffects::Substitute] > 0
     res.push([_INTL("Embargo"), "#{eff[PBEffects::Embargo]}T"]) if eff[PBEffects::Embargo] && eff[PBEffects::Embargo] > 0
     res.push([_INTL("Anticura"), "#{eff[PBEffects::HealBlock]}T"]) if eff[PBEffects::HealBlock] && eff[PBEffects::HealBlock] > 0
+    
+    # Trapeado y bloqueo
+    res.push([_INTL("Atrapado"), "#{eff[PBEffects::MultiTurn]}T"]) if eff[PBEffects::MultiTurn] && eff[PBEffects::MultiTurn] > 0
+    res.push([_INTL("Mal de Ojo"), "-"]) if eff[PBEffects::MeanLook] && eff[PBEffects::MeanLook] >= 0
+    res.push([_INTL("Atrapado"), "-"]) if defined?(PBEffects::JawLock) && eff[PBEffects::JawLock] && eff[PBEffects::JawLock] >= 0
+    
+    # Críticos y potenciadores de combate
+    res.push([_INTL("Foco Energía"), "-"]) if eff[PBEffects::FocusEnergy] && eff[PBEffects::FocusEnergy] > 0
+    res.push([_INTL("Aguzar"), "1T"]) if defined?(PBEffects::LaserFocus) && eff[PBEffects::LaserFocus] && eff[PBEffects::LaserFocus] > 0
+    res.push([_INTL("Levitón"), "#{eff[PBEffects::MagnetRise]}T"]) if eff[PBEffects::MagnetRise] && eff[PBEffects::MagnetRise] > 0
+    res.push([_INTL("Acua Aro"), "-"]) if eff[PBEffects::AquaRing]
+    res.push([_INTL("Arraigo"), "-"]) if eff[PBEffects::Ingrain]
+    res.push([_INTL("Mismo Destino"), "1T"]) if eff[PBEffects::DestinyBond]
+    res.push([_INTL("Bilis"), "-"]) if eff[PBEffects::GastroAcid]
+    res.push([_INTL("Mordaza"), "#{eff[PBEffects::ThroatChop]}T"]) if defined?(PBEffects::ThroatChop) && eff[PBEffects::ThroatChop] && eff[PBEffects::ThroatChop] > 0
+    res.push([_INTL("Antiaéreo"), "-"]) if eff[PBEffects::SmackDown]
+    res.push([_INTL("Telequinesia"), "#{eff[PBEffects::Telekinesis]}T"]) if eff[PBEffects::Telekinesis] && eff[PBEffects::Telekinesis] > 0
+    res.push([_INTL("Alboroto"), "#{eff[PBEffects::Uproar]}T"]) if eff[PBEffects::Uproar] && eff[PBEffects::Uproar] > 0
+    
     return res
   end
 
@@ -848,7 +877,6 @@ class PokeBattle_Scene
     vp.dispose
   end
 end
-
 # CALIBRACIÓN DE SPRITES DE COMBATE: plataformas y fondos conservan sus coordenadas nativas; cada sprite se apoya por su arte real (se descuenta el margen transparente inferior
 # que mide BitmapWrapperEX), de modo que nada queda hundido ni flotando.
 #===============================================================================
