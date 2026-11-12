@@ -591,9 +591,6 @@ end
 #===============================================================================
 def pbDebugTestingMenu
   loop do
-    hora_str = sprintf("%02d:%02d", pbGetTimeNow.hour, pbGetTimeNow.min)
-    noche_str = pbRemIsNight? ? "Noche (x1.5 Lv)" : "Día"
-    congelado_str = ($PokemonGlobal && $PokemonGlobal.remTimeFrozen) ? " [Tiempo Congelado]" : ""
     has_inc = ($PokemonBag && $PokemonBag.pbHasItem?(:INCUBADORA)) ? "Sí" : "No"
     egg = $PokemonGlobal ? $PokemonGlobal.egg : nil
     egg_str = egg ? (egg.eggsteps == 0 ? "¡Listo para abrir!" : "#{egg.eggsteps} pasos") : "Vacía"
@@ -601,17 +598,62 @@ def pbDebugTestingMenu
     cmd = Kernel.pbMessage(
       _INTL("BANCO DE PRUEBAS REM\\nIncubadora: {1} | Huevo: {2}\\n¿Qué sistema deseas verificar?", has_inc, egg_str),
       [
-        _INTL("1. Incubadora Noir (Huevo, pasos y entrega)"),
-        _INTL("2. Equipar Objetos a Pokémon (Icono bajo PS)"),
-        _INTL("3. Combate 2vs1 (Selector de Aura)"),
-        _INTL("4. Tiempo Irreal (Día/Noche)"),
-        _INTL("5. Preparar / Curar Equipo"),
+        _INTL("1. Cartel de Ruta (pbRouteSign) [NUEVO]"),
+        _INTL("2. Incubadora Noir (Huevo, pasos y entrega)"),
+        _INTL("3. Equipar Objetos a Pokémon (Icono bajo PS)"),
+        _INTL("4. Preparar / Curar Equipo"),
         _INTL("Salir")
       ]
     )
     
     case cmd
-    when 0 # 1. Pruebas de Incubadora
+    when 0 # 1. Cartel de Ruta / Encuentros (pbRouteSign)
+      sign_opts = [
+        _INTL("Probar Ruta 8 Pokes + 2 Pesca (Ej. Costa Sepiola)"),
+        _INTL("Probar Ruta 6 Pokes (Ej. Bosque Dioptasa)"),
+        _INTL("Probar Ruta 4 Pokes (Ej. Senda del Albor)"),
+        _INTL("Alternar Pokédex Vistos (Siluetas Negras vs Color)"),
+        _INTL("Probar pbRouteSign de este mapa actual"),
+        _INTL("Volver")
+      ]
+      sign_cmd = Kernel.pbMessage(_INTL("VISOR DE CARTELES DE RUTA (pbRouteSign)\\nSelecciona una prueba:"), sign_opts, 0)
+      case sign_cmd
+      when 0
+        land = [:PIDGEY, :RATTATA, :ZUBAT, :GEODUDE, :MANKEY, :GROWLITHE, :ABRA, :MACHOP]
+        fish = [:MAGIKARP, :POLIWAG]
+        pbRouteSign(nil, "Ruta 4 - Costa Sepiola", land, fish)
+      when 1
+        land = [:ZIGZAGOON, :TAILLOW, :WURMPLE, :POOCHYENA, :SHROOMISH, :SLAKOTH]
+        pbRouteSign(nil, "Ruta 1 - Bosque Dioptasa", land, [])
+      when 2
+        land = [:STARLY, :BIDOOF, :KRICKETOT, :SHINX]
+        pbRouteSign(nil, "Senda del Albor", land, [])
+      when 3
+        sample_pokes = [:PIDGEY, :RATTATA, :ZUBAT, :GEODUDE, :MANKEY, :GROWLITHE, :ABRA, :MACHOP, :MAGIKARP, :POLIWAG, :ZIGZAGOON, :TAILLOW]
+        any_seen = sample_pokes.any? { |sp| $Trainer && $Trainer.hasSeen?(sp) }
+        if any_seen
+          sample_pokes.each do |sp|
+            id = getID(PBSpecies, sp) rescue 0
+            if id > 0 && $Trainer
+              $Trainer.seen[id] = false
+              $Trainer.owned[id] = false
+            end
+          end
+          Kernel.pbMessage(_INTL("Pokédex de prueba restablecida.\\nLos Pokémon ahora se mostrarán como SILUETAS NEGRAS."))
+        else
+          sample_pokes.each_with_index do |sp, idx|
+            # Marca la mitad de los Pokémon como vistos para comprobar el contraste directo
+            if idx % 2 == 0 && $Trainer
+              $Trainer.setSeen(sp)
+            end
+          end
+          Kernel.pbMessage(_INTL("Pokédex de prueba actualizada.\\nLa mitad de los Pokémon ahora están VISTOS (a color) y la otra mitad en SILUETA NEGRA."))
+        end
+      when 4
+        pbRouteSign
+      end
+
+    when 1 # 2. Pruebas de Incubadora
       inc_cmd = Kernel.pbMessage(
         _INTL("INCUBADORA NOIR\\nIncubadora: {1} | Huevo: {2}\\nSelecciona una acción:", has_inc, egg_str),
         [
@@ -656,7 +698,7 @@ def pbDebugTestingMenu
         Kernel.pbMessage(_INTL("Incubadora vaciada."))
       end
 
-    when 1 # 2. Equipar Objetos a Pokémon
+    when 2 # 3. Equipar Objetos a Pokémon
       while $Trainer.party.length < 3
         pbAddPokemon(:LUCARIO, 25) if hasConst?(PBSpecies, :LUCARIO)
         pbAddPokemon(:GRENINJA, 25) if hasConst?(PBSpecies, :GRENINJA)
@@ -672,71 +714,14 @@ def pbDebugTestingMenu
       end
       Kernel.pbMessage(_INTL("¡Objetos equipados en tu equipo (Cinta Elegida, Restos, Baya Zidra...)!\\nAbre el menú de Pokémon para comprobar que sus iconos se muestran alineados justo debajo de 'PS'."))
 
-    when 2 # 3. Combate 2vs1 con selector de Aura
-      if !$Trainer || $Trainer.pokemonCount < 2
-        Kernel.pbMessage(_INTL("Para un combate 2vs1 necesitas al menos 2 Pokémon. Añadiendo equipo de prueba..."))
-        pbAddPokemon(:LUCARIO, 25) if hasConst?(PBSpecies, :LUCARIO)
-        pbAddPokemon(:GRENINJA, 25) if hasConst?(PBSpecies, :GRENINJA)
-        for p in $Trainer.party; p.heal; end
-      end
-      aura_opts = [
-        _INTL("1. Normal (Estadísticas base Nv25)"),
-        _INTL("2. Aura Dominante PS x2 (Doble vida)"),
-        _INTL("3. Aura Dominante Total x1.5 (+50% stats)"),
-        _INTL("4. Aura Dominante Total x2.0 (+100% stats)")
-      ]
-      aura_sel = Kernel.pbMessage(_INTL("¿Qué modificador de estadísticas deseas aplicar al Jefe?"), aura_opts, 0)
-      boost = case aura_sel
-      when 1 then :hp_x2
-      when 2 then :all_x15
-      when 3 then :all_x2
-      else nil
-      end
-      species_sym = hasConst?(PBSpecies, :URSALUNA) ? :URSALUNA : :SNORLAX
-      species_id = getID(PBSpecies, species_sym)
-      species_name = PBSpecies.getName(species_id)
-      Kernel.pbMessage(_INTL("Iniciando combate 2vs1 contra {1} Nv25...", species_name))
-      if boost
-        $PokemonTemp.remDominantMode = boost
-        begin
-          pbBossFight(species_id, 25, 0, nil, false, false)
-        ensure
-          $PokemonTemp.remDominantMode = nil
-        end
-      else
-        pbBossFight(species_id, 25, 0, nil, false, false)
-      end
-      Kernel.pbMessage(_INTL("Combate finalizado. Los consumibles usados se han restaurado automáticamente."))
-
-    when 3 # 4. Tiempo Irreal
-      sub = Kernel.pbMessage(
-        _INTL("TIEMPO IRREAL\\n¿Qué acción deseas ejecutar?"),
-        [
-          _INTL("Alternar Día / Noche (Forzar)"),
-          _INTL("Avanzar 3 horas"),
-          _INTL("Congelar / Descongelar tiempo"),
-          _INTL("Volver")
-        ]
-      )
-      case sub
-      when 0
-        pbToggleDayNight(true)
-        Kernel.pbMessage(_INTL("Estado cambiado a: {1}.", pbRemIsNight? ? "Noche" : "Día"))
-      when 1
-        skipToHour((pbGetTimeNow.hour + 3) % 24)
-        Kernel.pbMessage(_INTL("Hora avanzada a las {1}.", sprintf("%02d:00", pbGetTimeNow.hour)))
-      when 2
-        $PokemonGlobal.remTimeFrozen = !$PokemonGlobal.remTimeFrozen
-        Kernel.pbMessage(_INTL("Tiempo {1}.", $PokemonGlobal.remTimeFrozen ? "CONGELADO" : "DESCONGELADO"))
-      end
-
-    when 4 # 5. Preparar / Curar Equipo
+    when 3 # 4. Preparar / Curar Equipo
       if $Trainer && $Trainer.party
         for p in $Trainer.party; p.heal; end
       end
       $PokemonBag.pbStoreItem(:SITRUSBERRY, 5) if hasConst?(PBItems, :SITRUSBERRY)
       $PokemonBag.pbStoreItem(:POKEBALL, 20) if hasConst?(PBItems, :POKEBALL)
       Kernel.pbMessage(_INTL("¡Equipo curado al 100%! Bayas Zidra y 20 Poké Balls añadidas a la mochila."))
+
     else
       break
     end
