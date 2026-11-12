@@ -587,6 +587,67 @@ class Game_Map
 end
 
 #===============================================================================
+#===============================================================================
+# SERVICIO DE TRANSPORTE AÉREO DE CENTROS POKÉMON (Vuelo de Refugio a Refugio)
+#===============================================================================
+class PokemonGlobalMetadata
+  attr_accessor :remAirTaxiIntroduced
+  attr_accessor :remAirTaxiUnlocked
+end
+
+def pbRemAirTaxiUnlocked?
+  return true if $DEBUG
+  return $PokemonGlobal && $PokemonGlobal.remAirTaxiUnlocked
+end
+
+def pbRemUnlockAirTaxi
+  $PokemonGlobal.remAirTaxiUnlocked = true if $PokemonGlobal
+end
+
+def pbRemAirTaxi
+  $PokemonGlobal.remAirTaxiIntroduced ||= false
+  
+  if !$PokemonGlobal.remAirTaxiIntroduced
+    Kernel.pbMessage(_INTL("¡Hola! Soy el piloto del Servicio de Transporte Aéreo de Oniria."))
+    Kernel.pbMessage(_INTL("Puedo llevarte rápidamente entre los Centros Pokémon de las ciudades y pueblos que ya hayas visitado."))
+    Kernel.pbMessage(_INTL("El servicio es completamente gratuito para los entrenadores."))
+    $PokemonGlobal.remAirTaxiIntroduced = true
+  end
+  
+  if Kernel.pbConfirmMessage(_INTL("¿Deseas volar a otro Centro Pokémon?"))
+    scene = PokemonRegionMapScene.new(-1, false)
+    screen = PokemonRegionMap.new(scene)
+    ret = screen.pbStartFlyScreen
+    if ret
+      if ret[0] == $game_map.map_id
+        Kernel.pbMessage(_INTL("¡Pero si ya estás aquí! Elige otra ciudad si deseas desplazarte."))
+        return false
+      end
+      
+      pbSEPlay("Fly") rescue pbSEPlay("PRSFX- Fly") rescue nil
+      Kernel.pbMessage(_INTL("¡Excelente! Prepárate, despegamos hacia nuestro destino..."))
+      pbFadeOutIn(99999) {
+        Kernel.pbCancelVehicles
+        $game_temp.player_new_map_id = ret[0]
+        $game_temp.player_new_x = ret[1]
+        $game_temp.player_new_y = ret[2]
+        $game_temp.player_new_direction = 2
+        $scene.transfer_player
+        $game_map.autoplay
+        $game_map.refresh
+      }
+      pbEraseEscapePoint
+      Kernel.pbMessage(_INTL("¡Aterrizaje completado con éxito! Buen viaje, entrenador."))
+      return true
+    else
+      Kernel.pbMessage(_INTL("Avísame si decides viajar más tarde."))
+    end
+  else
+    Kernel.pbMessage(_INTL("Entendido. Aquí me encontrarás cuando necesites transporte."))
+  end
+  return false
+end
+
 # Menú de Banco de Pruebas (Testing de Sistemas de la Auditoría)
 #===============================================================================
 def pbDebugTestingMenu
@@ -602,10 +663,11 @@ def pbDebugTestingMenu
         _INTL("2. Salón de la Fama Gen 5 Noir [NUEVO]"),
         _INTL("3. Herramientas Clave (Tijeras, Pico, Guantes, Surf) [NUEVO]"),
         _INTL("4. Saco de Dormir Noir (Dormir en ruta y cargas) [NUEVO]"),
-        _INTL("5. Cartel de Ruta (pbRouteSign)"),
-        _INTL("6. Incubadora Noir (Huevo, pasos y entrega)"),
-        _INTL("7. Equipar Objetos a Pokémon (Icono bajo PS)"),
-        _INTL("8. Preparar / Curar Equipo"),
+        _INTL("5. Transporte Aéreo de Centro Pokémon (Vuelo) [NUEVO]"),
+        _INTL("6. Cartel de Ruta (pbRouteSign)"),
+        _INTL("7. Incubadora Noir (Huevo, pasos y entrega)"),
+        _INTL("8. Equipar Objetos a Pokémon (Icono bajo PS)"),
+        _INTL("9. Preparar / Curar Equipo"),
         _INTL("Salir")
       ]
     )
@@ -730,7 +792,29 @@ def pbDebugTestingMenu
         Kernel.pbMessage(_INTL("Cargas del Saco de Dormir rellenadas al 100% ({1}/{2}).", pbRemSleepBagCharges, pbRemSleepBagMax))
       end
 
-    when 4 # 5. Cartel de Ruta (pbRouteSign)
+    when 4 # 5. Transporte Aéreo de Centro Pokémon (Vuelo)
+      air_opts = [
+        _INTL("Hablar con el Piloto / Iniciar Vuelo (pbRemAirTaxi)"),
+        _INTL("Desbloquear Todos los Puntos de Vuelo en el Mapa"),
+        _INTL("Volver")
+      ]
+      air_cmd = Kernel.pbMessage(_INTL("TRANSPORTE AÉREO ONÍRICO (Vuelo)\\nSelecciona una acción:"), air_opts, 0)
+      case air_cmd
+      when 0
+        pbRemAirTaxi
+      when 1
+        meta = pbLoadMetadata
+        count = 0
+        for i in 1...meta.length
+          if meta[i] && meta[i][MetadataMapPosition]
+            $PokemonGlobal.visitedMaps[i] = true
+            count += 1
+          end
+        end
+        Kernel.pbMessage(_INTL("¡{1} puntos de mapa marcados como visitados para el vuelo de prueba!", count))
+      end
+
+    when 5 # 6. Cartel de Ruta (pbRouteSign)
       sign_opts = [
         _INTL("Probar Ruta 8 Pokes + 2 Pesca (Ej. Costa Sepiola)"),
         _INTL("Probar Ruta 6 Pokes (Ej. Bosque Dioptasa)"),
@@ -775,7 +859,7 @@ def pbDebugTestingMenu
         pbRouteSign
       end
 
-    when 5 # 6. Pruebas de Incubadora
+    when 6 # 7. Pruebas de Incubadora
       inc_cmd = Kernel.pbMessage(
         _INTL("INCUBADORA NOIR\\nIncubadora: {1} | Huevo: {2}\\nSelecciona una acción:", has_inc, egg_str),
         [
@@ -820,7 +904,7 @@ def pbDebugTestingMenu
         Kernel.pbMessage(_INTL("Incubadora vaciada."))
       end
 
-    when 6 # 7. Equipar Objetos a Pokémon
+    when 7 # 8. Equipar Objetos a Pokémon
       while $Trainer.party.length < 3
         pbAddPokemon(:LUCARIO, 25) if hasConst?(PBSpecies, :LUCARIO)
         pbAddPokemon(:GRENINJA, 25) if hasConst?(PBSpecies, :GRENINJA)
@@ -835,7 +919,7 @@ def pbDebugTestingMenu
       end
       Kernel.pbMessage(_INTL("¡Objetos equipados en tu equipo (Cinta Elegida, Restos, Baya Zidra...)!\\nAbre el menú de Pokémon para comprobar que sus iconos se muestran alineados justo debajo de 'PS'."))
 
-    when 7 # 8. Preparar / Curar Equipo
+    when 8 # 9. Preparar / Curar Equipo
       if $Trainer && $Trainer.party
         for p in $Trainer.party; p.heal; end
       end
