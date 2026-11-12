@@ -600,10 +600,11 @@ def pbDebugTestingMenu
       [
         _INTL("1. Follower a Combate (Sin Ball 1vs1 y Doble) [NUEVO]"),
         _INTL("2. Salón de la Fama Gen 5 Noir [NUEVO]"),
-        _INTL("3. Cartel de Ruta (pbRouteSign)"),
-        _INTL("4. Incubadora Noir (Huevo, pasos y entrega)"),
-        _INTL("5. Equipar Objetos a Pokémon (Icono bajo PS)"),
-        _INTL("6. Preparar / Curar Equipo"),
+        _INTL("3. Herramientas Clave (Tijeras, Pico, Guantes, Surf) [NUEVO]"),
+        _INTL("4. Cartel de Ruta (pbRouteSign)"),
+        _INTL("5. Incubadora Noir (Huevo, pasos y entrega)"),
+        _INTL("6. Equipar Objetos a Pokémon (Icono bajo PS)"),
+        _INTL("7. Preparar / Curar Equipo"),
         _INTL("Salir")
       ]
     )
@@ -657,7 +658,37 @@ def pbDebugTestingMenu
       Kernel.pbMessage(_INTL("Iniciando secuencia cinemática del Salón de la Fama Gen 5 Noir..."))
       pbHallOfFameEntry
 
-    when 2 # 3. Cartel de Ruta (pbRouteSign)
+    when 2 # 3. Herramientas Clave (Sustituto de MOs)
+      has_shears = ($PokemonBag && $PokemonBag.pbHasItem?(:SHEARS)) ? "Sí" : "No"
+      has_pickaxe = ($PokemonBag && $PokemonBag.pbHasItem?(:PICKAXE)) ? "Sí" : "No"
+      has_gloves = ($PokemonBag && $PokemonBag.pbHasItem?(:GLOVES)) ? "Sí" : "No"
+      has_board = ($PokemonBag && $PokemonBag.pbHasItem?(:SURFBOARD)) ? "Sí" : "No"
+      
+      tool_info = "Tijeras (Corte): #{has_shears} | Pico (Roca): #{has_pickaxe}\nGuantes (Fuerza): #{has_gloves} | Surf (Agua): #{has_board}"
+      t_cmd = Kernel.pbMessage(
+        _INTL("HERRAMIENTAS DE CAMPO CLAVE (Sustituto de MOs)\\n{1}\\nSelecciona una opción:", tool_info),
+        [
+          _INTL("Dar las 4 Herramientas Clave a la Mochila"),
+          _INTL("Quitar las 4 Herramientas Clave"),
+          _INTL("Volver")
+        ]
+      )
+      case t_cmd
+      when 0
+        $PokemonBag.pbStoreItem(:SHEARS, 1) if hasConst?(PBItems, :SHEARS)
+        $PokemonBag.pbStoreItem(:PICKAXE, 1) if hasConst?(PBItems, :PICKAXE)
+        $PokemonBag.pbStoreItem(:GLOVES, 1) if hasConst?(PBItems, :GLOVES)
+        $PokemonBag.pbStoreItem(:SURFBOARD, 1) if hasConst?(PBItems, :SURFBOARD)
+        Kernel.pbMessage(_INTL("¡Has recibido las 4 Herramientas Clave!\\n- Tijeras (Corte de maleza)\\n- Pico (Golpe Roca en rocas agrietadas)\\n- Guantes de Fuerza (Empuje de rocas pesadas)\\n- Tabla de Surf (Navegación en agua)"))
+      when 1
+        $PokemonBag.pbDeleteItem(:SHEARS, 1) if hasConst?(PBItems, :SHEARS)
+        $PokemonBag.pbDeleteItem(:PICKAXE, 1) if hasConst?(PBItems, :PICKAXE)
+        $PokemonBag.pbDeleteItem(:GLOVES, 1) if hasConst?(PBItems, :GLOVES)
+        $PokemonBag.pbDeleteItem(:SURFBOARD, 1) if hasConst?(PBItems, :SURFBOARD)
+        Kernel.pbMessage(_INTL("Se han retirado las 4 Herramientas Clave de tu mochila para probar los diálogos cuando no se tienen los objetos."))
+      end
+
+    when 3 # 4. Cartel de Ruta (pbRouteSign)
       sign_opts = [
         _INTL("Probar Ruta 8 Pokes + 2 Pesca (Ej. Costa Sepiola)"),
         _INTL("Probar Ruta 6 Pokes (Ej. Bosque Dioptasa)"),
@@ -702,7 +733,7 @@ def pbDebugTestingMenu
         pbRouteSign
       end
 
-    when 3 # 4. Pruebas de Incubadora
+    when 4 # 5. Pruebas de Incubadora
       inc_cmd = Kernel.pbMessage(
         _INTL("INCUBADORA NOIR\\nIncubadora: {1} | Huevo: {2}\\nSelecciona una acción:", has_inc, egg_str),
         [
@@ -747,7 +778,7 @@ def pbDebugTestingMenu
         Kernel.pbMessage(_INTL("Incubadora vaciada."))
       end
 
-    when 4 # 5. Equipar Objetos a Pokémon
+    when 5 # 6. Equipar Objetos a Pokémon
       while $Trainer.party.length < 3
         pbAddPokemon(:LUCARIO, 25) if hasConst?(PBSpecies, :LUCARIO)
         pbAddPokemon(:GRENINJA, 25) if hasConst?(PBSpecies, :GRENINJA)
@@ -762,7 +793,7 @@ def pbDebugTestingMenu
       end
       Kernel.pbMessage(_INTL("¡Objetos equipados en tu equipo (Cinta Elegida, Restos, Baya Zidra...)!\\nAbre el menú de Pokémon para comprobar que sus iconos se muestran alineados justo debajo de 'PS'."))
 
-    when 5 # 6. Preparar / Curar Equipo
+    when 6 # 7. Preparar / Curar Equipo
       if $Trainer && $Trainer.party
         for p in $Trainer.party; p.heal; end
       end

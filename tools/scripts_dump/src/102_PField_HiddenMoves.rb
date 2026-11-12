@@ -264,53 +264,79 @@ def pbHiddenMoveAnimation(pokemon)
 end
 
 #===============================================================================
-# Corte / Cut
+# Herramientas de Campo Clave (Tijeras, Pico, Guantes de Fuerza, Tabla de Surf)
+# En Pokémon REM los obstáculos de campo se resuelven mediante Objetos Clave
+# del inventario sin depender de movimientos de MO.
+#===============================================================================
+
+def canUseCut?
+  facingEvent = $game_player.pbFacingEvent
+  return facingEvent && (facingEvent.name == "Tree" || facingEvent.name.include?("Tree"))
+end
+
+def useCut
+  Kernel.pbCut
+end
+
+def canUseRockSmash?
+  facingEvent = $game_player.pbFacingEvent
+  return facingEvent && (facingEvent.name == "Rock" || facingEvent.name.include?("Rock"))
+end
+
+def useRockSmash
+  Kernel.pbRockSmash
+end
+
+def canUseStrength?
+  facingEvent = $game_player.pbFacingEvent
+  return facingEvent && (facingEvent.name == "Boulder" || facingEvent.name.include?("Boulder")) && !$PokemonMap.strengthUsed
+end
+
+def useStrength
+  Kernel.pbStrength
+end
+
+def canUseSurf?
+  terrain = Kernel.pbFacingTerrainTag
+  notCliff = $game_map.passable?($game_player.x, $game_player.y, $game_player.direction)
+  return PBTerrain.isSurfable?(terrain) && !$PokemonGlobal.surfing && 
+         !pbGetMetadata($game_map.map_id, MetadataBicycleAlways) && notCliff
+end
+
+def useSurf
+  Kernel.pbSurf
+end
+
+#===============================================================================
+# Corte / Cut -> Tijeras (:SHEARS)
 #===============================================================================
 def Kernel.pbCut
-  if $DEBUG ||
-     (HIDDENMOVESCOUNTBADGES ? $Trainer.numbadges>=BADGEFORCUT : $Trainer.badges[BADGEFORCUT])
-    movefinder=Kernel.pbCheckMove(:CUT)
-    if $DEBUG || movefinder
-      Kernel.pbMessage(_INTL("Hay unas espinas demasiado peligrosas como para pasar.\1"))
-      if Kernel.pbConfirmMessage(_INTL("¿Quieres usar Corte?"))
-        speciesname=!movefinder ? $Trainer.name : movefinder.name
-        Kernel.pbMessage(_INTL("¡{1} ha usado Corte!",speciesname))
-        pbHiddenMoveAnimation(movefinder)
-        return true
+  has_shears = ($DEBUG || ($PokemonBag && $PokemonBag.pbHasItem?(:SHEARS)))
+  if has_shears
+    Kernel.pbMessage(_INTL("Hay maleza y ramas que bloquean el camino.\\1"))
+    if Kernel.pbConfirmMessage(_INTL("¿Quieres cortarlas con las Tijeras?"))
+      pbSEPlay("PRSFX- Cut") rescue pbSEPlay("Cut") rescue nil
+      Kernel.pbMessage(_INTL("¡Has usado las Tijeras para despejar el camino!"))
+      facingEvent = $game_player.pbFacingEvent
+      if facingEvent
+        facingEvent.erase
+        $PokemonMap.addErasedEvent(facingEvent.id) if $PokemonMap
       end
-    else
-      Kernel.pbMessage(_INTL("Hay unas espinas demasiado peligrosas como para pasar."))
+      return true
     end
   else
-    Kernel.pbMessage(_INTL("Hay unas espinas demasiado peligrosas como para pasar."))
+    Kernel.pbMessage(_INTL("Hay maleza y ramas bloqueando el paso. Con unas tijeras de podar se podría cortar fácilmente."))
   end
   return false
 end
 
-HiddenMoveHandlers::CanUseMove.add(:CUT,proc{|move,pkmn|
-   if !$DEBUG &&
-      !(HIDDENMOVESCOUNTBADGES ? $Trainer.numbadges>=BADGEFORCUT : $Trainer.badges[BADGEFORCUT])
-     Kernel.pbMessage(_INTL("No tienes el número necesario de medallas."))
-     return false
-   end
-   facingEvent=$game_player.pbFacingEvent
-   if !facingEvent || facingEvent.name!="Tree"
-     Kernel.pbMessage(_INTL("No se puede usar aquí."))
-     return false
-   end
-   return true
+HiddenMoveHandlers::CanUseMove.add(:CUT, proc { |move, pkmn|
+  return true
 })
 
-HiddenMoveHandlers::UseMove.add(:CUT,proc{|move,pokemon|
-   if !pbHiddenMoveAnimation(pokemon)
-     Kernel.pbMessage(_INTL("¡{1} ha usado {2}!",pokemon.name,PBMoves.getName(move)))
-   end
-   facingEvent=$game_player.pbFacingEvent
-   if facingEvent
-     facingEvent.erase
-     $PokemonMap.addErasedEvent(facingEvent.id)
-   end
-   return true
+HiddenMoveHandlers::UseMove.add(:CUT, proc { |move, pokemon|
+  Kernel.pbCut
+  return true
 })
 
 #===============================================================================
@@ -370,142 +396,100 @@ HiddenMoveHandlers::UseMove.add(:HEADBUTT,proc{|move,pokemon|
 })
 
 #===============================================================================
-# Golpe roca  /  Rock Smash
+# Golpe roca  /  Rock Smash -> Pico (:PICKAXE)
 #===============================================================================
 def pbRockSmashRandomEncounter
-  if rand(100)<25
+  if rand(100) < 25
     pbEncounter(EncounterTypes::RockSmash)
   end
 end
 
 def Kernel.pbRockSmash
-  if $DEBUG ||
-    (HIDDENMOVESCOUNTBADGES ? $Trainer.numbadges>=BADGEFORROCKSMASH : $Trainer.badges[BADGEFORROCKSMASH])
-    movefinder=Kernel.pbCheckMove(:ROCKSMASH)
-    if $DEBUG || movefinder
-      if Kernel.pbConfirmMessage(_INTL("Esta roca se podría romper. ¿Quieres usar Golpe roca?"))
-        speciesname=!movefinder ? $Trainer.name : movefinder.name
-        Kernel.pbMessage(_INTL("¡{1} ha usado Golpe roca!",speciesname))
-        pbHiddenMoveAnimation(movefinder)
-        return true
+  has_pickaxe = ($DEBUG || ($PokemonBag && $PokemonBag.pbHasItem?(:PICKAXE)))
+  if has_pickaxe
+    Kernel.pbMessage(_INTL("Esta roca parece quebradiza y agrietada.\\1"))
+    if Kernel.pbConfirmMessage(_INTL("¿Quieres picarla con el Pico?"))
+      pbSEPlay("PRSFX- Rock Smash") rescue pbSEPlay("Rock Smash") rescue nil
+      Kernel.pbMessage(_INTL("¡Has usado el Pico para quebrar la roca!"))
+      facingEvent = $game_player.pbFacingEvent
+      if facingEvent
+        facingEvent.erase
+        $PokemonMap.addErasedEvent(facingEvent.id) if $PokemonMap
       end
-    else
-      Kernel.pbMessage(_INTL("Es una roca resistente, pero un Pokémon podría destrozarla."))
+      pbRockSmashRandomEncounter
+      return true
     end
   else
-    Kernel.pbMessage(_INTL("Es una roca resistente, pero un Pokémon podría destrozarla."))
+    Kernel.pbMessage(_INTL("Es una roca quebradiza y agrietada. Con un pico de minero se podría romper fácilmente."))
   end
   return false
 end
 
-HiddenMoveHandlers::CanUseMove.add(:ROCKSMASH,proc{|move,pkmn|
-   terrain=Kernel.pbFacingTerrainTag
-   if !$DEBUG &&
-      !(HIDDENMOVESCOUNTBADGES ? $Trainer.numbadges>=BADGEFORROCKSMASH : $Trainer.badges[BADGEFORROCKSMASH])
-     Kernel.pbMessage(_INTL("No tienes el número necesario de medallas."))
-     return false
-   end
-   facingEvent=$game_player.pbFacingEvent
-   if !facingEvent || facingEvent.name!="Rock"
-     Kernel.pbMessage(_INTL("No puede usarse aquí."))
-     return false
-   end
-   return true
+HiddenMoveHandlers::CanUseMove.add(:ROCKSMASH, proc { |move, pkmn|
+  return true
 })
 
-HiddenMoveHandlers::UseMove.add(:ROCKSMASH,proc{|move,pokemon|
-   if !pbHiddenMoveAnimation(pokemon)
-     Kernel.pbMessage(_INTL("¡{1} ha usado {2}!",pokemon.name,PBMoves.getName(move)))
-   end
-   facingEvent=$game_player.pbFacingEvent
-   if facingEvent
-     facingEvent.erase
-     $PokemonMap.addErasedEvent(facingEvent.id)
-   end
-   return true
+HiddenMoveHandlers::UseMove.add(:ROCKSMASH, proc { |move, pokemon|
+  Kernel.pbRockSmash
+  return true
 })
 
 #===============================================================================
-# Fuerza  /  Strength
+# Fuerza  /  Strength -> Guantes de Fuerza (:GLOVES)
 #===============================================================================
 def Kernel.pbStrength
   if $PokemonMap.strengthUsed
-    Kernel.pbMessage(_INTL("Fuerza permite desplazar rocas."))
-  elsif $DEBUG ||
-    (HIDDENMOVESCOUNTBADGES ? $Trainer.numbadges>=BADGEFORSTRENGTH : $Trainer.badges[BADGEFORSTRENGTH])
-    movefinder=Kernel.pbCheckMove(:STRENGTH)
-    if $DEBUG || movefinder
-      Kernel.pbMessage(_INTL("Es una roca enorme, pero un Pokémon podría ser capaz de desplazarla."))
-      if Kernel.pbConfirmMessage(_INTL("¿Quieres utilizar Fuerza"))
-        speciesname=!movefinder ? $Trainer.name : movefinder.name
-        Kernel.pbMessage(_INTL("¡{1} ha usado Fuerza!\1",speciesname))
-        pbHiddenMoveAnimation(movefinder)
-        Kernel.pbMessage(_INTL("¡Fuerza de {1} permite desplazar rocas!",speciesname))
-        $PokemonMap.strengthUsed=true
-        return true
-      end
-    else
-      Kernel.pbMessage(_INTL("Es una roca enorme, pero un Pokémon podría ser capaz de desplazarla."))
+    Kernel.pbMessage(_INTL("Los Guantes de Fuerza te permiten mover rocas pesadas."))
+    return true
+  end
+  has_gloves = ($DEBUG || ($PokemonBag && $PokemonBag.pbHasItem?(:GLOVES)))
+  if has_gloves
+    Kernel.pbMessage(_INTL("Es una roca enorme y pesada.\\1"))
+    if Kernel.pbConfirmMessage(_INTL("¿Quieres usar los Guantes de Fuerza para empujarla?"))
+      pbSEPlay("PRSFX- Strength") rescue nil
+      $PokemonMap.strengthUsed = true
+      Kernel.pbMessage(_INTL("¡Te has equipado los Guantes de Fuerza! Ahora puedes mover rocas pesadas."))
+      return true
     end
   else
-    Kernel.pbMessage(_INTL("Es una roca enorme, pero un Pokémon podría ser capaz de desplazarla."))
+    Kernel.pbMessage(_INTL("Es una roca enorme. Demasiado pesada para moverla con las manos desnudas."))
   end
   return false
 end
 
-Events.onAction+=proc{|sender,e|
-   facingEvent=$game_player.pbFacingEvent
-   if facingEvent
-     if facingEvent.name=="Boulder"
-       Kernel.pbStrength
-       return
-     end
-   end
-}
-
-HiddenMoveHandlers::CanUseMove.add(:STRENGTH,proc{|move,pkmn|
-   if !$DEBUG &&
-      !(HIDDENMOVESCOUNTBADGES ? $Trainer.numbadges>=BADGEFORSTRENGTH : $Trainer.badges[BADGEFORSTRENGTH])
-     Kernel.pbMessage(_INTL("No tienes el número necesario de medallas."))
-     return false
-   end
-   if $PokemonMap.strengthUsed
-     Kernel.pbMessage(_INTL("Ya se está usando Fuerza."))
-     return false
-   end
-   return true
+HiddenMoveHandlers::CanUseMove.add(:STRENGTH, proc { |move, pkmn|
+  return true
 })
 
-HiddenMoveHandlers::UseMove.add(:STRENGTH,proc{|move,pokemon|
-   if !pbHiddenMoveAnimation(pokemon)
-     Kernel.pbMessage(_INTL("¡{1} ha usado {2}!\1",pokemon.name,PBMoves.getName(move)))
-   end
-   Kernel.pbMessage(_INTL("¡La Fuerza de {1} permite desplazar rocas!",pokemon.name))
-   $PokemonMap.strengthUsed=true
-   return true
+HiddenMoveHandlers::UseMove.add(:STRENGTH, proc { |move, pokemon|
+  Kernel.pbStrength
+  return true
 })
 
 #===============================================================================
-# Surf
+# Surf -> Tabla de Surf (:SURFBOARD)
 #===============================================================================
 def Kernel.pbSurf
   if $game_player.pbHasDependentEvents?
+    Kernel.pbMessage(_INTL("No puedes surfear mientras vas acompañado."))
     return false
   end
-  if $DEBUG ||
-    (HIDDENMOVESCOUNTBADGES ? $Trainer.numbadges>=BADGEFORSURF : $Trainer.badges[BADGEFORSURF])
-    movefinder=Kernel.pbCheckMove(:SURF)
-    if $DEBUG || movefinder
-      if Kernel.pbConfirmMessage(_INTL("El agua tiene buena pinta...\n¿Quieres navegar sobre ella?"))
-        speciesname=!movefinder ? $Trainer.name : movefinder.name
-        Kernel.pbMessage(_INTL("¡{1} ha usado Surf!",speciesname))
-        pbHiddenMoveAnimation(movefinder)
-        surfbgm=pbGetMetadata(0,MetadataSurfBGM)
-        pbCueBGM(surfbgm,0.5) if surfbgm
-        pbStartSurfing()
-        return true
-      end
+  if pbGetMetadata($game_map.map_id, MetadataBicycleAlways)
+    Kernel.pbMessage(_INTL("¡No puedes surfear aquí!"))
+    return false
+  end
+  has_board = ($DEBUG || ($PokemonBag && $PokemonBag.pbHasItem?(:SURFBOARD)))
+  if has_board
+    if Kernel.pbConfirmMessage(_INTL("El agua tiene buena pinta...\n¿Quieres navegar con la Tabla de Surf?"))
+      pbSEPlay("PRSFX- Surf") rescue nil
+      surfbgm = pbGetMetadata(0, MetadataSurfBGM)
+      pbCueBGM(surfbgm, 0.5) if surfbgm
+      Kernel.pbMessage(_INTL("¡Te subes a la Tabla de Surf!"))
+      pbStartSurfing()
+      return true
     end
+  else
+    Kernel.pbMessage(_INTL("El agua es profunda y cristalina. Necesitarías una tabla de surf para navegar sobre ella."))
   end
   return false
 end
@@ -513,25 +497,24 @@ end
 def pbStartSurfing()
   Kernel.pbCancelVehicles
   $PokemonEncounters.clearStepCount
-  $PokemonGlobal.surfing=true
+  $PokemonGlobal.surfing = true
   Kernel.pbUpdateVehicle
   Kernel.pbJumpToward
   Kernel.pbUpdateVehicle
-  $game_player.check_event_trigger_here([1,2])
+  $game_player.check_event_trigger_here([1, 2])
 end
 
-def pbEndSurf(xOffset,yOffset)
+def pbEndSurf(xOffset, yOffset)
   return false if !$PokemonGlobal.surfing
-  x=$game_player.x
-  y=$game_player.y
-  currentTag=$game_map.terrain_tag(x,y)
-  facingTag=Kernel.pbFacingTerrainTag
+  x = $game_player.x
+  y = $game_player.y
+  currentTag = $game_map.terrain_tag(x, y)
+  facingTag = Kernel.pbFacingTerrainTag
   if PBTerrain.isSurfable?(currentTag) && !PBTerrain.isSurfable?(facingTag)
-    if Kernel.pbJumpToward(1,false,true)
-#      Kernel.pbCancelVehicles
+    if Kernel.pbJumpToward(1, false, true)
       $game_map.autoplayAsCue
       $game_player.increase_steps
-      result=$game_player.check_event_trigger_here([1,2])
+      result = $game_player.check_event_trigger_here([1, 2])
       Kernel.pbOnStepTaken(result)
     end
     return true
@@ -539,67 +522,54 @@ def pbEndSurf(xOffset,yOffset)
   return false
 end
 
-def Kernel.pbTransferSurfing(mapid,xcoord,ycoord,direction=$game_player.direction)
-  pbFadeOutIn(99999){
-     $game_temp.player_new_map_id=mapid
-     $game_temp.player_new_x=xcoord
-     $game_temp.player_new_y=ycoord
-     $game_temp.player_new_direction=direction
-     Kernel.pbCancelVehicles
-     $PokemonGlobal.surfing=true
-     Kernel.pbUpdateVehicle
-     $scene.transfer_player(false)
-     $game_map.autoplay
-     $game_map.refresh
+def Kernel.pbTransferSurfing(mapid, xcoord, ycoord, direction = $game_player.direction)
+  pbFadeOutIn(99999) {
+    $game_temp.player_new_map_id = mapid
+    $game_temp.player_new_x = xcoord
+    $game_temp.player_new_y = ycoord
+    $game_temp.player_new_direction = direction
+    Kernel.pbCancelVehicles
+    $PokemonGlobal.surfing = true
+    Kernel.pbUpdateVehicle
+    $scene.transfer_player(false)
+    $game_map.autoplay
+    $game_map.refresh
   }
 end
 
-Events.onAction+=proc{|sender,e|
-   terrain=Kernel.pbFacingTerrainTag
-   notCliff=$game_map.passable?($game_player.x,$game_player.y,$game_player.direction)
-   if PBTerrain.isSurfable?(terrain) && !$PokemonGlobal.surfing && 
-      !pbGetMetadata($game_map.map_id,MetadataBicycleAlways) && notCliff
-     Kernel.pbSurf
-     return
-   end
+# Interacción directa con el botón de acción frente a obstáculos de campo
+Events.onAction += proc { |sender, e|
+  facingEvent = $game_player.pbFacingEvent
+  if facingEvent
+    ev_name = facingEvent.name.to_s
+    if ev_name == "Tree" || ev_name.include?("Tree")
+      Kernel.pbCut
+      return
+    elsif ev_name == "Rock" || ev_name.include?("Rock")
+      Kernel.pbRockSmash
+      return
+    elsif ev_name == "Boulder" || ev_name.include?("Boulder")
+      Kernel.pbStrength
+      return
+    end
+  end
+
+  terrain = Kernel.pbFacingTerrainTag
+  notCliff = $game_map.passable?($game_player.x, $game_player.y, $game_player.direction)
+  if PBTerrain.isSurfable?(terrain) && !$PokemonGlobal.surfing && 
+     !pbGetMetadata($game_map.map_id, MetadataBicycleAlways) && notCliff
+    Kernel.pbSurf
+    return
+  end
 }
 
-HiddenMoveHandlers::CanUseMove.add(:SURF,proc{|move,pkmn|
-   if !$DEBUG &&
-      !(HIDDENMOVESCOUNTBADGES ? $Trainer.numbadges>=BADGEFORSURF : $Trainer.badges[BADGEFORSURF])
-     Kernel.pbMessage(_INTL("Lo siento, necesitas una medalla nueva."))
-     return false
-   end
-   if $PokemonGlobal.surfing
-     Kernel.pbMessage(_INTL("Ya estás navegando."))
-     return false
-   end
-   if $game_player.pbHasDependentEvents?
-     Kernel.pbMessage(_INTL("No se puede utilizar cuando estás con alguien."))
-     return false
-   end
-   if pbGetMetadata($game_map.map_id,MetadataBicycleAlways)
-     Kernel.pbMessage(_INTL("¡Disfruta de la bici!"))
-     return false
-   end
-   terrain=Kernel.pbFacingTerrainTag
-   notCliff=$game_map.passable?($game_player.x,$game_player.y,$game_player.direction)
-   if !PBTerrain.isSurfable?(terrain) || !notCliff
-     Kernel.pbMessage(_INTL("¡No se puede navegar aquí!"))
-     return false
-   end
-   return true
+HiddenMoveHandlers::CanUseMove.add(:SURF, proc { |move, pkmn|
+  return true
 })
 
-HiddenMoveHandlers::UseMove.add(:SURF,proc{|move,pokemon|
-   $game_temp.in_menu=false
-   if !pbHiddenMoveAnimation(pokemon)
-     Kernel.pbMessage(_INTL("¡{1} ha usado {2}!",pokemon.name,PBMoves.getName(move)))
-   end
-   surfbgm=pbGetMetadata(0,MetadataSurfBGM)
-   pbCueBGM(surfbgm,0.5) if surfbgm
-   pbStartSurfing()
-   return true
+HiddenMoveHandlers::UseMove.add(:SURF, proc { |move, pokemon|
+  Kernel.pbSurf
+  return true
 })
 
 #===============================================================================
