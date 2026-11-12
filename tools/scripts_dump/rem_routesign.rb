@@ -50,16 +50,31 @@ class REM_RouteSign_Scene
     silver = defined?(REM_UI::SILVER) ? REM_UI::SILVER : Color.new(214, 219, 228)
     ink    = defined?(REM_UI::INK) ? REM_UI::INK : Color.new(13, 14, 18)
 
-    # Fondo Noir translúcido liso (sin rayas, idéntico a las ventanas de información de combate)
+    # Fondo Noir translúcido liso
     bmp.fill_rect(2, 2, box_w - 4, box_h - 4, Color.new(16, 18, 26, 225))
 
-    # Marcos biselados plata
-    bmp.fill_rect(0, 0, box_w, 1, silver)
-    bmp.fill_rect(0, box_h - 1, box_w, 1, silver)
-    bmp.fill_rect(0, 0, 1, box_h, silver)
-    bmp.fill_rect(box_w - 1, 0, 1, box_h, silver)
-    bmp.fill_rect(1, 1, box_w - 2, 1, Color.new(35, 42, 58))
-    bmp.fill_rect(1, box_h - 2, box_w - 2, 1, Color.new(35, 42, 58))
+    # Marco biselado Noir con curvatura redondeada idéntica a More Info en combate
+    bmp.fill_rect(3, 0, box_w - 6, 1, silver)
+    bmp.fill_rect(3, box_h - 1, box_w - 6, 1, silver)
+    bmp.fill_rect(0, 3, 1, box_h - 6, silver)
+    bmp.fill_rect(box_w - 1, 3, 1, box_h - 6, silver)
+
+    # Píxeles de redondeo en las 4 esquinas
+    bmp.set_pixel(1, 2, silver); bmp.set_pixel(2, 1, silver)
+    bmp.set_pixel(box_w - 2, 2, silver); bmp.set_pixel(box_w - 3, 1, silver)
+    bmp.set_pixel(1, box_h - 3, silver); bmp.set_pixel(2, box_h - 2, silver)
+    bmp.set_pixel(box_w - 2, box_h - 3, silver); bmp.set_pixel(box_w - 3, box_h - 2, silver)
+
+    # Filete interior biselado
+    inner = Color.new(45, 50, 65, 180)
+    bmp.fill_rect(3, 1, box_w - 6, 1, inner)
+    bmp.fill_rect(3, box_h - 2, box_w - 6, 1, inner)
+    bmp.fill_rect(1, 3, 1, box_h - 6, inner)
+    bmp.fill_rect(box_w - 2, 3, 1, box_h - 6, inner)
+    bmp.set_pixel(2, 2, inner)
+    bmp.set_pixel(box_w - 3, 2, inner)
+    bmp.set_pixel(2, box_h - 3, inner)
+    bmp.set_pixel(box_w - 3, box_h - 3, inner)
 
     # Cabecera
     pbSetNarrowFont(bmp)
