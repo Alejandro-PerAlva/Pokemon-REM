@@ -834,13 +834,20 @@ class PokeSelectionIncubatorBox < SpriteWrapper
     self.bitmap.fill_rect(0, 2, 1, 50, border_col)
     self.bitmap.fill_rect(143, 2, 1, 50, border_col)
 
-    # Icono en el lateral izquierdo (36x36)
+    # Icono en el lateral izquierdo
     icon_path = has_egg ? "Graphics/Icons/iconEgg" : "Graphics/Icons/item718"
     icon = AnimatedBitmap.new(icon_path) rescue nil
     if icon && icon.bitmap
-      src_w = has_egg ? (icon.width / 2) : icon.width
-      src_h = icon.height
-      self.bitmap.stretch_blt(Rect.new(8, 9, 36, 36), icon.bitmap, Rect.new(0, 0, src_w, src_h))
+      if has_egg
+        # Recorte ceñido al dibujo real del huevo (24x30 px dentro del lienzo de 64x64)
+        # para igualar exactamente el tamaño y proporción del icono de la incubadora
+        src_rect = Rect.new(20, 24, 24, 30)
+        dest_rect = Rect.new(12, 9, 28, 36)
+      else
+        src_rect = Rect.new(0, 0, icon.width, icon.height)
+        dest_rect = Rect.new(8, 9, 36, 36)
+      end
+      self.bitmap.stretch_blt(dest_rect, icon.bitmap, src_rect)
       icon.dispose
     end
 
