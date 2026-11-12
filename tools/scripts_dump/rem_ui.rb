@@ -3453,16 +3453,16 @@ class PokemonMenu_Scene
   def remUseSleepBag
     pbHideMenu
     if pbRemSleepBagCharges<=0
-      Kernel.pbMessage(_INTL("El Saco de Dormir no tiene cargas. Se recarga descansando en un Centro Pokémon."))
+      Kernel.pbMessage(_INTL("El Saco de Dormir está vacío. Se recarga en un Centro Pokémon."))
       pbShowMenu
       return
     end
     if !PBDayNight.isNight?
-      Kernel.pbMessage(_INTL("Aún es de día y no tienes sueño. Guárdalo para cuando caiga la noche en la ruta."))
+      Kernel.pbMessage(_INTL("Solo se puede usar de noche."))
       pbShowMenu
       return
     end
-    if !Kernel.pbConfirmMessage(_INTL("¿Quieres acampar y dormir hasta el amanecer?"))
+    if !Kernel.pbConfirmMessage(_INTL("¿Quieres dormir hasta el amanecer?"))
       pbShowMenu
       return
     end
