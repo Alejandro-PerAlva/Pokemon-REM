@@ -155,17 +155,17 @@ class HallOfFameScene
       next if i >= @hallEntry.size
       pok = @hallEntry[i]
       @sprites["pokemon#{i}"] = PokemonSprite.new(@viewport)
-      # Comienza de espaldas (Back Sprite) avanzando hacia el Salón
+      # Comienza de espaldas (Back Sprite) a tamaño natural (1.0x) avanzando hacia el Salón
       @sprites["pokemon#{i}"].setPokemonBitmap(pok, true)
-      @sprites["pokemon#{i}"].zoom_x = 1.5
-      @sprites["pokemon#{i}"].zoom_y = 1.5
+      @sprites["pokemon#{i}"].zoom_x = 1.0
+      @sprites["pokemon#{i}"].zoom_y = 1.0
       bw = @sprites["pokemon#{i}"].bitmap ? @sprites["pokemon#{i}"].bitmap.width : 96
       bh = @sprites["pokemon#{i}"].bitmap ? @sprites["pokemon#{i}"].bitmap.height : 96
       @sprites["pokemon#{i}"].ox = bw / 2
       @sprites["pokemon#{i}"].oy = bh / 2
       # Comienza a la derecha de la pantalla para cruzar de espaldas
       @sprites["pokemon#{i}"].x = Graphics.width + 120
-      @sprites["pokemon#{i}"].y = 220
+      @sprites["pokemon#{i}"].y = 208
       @sprites["pokemon#{i}"].z = 7
       @faseinfo[i] = 0
       @holdtimer[i] = 0
@@ -201,7 +201,7 @@ class HallOfFameScene
     end
   end
 
-  # Animación cinemática completa de cada Pokémon (de espaldas y luego de frente 2x)
+  # Animación cinemática completa de cada Pokémon (de espaldas y luego de frente centrado)
   def movePokemonPresentation(i)
     spr = @sprites["pokemon#{i}"]
     return if !spr
@@ -211,24 +211,24 @@ class HallOfFameScene
     # Fase 0: Entrada de espaldas caminando hacia el Salón (derecha hacia izquierda)
     if @faseinfo[i] == 0
       spr.x -= 20
-      bob = ((spr.x.abs / 16) % 2 == 0) ? 3 : 0
-      spr.y = 220 - bob
+      bob = ((spr.x.abs / 16) % 2 == 0) ? 2 : 0
+      spr.y = 208 - bob
       if spr.x < -140
         @faseinfo[i] = 1
       end
     end
 
-    # Fase 1: Giro al frente, escalado heroico 2.0x y preparación de barras y tipo
+    # Fase 1: Giro al frente a tamaño natural (1.0x), centrado y preparación de barras y tipo
     if @faseinfo[i] == 1
       spr.setPokemonBitmap(pok, false) # Front sprite
-      spr.zoom_x = 2.0
-      spr.zoom_y = 2.0
+      spr.zoom_x = 1.0
+      spr.zoom_y = 1.0
       bw = spr.bitmap ? spr.bitmap.width : 96
       bh = spr.bitmap ? spr.bitmap.height : 96
       spr.ox = bw / 2
       spr.oy = bh / 2
       spr.x = -140
-      spr.y = 205
+      spr.y = 208
 
       typename = pbGetHallTypeGraphic(pok.type1)
       @sprites["typebg"].bitmap = RPG::Cache.picture("HallOfFame/" + typename)
