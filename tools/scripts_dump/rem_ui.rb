@@ -3462,7 +3462,7 @@ class PokemonMenu_Scene
       pbShowMenu
       return
     end
-    if !Kernel.pbConfirmMessage(_INTL("¿Quieres acampar y dormir hasta el amanecer?\\n(Cargas restantes: {1}/{2})",pbRemSleepBagCharges,pbRemSleepBagMax))
+    if !Kernel.pbConfirmMessage(_INTL("¿Quieres acampar y dormir hasta el amanecer?"))
       pbShowMenu
       return
     end

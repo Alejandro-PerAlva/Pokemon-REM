@@ -202,7 +202,7 @@ ItemHandlers::UseFromBag.add(:SLEEPINGBAG,proc{|item|
     Kernel.pbMessage(_INTL("Aún es de día y no tienes sueño. Guárdalo para cuando caiga la noche en la ruta."))
     next 0
   end
-  if !Kernel.pbConfirmMessage(_INTL("¿Quieres acampar y dormir hasta el amanecer?\\n(Cargas restantes: {1}/{2})",cur,pbRemSleepBagMax))
+  if !Kernel.pbConfirmMessage(_INTL("¿Quieres acampar y dormir hasta el amanecer?"))
     next 0
   end
   pbSEPlay("Recovery") rescue pbSEPlay("Item get") rescue nil
