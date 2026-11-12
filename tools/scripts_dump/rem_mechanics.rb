@@ -596,18 +596,68 @@ def pbDebugTestingMenu
     egg_str = egg ? (egg.eggsteps == 0 ? "¡Listo para abrir!" : "#{egg.eggsteps} pasos") : "Vacía"
     
     cmd = Kernel.pbMessage(
-      _INTL("BANCO DE PRUEBAS REM\\nIncubadora: {1} | Huevo: {2}\\n¿Qué sistema deseas verificar?", has_inc, egg_str),
+      _INTL("BANCO DE PRUEBAS REM\\n¿Qué sistema deseas verificar?"),
       [
-        _INTL("1. Cartel de Ruta (pbRouteSign) [NUEVO]"),
-        _INTL("2. Incubadora Noir (Huevo, pasos y entrega)"),
-        _INTL("3. Equipar Objetos a Pokémon (Icono bajo PS)"),
-        _INTL("4. Preparar / Curar Equipo"),
+        _INTL("1. Follower a Combate (Sin Ball 1vs1 y Doble) [NUEVO]"),
+        _INTL("2. Salón de la Fama Gen 5 Noir [NUEVO]"),
+        _INTL("3. Cartel de Ruta (pbRouteSign)"),
+        _INTL("4. Incubadora Noir (Huevo, pasos y entrega)"),
+        _INTL("5. Equipar Objetos a Pokémon (Icono bajo PS)"),
+        _INTL("6. Preparar / Curar Equipo"),
         _INTL("Salir")
       ]
     )
     
     case cmd
-    when 0 # 1. Cartel de Ruta / Encuentros (pbRouteSign)
+    when 0 # 1. Follower a Combate (1vs1 y Doble)
+      fol_opts = [
+        _INTL("Combate 1vs1 (Follower entra corriendo sin Pokéball)"),
+        _INTL("Combate 2vs2 Doble (Follower sin Ball + 2º con Ball)"),
+        _INTL("Activar / Reaparecer Follower en mapa"),
+        _INTL("Volver")
+      ]
+      fol_cmd = Kernel.pbMessage(_INTL("PRUEBAS DE FOLLOWER EN COMBATE:\\nElige un modo:"), fol_opts, 0)
+      case fol_cmd
+      when 0 # 1vs1
+        if !$Trainer || $Trainer.party.length == 0
+          pbAddPokemon(:RIOLU, 20)
+        end
+        $Trainer.party[0].heal
+        fswitch = defined?(FOLLOWER_SWITCH) ? FOLLOWER_SWITCH : 101
+        $game_switches[fswitch] = true
+        pbSpawnFollower if defined?(pbSpawnFollower)
+        Kernel.pbMessage(_INTL("Iniciando combate 1vs1...\\n¡Observa cómo {1} entra directamente corriendo sin lanzar Pokéball!", $Trainer.party[0].name))
+        pbWildBattle(getID(PBSpecies, :ZIGZAGOON), 5)
+      when 1 # 2vs2 Doble
+        while $Trainer.party.length < 2
+          pbAddPokemon(:PIKACHU, 20)
+        end
+        $Trainer.party[0].heal
+        $Trainer.party[1].heal
+        fswitch = defined?(FOLLOWER_SWITCH) ? FOLLOWER_SWITCH : 101
+        $game_switches[fswitch] = true
+        pbSpawnFollower if defined?(pbSpawnFollower)
+        Kernel.pbMessage(_INTL("Iniciando combate 2vs2 Doble...\\n¡Observa: {1} (slot 0) entra corriendo sin Ball, y {2} (slot 2) sale lanzado con su Pokéball!", $Trainer.party[0].name, $Trainer.party[1].name))
+        p1 = getID(PBSpecies, :PIDGEY)
+        p2 = getID(PBSpecies, :RATTATA)
+        pbDoubleWildBattle(p1, 5, p2, 5)
+      when 2 # Reaparecer follower
+        fswitch = defined?(FOLLOWER_SWITCH) ? FOLLOWER_SWITCH : 101
+        $game_switches[fswitch] = true
+        pbSpawnFollower if defined?(pbSpawnFollower)
+        Kernel.pbMessage(_INTL("Follower actualizado en el mapa."))
+      end
+
+    when 1 # 2. Salón de la Fama Gen 5 Noir
+      if !$Trainer || $Trainer.party.length == 0
+        pbAddPokemon(:LUCARIO, 55)
+        pbAddPokemon(:GRENINJA, 54)
+        pbAddPokemon(:CHARIZARD, 56)
+      end
+      Kernel.pbMessage(_INTL("Iniciando secuencia cinemática del Salón de la Fama Gen 5 Noir..."))
+      pbHallOfFameEntry
+
+    when 2 # 3. Cartel de Ruta (pbRouteSign)
       sign_opts = [
         _INTL("Probar Ruta 8 Pokes + 2 Pesca (Ej. Costa Sepiola)"),
         _INTL("Probar Ruta 6 Pokes (Ej. Bosque Dioptasa)"),
@@ -642,7 +692,6 @@ def pbDebugTestingMenu
           Kernel.pbMessage(_INTL("Pokédex de prueba restablecida.\\nLos Pokémon ahora se mostrarán como SILUETAS NEGRAS."))
         else
           sample_pokes.each_with_index do |sp, idx|
-            # Marca la mitad de los Pokémon como vistos para comprobar el contraste directo
             if idx % 2 == 0 && $Trainer
               $Trainer.setSeen(sp)
             end
@@ -653,7 +702,7 @@ def pbDebugTestingMenu
         pbRouteSign
       end
 
-    when 1 # 2. Pruebas de Incubadora
+    when 3 # 4. Pruebas de Incubadora
       inc_cmd = Kernel.pbMessage(
         _INTL("INCUBADORA NOIR\\nIncubadora: {1} | Huevo: {2}\\nSelecciona una acción:", has_inc, egg_str),
         [
@@ -698,13 +747,12 @@ def pbDebugTestingMenu
         Kernel.pbMessage(_INTL("Incubadora vaciada."))
       end
 
-    when 2 # 3. Equipar Objetos a Pokémon
+    when 4 # 5. Equipar Objetos a Pokémon
       while $Trainer.party.length < 3
         pbAddPokemon(:LUCARIO, 25) if hasConst?(PBSpecies, :LUCARIO)
         pbAddPokemon(:GRENINJA, 25) if hasConst?(PBSpecies, :GRENINJA)
         pbAddPokemon(:CHARIZARD, 25) if hasConst?(PBSpecies, :CHARIZARD)
       end
-      # Equipar objetos variados
       items = [:CHOICEBAND, :LEFTOVERS, :SITRUSBERRY, :ASSAULTVEST, :LIFEORB, :EXPSHARE]
       $Trainer.party.each_with_index do |pkmn, i|
         it = items[i % items.length]
@@ -714,7 +762,7 @@ def pbDebugTestingMenu
       end
       Kernel.pbMessage(_INTL("¡Objetos equipados en tu equipo (Cinta Elegida, Restos, Baya Zidra...)!\\nAbre el menú de Pokémon para comprobar que sus iconos se muestran alineados justo debajo de 'PS'."))
 
-    when 3 # 4. Preparar / Curar Equipo
+    when 5 # 6. Preparar / Curar Equipo
       if $Trainer && $Trainer.party
         for p in $Trainer.party; p.heal; end
       end
@@ -991,3 +1039,188 @@ class Game_Player < Game_Character
     return @bush_depth || 0
   end
 end
+
+#===============================================================================
+# 8. FOLLOWER ENTRA EN COMBATE SIN POKÉBALL (Single y Double Battle)
+# El primer Pokémon que acompaña al jugador entra corriendo directamente al
+# campo de batalla sin lanzar Pokéball ni sonido de recall.
+# En combates dobles: El follower (slot 0) entra corriendo, y el 2º Pokémon (slot 2)
+# es lanzado con Pokéball por el entrenador.
+# En cambios durante el combate: Salen de su Pokéball con normalidad.
+#===============================================================================
+class FollowerPlayerSendOutAnimation
+  SPEED = 14
+
+  def initialize(sprite, spritehash, pkmn, illusionpoke, doublebattle)
+    @illusionpoke = illusionpoke
+    @disposed = false
+    @PokemonBattlerSprite = sprite
+    @pkmn = pkmn
+    @spritehash = spritehash
+    if doublebattle
+      @spritex = PokeBattle_SceneConstants::PLAYERBATTLERD1_X if pkmn.index == 0
+      @spritex = PokeBattle_SceneConstants::PLAYERBATTLERD2_X if pkmn.index == 2
+    else
+      @spritex = PokeBattle_SceneConstants::PLAYERBATTLER_X
+    end
+    @spritey = 0
+    if @illusionpoke
+      @endspritey = adjustBattleSpriteY(sprite, @illusionpoke.species, pkmn.index)
+    else
+      @endspritey = adjustBattleSpriteY(sprite, pkmn.species, pkmn.index)
+    end
+    if doublebattle
+      @spritey += PokeBattle_SceneConstants::PLAYERBATTLERD1_Y if pkmn.index == 0
+      @spritey += PokeBattle_SceneConstants::PLAYERBATTLERD2_Y if pkmn.index == 2
+      @endspritey += PokeBattle_SceneConstants::PLAYERBATTLERD1_Y if pkmn.index == 0
+      @endspritey += PokeBattle_SceneConstants::PLAYERBATTLERD2_Y if pkmn.index == 2
+    else
+      @spritey += PokeBattle_SceneConstants::PLAYERBATTLER_Y
+      @endspritey += PokeBattle_SceneConstants::PLAYERBATTLER_Y
+    end
+    # Posición inicial: corriendo desde la izquierda fuera de pantalla
+    @current_x = @spritex - 180
+    @PokemonBattlerSprite.visible = true
+    @PokemonBattlerSprite.zoom_x = 1.0
+    @PokemonBattlerSprite.zoom_y = 1.0
+    @PokemonBattlerSprite.tone = Tone.new(0, 0, 0, 0)
+    pbSpriteSetCenter(@PokemonBattlerSprite, @current_x, 0)
+    @PokemonBattlerSprite.y = @endspritey
+    @animdone = false
+    @frame = 0
+    @cry_played = false
+  end
+
+  def disposed?
+    return @disposed
+  end
+
+  def animdone?
+    return @animdone
+  end
+
+  def dispose
+    return if disposed?
+    @disposed = true
+  end
+
+  def update
+    return if disposed?
+    @frame += 1
+    # Grito enérgico al entrar al combate
+    if @frame >= 3 && !@cry_played
+      if @illusionpoke
+        pbPlayCry(@illusionpoke)
+      else
+        pbPlayCry(@pkmn.pokemon ? @pkmn.pokemon : @pkmn.species)
+      end
+      @cry_played = true
+    end
+    if @current_x < @spritex
+      @current_x += SPEED
+      @current_x = @spritex if @current_x > @spritex
+      # Pequeño rebote de carrera
+      bob = (@current_x < @spritex) ? ((@frame % 4 < 2) ? 4 : 0) : 0
+      pbSpriteSetCenter(@PokemonBattlerSprite, @current_x, 0)
+      @PokemonBattlerSprite.y = @endspritey - bob
+    else
+      pbSpriteSetCenter(@PokemonBattlerSprite, @spritex, 0)
+      @PokemonBattlerSprite.y = @endspritey
+      @animdone = true if @frame >= 14
+    end
+  end
+end
+
+class PokeBattle_Scene
+  attr_accessor :remFollowerSendOut
+
+  alias rem_orig_pbSendOut pbSendOut unless method_defined?(:rem_orig_pbSendOut)
+  def pbSendOut(battlerindex, pkmn, is_follower = false)
+    if is_follower
+      while inPartyAnimation?; end
+      illusionpoke = @battle.battlers[battlerindex].effects[PBEffects::Illusion]
+      @sprites["battlebox#{battlerindex}"].visible = false
+      @briefmessage = false
+      fadeanim = nil
+      if @showingplayer
+        fadeanim = PlayerFadeAnimation.new(@sprites)
+      end
+      frame = 0
+      @sprites["pokemon#{battlerindex}"].setPokemonBitmap(pkmn, true)
+      if illusionpoke
+        @sprites["pokemon#{battlerindex}"].setPokemonBitmap(illusionpoke, true)
+      end
+      sendout = FollowerPlayerSendOutAnimation.new(
+        @sprites["pokemon#{battlerindex}"],
+        @sprites,
+        @battle.battlers[battlerindex],
+        illusionpoke,
+        @battle.doublebattle
+      )
+      loop do
+        fadeanim.update if fadeanim
+        frame += 1
+        if frame > 4 && !@sprites["battlebox#{battlerindex}"].appearing
+          @sprites["battlebox#{battlerindex}"].appear
+        end
+        sendout.update
+        pbGraphicsUpdate
+        pbInputUpdate
+        pbFrameUpdate
+        break if (!fadeanim || fadeanim.animdone?) && sendout.animdone? &&
+                 !@sprites["battlebox#{battlerindex}"].appearing
+      end
+      sendout.dispose
+      if @battle.battlers[battlerindex].isShiny? && @battle.battlescene
+        pbCommonAnimation("Shiny", @battle.battlers[battlerindex], nil)
+      end
+      if @showingplayer
+        @showingplayer = false
+        pbDisposeSprite(@sprites, "player")
+        pbDisposeSprite(@sprites, "partybarplayer")
+        for i in 0...6
+          pbDisposeSprite(@sprites, "player#{i}")
+        end
+      end
+      pbRefresh
+    else
+      rem_orig_pbSendOut(battlerindex, pkmn)
+    end
+  end
+end
+
+class PokeBattle_Battle
+  attr_accessor :remFollowerSendOut
+
+  alias rem_follower_pbStartBattleCore pbStartBattleCore unless method_defined?(:rem_follower_pbStartBattleCore)
+  def pbStartBattleCore(canlose)
+    @remFollowerSendOut = false
+    fswitch = defined?(FOLLOWER_SWITCH) ? FOLLOWER_SWITCH : 101
+    if $game_switches && $game_switches[fswitch] && $Trainer && $Trainer.party.length > 0
+      lead = $Trainer.party[0]
+      if lead && !lead.isEgg? && lead.hp > 0
+        @remFollowerSendOut = true
+      end
+    end
+    rem_follower_pbStartBattleCore(canlose)
+  end
+
+  alias rem_follower_pbSendOut pbSendOut unless method_defined?(:rem_follower_pbSendOut)
+  def pbSendOut(index, pokemon)
+    pbSetSeen(pokemon)
+    @peer.pbOnEnteringBattle(self, pokemon)
+    if pbIsOpposing?(index)
+      @scene.pbTrainerSendOut(index, pokemon)
+    else
+      is_follower = (@remFollowerSendOut && index == 0)
+      if is_follower
+        @remFollowerSendOut = false
+        @scene.pbSendOut(index, pokemon, true)
+      else
+        @scene.pbSendOut(index, pokemon, false)
+      end
+    end
+    @scene.pbResetMoveIndex(index)
+  end
+end
+
