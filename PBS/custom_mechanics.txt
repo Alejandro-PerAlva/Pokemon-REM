@@ -1,0 +1,349 @@
+#===============================================================================
+# POKÉMON REM - COMPENDIO MAESTRO DE MECÁNICAS CUSTOM Y QoL
+# Archivo de Referencia Permanente del Proyecto (PBS/custom_mechanics.txt)
+# Generado para consulta del equipo y registro de sistemas implementados.
+#===============================================================================
+
+#-------------------------------------------------------------------------------
+# ÍNDICE GENERAL DE MECÁNICAS
+#-------------------------------------------------------------------------------
+# 1. Ciclo Día/Noche Dinámico y Reglas de Supervivencia Nocturna
+# 2. Saco de Dormir Noir (:SLEEPINGBAG)
+# 3. Pokévial Portátil (:POKEVIAL)
+# 4. Herramientas Clave de Campo (Reemplazo Total de MOs)
+# 5. Servicio de Transporte Aéreo de Centros Pokémon (Vuelo de Refugio a Refugio)
+# 6. Follower Pokémon: Entrada Directa a Combate sin Poké Ball
+# 7. Salón de la Fama Gen 5 Oniria Noir
+# 8. Carteles de Ruta con Hábitats y Siluetas Pokédex (pbRouteSign)
+# 9. Incubadora Portátil de Huevos (:INCUBADORA)
+# 10. Indicador de Objeto Equipado en la UI de Equipo Pokémon
+# 11. Caramelo Infinito (:INFINITECANDY) y Mentas de Naturaleza
+# 12. Sistema de Level Cap Dinámico de Historia
+# 13. Banco de Pruebas Centralizado (NPC Tester)
+#===============================================================================
+
+
+#===============================================================================
+# 1. CICLO DÍA/NOCHE DINÁMICO Y REGLAS DE SUPERVIVENCIA NOCTURNA
+#===============================================================================
+# Concepto:
+#   El paso del tiempo en Oniria Noir es dinámico. Las noches son letales y
+#   representan un reto de supervivencia para el jugador.
+#
+# Reglas y Efectos:
+#   - Reloj: REM_NIGHT_START_HOUR = 20 (20:00), REM_DAY_START_HOUR = 8 (08:00).
+#   - Nivel salvaje nocturno: Multiplicador REM_NIGHT_LEVEL_MULT (los Pokémon
+#     salvajes nocturnos aparecen a niveles mucho más altos y peligrosos).
+#   - Salto de Level Cap: Los salvajes nocturnos ignoran el Level Cap del jugador.
+#   - Prohibición de captura: De noche está prohibido capturar Pokémon salvajes.
+#   - Tinte visual: Tintado adaptativo onírico frío sobre mapas y personajes.
+#
+# Funciones públicas de script:
+#   pbRemIsNight?              -> Retorna true si actualmente es de noche.
+#   pbSetNight(night, freeze)  -> Pasa la hora a día o noche y permite congelar reloj.
+#   pbToggleDayNight(freeze)   -> Alterna entre día y noche al instante.
+#   pbRemTimeFree              -> Descongela el reloj dinámico.
+#
+# Archivos:
+#   tools/scripts_dump/rem_mechanics.rb
+#   tools/scripts_dump/src/184_Fake_Time.rb
+#===============================================================================
+
+
+#===============================================================================
+# 2. SACO DE DORMIR NOIR (:SLEEPINGBAG, ID 719)
+#===============================================================================
+# Concepto:
+#   Herramienta clave para gestionar la supervivencia nocturna en rutas.
+#   Permite acampar y pasar la noche hasta el amanecer (08:00 AM) con cargas
+#   limitadas para obligar a una gestión táctica de los descansos.
+#
+# Reglas y Efectos:
+#   - Cargas: Empieza con 1 carga. Mejorable hasta 3 cargas máximas.
+#   - Recarga: Se recarga automáticamente al 100% al curar al equipo en cualquier
+#     Centro Pokémon o al dormir en las camas del segundo piso.
+#   - Restricción de uso: Solo se puede usar de noche ("Solo se puede usar de noche.").
+#   - Si está vacío: "El Saco de Dormir está vacío. Se recarga en un Centro Pokémon."
+#   - Confirmación: "¿Quieres dormir hasta el amanecer?"
+#   - Al usar con éxito: Sonido de recuperación, gasta 1 carga, avanza el tiempo a
+#     las 08:00 AM (día), refresca la luz solar del mapa y muestra:
+#     "¡Ha amanecido! Cargas restantes: X/Y."
+#   - Integración en Menú de Pausa: Cajita Oniria Noir justo debajo del Pokévial.
+#     Muestra cargas en ámbar o gris, icono pixel art propio (item719.png) y atajo
+#     rápido con la tecla física [D] ("D: usar").
+#
+# Funciones públicas de script:
+#   pbRemSleepBagMax           -> Cargas máximas actuales (1..3).
+#   pbRemSleepBagCharges       -> Cargas disponibles.
+#   pbRemSleepBagUpgrade       -> Sube +1 carga máxima (hasta 3) y rellena.
+#   pbRemSleepBagRefill        -> Rellena las cargas al máximo actual.
+#
+# Archivos:
+#   PBS/items.txt (ID 719, SLEEPINGBAG)
+#   Graphics/Icons/item719.png (Icono pixel art 48x48)
+#   tools/scripts_dump/rem_rebalance.rb
+#   tools/scripts_dump/rem_ui.rb
+#===============================================================================
+
+
+#===============================================================================
+# 3. POKÉVIAL PORTÁTIL (:POKEVIAL, ID 716)
+#===============================================================================
+# Concepto:
+#   Frasco de agua curativa para restaurar al equipo entre combates de ruta sin
+#   necesidad de gastar consumibles comunes ni tener que retroceder constantemente.
+#
+# Reglas y Efectos:
+#   - Cargas: Empieza con 1 carga. Mejorable hasta 3 cargas máximas.
+#   - Recarga: Se recarga automáticamente al curar en Centro Pokémon / camas.
+#   - Si está vacío: "El Pokévial está vacío. Se recarga en un Centro Pokémon."
+#   - Si el equipo está sano: "No hay nada que curar."
+#   - Confirmación: "¿Quieres curar a tu equipo?"
+#   - Al usar con éxito: Cura PS y estados de todo el equipo, gasta 1 carga y muestra:
+#     "¡El equipo se ha curado! Cargas restantes: X/Y."
+#   - Integración en Menú de Pausa: Cajita superior izquierda con icono (item716.png),
+#     cargas en azul celeste o gris y atajo rápido con la tecla física [Z] ("Z: usar").
+#
+# Funciones públicas de script:
+#   pbRemVialMax               -> Cargas máximas actuales (1..3).
+#   pbRemVialCharges           -> Cargas disponibles.
+#   pbRemVialUpgrade           -> Sube +1 carga máxima (hasta 3) y rellena.
+#   pbRemVialRefill            -> Rellena las cargas al máximo actual.
+#
+# Archivos:
+#   PBS/items.txt (ID 716, POKEVIAL)
+#   tools/scripts_dump/rem_rebalance.rb
+#   tools/scripts_dump/rem_ui.rb
+#===============================================================================
+
+
+#===============================================================================
+# 4. HERRAMIENTAS CLAVE DE CAMPO (REEMPLAZO TOTAL DE MOs)
+#===============================================================================
+# Concepto:
+#   Se elimina por completo la necesidad de aprender Máquinas Ocultas (MOs) en
+#   los movimientos de los Pokémon y se eliminan los requisitos de medallas.
+#   Los obstáculos de campo se resuelven mediante 4 Objetos Clave de la mochila.
+#
+# Objetos y Mecánicas:
+#   1. TIJERAS (:SHEARS, ID 688) -> Reemplaza a Corte (Cut)
+#      - Obstáculo: Arbustos, maleza y árboles pequeños (eventos "Tree").
+#      - Con objeto: "Hay maleza y ramas que bloquean el camino.\1 ¿Quieres cortarlas con las Tijeras?"
+#      - Sin objeto: "Hay maleza y ramas bloqueando el paso. Con unas tijeras de podar se podría cortar fácilmente."
+#
+#   2. PICO (:PICKAXE, ID 689) -> Reemplaza a Golpe Roca (Rock Smash)
+#      - Obstáculo: Rocas quebradizas agrietadas (eventos "Rock").
+#      - Con objeto: "Esta roca parece quebradiza y agrietada.\1 ¿Quieres picarla con el Pico?"
+#        (Incluye posibilidad de encuentro salvaje de roca).
+#      - Sin objeto: "Es una roca agrietada y quebradiza. Con un pico de minero se podría romper fácilmente."
+#
+#   3. GUANTES DE FUERZA (:GLOVES, ID 690) -> Reemplaza a Fuerza (Strength)
+#      - Obstáculo: Rocas pesadas (eventos "Boulder").
+#      - Con objeto: "Es una roca enorme y pesada.\1 ¿Quieres usar los Guantes de Fuerza para empujarla?"
+#        Activa $PokemonMap.strengthUsed = true y permite empujar rocas en el mapa.
+#        Si ya se equiparon: "Los Guantes de Fuerza te permiten mover rocas pesadas."
+#      - Sin objeto: "Es una roca enorme. Demasiado pesada para moverla con las manos desnudas."
+#
+#   4. TABLA DE SURF (:SURFBOARD, ID 691) -> Reemplaza a Surf
+#      - Obstáculo: Agua navegable profunda (PBTerrain.isSurfable?).
+#      - Con objeto: "¿Quieres navegar con la Tabla de Surf?" (Activa pbStartSurfing() y música de surf).
+#      - Sin objeto: "El agua es profunda y cristalina. Necesitarías una tabla de surf para navegar sobre ella."
+#
+# Formas de activación:
+#   - Interacción directa con el botón [C] / [Espacio] frente al obstáculo o agua.
+#   - Usar el objeto directamente desde el bolsillo de Objetos Clave de la Mochila.
+#
+# Archivos:
+#   PBS/items.txt (IDs 688, 689, 690, 691)
+#   tools/scripts_dump/src/102_PField_HiddenMoves.rb
+#   tools/scripts_dump/src/116_PItem_ItemEffects.rb
+#===============================================================================
+
+
+#===============================================================================
+# 5. SERVICIO DE TRANSPORTE AÉREO DE CENTROS POKÉMON (VUELO SEGURO)
+#===============================================================================
+# Concepto:
+#   Viaje rápido entre refugios para evitar retrocesos tediosos entre pueblos
+#   ya superados, sin romper la tensión de la supervivencia en las rutas nocturnas.
+#
+# Reglas y Efectos:
+#   - Punto de origen: Solo se puede viajar hablando con el Piloto NPC dentro del Centro Pokémon.
+#   - Punto de destino: Ubicaciones seguras exteriores de pueblos/ciudades y la Liga.
+#   - Filtro de destinos: Solo muestra pueblos y ciudades visitados previamente.
+#   - Gratuito: Sin coste de dinero ni requisitos de MO/medallas.
+#   - Presentación de historia en la primera charla.
+#   - Anti-exploit: Imposible teletransportarse desde mitad de una ruta o cueva.
+#
+# Comando para eventos en Centros Pokémon:
+#   pbRemAirTaxi
+#
+# Archivos:
+#   tools/scripts_dump/rem_mechanics.rb
+#===============================================================================
+
+
+#===============================================================================
+# 6. FOLLOWER POKÉMON: ENTRADA DIRECTA A COMBATE SIN POKÉ BALL
+#===============================================================================
+# Concepto:
+#   El Pokémon que camina contigo en el overworld (follower) no tiene sentido
+#   que regrese mágicamente a su Poké Ball para luego ser lanzado al inicio del combate.
+#
+# Reglas y Efectos:
+#   - Combate 1vs1: El primer Pokémon entra corriendo al campo de batalla con
+#     animación de avance veloz y grito de guerra, sin lanzar Poké Ball.
+#   - Combate 2vs2 (Doble): El primer Pokémon (slot 0) entra corriendo sin Poké Ball;
+#     el segundo Pokémon (slot 2) se lanza de forma clásica con su Poké Ball.
+#   - Si el follower está desactivado o debilitado: Se utiliza la animación normal.
+#
+# Archivos:
+#   tools/scripts_dump/rem_mechanics.rb (FollowerPlayerSendOutAnimation, hooks en PokeBattle_Battle)
+#===============================================================================
+
+
+#===============================================================================
+# 7. SALÓN DE LA FAMA GEN 5 ONIRIA NOIR (BW_HallOfFame)
+#===============================================================================
+# Concepto:
+#   Cinemática de coronación tras superar la Liga Pokémon adaptada a la estética
+#   de 5ª Generación (Blanco/Negro) con paleta y atmósfera Oniria Noir.
+#
+# Reglas y Efectos:
+#   - Transición individual por Pokémon:
+#     1) Entrada de espaldas (0.9x) alejándose hacia la profundidad del salón.
+#     2) Giro al frente centrado a escala armónica (1.4x con tope 185px para gigantes).
+#     3) Barras deslizantes con nombre, nivel y fondo elemental animado por tipo.
+#   - Pantalla final de Campeón:
+#     - Sello de Poké Ball central giratorio suave en marca de agua de fondo.
+#     - Marco de Campeón con textos superior ("¡Felicidades, Entrenador!") e inferior
+#       ("CAMPEÓN DE LA LIGA | ID | Tiempo") perfectamente alineados en las franjas.
+#     - Equipo de 6 Pokémon distribuido simétricamente (3 flanco izq, 3 flanco der)
+#       con el Entrenador en el centro.
+#
+# Función pública de script:
+#   pbHallOfFameEntry
+#
+# Archivos:
+#   tools/scripts_dump/src/151_PScreen_HallOfFame.rb
+#   Graphics/Pictures/HallOfFame/
+#===============================================================================
+
+
+#===============================================================================
+# 8. CARTELES DE RUTA CON HÁBITATS Y SILUETAS POKÉDEX (pbRouteSign)
+#===============================================================================
+# Concepto:
+#   Cartel deslizante que aparece al acceder a una ruta informando del nombre
+#   y de las especies autóctonas terrestres y acuáticas.
+#
+# Reglas y Efectos:
+#   - Especie ya vista / capturada en Pokédex: Se muestra su sprite a color.
+#   - Especie NO vista en Pokédex: Se muestra como silueta negra misteriosa (Oniria Noir).
+#   - Separación visual clara entre Pokémon de tierra y Pokémon de agua/pesca.
+#
+# Función pública de script:
+#   pbRouteSign(map_id, name, land_array, fish_array)
+#
+# Archivos:
+#   tools/scripts_dump/rem_routesign.rb
+#===============================================================================
+
+
+#===============================================================================
+# 9. INCUBADORA PORTÁTIL DE HUEVOS (:INCUBADORA, ID 718)
+#===============================================================================
+# Concepto:
+#   Dispositivo para transportar hasta 6 huevos e incubarlos mientras caminas
+#   en el mapa sin ocupar valiosos espacios del equipo de 6 Pokémon activos.
+#
+# Reglas y Efectos:
+#   - Acumulación de pasos por cada baldosa caminada (excepto hielo).
+#   - Notificación emergente al alcanzar 0 pasos restantes.
+#   - Eclosión mediante botón [C] desde la mochila o menú.
+#
+# Funciones públicas de script:
+#   pbGenerateEgg(species, text) -> Entrega un huevo directamente a la incubadora.
+#
+# Archivos:
+#   PBS/items.txt (ID 718, INCUBADORA)
+#   tools/scripts_dump/rem_incubator.rb
+#===============================================================================
+
+
+#===============================================================================
+# 10. INDICADOR DE OBJETO EQUIPADO EN LA UI DE EQUIPO POKÉMON
+#===============================================================================
+# Concepto:
+#   Mejora de QoL para verificar de un vistazo en el menú qué Pokémon llevan
+#   objeto equipado sin tener que abrir el submenú de datos de cada uno.
+#
+# Reglas y Efectos:
+#   - En la pantalla de selección de equipo (Party Screen):
+#     Si el Pokémon sostiene un objeto, se dibuja un icono nítido del objeto
+#     centrado exactamente debajo de la etiqueta "PS".
+#
+# Archivos:
+#   tools/scripts_dump/rem_ui.rb
+#===============================================================================
+
+
+#===============================================================================
+# 11. CARAMELO INFINITO (:INFINITECANDY, ID 717) Y MENTAS DE NATURALEZA
+#===============================================================================
+# Concepto:
+#   Herramientas competitivas y de leveo justo para agilizar la preparación del equipo.
+#
+# Reglas y Efectos:
+#   - Caramelo Infinito: Sube 1 nivel sin consumirse, pero respetando estrictamente
+#     el Level Cap de la historia (no permite sobreentrenar por encima del límite).
+#   - Mentas (IDs 701-715): Modifican la Naturaleza efectiva y recalcula las estadísticas
+#     del Pokémon de forma instantánea.
+#
+# Archivos:
+#   PBS/items.txt (IDs 701-715, 717)
+#   tools/scripts_dump/rem_rebalance.rb
+#===============================================================================
+
+
+#===============================================================================
+# 12. SISTEMA DE LEVEL CAP DINÁMICO DE HISTORIA
+#===============================================================================
+# Concepto:
+#   Límite de nivel de experiencia ligado a las medallas y el progreso de la historia
+#   para evitar romper la curva de dificultad de los combates contra Líderes y Jefes.
+#
+# Reglas y Efectos:
+#   - La experiencia se frena al llegar al tope de la fase actual.
+#   - Los Pokémon salvajes nocturnos ignoran este cap para representar un peligro real.
+#
+# Archivos:
+#   tools/scripts_dump/src/194_Level_Cap.rb
+#   tools/scripts_dump/rem_mechanics.rb
+#===============================================================================
+
+
+#===============================================================================
+# 13. BANCO DE PRUEBAS CENTRALIZADO (NPC TESTER)
+#===============================================================================
+# Concepto:
+#   NPC dinámico ubicado en la Habitación del Jugador (Mapa 003, Pueblo Albor)
+#   diseñado específicamente para auditar, probar y demostrar cada mecánica custom.
+#
+# Opciones disponibles en el menú del NPC:
+#   1. Follower a Combate (Prueba de combate 1vs1 y 2vs2 sin Poké Ball).
+#   2. Salón de la Fama Gen 5 Noir (Lanza la cinemática de inducción completa).
+#   3. Herramientas Clave (Dar / Quitar Tijeras, Pico, Guantes y Tabla de Surf).
+#   4. Saco de Dormir Noir (Dar / Quitar, Alternar Día/Noche, Cargas y Mejoras).
+#   5. Transporte Aéreo de Centro Pokémon (Probar Vuelo y Desbloquear mapa).
+#   6. Carteles de Ruta (Probar cartel de 4, 6 y 8 Pokémon y siluetas).
+#   7. Incubadora Noir (Dar huevo, fijar pasos a 0/10 y vaciar).
+#   8. Equipar Objetos a Pokémon (Equipa Cinta Elegida, Restos, etc. para probar UI).
+#   9. Preparar / Curar Equipo al 100%.
+#
+# Comando para invocar el menú desde cualquier evento:
+#   pbDebugTestingMenu
+#
+# Archivos:
+#   tools/scripts_dump/rem_mechanics.rb
+#===============================================================================
