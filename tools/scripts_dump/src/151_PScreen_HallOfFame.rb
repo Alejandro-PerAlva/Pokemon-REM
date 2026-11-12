@@ -155,10 +155,10 @@ class HallOfFameScene
       next if i >= @hallEntry.size
       pok = @hallEntry[i]
       @sprites["pokemon#{i}"] = PokemonSprite.new(@viewport)
-      # Comienza de espaldas (Back Sprite) a tamaño natural (1.0x) avanzando hacia el Salón
+      # Comienza de espaldas (Back Sprite) ligeramente compacto (0.9x) alejándose hacia el Salón
       @sprites["pokemon#{i}"].setPokemonBitmap(pok, true)
-      @sprites["pokemon#{i}"].zoom_x = 1.0
-      @sprites["pokemon#{i}"].zoom_y = 1.0
+      @sprites["pokemon#{i}"].zoom_x = 0.9
+      @sprites["pokemon#{i}"].zoom_y = 0.9
       bw = @sprites["pokemon#{i}"].bitmap ? @sprites["pokemon#{i}"].bitmap.width : 96
       bh = @sprites["pokemon#{i}"].bitmap ? @sprites["pokemon#{i}"].bitmap.height : 96
       @sprites["pokemon#{i}"].ox = bw / 2
@@ -218,13 +218,20 @@ class HallOfFameScene
       end
     end
 
-    # Fase 1: Giro al frente a tamaño natural (1.0x), centrado y preparación de barras y tipo
+    # Fase 1: Giro al frente a escala media ideal (1.4x), centrado y preparación de barras y tipo
     if @faseinfo[i] == 1
       spr.setPokemonBitmap(pok, false) # Front sprite
-      spr.zoom_x = 1.0
-      spr.zoom_y = 1.0
       bw = spr.bitmap ? spr.bitmap.width : 96
       bh = spr.bitmap ? spr.bitmap.height : 96
+      
+      # Punto medio armónico: 1.4x (con tope de 185px para especies gigantes)
+      scale = 1.4
+      if bh * scale > 185
+        scale = 185.0 / bh
+      end
+      spr.zoom_x = scale
+      spr.zoom_y = scale
+
       spr.ox = bw / 2
       spr.oy = bh / 2
       spr.x = -140
