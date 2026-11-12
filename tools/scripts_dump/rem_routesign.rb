@@ -50,15 +50,8 @@ class REM_RouteSign_Scene
     silver = defined?(REM_UI::SILVER) ? REM_UI::SILVER : Color.new(214, 219, 228)
     ink    = defined?(REM_UI::INK) ? REM_UI::INK : Color.new(13, 14, 18)
 
-    # Fondo Noir translúcido
-    bmp.fill_rect(2, 2, box_w - 4, box_h - 4, Color.new(14, 17, 24, 245))
-
-    # Trama sutil de fondo
-    y_scan = 4
-    while y_scan < box_h - 4
-      bmp.fill_rect(2, y_scan, box_w - 4, 1, Color.new(20, 26, 38, 120))
-      y_scan += 4
-    end
+    # Fondo Noir translúcido liso (sin rayas, idéntico a las ventanas de información de combate)
+    bmp.fill_rect(2, 2, box_w - 4, box_h - 4, Color.new(16, 18, 26, 225))
 
     # Marcos biselados plata
     bmp.fill_rect(0, 0, box_w, 1, silver)
@@ -81,6 +74,16 @@ class REM_RouteSign_Scene
       [_INTL("ENCUENTROS"), tag_x, 8, 1, Color.new(110, 195, 255), ink]
     ])
 
+    # Si hay pesca, ubicar el icono de la caña arriba en la fila de cabecera alineado con ENCUENTROS
+    col_center_x = divider_x + (box_w - divider_x) / 2
+    if has_fish
+      rod_icon = AnimatedBitmap.new("Graphics/Icons/item505") rescue nil
+      if rod_icon && rod_icon.bitmap
+        bmp.stretch_blt(Rect.new(col_center_x - 9, 6, 18, 18), rod_icon.bitmap, Rect.new(0, 0, rod_icon.width, rod_icon.height))
+        rod_icon.dispose
+      end
+    end
+
     # Separador horizontal de cabecera
     bmp.fill_rect(12, 31, box_w - 24, 1, Color.new(50, 58, 76))
 
@@ -89,19 +92,11 @@ class REM_RouteSign_Scene
       # Separador vertical
       bmp.fill_rect(divider_x, 32, 1, box_h - 36, Color.new(50, 58, 76))
 
-      # Icono de la caña de pescar (item505) en la parte superior de la columna
-      rod_icon = AnimatedBitmap.new("Graphics/Icons/item505") rescue nil
-      col_center_x = divider_x + (box_w - divider_x) / 2
-      if rod_icon && rod_icon.bitmap
-        bmp.stretch_blt(Rect.new(col_center_x - 14, 35, 28, 28), rod_icon.bitmap, Rect.new(0, 0, rod_icon.width, rod_icon.height))
-        rod_icon.dispose
-      end
-
-      # Sprites de Pokémon de pesca (2 filas x 1 columna)
+      # Sprites de Pokémon de pesca (2 filas x 1 columna, alineadas con las filas de tierra)
       @fish_species.each_with_index do |specie, i|
         next if i >= 2
         sp_x = box_x + col_center_x
-        sp_y = box_y + (i == 0 ? 82 : 126)
+        sp_y = box_y + (i == 0 ? 60 : 118)
         createPokemonIcon("fish_#{i}", specie, sp_x, sp_y)
       end
     end
@@ -131,7 +126,7 @@ class REM_RouteSign_Scene
         c = i % cols
         r = i / cols # 0 o 1
         slot_cx = 14 + c * col_w + (col_w / 2)
-        slot_cy = (r == 0) ? 62 : 118
+        slot_cy = (r == 0) ? 60 : 118
         createPokemonIcon("land_#{i}", specie, box_x + slot_cx, box_y + slot_cy)
       end
     end
