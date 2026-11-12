@@ -844,39 +844,40 @@ class PokeSelectionIncubatorBox < SpriteWrapper
       icon.dispose
     end
 
-    # Textos con mayor presencia y legibilidad
+    # Textos con mayor presencia, legibilidad y centrado equilibrado
     pbSetNarrowFont(self.bitmap)
     ink = (defined?(REM_UI::INK) ? REM_UI::INK : Color.new(13, 14, 18))
     silver = (defined?(REM_UI::SILVER) ? REM_UI::SILVER : Color.new(214, 219, 228))
+    cx = 94 # Centro geométrico del espacio textual (x=44..144)
 
     if has_egg
       if ready
         self.bitmap.font.size = 17
         pbDrawTextPositions(self.bitmap, [
-          [_INTL("¡LISTO!"), 50, 7, 0, Color.new(110, 235, 140), ink]
+          [_INTL("¡LISTO!"), cx, 7, 2, Color.new(110, 235, 140), ink]
         ])
-        self.bitmap.font.size = 15
+        self.bitmap.font.size = 14
         pbDrawTextPositions(self.bitmap, [
-          [_INTL("[D] Abrir"), 50, 29, 0, silver, ink]
+          [_INTL("[D] Abrir"), cx, 28, 2, silver, ink]
         ])
       else
         self.bitmap.font.size = 16
         pbDrawTextPositions(self.bitmap, [
-          [_INTL("{1} PASOS", egg.eggsteps || 0), 50, 7, 0, Color.new(255, 255, 255), ink]
+          [_INTL("HUEVO"), cx, 7, 2, Color.new(255, 255, 255), ink]
         ])
-        self.bitmap.font.size = 15
+        self.bitmap.font.size = 14
         pbDrawTextPositions(self.bitmap, [
-          [_INTL("[D] Info"), 50, 29, 0, silver, ink]
+          [_INTL("[D] Info"), cx, 28, 2, silver, ink]
         ])
       end
     else
       self.bitmap.font.size = 16
       pbDrawTextPositions(self.bitmap, [
-        [_INTL("INCUBADORA"), 50, 7, 0, silver, ink]
+        [_INTL("INCUBADORA"), cx, 7, 2, silver, ink]
       ])
-      self.bitmap.font.size = 15
+      self.bitmap.font.size = 14
       pbDrawTextPositions(self.bitmap, [
-        [_INTL("[D] Info"), 50, 29, 0, Color.new(150, 160, 175), ink]
+        [_INTL("[D] Info"), cx, 28, 2, Color.new(150, 160, 175), ink]
       ])
     end
   end

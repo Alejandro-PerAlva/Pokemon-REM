@@ -255,7 +255,7 @@ class REM_EggHatcher_Scene
       x += 8
     end
 
-    # Pedestal inferior
+    # Pedestal inferior metálico
     bmp.fill_rect(16, 216, bmp.width - 32, 14, Color.new(35, 42, 58))
     bmp.fill_rect(16, 216, bmp.width - 32, 1, silver)
     bmp.fill_rect(24, 230, bmp.width - 48, 6, Color.new(24, 28, 40))
@@ -264,28 +264,19 @@ class REM_EggHatcher_Scene
       steps = egg.eggsteps || 0
       ready = (steps == 0)
 
-      frameskip = 20
-      frameskip = 15 if steps < 10200
-      frameskip = 10 if steps < 2550
-      frameskip = 6  if steps < 1275
-      frameskip = 4  if ready
-
-      if @sprites["egg"] && !@sprites["egg"].disposed? && @current_frameskip != frameskip
-        @sprites["egg"].dispose
-        @sprites.delete("egg")
-      end
-
+      # Gráfico del huevo: usa el battler sprite real de eclosión (Graphics/Battlers/egg)
+      # a tamaño amplio (zoom 0.85 -> 136x94 px) centrado sobre el pedestal
       if !@sprites["egg"] || @sprites["egg"].disposed?
-        @sprites["egg"] = AnimatedSprite.create("Graphics/Icons/iconEgg", 2, frameskip, @viewport)
-        # Escala al 150% (96x96 px) para aprovechar y llenar el espacio de la cámara
-        @sprites["egg"].zoom_x = 1.5
-        @sprites["egg"].zoom_y = 1.5
-        @sprites["egg"].x = @sprites["chamber"].x + (bmp.width - 96) / 2
-        @sprites["egg"].y = @sprites["chamber"].y + 60
+        @sprites["egg"] = PokemonSprite.new(@viewport)
+        @sprites["egg"].setSpeciesBitmap(egg.species, false, 0, false, false, false, true)
+        @sprites["egg"].ox = 80
+        @sprites["egg"].oy = 158
+        @sprites["egg"].zoom_x = 0.85
+        @sprites["egg"].zoom_y = 0.85
+        @sprites["egg"].x = @sprites["chamber"].x + (bmp.width / 2)
+        @sprites["egg"].y = @sprites["chamber"].y + 216
         @sprites["egg"].z = @sprites["chamber"].z + 2
-        @current_frameskip = frameskip
       end
-      @sprites["egg"].play
 
       # Etiqueta inferior de estado del huevo
       pbSetNarrowFont(bmp)
@@ -309,11 +300,10 @@ class REM_EggHatcher_Scene
         @sprites["egg"].dispose
         @sprites.delete("egg")
       end
-      @current_frameskip = nil
 
-      # Silueta vacía estilizada
-      bmp.fill_rect((bmp.width - 64) / 2, 85, 64, 80, Color.new(26, 34, 48, 120))
-      bmp.fill_rect((bmp.width - 64) / 2 + 4, 81, 56, 88, Color.new(26, 34, 48, 120))
+      # Silueta vacía estilizada en el pedestal
+      bmp.fill_rect((bmp.width - 64) / 2, 115, 64, 96, Color.new(24, 32, 46, 90))
+      bmp.fill_rect((bmp.width - 64) / 2 + 6, 108, 52, 106, Color.new(24, 32, 46, 90))
       pbSetNarrowFont(bmp)
       bmp.font.size = 17
       bmp.fill_rect(10, 236, bmp.width - 20, 26, Color.new(20, 26, 36, 220))
@@ -333,11 +323,11 @@ class REM_EggHatcher_Scene
     ink    = defined?(REM_UI::INK) ? REM_UI::INK : Color.new(13, 14, 18)
 
     # 1. Encabezado del panel
-    bmp.font.size = 21
+    bmp.font.size = 20
     pbDrawTextPositions(bmp, [
       [_INTL("DIAGNÓSTICO TÉRMICO"), bmp.width / 2, 7, 2, Color.new(110, 195, 255), ink]
     ])
-    bmp.fill_rect(12, 35, bmp.width - 24, 1, Color.new(50, 56, 72))
+    bmp.fill_rect(12, 33, bmp.width - 24, 1, Color.new(50, 56, 72))
 
     if egg
       steps = egg.eggsteps || 0
@@ -345,59 +335,68 @@ class REM_EggHatcher_Scene
       max_steps = 10200.0
       pct = ready ? 100 : [[(1.0 - (steps / max_steps)) * 100, 0.0].max, 99.0].min
 
-      # 2. Estado de gestación con tamaño legible (18pt)
-      state_text = if ready
-                     _INTL("¡El cascarón está a punto de abrirse!\n¡El Pokémon interior está listo para nacer!")
-                   elsif steps < 1275
-                     _INTL("¡Está haciendo ruidos y crujidos!\n¡A punto de eclosionar!")
-                   elsif steps < 2550
-                     _INTL("A veces se mueve con fuerza.\nDebería abrirse muy pronto.")
-                   elsif steps < 10200
-                     _INTL("¿Qué saldrá de él?\nAún le queda recorrido para abrirse.")
-                   else
-                     _INTL("Parece que a este Huevo aún\nle tomará tiempo abrirse.")
-                   end
+      # 2. Estado de gestación con 2 líneas fijas delimitadas (sin posibilidad de desborde ni solape)
+      line1, line2 = if ready
+                       [_INTL("¡El cascarón está a punto de abrirse!"), _INTL("¡Listo para eclosionar!")]
+                     elsif steps < 1275
+                       [_INTL("¡Hace ruidos y crujidos!"), _INTL("Eclosionará muy pronto.")]
+                     elsif steps < 2550
+                       [_INTL("A veces se mueve con fuerza."), _INTL("Le queda poco tiempo.")]
+                     elsif steps < 10200
+                       [_INTL("¿Qué Pokémon saldrá de él?"), _INTL("Aún requiere incubación.")]
+                     else
+                       [_INTL("Un Huevo Pokémon misterioso."), _INTL("Le tomará tiempo abrirse.")]
+                     end
 
-      bmp.font.size = 18
-      drawTextEx(bmp, 12, 42, bmp.width - 24, 3, state_text, silver, ink)
-
-      # 3. Sección de progreso
-      bmp.fill_rect(12, 104, bmp.width - 24, 1, Color.new(50, 56, 72))
-      bmp.font.size = 16
+      bmp.font.size = 15
       pbDrawTextPositions(bmp, [
-        [_INTL("Progreso de gestación:"), 12, 110, 0, silver, ink]
-      ])
-      bmp.font.size = 18
-      pbDrawTextPositions(bmp, [
-        [_INTL("{1}%", pct.round), bmp.width - 12, 109, 1, Color.new(110, 195, 255), ink]
+        [line1, 12, 39, 0, silver, ink],
+        [line2, 12, 59, 0, ready ? Color.new(110, 235, 140) : silver, ink]
       ])
 
-      # Barra de progreso sólida (ancho 220, alto 14)
+      # 3. Separador intermedio
+      bmp.fill_rect(12, 82, bmp.width - 24, 1, Color.new(50, 56, 72))
+
+      # 4. Sección de progreso de gestación
+      bmp.font.size = 15
+      pbDrawTextPositions(bmp, [
+        [_INTL("Progreso de gestación:"), 12, 88, 0, silver, ink]
+      ])
+      bmp.font.size = 17
+      pbDrawTextPositions(bmp, [
+        [_INTL("{1}%", pct.round), bmp.width - 12, 87, 1, Color.new(110, 195, 255), ink]
+      ])
+
+      # Barra de progreso sólida (ancho 220, alto 12, y=108..120)
       bar_w = 220
-      bar_h = 14
-      bmp.fill_rect(12, 134, bar_w, bar_h, Color.new(14, 16, 22))
+      bar_h = 12
+      bar_y = 108
+      bmp.fill_rect(12, bar_y, bar_w, bar_h, Color.new(14, 16, 22))
       fill_w = (bar_w * (pct / 100.0)).round
       if fill_w > 0
         fill_col = ready ? Color.new(110, 235, 140) : Color.new(110, 195, 255)
-        bmp.fill_rect(12, 134, fill_w, bar_h, fill_col)
-        bmp.fill_rect(12, 134, fill_w, 1, Color.new(220, 245, 255, 160))
+        bmp.fill_rect(12, bar_y, fill_w, bar_h, fill_col)
+        bmp.fill_rect(12, bar_y, fill_w, 1, Color.new(220, 245, 255, 160))
       end
-      bmp.fill_rect(12, 134, bar_w, 1, Color.new(70, 80, 100))
-      bmp.fill_rect(12, 134 + bar_h - 1, bar_w, 1, Color.new(70, 80, 100))
-      bmp.fill_rect(12, 134, 1, bar_h, Color.new(70, 80, 100))
-      bmp.fill_rect(12 + bar_w - 1, 134, 1, bar_h, Color.new(70, 80, 100))
+      bmp.fill_rect(12, bar_y, bar_w, 1, Color.new(70, 80, 100))
+      bmp.fill_rect(12, bar_y + bar_h - 1, bar_w, 1, Color.new(70, 80, 100))
+      bmp.fill_rect(12, bar_y, 1, bar_h, Color.new(70, 80, 100))
+      bmp.fill_rect(12 + bar_w - 1, bar_y, 1, bar_h, Color.new(70, 80, 100))
 
-      # 4. Pasos restantes con tipografía destacada
-      bmp.font.size = 16
+      # 5. Pasos restantes
+      bmp.font.size = 15
       pbDrawTextPositions(bmp, [
-        [_INTL("Pasos restantes:"), 12, 156, 0, silver, ink]
+        [_INTL("Pasos restantes:"), 12, 128, 0, silver, ink]
       ])
-      bmp.font.size = 19
+      bmp.font.size = 18
       pbDrawTextPositions(bmp, [
-        [_INTL("{1}", steps), bmp.width - 12, 154, 1, white, ink]
+        [_INTL("{1}", steps), bmp.width - 12, 126, 1, white, ink]
       ])
 
-      # 5. Origen del huevo
+      # 6. Separador de origen
+      bmp.fill_rect(12, 150, bmp.width - 24, 1, Color.new(50, 56, 72))
+
+      # Origen del huevo
       obtain = (egg.obtainText rescue "") || ""
       if obtain == "" && egg.obtainMap && egg.obtainMap > 0
         mapname = (pbGetMapNameFromId(egg.obtainMap) rescue "") || ""
@@ -405,14 +404,13 @@ class REM_EggHatcher_Scene
       end
 
       if obtain != ""
-        bmp.fill_rect(12, 180, bmp.width - 24, 1, Color.new(50, 56, 72))
-        bmp.font.size = 15
-        drawTextEx(bmp, 12, 186, bmp.width - 24, 2, obtain, Color.new(180, 190, 205), ink)
+        bmp.font.size = 14
+        drawTextEx(bmp, 12, 156, bmp.width - 24, 2, obtain, Color.new(180, 190, 205), ink)
       end
 
-      # 6. Botón de apertura (sin '[C]', limpio y destacado)
+      # 7. Botón de apertura (sin '[C]', limpio y destacado)
       if ready
-        btn_y = 216
+        btn_y = 212
         bmp.fill_rect(12, btn_y, bar_w, 44, Color.new(24, 58, 38, 245))
         glow = Color.new(110, 235, 140)
         bmp.fill_rect(12, btn_y, bar_w, 1, glow)
@@ -426,11 +424,11 @@ class REM_EggHatcher_Scene
       else
         bmp.font.size = 15
         pbDrawTextPositions(bmp, [
-          [_INTL("Incubación en curso."), 12, 222, 0, Color.new(160, 170, 185), ink]
+          [_INTL("Incubación en curso."), 12, 218, 0, Color.new(160, 170, 185), ink]
         ])
-        bmp.font.size = 14
+        bmp.font.size = 13
         pbDrawTextPositions(bmp, [
-          [_INTL("El Huevo no puede salir hasta nacer."), 12, 244, 0, Color.new(120, 130, 145), ink]
+          [_INTL("El Huevo no puede salir hasta nacer."), 12, 238, 0, Color.new(120, 130, 145), ink]
         ])
       end
     else
@@ -453,7 +451,24 @@ class REM_EggHatcher_Scene
     loop do
       Graphics.update
       Input.update
+
+      # Animación de respiración / balanceo del huevo en su pedestal
+      @egg_timer = (@egg_timer || 0) + 1
       if @sprites["egg"] && !@sprites["egg"].disposed?
+        egg = $PokemonGlobal ? $PokemonGlobal.egg : nil
+        ready = egg && (egg.eggsteps || 0) == 0
+        if ready
+          # Balanceo continuo y perceptible cuando está a punto de nacer
+          @sprites["egg"].angle = Math.sin(@egg_timer * 0.25) * 4.0
+        else
+          # Suave ciclo periódico cada ~2.5 segundos
+          cycle = @egg_timer % 140
+          if cycle < 30
+            @sprites["egg"].angle = Math.sin(cycle * (Math::PI / 15)) * 2.5
+          else
+            @sprites["egg"].angle = 0
+          end
+        end
         @sprites["egg"].update
       end
 
@@ -475,6 +490,11 @@ class REM_EggHatcher_Scene
         egg = $PokemonGlobal ? $PokemonGlobal.egg : nil
         if egg && (egg.eggsteps || 0) == 0
           pbPlayDecisionSE
+          # Liberar sprite temporal del huevo en la incubadora antes de la cinemática
+          if @sprites["egg"] && !@sprites["egg"].disposed?
+            @sprites["egg"].dispose
+            @sprites.delete("egg")
+          end
           # Eclosión con cinemática Noir nativa
           pbFadeOutIn(99999) {
             pbHatch(egg)
