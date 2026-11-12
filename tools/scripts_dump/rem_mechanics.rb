@@ -619,14 +619,14 @@ def pbDebugTestingMenu
       sign_cmd = Kernel.pbMessage(_INTL("VISOR DE CARTELES DE RUTA (pbRouteSign)\\nSelecciona una prueba:"), sign_opts, 0)
       case sign_cmd
       when 0
-        land = [:PIDGEY, :RATTATA, :ZUBAT, :GEODUDE, :MANKEY, :GROWLITHE, :ABRA, :MACHOP]
-        fish = [:MAGIKARP, :POLIWAG]
+        land = [:PIDGEY, :RATTATA, :ZUBAT, :GEODUDE, :MANKEY, :GROWLITHE, :ABRA, :MACHOP].map { |s| getID(PBSpecies, s) }
+        fish = [:MAGIKARP, :POLIWAG].map { |s| getID(PBSpecies, s) }
         pbRouteSign(nil, "Ruta 4 - Costa Sepiola", land, fish)
       when 1
-        land = [:ZIGZAGOON, :TAILLOW, :WURMPLE, :POOCHYENA, :SHROOMISH, :SLAKOTH]
+        land = [:ZIGZAGOON, :TAILLOW, :WURMPLE, :POOCHYENA, :SHROOMISH, :SLAKOTH].map { |s| getID(PBSpecies, s) }
         pbRouteSign(nil, "Ruta 1 - Bosque Dioptasa", land, [])
       when 2
-        land = [:STARLY, :BIDOOF, :KRICKETOT, :SHINX]
+        land = [:STARLY, :BIDOOF, :KRICKETOT, :SHINX].map { |s| getID(PBSpecies, s) }
         pbRouteSign(nil, "Senda del Albor", land, [])
       when 3
         sample_pokes = [:PIDGEY, :RATTATA, :ZUBAT, :GEODUDE, :MANKEY, :GROWLITHE, :ABRA, :MACHOP, :MAGIKARP, :POLIWAG, :ZIGZAGOON, :TAILLOW]

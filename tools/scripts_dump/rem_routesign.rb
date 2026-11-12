@@ -155,7 +155,17 @@ class REM_RouteSign_Scene
   end
 
   def createPokemonIcon(key, specie, x, y)
-    sprite = PokemonSpeciesIconSprite.new(specie, @viewport)
+    spec_id = (specie.is_a?(Numeric) ? specie : getID(PBSpecies, specie)) rescue 0
+    return if !spec_id || spec_id <= 0
+
+    sprite = nil
+    begin
+      sprite = PokemonSpeciesIconSprite.new(spec_id, @viewport)
+    rescue
+      sprite = (PokemonSpeciesIconSprite.new(0, @viewport) rescue nil)
+    end
+    return if !sprite
+
     sprite.ox = 32
     sprite.oy = 32
     sprite.x = x
@@ -167,7 +177,7 @@ class REM_RouteSign_Scene
     # Verificación Pokédex:
     # No visto -> Silueta completamente negra
     # Visto / Capturado -> Icono a todo color original
-    seen = $Trainer ? ($Trainer.hasSeen?(specie) || $Trainer.hasOwned?(specie)) : false
+    seen = $Trainer ? ($Trainer.hasSeen?(spec_id) || $Trainer.hasOwned?(spec_id)) : false
     if seen
       sprite.tone = Tone.new(0, 0, 0, 0)
     else
