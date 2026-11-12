@@ -3246,6 +3246,10 @@ class PokemonMenu_Scene
     @sprites["vial"].x=10
     @sprites["vial"].y=10
     @sprites["vial"].visible=false
+    @sprites["sleepbag"]=BitmapSprite.new(190,44,@viewport)
+    @sprites["sleepbag"].x=10
+    @sprites["sleepbag"].y=10
+    @sprites["sleepbag"].visible=false
     @sprites["save"]=BitmapSprite.new(190,44,@viewport)
     @sprites["save"].x=10
     @sprites["save"].y=10
@@ -3263,6 +3267,7 @@ class PokemonMenu_Scene
 
   def pbHideMenu
     @sprites["save"].visible=false
+    @sprites["sleepbag"].visible=false if @sprites["sleepbag"]
     @sprites["vial"].visible=false
     @sprites["cards"].visible=false
     @sprites["infowindow"].visible=false
@@ -3339,32 +3344,60 @@ class PokemonMenu_Scene
     return false
   end
 
-  # Columna de cajitas informativas arriba a la izquierda: Pokévial (si lo tienes) y debajo Guardar.
-  # Las dos tienen siempre el mismo ancho (el que ocupa la del Pokévial), exista o no.
+  # ---- Saco de Dormir: cajita informativa justo debajo del Pokévial ----
+  def remHasSleepBag?
+    return false if pbInSafari? || pbInBugContest?
+    return false if !hasConst?(PBItems,:SLEEPINGBAG)
+    return $PokemonBag && $PokemonBag.pbQuantity(getConst(PBItems,:SLEEPINGBAG))>0
+  rescue
+    return false
+  end
+
+  # Columna de cajitas informativas arriba a la izquierda: Pokévial, Saco de Dormir y Guardar.
+  # Las cajitas tienen el mismo ancho armónico para mantener la simetría de la interfaz.
   def remDrawVial
-    vspr=@sprites["vial"]; sspr=@sprites["save"]
+    vspr=@sprites["vial"]; bspr=@sprites["sleepbag"]; sspr=@sprites["save"]
     hasSave=(@saveIndex && @saveIndex>=0)
     hasVial=remHasVial?
-    cur=hasVial ? pbRemVialCharges : 0
-    mx=hasVial ? pbRemVialMax : 1
-    empty=(cur<=0)
-    num=sprintf("%d/%d",cur,mx)
-    vhint=empty ? _INTL("Vacío") : _INTL("Z: usar")
+    hasBag=remHasSleepBag?
+
+    cur_v=hasVial ? pbRemVialCharges : 0
+    mx_v=hasVial ? pbRemVialMax : 1
+    empty_v=(cur_v<=0)
+    num_v=sprintf("%d/%d",cur_v,mx_v)
+    vhint=empty_v ? _INTL("Vacío") : _INTL("Z: usar")
+
+    cur_b=hasBag ? pbRemSleepBagCharges : 0
+    mx_b=hasBag ? pbRemSleepBagMax : 1
+    empty_b=(cur_b<=0)
+    num_b=sprintf("%d/%d",cur_b,mx_b)
+    bhint=empty_b ? _INTL("Vacío") : _INTL("D: usar")
+
     shint=_INTL("S: usar")
     probe=sspr.bitmap
     pbSetSystemFont(probe)
     probe.font.size=20
     l1=[probe.text_size(_INTL("Guardar")).width,probe.text_size(_INTL("Cargas: {1}","3/3")).width].max
     probe.font.size=17
-    l2=[probe.text_size(shint).width,probe.text_size(_INTL("Z: usar")).width,probe.text_size(_INTL("Vacío")).width].max
+    l2=[probe.text_size(shint).width,probe.text_size(_INTL("Z: usar")).width,probe.text_size(_INTL("D: usar")).width,probe.text_size(_INTL("Vacío")).width].max
     w=46+[l1,l2].max+14
+
     sspr.visible=false; vspr.visible=false
+    bspr.visible=false if bspr
     y=10
     if hasVial
       bmp=vspr.bitmap; bmp.clear
       remInfoBox(bmp,w,getConst(PBItems,:POKEVIAL),nil,_INTL("Cargas: "),REM_UI::WHITE,vhint,
-                 num,empty ? Color.new(150,158,176) : Color.new(74,200,255))
+                 num_v,empty_v ? Color.new(150,158,176) : Color.new(74,200,255))
       vspr.y=y; vspr.visible=true
+      y+=50
+    end
+    if hasBag && bspr
+      bmp=bspr.bitmap; bmp.clear
+      # Saco de Dormir justo debajo del Pokévial
+      remInfoBox(bmp,w,getConst(PBItems,:SLEEPINGBAG),nil,_INTL("Cargas: "),REM_UI::WHITE,bhint,
+                 num_b,empty_b ? Color.new(150,158,176) : Color.new(255,195,75))
+      bspr.y=y; bspr.visible=true
       y+=50
     end
     if hasSave
@@ -3417,6 +3450,26 @@ class PokemonMenu_Scene
     pbShowMenu            # y reaparece con las cargas actualizadas
   end
 
+  def remUseSleepBag
+    pbHideMenu
+    if pbRemSleepBagCharges<=0
+      Kernel.pbMessage(_INTL("El Saco de Dormir no tiene cargas. Se recarga descansando en un Centro Pokémon."))
+      pbShowMenu
+      return
+    end
+    if !PBDayNight.isNight?
+      Kernel.pbMessage(_INTL("Aún es de día y no tienes sueño. Guárdalo para cuando caiga la noche en la ruta."))
+      pbShowMenu
+      return
+    end
+    if !Kernel.pbConfirmMessage(_INTL("¿Quieres acampar y dormir hasta el amanecer?\\n(Cargas restantes: {1}/{2})",pbRemSleepBagCharges,pbRemSleepBagMax))
+      pbShowMenu
+      return
+    end
+    ItemHandlers.triggerUseFromBag(getConst(PBItems,:SLEEPINGBAG))
+    pbShowMenu
+  end
+
   def pbShowCommands(commands)
     ret=-1
     @saveIndex=commands.index(_INTL("Guardar")) || -1
@@ -3439,6 +3492,8 @@ class PokemonMenu_Scene
         break
       elsif Input.trigger?(Input::A) && remHasVial?
         remUseVial
+      elsif Input.trigger?(Input::Z) && remHasSleepBag?
+        remUseSleepBag
       elsif Input.trigger?(Input::UP)
         index=(index+n-1)%n
         pbPlayCursorSE()

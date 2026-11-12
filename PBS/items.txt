@@ -412,3 +412,4 @@
 716,POKEVIAL,Pokévial,Pokéviales,8,0,"Frasco portátil de agua curativa: úsalo entre combates para curar a todo el equipo. Se recarga solo en cualquier Centro Pokémon. Empieza con 1 carga y mejora hasta 3.",2,0,6,
 717,INFINITECANDY,Caramelo Infinito,Caramelos Infinitos,8,0,"Caramelo de sabor inagotable: sube un nivel al Pokémon cada vez que se usa, sin límite de usos, hasta el tope de nivel de la historia.",5,0,6,
 718,INCUBADORA,Incubadora,Incubadoras,8,0,"Dispositivo portátil para transportar e incubar hasta 6 huevos Pokémon mientras caminas, sin ocupar espacio en el equipo.",2,0,6,
+719,SLEEPINGBAG,Saco de Dormir,Sacos de Dormir,8,0,"Saco de dormir térmico y compacto: úsalo en campo para descansar hasta el amanecer cuando cae la noche. Se recarga en cualquier Centro Pokémon. Empieza con 1 carga y mejora hasta 3.",2,0,6,

@@ -131,21 +131,28 @@ end
 class PokemonGlobalMetadata
   attr_accessor :remVialMax
   attr_accessor :remVialCharges
+  attr_accessor :remSleepBagMax
+  attr_accessor :remSleepBagCharges
 end
+
 def pbRemVialMax
   return ($PokemonGlobal && $PokemonGlobal.remVialMax) ? [[$PokemonGlobal.remVialMax,1].max,3].min : 1
 end
+
 def pbRemVialCharges
   return pbRemVialMax if !$PokemonGlobal || $PokemonGlobal.remVialCharges==nil
   return [$PokemonGlobal.remVialCharges,pbRemVialMax].min
 end
+
 def pbRemVialUpgrade   # +1 carga máxima (hasta 3); para usar desde eventos
   $PokemonGlobal.remVialMax=[pbRemVialMax+1,3].min
   $PokemonGlobal.remVialCharges=$PokemonGlobal.remVialMax
 end
+
 def pbRemVialRefill
   $PokemonGlobal.remVialCharges=pbRemVialMax if $PokemonGlobal
 end
+
 ItemHandlers::UseFromBag.add(:POKEVIAL,proc{|item|
   cur=pbRemVialCharges
   if cur<=0
@@ -165,8 +172,49 @@ ItemHandlers::UseFromBag.add(:POKEVIAL,proc{|item|
   Kernel.pbMessage(_INTL("¡El equipo se ha curado! Cargas restantes: {1}/{2}.",cur-1,pbRemVialMax))
   next 1
 })
+
+# Saco de Dormir: pasa la noche a día en campo; empieza con 1 carga (máx. 3) y se recarga en Centro Pokémon / camas
+def pbRemSleepBagMax
+  return ($PokemonGlobal && $PokemonGlobal.remSleepBagMax) ? [[$PokemonGlobal.remSleepBagMax,1].max,3].min : 1
+end
+
+def pbRemSleepBagCharges
+  return pbRemSleepBagMax if !$PokemonGlobal || $PokemonGlobal.remSleepBagCharges==nil
+  return [$PokemonGlobal.remSleepBagCharges,pbRemSleepBagMax].min
+end
+
+def pbRemSleepBagUpgrade   # +1 carga máxima (hasta 3); para usar desde eventos
+  $PokemonGlobal.remSleepBagMax=[pbRemSleepBagMax+1,3].min
+  $PokemonGlobal.remSleepBagCharges=$PokemonGlobal.remSleepBagMax
+end
+
+def pbRemSleepBagRefill
+  $PokemonGlobal.remSleepBagCharges=pbRemSleepBagMax if $PokemonGlobal
+end
+
+ItemHandlers::UseFromBag.add(:SLEEPINGBAG,proc{|item|
+  cur=pbRemSleepBagCharges
+  if cur<=0
+    Kernel.pbMessage(_INTL("El Saco de Dormir no tiene cargas. Se recarga descansando en un Centro Pokémon."))
+    next 0
+  end
+  if !PBDayNight.isNight?
+    Kernel.pbMessage(_INTL("Aún es de día y no tienes sueño. Guárdalo para cuando caiga la noche en la ruta."))
+    next 0
+  end
+  if !Kernel.pbConfirmMessage(_INTL("¿Quieres acampar y dormir hasta el amanecer?\\n(Cargas restantes: {1}/{2})",cur,pbRemSleepBagMax))
+    next 0
+  end
+  pbSEPlay("Recovery") rescue pbSEPlay("Item get") rescue nil
+  $PokemonGlobal.remSleepBagCharges=cur-1
+  pbSetNight(false,false)
+  Kernel.pbMessage(_INTL("Te has resguardado en el Saco de Dormir hasta que ha salido el sol.\\n¡Ha amanecido! Cargas restantes: {1}/{2}.",cur-1,pbRemSleepBagMax))
+  next 1
+})
+
 alias rem_orig_pbHealAll pbHealAll
 def pbHealAll
   rem_orig_pbHealAll
   pbRemVialRefill
+  pbRemSleepBagRefill
 end

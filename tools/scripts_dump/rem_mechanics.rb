@@ -601,10 +601,11 @@ def pbDebugTestingMenu
         _INTL("1. Follower a Combate (Sin Ball 1vs1 y Doble) [NUEVO]"),
         _INTL("2. Salón de la Fama Gen 5 Noir [NUEVO]"),
         _INTL("3. Herramientas Clave (Tijeras, Pico, Guantes, Surf) [NUEVO]"),
-        _INTL("4. Cartel de Ruta (pbRouteSign)"),
-        _INTL("5. Incubadora Noir (Huevo, pasos y entrega)"),
-        _INTL("6. Equipar Objetos a Pokémon (Icono bajo PS)"),
-        _INTL("7. Preparar / Curar Equipo"),
+        _INTL("4. Saco de Dormir Noir (Dormir en ruta y cargas) [NUEVO]"),
+        _INTL("5. Cartel de Ruta (pbRouteSign)"),
+        _INTL("6. Incubadora Noir (Huevo, pasos y entrega)"),
+        _INTL("7. Equipar Objetos a Pokémon (Icono bajo PS)"),
+        _INTL("8. Preparar / Curar Equipo"),
         _INTL("Salir")
       ]
     )
@@ -688,7 +689,48 @@ def pbDebugTestingMenu
         Kernel.pbMessage(_INTL("Se han retirado las 4 Herramientas Clave de tu mochila para probar los diálogos cuando no se tienen los objetos."))
       end
 
-    when 3 # 4. Cartel de Ruta (pbRouteSign)
+    when 3 # 4. Saco de Dormir Noir
+      has_bag = ($PokemonBag && $PokemonBag.pbHasItem?(:SLEEPINGBAG)) ? "Sí" : "No"
+      cur_c = pbRemSleepBagCharges
+      max_c = pbRemSleepBagMax
+      is_n = PBDayNight.isNight? ? "Noche" : "Día"
+      
+      bag_menu = [
+        _INTL("Dar / Quitar Saco de Dormir a la Mochila"),
+        _INTL("Alternar Día / Noche (Actualmente: {1})", is_n),
+        _INTL("Mejorar Cargas Máximas (+1 hasta 3) [Actual: {1}]", max_c),
+        _INTL("Vaciar Cargas a 0 (Probar mensaje de sin cargas)"),
+        _INTL("Rellenar Cargas al 100%"),
+        _INTL("Volver")
+      ]
+      b_cmd = Kernel.pbMessage(
+        _INTL("SACO DE DORMIR NOIR\\nPosee Saco: {1} | Cargas: {2}/{3} | Estado: {4}\\nSelecciona una prueba:", has_bag, cur_c, max_c, is_n),
+        bag_menu, 0
+      )
+      case b_cmd
+      when 0
+        if $PokemonBag.pbHasItem?(:SLEEPINGBAG)
+          $PokemonBag.pbDeleteItem(:SLEEPINGBAG, 1)
+          Kernel.pbMessage(_INTL("Saco de Dormir retirado de la mochila."))
+        else
+          $PokemonBag.pbStoreItem(:SLEEPINGBAG, 1)
+          Kernel.pbMessage(_INTL("¡Saco de Dormir añadido a la mochila!\\nAhora puedes verlo en el Menú de Pausa justo debajo del Pokévial."))
+        end
+      when 1
+        pbToggleDayNight(false)
+        Kernel.pbMessage(_INTL("Tiempo cambiado a: {1}.", PBDayNight.isNight? ? "NOCHE" : "DÍA"))
+      when 2
+        pbRemSleepBagUpgrade
+        Kernel.pbMessage(_INTL("¡Cargas máximas del Saco de Dormir mejoradas a {1}/3!", pbRemSleepBagMax))
+      when 3
+        $PokemonGlobal.remSleepBagCharges = 0 if $PokemonGlobal
+        Kernel.pbMessage(_INTL("Cargas del Saco de Dormir fijadas a 0/3 (Vacío)."))
+      when 4
+        pbRemSleepBagRefill
+        Kernel.pbMessage(_INTL("Cargas del Saco de Dormir rellenadas al 100% ({1}/{2}).", pbRemSleepBagCharges, pbRemSleepBagMax))
+      end
+
+    when 4 # 5. Cartel de Ruta (pbRouteSign)
       sign_opts = [
         _INTL("Probar Ruta 8 Pokes + 2 Pesca (Ej. Costa Sepiola)"),
         _INTL("Probar Ruta 6 Pokes (Ej. Bosque Dioptasa)"),
@@ -733,7 +775,7 @@ def pbDebugTestingMenu
         pbRouteSign
       end
 
-    when 4 # 5. Pruebas de Incubadora
+    when 5 # 6. Pruebas de Incubadora
       inc_cmd = Kernel.pbMessage(
         _INTL("INCUBADORA NOIR\\nIncubadora: {1} | Huevo: {2}\\nSelecciona una acción:", has_inc, egg_str),
         [
@@ -778,7 +820,7 @@ def pbDebugTestingMenu
         Kernel.pbMessage(_INTL("Incubadora vaciada."))
       end
 
-    when 5 # 6. Equipar Objetos a Pokémon
+    when 6 # 7. Equipar Objetos a Pokémon
       while $Trainer.party.length < 3
         pbAddPokemon(:LUCARIO, 25) if hasConst?(PBSpecies, :LUCARIO)
         pbAddPokemon(:GRENINJA, 25) if hasConst?(PBSpecies, :GRENINJA)
@@ -793,7 +835,7 @@ def pbDebugTestingMenu
       end
       Kernel.pbMessage(_INTL("¡Objetos equipados en tu equipo (Cinta Elegida, Restos, Baya Zidra...)!\\nAbre el menú de Pokémon para comprobar que sus iconos se muestran alineados justo debajo de 'PS'."))
 
-    when 6 # 7. Preparar / Curar Equipo
+    when 7 # 8. Preparar / Curar Equipo
       if $Trainer && $Trainer.party
         for p in $Trainer.party; p.heal; end
       end
