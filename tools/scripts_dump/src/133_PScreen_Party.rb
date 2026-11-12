@@ -804,9 +804,9 @@ class PokeSelectionIncubatorBox < SpriteWrapper
 
   def initialize(viewport=nil)
     super(viewport)
-    self.bitmap = Bitmap.new(116, 48)
-    self.x = 388
-    self.y = 328
+    self.bitmap = Bitmap.new(144, 54)
+    self.x = 360
+    self.y = 325
     self.z = viewport ? viewport.z + 2 : 100000
     @selected = false
     refresh
@@ -823,60 +823,60 @@ class PokeSelectionIncubatorBox < SpriteWrapper
     egg = ($PokemonGlobal ? $PokemonGlobal.egg : nil) rescue nil
     has_egg = !egg.nil?
 
-    # Fondo Noir
-    self.bitmap.fill_rect(2, 2, 112, 44, Color.new(20, 24, 34, 240))
+    # Fondo Noir biselado
+    self.bitmap.fill_rect(2, 2, 140, 50, Color.new(20, 24, 34, 245))
 
     # Borde plateado o cian si está listo para eclosionar
     ready = has_egg && (egg.eggsteps || 0) == 0
     border_col = ready ? Color.new(110, 235, 140) : Color.new(110, 118, 138)
-    self.bitmap.fill_rect(2, 0, 112, 1, border_col)
-    self.bitmap.fill_rect(2, 47, 112, 1, border_col)
-    self.bitmap.fill_rect(0, 2, 1, 44, border_col)
-    self.bitmap.fill_rect(115, 2, 1, 44, border_col)
+    self.bitmap.fill_rect(2, 0, 140, 1, border_col)
+    self.bitmap.fill_rect(2, 53, 140, 1, border_col)
+    self.bitmap.fill_rect(0, 2, 1, 50, border_col)
+    self.bitmap.fill_rect(143, 2, 1, 50, border_col)
 
-    # Icono en el lateral izquierdo
+    # Icono en el lateral izquierdo (36x36)
     icon_path = has_egg ? "Graphics/Icons/iconEgg" : "Graphics/Icons/item718"
     icon = AnimatedBitmap.new(icon_path) rescue nil
     if icon && icon.bitmap
       src_w = has_egg ? (icon.width / 2) : icon.width
       src_h = icon.height
-      self.bitmap.stretch_blt(Rect.new(6, 8, 32, 32), icon.bitmap, Rect.new(0, 0, src_w, src_h))
+      self.bitmap.stretch_blt(Rect.new(8, 9, 36, 36), icon.bitmap, Rect.new(0, 0, src_w, src_h))
       icon.dispose
     end
 
-    # Textos
+    # Textos con mayor presencia y legibilidad
     pbSetNarrowFont(self.bitmap)
     ink = (defined?(REM_UI::INK) ? REM_UI::INK : Color.new(13, 14, 18))
     silver = (defined?(REM_UI::SILVER) ? REM_UI::SILVER : Color.new(214, 219, 228))
 
     if has_egg
       if ready
+        self.bitmap.font.size = 17
+        pbDrawTextPositions(self.bitmap, [
+          [_INTL("¡LISTO!"), 50, 7, 0, Color.new(110, 235, 140), ink]
+        ])
         self.bitmap.font.size = 15
         pbDrawTextPositions(self.bitmap, [
-          [_INTL("¡LISTO!"), 42, 6, 0, Color.new(110, 235, 140), ink]
-        ])
-        self.bitmap.font.size = 13
-        pbDrawTextPositions(self.bitmap, [
-          [_INTL("[D] Abrir"), 42, 24, 0, silver, ink]
+          [_INTL("[D] Abrir"), 50, 29, 0, silver, ink]
         ])
       else
-        self.bitmap.font.size = 14
+        self.bitmap.font.size = 16
         pbDrawTextPositions(self.bitmap, [
-          [_INTL("{1}p", egg.eggsteps || 0), 42, 6, 0, Color.new(255, 255, 255), ink]
+          [_INTL("{1} PASOS", egg.eggsteps || 0), 50, 7, 0, Color.new(255, 255, 255), ink]
         ])
-        self.bitmap.font.size = 13
+        self.bitmap.font.size = 15
         pbDrawTextPositions(self.bitmap, [
-          [_INTL("[D] Info"), 42, 24, 0, silver, ink]
+          [_INTL("[D] Info"), 50, 29, 0, silver, ink]
         ])
       end
     else
-      self.bitmap.font.size = 14
+      self.bitmap.font.size = 16
       pbDrawTextPositions(self.bitmap, [
-        [_INTL("INCUBADORA"), 42, 6, 0, silver, ink]
+        [_INTL("INCUBADORA"), 50, 7, 0, silver, ink]
       ])
-      self.bitmap.font.size = 13
+      self.bitmap.font.size = 15
       pbDrawTextPositions(self.bitmap, [
-        [_INTL("[D] Info"), 42, 24, 0, Color.new(140, 150, 165), ink]
+        [_INTL("[D] Info"), 50, 29, 0, Color.new(150, 160, 175), ink]
       ])
     end
   end
@@ -1049,8 +1049,8 @@ class PokemonScreen_Scene
 
     if @is_main_menu && $PokemonBag && $PokemonBag.pbHasItem?(:INCUBADORA)
       @sprites["incubator_box"]=PokeSelectionIncubatorBox.new(@viewport)
-      @sprites["messagebox"].width=380
-      @sprites["helpwindow"].width=380
+      @sprites["messagebox"].width=352
+      @sprites["helpwindow"].width=352
     else
       @sprites["messagebox"].width=500
       @sprites["helpwindow"].width=500

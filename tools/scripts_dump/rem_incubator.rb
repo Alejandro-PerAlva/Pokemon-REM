@@ -224,11 +224,11 @@ class REM_EggHatcher_Scene
     pbDrawTextPositions(bg, [
       [_INTL("INCUBADORA PORTÁTIL"), 24, 22, 0, Color.new(255, 255, 255), ink]
     ])
-    bg.font.size = 16
+    bg.font.size = 17
     status_label = egg ? (egg.eggsteps == 0 ? _INTL("ESTADO: ¡LISTO PARA ABRIR!") : _INTL("ESTADO: EN GESTACIÓN")) : _INTL("ESTADO: CÁPSULA DISPONIBLE")
     status_color = egg ? (egg.eggsteps == 0 ? Color.new(110, 235, 140) : Color.new(110, 195, 255)) : silver
     pbDrawTextPositions(bg, [
-      [status_label, bg.width - 32, 26, 1, status_color, ink]
+      [status_label, bg.width - 32, 25, 1, status_color, ink]
     ])
 
     # 2. Dibujar Cámara de Incubación
@@ -256,9 +256,9 @@ class REM_EggHatcher_Scene
     end
 
     # Pedestal inferior
-    bmp.fill_rect(16, 204, bmp.width - 32, 16, Color.new(35, 42, 58))
-    bmp.fill_rect(16, 204, bmp.width - 32, 1, silver)
-    bmp.fill_rect(24, 220, bmp.width - 48, 8, Color.new(24, 28, 40))
+    bmp.fill_rect(16, 216, bmp.width - 32, 14, Color.new(35, 42, 58))
+    bmp.fill_rect(16, 216, bmp.width - 32, 1, silver)
+    bmp.fill_rect(24, 230, bmp.width - 48, 6, Color.new(24, 28, 40))
 
     if egg
       steps = egg.eggsteps || 0
@@ -277,8 +277,11 @@ class REM_EggHatcher_Scene
 
       if !@sprites["egg"] || @sprites["egg"].disposed?
         @sprites["egg"] = AnimatedSprite.create("Graphics/Icons/iconEgg", 2, frameskip, @viewport)
-        @sprites["egg"].x = @sprites["chamber"].x + (bmp.width - 64) / 2
-        @sprites["egg"].y = @sprites["chamber"].y + 80
+        # Escala al 150% (96x96 px) para aprovechar y llenar el espacio de la cámara
+        @sprites["egg"].zoom_x = 1.5
+        @sprites["egg"].zoom_y = 1.5
+        @sprites["egg"].x = @sprites["chamber"].x + (bmp.width - 96) / 2
+        @sprites["egg"].y = @sprites["chamber"].y + 60
         @sprites["egg"].z = @sprites["chamber"].z + 2
         @current_frameskip = frameskip
       end
@@ -287,17 +290,18 @@ class REM_EggHatcher_Scene
       # Etiqueta inferior de estado del huevo
       pbSetNarrowFont(bmp)
       if ready
-        bmp.font.size = 16
-        bmp.fill_rect(10, 236, bmp.width - 20, 24, Color.new(25, 55, 38, 220))
+        bmp.font.size = 17
+        bmp.fill_rect(10, 236, bmp.width - 20, 26, Color.new(25, 55, 38, 220))
         bmp.fill_rect(10, 236, bmp.width - 20, 1, Color.new(110, 235, 140))
-        bmp.fill_rect(10, 259, bmp.width - 20, 1, Color.new(110, 235, 140))
+        bmp.fill_rect(10, 261, bmp.width - 20, 1, Color.new(110, 235, 140))
         pbDrawTextPositions(bmp, [
           [_INTL("¡LISTO PARA ABRIR!"), bmp.width / 2, 239, 2, Color.new(110, 235, 140), ink]
         ])
       else
-        bmp.font.size = 15
+        bmp.font.size = 17
+        bmp.fill_rect(10, 236, bmp.width - 20, 26, Color.new(20, 26, 36, 220))
         pbDrawTextPositions(bmp, [
-          [_INTL("{1} PASOS", steps), bmp.width / 2, 240, 2, Color.new(255, 255, 255), ink]
+          [_INTL("{1} PASOS", steps), bmp.width / 2, 239, 2, Color.new(255, 255, 255), ink]
         ])
       end
     else
@@ -307,12 +311,14 @@ class REM_EggHatcher_Scene
       end
       @current_frameskip = nil
 
-      # Silueta vacía
-      bmp.fill_rect((bmp.width - 44) / 2, 100, 44, 56, Color.new(26, 34, 48, 120))
+      # Silueta vacía estilizada
+      bmp.fill_rect((bmp.width - 64) / 2, 85, 64, 80, Color.new(26, 34, 48, 120))
+      bmp.fill_rect((bmp.width - 64) / 2 + 4, 81, 56, 88, Color.new(26, 34, 48, 120))
       pbSetNarrowFont(bmp)
-      bmp.font.size = 15
+      bmp.font.size = 17
+      bmp.fill_rect(10, 236, bmp.width - 20, 26, Color.new(20, 26, 36, 220))
       pbDrawTextPositions(bmp, [
-        [_INTL("CÁPSULA VACÍA"), bmp.width / 2, 238, 2, Color.new(120, 130, 145), ink]
+        [_INTL("CÁPSULA VACÍA"), bmp.width / 2, 239, 2, Color.new(130, 140, 155), ink]
       ])
     end
   end
@@ -326,12 +332,12 @@ class REM_EggHatcher_Scene
     white  = Color.new(255, 255, 255)
     ink    = defined?(REM_UI::INK) ? REM_UI::INK : Color.new(13, 14, 18)
 
-    # Encabezado del panel
-    bmp.font.size = 17
+    # 1. Encabezado del panel
+    bmp.font.size = 21
     pbDrawTextPositions(bmp, [
-      [_INTL("DIAGNÓSTICO TÉRMICO"), bmp.width / 2, 8, 2, Color.new(110, 195, 255), ink]
+      [_INTL("DIAGNÓSTICO TÉRMICO"), bmp.width / 2, 7, 2, Color.new(110, 195, 255), ink]
     ])
-    bmp.fill_rect(12, 34, bmp.width - 24, 1, Color.new(45, 50, 65))
+    bmp.fill_rect(12, 35, bmp.width - 24, 1, Color.new(50, 56, 72))
 
     if egg
       steps = egg.eggsteps || 0
@@ -339,7 +345,7 @@ class REM_EggHatcher_Scene
       max_steps = 10200.0
       pct = ready ? 100 : [[(1.0 - (steps / max_steps)) * 100, 0.0].max, 99.0].min
 
-      # Estado de gestación
+      # 2. Estado de gestación con tamaño legible (18pt)
       state_text = if ready
                      _INTL("¡El cascarón está a punto de abrirse!\n¡El Pokémon interior está listo para nacer!")
                    elsif steps < 1275
@@ -349,37 +355,49 @@ class REM_EggHatcher_Scene
                    elsif steps < 10200
                      _INTL("¿Qué saldrá de él?\nAún le queda recorrido para abrirse.")
                    else
-                     _INTL("Parece que a este Huevo aún le tomará mucho tiempo abrirse.")
+                     _INTL("Parece que a este Huevo aún\nle tomará tiempo abrirse.")
                    end
 
-      bmp.font.size = 14
+      bmp.font.size = 18
       drawTextEx(bmp, 12, 42, bmp.width - 24, 3, state_text, silver, ink)
 
-      # Sección de progreso
-      bmp.fill_rect(12, 98, bmp.width - 24, 1, Color.new(45, 50, 65))
-      bmp.font.size = 14
+      # 3. Sección de progreso
+      bmp.fill_rect(12, 104, bmp.width - 24, 1, Color.new(50, 56, 72))
+      bmp.font.size = 16
       pbDrawTextPositions(bmp, [
-        [_INTL("Progreso de incubación:"), 12, 106, 0, silver, ink],
-        [_INTL("{1}%", pct.round), bmp.width - 12, 106, 1, Color.new(110, 195, 255), ink]
+        [_INTL("Progreso de gestación:"), 12, 110, 0, silver, ink]
+      ])
+      bmp.font.size = 18
+      pbDrawTextPositions(bmp, [
+        [_INTL("{1}%", pct.round), bmp.width - 12, 109, 1, Color.new(110, 195, 255), ink]
       ])
 
-      # Barra de progreso grande (ancho 220, alto 10)
+      # Barra de progreso sólida (ancho 220, alto 14)
       bar_w = 220
-      bmp.fill_rect(12, 128, bar_w, 10, Color.new(14, 16, 22))
+      bar_h = 14
+      bmp.fill_rect(12, 134, bar_w, bar_h, Color.new(14, 16, 22))
       fill_w = (bar_w * (pct / 100.0)).round
       if fill_w > 0
         fill_col = ready ? Color.new(110, 235, 140) : Color.new(110, 195, 255)
-        bmp.fill_rect(12, 128, fill_w, 10, fill_col)
+        bmp.fill_rect(12, 134, fill_w, bar_h, fill_col)
+        bmp.fill_rect(12, 134, fill_w, 1, Color.new(220, 245, 255, 160))
       end
-      bmp.fill_rect(12, 128, bar_w, 1, Color.new(60, 70, 90))
+      bmp.fill_rect(12, 134, bar_w, 1, Color.new(70, 80, 100))
+      bmp.fill_rect(12, 134 + bar_h - 1, bar_w, 1, Color.new(70, 80, 100))
+      bmp.fill_rect(12, 134, 1, bar_h, Color.new(70, 80, 100))
+      bmp.fill_rect(12 + bar_w - 1, 134, 1, bar_h, Color.new(70, 80, 100))
 
-      # Pasos restantes
+      # 4. Pasos restantes con tipografía destacada
+      bmp.font.size = 16
       pbDrawTextPositions(bmp, [
-        [_INTL("Pasos restantes:"), 12, 146, 0, silver, ink],
-        [_INTL("{1}", steps), bmp.width - 12, 146, 1, white, ink]
+        [_INTL("Pasos restantes:"), 12, 156, 0, silver, ink]
+      ])
+      bmp.font.size = 19
+      pbDrawTextPositions(bmp, [
+        [_INTL("{1}", steps), bmp.width - 12, 154, 1, white, ink]
       ])
 
-      # Origen del huevo
+      # 5. Origen del huevo
       obtain = (egg.obtainText rescue "") || ""
       if obtain == "" && egg.obtainMap && egg.obtainMap > 0
         mapname = (pbGetMapNameFromId(egg.obtainMap) rescue "") || ""
@@ -387,37 +405,39 @@ class REM_EggHatcher_Scene
       end
 
       if obtain != ""
-        bmp.fill_rect(12, 170, bmp.width - 24, 1, Color.new(45, 50, 65))
-        bmp.font.size = 13
-        drawTextEx(bmp, 12, 176, bmp.width - 24, 2, obtain, Color.new(160, 170, 185), ink)
+        bmp.fill_rect(12, 180, bmp.width - 24, 1, Color.new(50, 56, 72))
+        bmp.font.size = 15
+        drawTextEx(bmp, 12, 186, bmp.width - 24, 2, obtain, Color.new(180, 190, 205), ink)
       end
 
-      # Botón de apertura (solo visible cuando se completa a 0 pasos)
+      # 6. Botón de apertura (sin '[C]', limpio y destacado)
       if ready
         btn_y = 216
-        bmp.fill_rect(12, btn_y, bar_w, 42, Color.new(24, 55, 36, 240))
+        bmp.fill_rect(12, btn_y, bar_w, 44, Color.new(24, 58, 38, 245))
         glow = Color.new(110, 235, 140)
         bmp.fill_rect(12, btn_y, bar_w, 1, glow)
-        bmp.fill_rect(12, btn_y + 41, bar_w, 1, glow)
-        bmp.fill_rect(12, btn_y, 1, 42, glow)
-        bmp.fill_rect(12 + bar_w - 1, btn_y, 1, 42, glow)
-        bmp.font.size = 18
+        bmp.fill_rect(12, btn_y + 43, bar_w, 1, glow)
+        bmp.fill_rect(12, btn_y, 1, 44, glow)
+        bmp.fill_rect(12 + bar_w - 1, btn_y, 1, 44, glow)
+        bmp.font.size = 20
         pbDrawTextPositions(bmp, [
-          [_INTL("[C] Eclosionar Huevo"), 12 + bar_w / 2, btn_y + 11, 2, Color.new(255, 255, 255), ink]
+          [_INTL("Eclosionar Huevo"), 12 + bar_w / 2, btn_y + 11, 2, Color.new(255, 255, 255), ink]
         ])
       else
-        bmp.font.size = 13
-        bmp.fill_rect(12, 214, bar_w, 1, Color.new(45, 50, 65))
+        bmp.font.size = 15
         pbDrawTextPositions(bmp, [
-          [_INTL("Incubación en curso."), 12, 222, 0, Color.new(140, 150, 165), ink],
-          [_INTL("El Huevo no puede salir hasta nacer."), 12, 240, 0, Color.new(110, 120, 135), ink]
+          [_INTL("Incubación en curso."), 12, 222, 0, Color.new(160, 170, 185), ink]
+        ])
+        bmp.font.size = 14
+        pbDrawTextPositions(bmp, [
+          [_INTL("El Huevo no puede salir hasta nacer."), 12, 244, 0, Color.new(120, 130, 145), ink]
         ])
       end
     else
-      # Mensaje para cápsula vacía
-      bmp.font.size = 14
+      # Mensaje para cápsula vacía con tipografía clara
+      bmp.font.size = 16
       desc = _INTL("Cápsula de incubación disponible.\n\nCuando recibas un Huevo de una persona o de la Guardería, se colocará automáticamente en este dispositivo para su transporte y gestación.")
-      drawTextEx(bmp, 12, 54, bmp.width - 24, 6, desc, Color.new(160, 170, 185), ink)
+      drawTextEx(bmp, 12, 60, bmp.width - 24, 6, desc, Color.new(180, 190, 205), ink)
     end
   end
 
