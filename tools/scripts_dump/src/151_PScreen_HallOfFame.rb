@@ -1,14 +1,17 @@
 #===============================================================================
 # BW Hall of Fame (KleinStudio / FL / Adaptado a Pokémon REM Oniria Noir)
 # Secuencia cinemática estilo Gen 5 (Blanco y Negro) con estética Noir:
-# Presentación en zoom 2x centrado de cada Pokémon con estandarte elemental,
-# alineación geométrica de textos en barras, y cuadro de honor final simétrico.
+# 1. El Pokémon entra de espaldas caminando hacia las profundidades del Hall.
+# 2. Gira y entra de frente en escala heroica 2.0x centrado con estandarte de tipo.
+# 3. Grito de combate, temblor y datos de nivel/nombre centrados en barras.
+# 4. Salida del Pokémon y entrada del siguiente miembro.
+# 5. Descenso final del Entrenador con cuadro de honor simétrico y sello giratorio.
 #===============================================================================
 
 class HallOfFameScene
   SINGLEROW       = false
   ANIMATION       = true
-  ENTRYWAITTIME   = 40    # Frames de exhibición del Pokémon en el centro (~1 segundo)
+  ENTRYWAITTIME   = 40    # Frames de exhibición de frente en el centro (~1 segundo)
   HALLLIMIT       = 50
   ENTRYMUSIC      = "HallofFame"
   ALLOWEGGS       = false
@@ -152,19 +155,19 @@ class HallOfFameScene
       next if i >= @hallEntry.size
       pok = @hallEntry[i]
       @sprites["pokemon#{i}"] = PokemonSprite.new(@viewport)
-      @sprites["pokemon#{i}"].setPokemonBitmap(pok, false)
-      # Escalado heroico 2.0x como en Gen 5 BW
-      @sprites["pokemon#{i}"].zoom_x = 2.0
-      @sprites["pokemon#{i}"].zoom_y = 2.0
+      # Comienza de espaldas (Back Sprite) avanzando hacia el Salón
+      @sprites["pokemon#{i}"].setPokemonBitmap(pok, true)
+      @sprites["pokemon#{i}"].zoom_x = 1.5
+      @sprites["pokemon#{i}"].zoom_y = 1.5
       bw = @sprites["pokemon#{i}"].bitmap ? @sprites["pokemon#{i}"].bitmap.width : 96
       bh = @sprites["pokemon#{i}"].bitmap ? @sprites["pokemon#{i}"].bitmap.height : 96
       @sprites["pokemon#{i}"].ox = bw / 2
       @sprites["pokemon#{i}"].oy = bh / 2
-      # Comienza fuera de pantalla a la derecha
-      @sprites["pokemon#{i}"].x = Graphics.width + 180
-      @sprites["pokemon#{i}"].y = 205
+      # Comienza a la derecha de la pantalla para cruzar de espaldas
+      @sprites["pokemon#{i}"].x = Graphics.width + 120
+      @sprites["pokemon#{i}"].y = 220
       @sprites["pokemon#{i}"].z = 7
-      @faseinfo[i] = 1
+      @faseinfo[i] = 0
       @holdtimer[i] = 0
       @playcry[i] = false
     end
@@ -198,39 +201,61 @@ class HallOfFameScene
     end
   end
 
-  # Animación de presentación de cada Pokémon individual (Gen 5)
+  # Animación cinemática completa de cada Pokémon (de espaldas y luego de frente 2x)
   def movePokemonPresentation(i)
     spr = @sprites["pokemon#{i}"]
     return if !spr
     @showinfo ||= []
     pok = @hallEntry[i]
 
-    # Fase 1: Entrada hacia el centro y entrada de barras
-    if @faseinfo[i] == 1
-      if spr.x > Graphics.width + 100
-        # Configurar gráfico de tipo y textos al iniciar avance
-        typename = pbGetHallTypeGraphic(pok.type1)
-        @sprites["typebg"].bitmap = RPG::Cache.picture("HallOfFame/" + typename)
-        @sprites["typeback"].bitmap = RPG::Cache.picture("HallOfFame/" + typename)
-        @sprites["typebg"].opacity = 0
-        @sprites["typeback"].opacity = 0
-
-        overlayup = @sprites["barupov"].bitmap
-        overlayup.clear
-        pbSetupHallFont(overlayup, 24)
-        pbDrawTextPositions(overlayup, [[_INTL("¡El Hall de la Fama!"), 16, 11, 0, BASECOLOR, SHADOWCOLOR]])
-
-        overlaydown = @sprites["bardownov"].bitmap
-        overlaydown.clear
-        pbSetupHallFont(overlaydown, 24)
-        pbDrawTextPositions(overlaydown, [
-          [pok.name, 24, 11, 0, BASECOLOR, SHADOWCOLOR],
-          [_INTL("Nv. {1}", pok.level), 250, 11, 0, BASECOLOR, SHADOWCOLOR]
-        ])
-        @bgshake = 0
+    # Fase 0: Entrada de espaldas caminando hacia el Salón (derecha hacia izquierda)
+    if @faseinfo[i] == 0
+      spr.x -= 20
+      bob = ((spr.x.abs / 16) % 2 == 0) ? 3 : 0
+      spr.y = 220 - bob
+      if spr.x < -140
+        @faseinfo[i] = 1
       end
+    end
 
-      # Movimiento de barras hacia el centro
+    # Fase 1: Giro al frente, escalado heroico 2.0x y preparación de barras y tipo
+    if @faseinfo[i] == 1
+      spr.setPokemonBitmap(pok, false) # Front sprite
+      spr.zoom_x = 2.0
+      spr.zoom_y = 2.0
+      bw = spr.bitmap ? spr.bitmap.width : 96
+      bh = spr.bitmap ? spr.bitmap.height : 96
+      spr.ox = bw / 2
+      spr.oy = bh / 2
+      spr.x = -140
+      spr.y = 205
+
+      typename = pbGetHallTypeGraphic(pok.type1)
+      @sprites["typebg"].bitmap = RPG::Cache.picture("HallOfFame/" + typename)
+      @sprites["typeback"].bitmap = RPG::Cache.picture("HallOfFame/" + typename)
+      @sprites["typebg"].opacity = 0
+      @sprites["typeback"].opacity = 0
+
+      overlayup = @sprites["barupov"].bitmap
+      overlayup.clear
+      pbSetupHallFont(overlayup, 24)
+      pbDrawTextPositions(overlayup, [[_INTL("¡El Hall de la Fama!"), 16, 11, 0, BASECOLOR, SHADOWCOLOR]])
+
+      overlaydown = @sprites["bardownov"].bitmap
+      overlaydown.clear
+      pbSetupHallFont(overlaydown, 24)
+      pbDrawTextPositions(overlaydown, [
+        [pok.name, 24, 11, 0, BASECOLOR, SHADOWCOLOR],
+        [_INTL("Nv. {1}", pok.level), 250, 11, 0, BASECOLOR, SHADOWCOLOR]
+      ])
+
+      @bgshake = 0
+      @faseinfo[i] = 2
+    end
+
+    # Fase 2: Entrada al centro de frente, barras, destello elemental y grito
+    if @faseinfo[i] == 2
+      # Desplazamiento de barras hacia el centro
       @sprites["barup"].x += 35 if @sprites["barup"].x < 0
       @sprites["barup"].x = 0 if @sprites["barup"].x > 0
       @sprites["barupov"].x = @sprites["barup"].x
@@ -239,43 +264,41 @@ class HallOfFameScene
       @sprites["bardown"].x = Graphics.width - 352 if @sprites["bardown"].x < Graphics.width - 352
       @sprites["bardownov"].x = @sprites["bardown"].x
 
-      # Desplazamiento del Pokémon al centro (256)
-      spr.x -= 24
-      target_center = Graphics.width / 2
-      if spr.x <= target_center
-        spr.x = target_center
-        @faseinfo[i] = 2
-      end
+      # Opacidad del fondo de tipo
       @sprites["typebg"].opacity += 20 if @sprites["typebg"].opacity < 225
       @sprites["typeback"].opacity = @sprites["typebg"].opacity
+
+      # Desplazamiento del Pokémon de frente hacia el centro geométrico (256)
+      target_center = Graphics.width / 2
+      if spr.x < target_center
+        spr.x += 24
+        spr.x = target_center if spr.x > target_center
+      else
+        # Ya está centrado: grito, temblor y pausa de exhibición
+        if !@playcry[i]
+          pbPlayCry(pok)
+          @playcry[i] = true
+        end
+
+        case @bgshake
+        when 0..1; @sprites["typebg"].x = 4
+        when 2..3; @sprites["typebg"].x = -4
+        when 4..5; @sprites["typebg"].x = 2
+        when 6..7; @sprites["typebg"].x = -2
+        else;      @sprites["typebg"].x = 0
+        end
+        @bgshake += 1 if @bgshake < 8
+
+        @sprites["typeback"].opacity -= 3 if @sprites["typeback"].opacity > 0
+
+        @holdtimer[i] += 1
+        if @holdtimer[i] >= ENTRYWAITTIME
+          @faseinfo[i] = 3
+        end
+      end
     end
 
-    # Fase 2: Presentación en el centro, grito de combate y temblor
-    if @faseinfo[i] == 2
-      if !@playcry[i]
-        pbPlayCry(pok)
-        @playcry[i] = true
-      end
-
-      # Temblor de impacto del fondo de tipo
-      case @bgshake
-      when 0..1; @sprites["typebg"].x = 4
-      when 2..3; @sprites["typebg"].x = -4
-      when 4..5; @sprites["typebg"].x = 2
-      when 6..7; @sprites["typebg"].x = -2
-      else;      @sprites["typebg"].x = 0
-      end
-      @bgshake += 1 if @bgshake < 8
-
-      @sprites["typeback"].opacity -= 3 if @sprites["typeback"].opacity > 0
-
-      @holdtimer[i] += 1
-      if @holdtimer[i] >= ENTRYWAITTIME
-        @faseinfo[i] = 3
-      end
-    end
-
-    # Fase 3: Retirada de barras y salida rápida del Pokémon hacia la izquierda
+    # Fase 3: Salida del Pokémon hacia la izquierda y retirada de barras
     if @faseinfo[i] == 3
       @sprites["barup"].x -= 35 if @sprites["barup"].x > -352
       @sprites["barup"].x = -352 if @sprites["barup"].x < -352
@@ -296,7 +319,7 @@ class HallOfFameScene
     end
   end
 
-  # Creación del cuadro final con el Entrenador y su equipo
+  # Creación del cuadro final con el Entrenador y su equipo simétrico
   def createTrainerBattler
     # Sello de Pokéball giratorio en marca de agua sutil
     @sprites["ball"] = Sprite.new(@viewport)
