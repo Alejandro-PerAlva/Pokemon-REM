@@ -143,23 +143,12 @@ for j, (sym, name, money, gen, note) in enumerate(COMMON):
 
 # --- PBS ---------------------------------------------------------------------
 def get_trainer_skill(sym, money):
-    # Jefes, Líderes, Alto Mando, Campeona, Generales y Líder de Morfeo: Máxima destreza 100
+    # Bosses: Líderes, Alto Mando, Campeona, Generales, Subcapitana y Líder de Morfeo (100)
     if (sym.startswith("LEADER_") or sym.startswith("ELITE_") or sym == "CHAMPION" or
         sym.startswith("MORFEO_GENERAL") or sym == "MORFEO_SUBCAPTAIN" or sym == "MORFEO_LEADER"):
         return 100
-    if sym.startswith("RIVAL_"):
-        return 70
-    if sym.startswith("MORFEO_RECRUIT"):
-        return 48
-    if "COOLTRAINER" in sym or "VETERAN" in sym or sym == "GENTLEMAN" or sym == "LADY":
-        return 70
-    if (sym in ["BLACKBELT", "CRUSHGIRL"] or "PSYCHIC" in sym or 
-        sym in ["HEXMANIAC", "DOCTOR", "NURSE"] or "POKEMONRANGER" in sym or 
-        "NINJA" in sym or sym == "POLICEMAN"):
-        return 48
-    if sym in ["YOUNGSTER", "LASS", "SCHOOLBOY", "SCHOOLGIRL", "BUGCATCHER_M", "BUGCATCHER_F"]:
-        return 32
-    return max(36, min(60, money))
+    # Todos los demás entrenadores normales comparten exactamente el mismo nivel de IA (70)
+    return 70
 
 def write_pbs():
     lines = ["\ufeff# Consulta la documentación de la wiki para aprender a modificar este archivo.",

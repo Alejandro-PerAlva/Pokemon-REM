@@ -382,11 +382,12 @@
 #   6. Control de Peligros de Entrada (Hazards) en Cambios Voluntarios:
 #      - Verifica si el campo tiene Trampa Rocas / Púas; descarta cambios a Pokémon
 #        que se debilitarían al pisar las rocas.
-#   7. Destrezas (Skills) Competitivas por Tipo de Entrenador:
-#      - Jefes / Líderes / Alto Mando / Morfeo Élite: Skill 100 garantizado.
-#      - Entrenadores Guay / Veteranos: Skill 70.
-#      - Especialistas (Karatekas, Psíquicos, Médicos, Rangers): Skill 48.
-#      - Suelo mínimo absoluto para cualquier entrenador del juego: Skill 32.
+#   7. Destrezas (Skills) Homogeneizadas y Claras:
+#      - Bosses (Líderes, Alto Mando, Campeona, Cúpula de Morfeo): Skill 100.
+#      - Todos los demás Entrenadores normales del juego: Skill 70 unificado.
+#        (Cualquier entrenador de ruta, novato, pescador o recluta piensa con la
+#        misma destreza táctica y seriedad competitiva).
+#      - Pokémon Salvajes: Instinto depredador táctico (daño real, remate directo).
 #
 # Archivos:
 #   tools/scripts_dump/rem_ai.rb (Módulo central REM_AI)

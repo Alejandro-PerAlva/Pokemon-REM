@@ -20,9 +20,8 @@ class PokeBattle_Battle
     return PBTrainerAI.mediumSkill if !@opponent # Salvajes: Instinto base táctico (32)
     
     owner = pbGetOwner(index)
-    base_skill = (owner && owner.skill) ? owner.skill : PBTrainerAI.mediumSkill
     
-    # Líderes, Alto Mando, Campeona y Alto Mando de Morfeo: Siempre destreza máxima (100)
+    # Bosses (Líderes, Alto Mando, Campeona y Alto Mando de Morfeo): Nivel Boss (100)
     if owner && owner.trainertype
       tt = owner.trainertype
       if (defined?(PBTrainers::LEADER_1) && tt >= PBTrainers::LEADER_1 && tt <= PBTrainers::LEADER_8) ||
@@ -36,8 +35,8 @@ class PokeBattle_Battle
       end
     end
     
-    # Suelo mínimo absoluto para cualquier entrenador del juego: mediumSkill (32)
-    return [base_skill, PBTrainerAI.mediumSkill].max
+    # Todos los entrenadores normales del juego tienen el mismo nivel unificado (70)
+    return 70
   end
 
   #-----------------------------------------------------------------------------
