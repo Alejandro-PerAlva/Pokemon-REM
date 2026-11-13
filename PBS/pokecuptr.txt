@@ -675,56 +675,56 @@ EndSpeechLose="Man, I lost!"
 Name=RIZ
 PokemonNos=126,148,159,173,192,196,199,203,208,217,218,224,236
 BeginSpeech=Here I come!
-Type=GENTLEMAN
+Type=ARISTOCRAT_M
 EndSpeechWin="Yes, I won!"
 [097]
 EndSpeechLose="Man, I lost!"
 Name=SLARN
 PokemonNos=128,162,163,167,191,208,212,229,235,236
 BeginSpeech=Here I come!
-Type=GENTLEMAN
+Type=ARISTOCRAT_M
 EndSpeechWin="Yes, I won!"
 [098]
 EndSpeechLose="Man, I lost!"
 Name=SEE
 PokemonNos=133,154,158,165,172,178,179,189,190,201,212,217,232,237
 BeginSpeech=Here I come!
-Type=GENTLEMAN
+Type=ARISTOCRAT_M
 EndSpeechWin="Yes, I won!"
 [099]
 EndSpeechLose="Man, I lost!"
 Name=IRALA
 PokemonNos=136,145,150,158,162,174,184,188,195,198,199,205,215,235
 BeginSpeech=Here I come!
-Type=LADY
+Type=ARISTOCRAT_F
 EndSpeechWin="Yes, I won!"
 [100]
 EndSpeechLose="Man, I lost!"
 Name=MICHIE
 PokemonNos=131,141,160,178,184,188,191,194,204,219,224,237
 BeginSpeech=Here I come!
-Type=LADY
+Type=ARISTOCRAT_F
 EndSpeechWin="Yes, I won!"
 [101]
 EndSpeechLose="Man, I lost!"
 Name=VLICHIE
 PokemonNos=121,128,130,131,157,173,174,176,177,181,223,233
 BeginSpeech=Here I come!
-Type=LADY
+Type=ARISTOCRAT_F
 EndSpeechWin="Yes, I won!"
 [102]
 EndSpeechLose="Man, I lost!"
 Name=SOLA
 PokemonNos=123,180,198,213,226,230
 BeginSpeech=Here I come!
-Type=LADY
+Type=ARISTOCRAT_F
 EndSpeechWin="Yes, I won!"
 [103]
 EndSpeechLose="Man, I lost!"
 Name=FINA
 PokemonNos=125,126,152,160,172,178,191,194,202,235
 BeginSpeech=Here I come!
-Type=LADY
+Type=ARISTOCRAT_F
 EndSpeechWin="Yes, I won!"
 [104]
 EndSpeechLose="Man, I lost!"
@@ -1235,14 +1235,14 @@ EndSpeechLose="Man, I lost!"
 Name=MIO
 PokemonNos=295,310,330,336,338,348,355,356,362
 BeginSpeech=Here I come!
-Type=GENTLEMAN
+Type=ARISTOCRAT_M
 EndSpeechWin="Yes, I won!"
 [177]
 EndSpeechLose="Man, I lost!"
 Name=LABSIJ
 PokemonNos=257,258,260,269,282,296,299,307,317,327,332,337,339,344,360
 BeginSpeech=Here I come!
-Type=GENTLEMAN
+Type=ARISTOCRAT_M
 EndSpeechWin="Yes, I won!"
 [178]
 EndSpeechLose="Man, I lost!"
@@ -1277,35 +1277,35 @@ EndSpeechLose="Man, I lost!"
 Name=NICHIE
 PokemonNos=246,251,257,269,275,290,297,311,314,334,336,338,348,357,360
 BeginSpeech=Here I come!
-Type=LADY
+Type=ARISTOCRAT_F
 EndSpeechWin="Yes, I won!"
 [183]
 EndSpeechLose="Man, I lost!"
 Name=ZUGA
 PokemonNos=242,248,255,266,267,276,281,297,316,320,342,344,350
 BeginSpeech=Here I come!
-Type=LADY
+Type=ARISTOCRAT_F
 EndSpeechWin="Yes, I won!"
 [184]
 EndSpeechLose="Man, I lost!"
 Name=OTIKA
 PokemonNos=250,265,268,275,291,301,317,327,344,351,354,356,358
 BeginSpeech=Here I come!
-Type=LADY
+Type=ARISTOCRAT_F
 EndSpeechWin="Yes, I won!"
 [185]
 EndSpeechLose="Man, I lost!"
 Name=TONA
 PokemonNos=245,247,249,259,264,269,271,277,297,299,306,307,311,339,343,344,353,356
 BeginSpeech=Here I come!
-Type=LADY
+Type=ARISTOCRAT_F
 EndSpeechWin="Yes, I won!"
 [186]
 EndSpeechLose="Man, I lost!"
 Name=UNDA
 PokemonNos=255,257,279,285,296,305,314,327,349,354
 BeginSpeech=Here I come!
-Type=LADY
+Type=ARISTOCRAT_F
 EndSpeechWin="Yes, I won!"
 [187]
 EndSpeechLose="Man, I lost!"

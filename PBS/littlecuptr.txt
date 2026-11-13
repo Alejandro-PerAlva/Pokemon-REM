@@ -696,21 +696,21 @@ EndSpeechLose="Man, I lost!"
 Name=SWALA
 PokemonNos=148,154,164,181,182,201,203,206,213,217
 BeginSpeech=Here I come!
-Type=LADY
+Type=ARISTOCRAT_F
 EndSpeechWin="Yes, I won!"
 [100]
 EndSpeechLose="Man, I lost!"
 Name=INDRA
 PokemonNos=129,160,175,177,181,198,205,245
 BeginSpeech=Here I come!
-Type=LADY
+Type=ARISTOCRAT_F
 EndSpeechWin="Yes, I won!"
 [101]
 EndSpeechLose="Man, I lost!"
 Name=GECHA
 PokemonNos=123,131,146,149,155,156,162,176,184,211,221,222,230,234,240
 BeginSpeech=Here I come!
-Type=LADY
+Type=ARISTOCRAT_F
 EndSpeechWin="Yes, I won!"
 [102]
 EndSpeechLose="Man, I lost!"
@@ -1228,35 +1228,35 @@ EndSpeechLose="Man, I lost!"
 Name=PHOKTANA
 PokemonNos=246,252,257,259,277,279,307,322,330,348,358
 BeginSpeech=Here I come!
-Type=LADY
+Type=ARISTOCRAT_F
 EndSpeechWin="Yes, I won!"
 [176]
 EndSpeechLose="Man, I lost!"
 Name=LACHIE
 PokemonNos=249,255,260,263,284,330,338,344,351,356,360
 BeginSpeech=Here I come!
-Type=LADY
+Type=ARISTOCRAT_F
 EndSpeechWin="Yes, I won!"
 [177]
 EndSpeechLose="Man, I lost!"
 Name=UVA
 PokemonNos=249,262,267,272,281,309,325,335,340,346,348,350,362,364,368
 BeginSpeech=Here I come!
-Type=LADY
+Type=ARISTOCRAT_F
 EndSpeechWin="Yes, I won!"
 [178]
 EndSpeechLose="Man, I lost!"
 Name=OSIFILA
 PokemonNos=255,261,267,273,277,281,285,291,299,311,313,316,325,335,341,350,357,361,368
 BeginSpeech=Here I come!
-Type=LADY
+Type=ARISTOCRAT_F
 EndSpeechWin="Yes, I won!"
 [179]
 EndSpeechLose="Man, I lost!"
 Name=ISTOLITA
 PokemonNos=250,253,272,284,318,344,357,361
 BeginSpeech=Here I come!
-Type=LADY
+Type=ARISTOCRAT_F
 EndSpeechWin="Yes, I won!"
 [180]
 EndSpeechLose="Man, I lost!"
@@ -1382,19 +1382,19 @@ EndSpeechLose="Man, I lost!"
 Name=NAME
 PokemonNos=256,258,274,279,283,287,290,306,315,321,338,355,361,365
 BeginSpeech=Here I come!
-Type=GENTLEMAN
+Type=ARISTOCRAT_M
 EndSpeechWin="Yes, I won!"
 [198]
 EndSpeechLose="Man, I lost!"
 Name=TWON
 PokemonNos=250,255,257,266,278,298,301,303,323,343,344,350,354,359
 BeginSpeech=Here I come!
-Type=GENTLEMAN
+Type=ARISTOCRAT_M
 EndSpeechWin="Yes, I won!"
 [199]
 EndSpeechLose="Man, I lost!"
 Name=TUJOGS
 PokemonNos=249,255,258,267,279,294,318,320,326,330,352,365,367
 BeginSpeech=Here I come!
-Type=GENTLEMAN
+Type=ARISTOCRAT_M
 EndSpeechWin="Yes, I won!"

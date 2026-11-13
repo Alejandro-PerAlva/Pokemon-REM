@@ -111,8 +111,8 @@ COMMON = [  # simbolo, nombre, dinero, genero, nota (tipos / bioma)
     ("PAINTER", "Pintor", 32, "Male", "Normal/Psiquico/Color; galerias y ciudades"),
     ("POLICEMAN", "Policía", 48, "Male", "Siniestro/Normal; ciudad, patrullas"),
     ("MAID", "Sirvienta", 32, "Female", "Fantasma/Normal; mansiones/hoteles"),
-    ("GENTLEMAN", "Caballero", 72, "Male", "Normal/Hada/Psiquico; ciudad/lujo"),
-    ("LADY", "Dama", 160, "Female", "Normal/Hada/Psiquico; ciudad/lujo"),
+    ("ARISTOCRAT_M", "Aristócrata", 72, "Male", "Normal/Hada/Psiquico; ciudad/lujo"),
+    ("ARISTOCRAT_F", "Aristócrata", 160, "Female", "Normal/Hada/Psiquico; ciudad/lujo"),
     ("RICHBOY_M", "Niño Bien", 80, "Male", "Normal/Acero/Dragon; mansiones/resort"),
     ("RICHBOY_F", "Joven Rica", 80, "Female", "Normal/Acero/Dragon; mansiones/resort"),
     # Actos IV-V: Combate marcial, bandas callejeras y élite (recta final)
