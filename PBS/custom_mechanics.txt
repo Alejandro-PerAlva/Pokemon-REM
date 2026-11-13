@@ -347,3 +347,50 @@
 # Archivos:
 #   tools/scripts_dump/rem_mechanics.rb
 #===============================================================================
+
+#===============================================================================
+# 14. INTELIGENCIA ARTIFICIAL COMPETITIVA Y TÁCTICA (REM_AI)
+#===============================================================================
+# Concepto:
+#   Evolución integral del motor de IA de combate de Pokémon Essentials inspirada
+#   en los estándares competitivos de Pokémon Añil, Realidea Spark y Berilo.
+#   Combate serio, desafiante y táctico sin trampas (Cero Input Reading).
+#
+# Pilares Clave Implementados:
+#   1. Visión y Cálculo de 2HKO:
+#      - Reconoce cuándo un movimiento asegura el KO en 2 turnos (>= 50% de daño).
+#      - Si la IA tiene la iniciativa (mayor velocidad o prioridad), prioriza
+#        cerrar el combate en vez de distraerse con estados innecesarios.
+#   2. Prohibición de Setup Suicida (Anti-Suicide Setup):
+#      - Si la IA está en rango de ser noqueada en el turno o su salud es crítica
+#        frente a un rival más veloz, queda vetado usar movimientos de subida de
+#        estadísticas (Danza Espada, Paz Mental, etc.). Forzado a golpear o usar prioridad.
+#   3. Castigo al Boost del Jugador (Anti-Sweeper):
+#      - Si el jugador acumula >= +2 en Ataque, Atk Especial o Velocidad:
+#        * Prioridad masiva a movimientos de reseteo/phasing (Niebla, Remolino, Rugido, Mofa).
+#        * Prioridad a estados incapacitantes (Fuego Fatuo a físicos, Onda Trueno a veloces).
+#        * Prioridad a movimientos con prioridad (+1) para arañar daño antes de caer.
+#   4. Reemplazo Quirúrgico tras KO (pbChooseBestNewEnemy):
+#      - Al debilitarse un Pokémon, la IA evalúa en el banquillo:
+#        a) Supervivencia defensiva (resistencias e inmunidades al tipo del jugador).
+#        b) Amenaza ofensiva (STAB y supereficacia contra el Pokémon activo).
+#        c) Velocidad e iniciativa (atacar primero).
+#        d) Daño residual de Trampa Rocas (evita sacar Pokémon que mueran al entrar).
+#   5. Instinto Depredador en Pokémon Salvajes:
+#      - En lugar de elegir movimientos al azar (100 planos), evalúan daño real y STAB.
+#      - Rematan al jugador si tienen el KO a tiro y no repiten estados inútiles.
+#   6. Control de Peligros de Entrada (Hazards) en Cambios Voluntarios:
+#      - Verifica si el campo tiene Trampa Rocas / Púas; descarta cambios a Pokémon
+#        que se debilitarían al pisar las rocas.
+#   7. Destrezas (Skills) Competitivas por Tipo de Entrenador:
+#      - Jefes / Líderes / Alto Mando / Morfeo Élite: Skill 100 garantizado.
+#      - Entrenadores Guay / Veteranos: Skill 70.
+#      - Especialistas (Karatekas, Psíquicos, Médicos, Rangers): Skill 48.
+#      - Suelo mínimo absoluto para cualquier entrenador del juego: Skill 32.
+#
+# Archivos:
+#   tools/scripts_dump/rem_ai.rb (Módulo central REM_AI)
+#   PBS/trainertypes.txt (Skills asignados por clase)
+#   Data/trainertypes.dat (Compilado binario)
+#   tools/scripts_dump/compile_scripts.py (Inyección en Scripts.rxdata, secc. 205)
+#===============================================================================

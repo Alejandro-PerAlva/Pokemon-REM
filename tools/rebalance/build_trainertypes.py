@@ -142,15 +142,35 @@ for j, (sym, name, money, gen, note) in enumerate(COMMON):
     ALL.append((24 + j, sym, name, money, gen, N, note, "common"))
 
 # --- PBS ---------------------------------------------------------------------
+def get_trainer_skill(sym, money):
+    # Jefes, Líderes, Alto Mando, Campeona, Generales y Líder de Morfeo: Máxima destreza 100
+    if (sym.startswith("LEADER_") or sym.startswith("ELITE_") or sym == "CHAMPION" or
+        sym.startswith("MORFEO_GENERAL") or sym == "MORFEO_SUBCAPTAIN" or sym == "MORFEO_LEADER"):
+        return 100
+    if sym.startswith("RIVAL_"):
+        return 70
+    if sym.startswith("MORFEO_RECRUIT"):
+        return 48
+    if "COOLTRAINER" in sym or "VETERAN" in sym or sym == "GENTLEMAN" or sym == "LADY":
+        return 70
+    if (sym in ["BLACKBELT", "CRUSHGIRL"] or "PSYCHIC" in sym or 
+        sym in ["HEXMANIAC", "DOCTOR", "NURSE"] or "POKEMONRANGER" in sym or 
+        "NINJA" in sym or sym == "POLICEMAN"):
+        return 48
+    if sym in ["YOUNGSTER", "LASS", "SCHOOLBOY", "SCHOOLGIRL", "BUGCATCHER_M", "BUGCATCHER_F"]:
+        return 32
+    return max(36, min(60, money))
+
 def write_pbs():
     lines = ["\ufeff# Consulta la documentación de la wiki para aprender a modificar este archivo.",
              "# Generado por tools/rebalance/build_trainertypes.py: 24 fijos (000-023) + 64 comunes (024-087) = 88.",
              "# Formato: ID,Símbolo,Nombre,DineroBase,MúsicaCombate,MEVictoria,MEIntro,Género,Habilidad,CódigosHab"]
     for i, sym, name, money, gen, audio, note, kind in ALL:
+        sk = get_trainer_skill(sym, money)
         if i == 0: lines.append("# --- Fijos 000-023 ---")
         if i == 24: lines.append("# --- Comunes 024-087 (audio vacío = música por defecto del mapa) ---")
         if kind == "fixed": lines.append("# %s" % note)
-        lines.append("%d,%s,%s,%d,%s,%s,,%s,," % (i, sym, name, money, audio[0], audio[1], gen))
+        lines.append("%d,%s,%s,%d,%s,%s,,%s,%d," % (i, sym, name, money, audio[0], audio[1], gen, sk))
     with open(os.path.join(ROOT, "PBS", "trainertypes.txt"), "w", encoding="utf-8", newline="") as f:
         f.write("\r\n".join(lines) + "\r\n")
 
@@ -240,7 +260,8 @@ def compile_data():
         me = audio[1].encode("utf-8") if audio[1] else None
         n_bytes = name.encode("utf-8")
         names.append(n_bytes)
-        rec = [i, sym.encode("utf-8"), n_bytes, money, bgm, me, None, g_map.get(gen, 0), money, None]
+        sk = get_trainer_skill(sym, money)
+        rec = [i, sym.encode("utf-8"), n_bytes, money, bgm, me, None, g_map.get(gen, 0), sk, None]
         dat_records.append(rec)
 
     with open(os.path.join(ROOT, "Data", "trainertypes.dat"), "wb") as f:

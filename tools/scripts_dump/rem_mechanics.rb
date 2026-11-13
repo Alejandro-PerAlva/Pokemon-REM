@@ -667,7 +667,8 @@ def pbDebugTestingMenu
         _INTL("6. Cartel de Ruta (pbRouteSign)"),
         _INTL("7. Incubadora Noir (Huevo, pasos y entrega)"),
         _INTL("8. Equipar Objetos a Pokémon (Icono bajo PS)"),
-        _INTL("9. Preparar / Curar Equipo"),
+        _INTL("9. Probar IA Competitiva REM (Simulación de Combate) [NUEVO]"),
+        _INTL("10. Preparar / Curar Equipo"),
         _INTL("Salir")
       ]
     )
@@ -919,7 +920,40 @@ def pbDebugTestingMenu
       end
       Kernel.pbMessage(_INTL("¡Objetos equipados en tu equipo (Cinta Elegida, Restos, Baya Zidra...)!\\nAbre el menú de Pokémon para comprobar que sus iconos se muestran alineados justo debajo de 'PS'."))
 
-    when 8 # 9. Preparar / Curar Equipo
+    when 8 # 9. Probar IA Competitiva REM
+      if !$Trainer || $Trainer.party.length == 0
+        pbAddPokemon(:LUCARIO, 30)
+      end
+      for p in $Trainer.party; p.heal; end
+      Kernel.pbMessage(_INTL("BANCO DE PRUEBAS IA:\\nVas a luchar contra un Entrenador con la nueva IA Competitiva REM.\\nComprueba: cálculo de 2HKO, anti-suicide setup y castigo si usas Danza Dragón / Danza Espada."))
+      # Entrenador de prueba con skill competitivo
+      trainer = PokeBattle_Trainer.new("Rival Táctico", PBTrainers::COOLTRAINER_M)
+      p1 = PokeBattle_Pokemon.new(:GENGAR, 30, trainer)
+      p1.pbLearnMove(:SHADOWBALL)
+      p1.pbLearnMove(:SLUDGEBOMB)
+      p1.pbLearnMove(:WILLOWISP)
+      p1.pbLearnMove(:TAUNT)
+      p2 = PokeBattle_Pokemon.new(:LUCARIO, 30, trainer)
+      p2.pbLearnMove(:EXTREMESPEED)
+      p2.pbLearnMove(:AURASPHERE)
+      p2.pbLearnMove(:CLOSECOMBAT)
+      p2.pbLearnMove(:SWORDSDANCE)
+      trainer.party = [p1, p2]
+      
+      scene = pbNewBattleScene
+      battle = PokeBattle_Battle.new(scene, $Trainer.party, trainer.party, $Trainer, trainer)
+      battle.internalbattle = true
+      battle.cantescape = true
+      pbPrepareBattle(battle)
+      decision = 0
+      pbBattleAnimation(pbGetTrainerBattleBGM(trainer)) {
+        pbSceneStandby {
+          decision = battle.pbStartBattle(true)
+        }
+      }
+      for p in $Trainer.party; p.heal; end
+
+    when 9 # 10. Preparar / Curar Equipo
       if $Trainer && $Trainer.party
         for p in $Trainer.party; p.heal; end
       end

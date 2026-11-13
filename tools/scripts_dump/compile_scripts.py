@@ -35,6 +35,7 @@ rem_names = [
     "REM_Stairs",
     "REM_Incubator",
     "REM_RouteSign",
+    "REM_AI",
 ]
 
 # Filtrar secciones REM preexistentes para evitar duplicados
