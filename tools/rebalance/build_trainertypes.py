@@ -113,8 +113,8 @@ COMMON = [  # simbolo, nombre, dinero, genero, nota (tipos / bioma)
     ("MAID", "Sirvienta", 32, "Female", "Fantasma/Normal; mansiones/hoteles"),
     ("ARISTOCRAT_M", "Aristócrata", 72, "Male", "Normal/Hada/Psiquico; ciudad/lujo"),
     ("ARISTOCRAT_F", "Aristócrata", 160, "Female", "Normal/Hada/Psiquico; ciudad/lujo"),
-    ("RICHBOY_M", "Niño Bien", 80, "Male", "Normal/Acero/Dragon; mansiones/resort"),
-    ("RICHBOY_F", "Joven Rica", 80, "Female", "Normal/Acero/Dragon; mansiones/resort"),
+    ("RICHBOY", "Niño Bien", 80, "Male", "Normal/Acero/Dragon; mansiones/resort"),
+    ("RICHGIRL", "Joven Rica", 80, "Female", "Normal/Acero/Dragon; mansiones/resort"),
     # Actos IV-V: Combate marcial, bandas callejeras y élite (recta final)
     ("BLACKBELT", "Karateka", 32, "Male", "Lucha; dojo/montana"),
     ("CRUSHGIRL", "Luchadora", 24, "Female", "Lucha; dojo/montana"),
