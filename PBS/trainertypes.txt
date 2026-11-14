@@ -28,15 +28,15 @@
 11,LEADER_7,Líder,100,Combate Lider,Victoria Lider,,Female,100,
 # Gimnasio 8: Baltasar (Fuego)
 12,LEADER_8,Líder,110,Combate Lider,Victoria Lider,,Male,100,
-# Alto Mando 1: Nicodemo (Roca/Hada)
+# Alto Mando 1: Nicodemo (Bicho)
 13,ELITE_1,Alto Mando,120,Combate Alto Mando,Victoria Liga,,Male,100,
-# Alto Mando 2: Oriana (Hielo/Siniestro)
+# Alto Mando 2: Oriana (Psíquico)
 14,ELITE_2,Alto Mando,120,Combate Alto Mando,Victoria Liga,,Female,100,
-# Alto Mando 3: Anteo (Fuego/Tierra)
+# Alto Mando 3: Anteo (Siniestro)
 15,ELITE_3,Alto Mando,120,Combate Alto Mando,Victoria Liga,,Male,100,
-# Alto Mando 4: Leucotea (Agua/Fantasma)
+# Alto Mando 4: Leucotea (Tierra)
 16,ELITE_4,Alto Mando,120,Combate Alto Mando,Victoria Liga,,Female,100,
-# Campeona: Rolanda Altamira (Dragon/Volador)
+# Campeona: Rolanda Altamira
 17,CHAMPION,Campeona,150,Combate Campeona,Victoria Liga,,Female,100,
 # Recluta M del Equipo Morfeo
 18,MORFEO_RECRUIT_M,Recluta Morfeo,16,Combate Recluta Morfeo,,,Male,70,
@@ -100,7 +100,7 @@
 70,NURSE,Enfermera,48,,,,Female,70,
 71,POKEFAN_M,Pokéfán,48,,,,Male,70,
 72,POKEFAN_F,Pokéfán,48,,,,Female,70,
-73,PAINTER,Pintor,32,,,,Male,70,
+73,ARTIST,Artista,32,,,,Male,70,
 74,POLICEMAN,Policía,48,,,,Male,70,
 75,MAID,Sirvienta,32,,,,Female,70,
 76,ARISTOCRAT_M,Aristócrata,72,,,,Male,70,
