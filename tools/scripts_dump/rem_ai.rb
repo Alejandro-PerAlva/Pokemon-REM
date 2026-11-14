@@ -77,10 +77,18 @@ class PokeBattle_Battle
     opponent = attacker.pbOppositeOpposing if !opponent
     return score if !opponent || opponent.isFainted?
 
-    # --- PILAR A: Inmunidad Absoluta (Nadie ataca a inmunidades evidentes) ---
+    # --- PILAR A: Efectividad de Tipos e Inmunidad Absoluta ---
     if move.basedamage > 0
       typemod = pbTypeModifier(move.type, attacker, opponent)
-      return 0 if typemod == 0 # Fantasma a Normal, Tierra a Volador, etc.
+      return 0 if typemod == 0 # Inmunidad limpia (Fantasma a Normal, etc.)
+      
+      # Supereficaz (typemod >= 16): bono masivo para que ningún efecto secundario lo eclipse
+      if typemod >= 16
+        score += (typemod >= 32) ? 80 : 50
+      elsif typemod <= 4
+        # Poco eficaz / Resistido: penalización dura si hay alternativas
+        score = [score - 40, 10].max
+      end
     end
 
     # --- PILAR B: Eliminación de Spam de Stats redundantes ---
@@ -169,77 +177,111 @@ class PokeBattle_Battle
   end
 
   #-----------------------------------------------------------------------------
-  # 4. Selección de Movimientos: Instinto Salvaje y Precisión de Élite
+  # 4. Selección de Movimientos Unificada (Entrenadores y Salvajes)
   #-----------------------------------------------------------------------------
   alias rem_orig_pbChooseMoves pbChooseMoves
   def pbChooseMoves(index)
     attacker = @battlers[index]
     wildbattle = !@opponent && pbIsOpposing?(index)
+    skill = remEffectiveSkill(index)
     
-    if wildbattle
-      # Pokémon Salvajes en Pokémon REM: Instinto Depredador Ofensivo
-      # No asignamos 100 planos al azar: calculan daño real y van a degüello
-      scores = [0, 0, 0, 0]
-      myChoices = []
-      totalscore = 0
-      opponent = attacker.pbOppositeOpposing
+    # En combates dobles con compañeros activos, delegar en Essentials para cálculo cruzado de targets
+    if @doublebattle
+      rem_orig_pbChooseMoves(index)
+      return
+    end
+
+    scores = [0, 0, 0, 0]
+    validChoices = []
+    totalscore = 0
+    opponent = attacker.pbOppositeOpposing
+    opponent = opponent.pbPartner if opponent && opponent.isFainted?
+    
+    for i in 0...4
+      if pbCanChooseMove?(index, i, false)
+        move = attacker.moves[i]
+        s = pbGetMoveScore(move, attacker, opponent, skill)
+        
+        # Filtro estricto de Inmunidad Absoluta: jamás registrar con score > 0
+        if move.basedamage > 0 && opponent && !opponent.isFainted?
+          typemod = pbTypeModifier(move.type, attacker, opponent)
+          s = 0 if typemod == 0
+        end
+        
+        scores[i] = [s, 0].max
+        validChoices.push(i) if scores[i] > 0
+        totalscore += scores[i]
+      end
+    end
+    
+    maxscore = 0
+    for s in scores
+      maxscore = s if s > maxscore
+    end
+    
+    # Caso de emergencia: si ningún movimiento tiene puntuación positiva
+    if maxscore <= 0 || validChoices.empty?
+      # Si el atacante tiene opciones de cambio frente a un rival que no puede tocar, cambiar
+      if !wildbattle && pbEnemyShouldWithdrawEx?(index, true)
+        return
+      end
       
+      # Si está obligado a atacar, buscar cualquier movimiento con daño que no sea inmune
+      non_immune_moves = []
       for i in 0...4
         if pbCanChooseMove?(index, i, false)
-          s = pbGetMoveScore(attacker.moves[i], attacker, opponent, PBTrainerAI.mediumSkill)
-          scores[i] = [s, 0].max
-          myChoices.push(i)
-          totalscore += scores[i]
-        end
-      end
-      
-      maxscore = 0
-      for s in scores
-        maxscore = s if s > maxscore
-      end
-      
-      if maxscore <= 0
-        if myChoices.length > 0
-          pbRegisterMove(index, myChoices[pbAIRandom(myChoices.length)], false)
-        else
-          pbAutoChooseMove(index)
-        end
-        return
-      end
-      
-      # Si hay un movimiento letal o muy superior (KO a tiro), 85% de probabilidad de elegirlo
-      best_moves = []
-      for i in 0...4
-        if attacker.moves[i].id != 0 && scores[i] >= (maxscore * 0.85)
-          best_moves.push(i)
-          best_moves.push(i) if scores[i] == maxscore # Doble peso al mejor
-        end
-      end
-      
-      if best_moves.length > 0 && pbAIRandom(100) < 85
-        chosen = best_moves[pbAIRandom(best_moves.length)]
-        pbRegisterMove(index, chosen, false)
-        return
-      end
-      
-      # Ruleta ponderada si hay opciones parejas
-      randnum = pbAIRandom(totalscore)
-      cumtotal = 0
-      for i in 0...4
-        if scores[i] > 0
-          cumtotal += scores[i]
-          if randnum < cumtotal
-            pbRegisterMove(index, i, false)
-            return
+          move = attacker.moves[i]
+          if move.basedamage > 0 && opponent && !opponent.isFainted?
+            typemod = pbTypeModifier(move.type, attacker, opponent)
+            next if typemod == 0 # Descartar totalmente inmunidades
           end
+          non_immune_moves.push(i)
         end
       end
-      pbRegisterMove(index, myChoices[0], false)
+      
+      if non_immune_moves.length > 0
+        pbRegisterMove(index, non_immune_moves[pbAIRandom(non_immune_moves.length)], false)
+      else
+        pbAutoChooseMove(index)
+      end
       return
-    else
-      # Combates de entrenadores: usar el método optimizado original
-      rem_orig_pbChooseMoves(index)
     end
+    
+    # Poda Minimax de Élite para Entrenadores y Bosses:
+    # Si un movimiento es claramente el óptimo, se ejecuta de forma determinante
+    best_threshold = (skill >= PBTrainerAI.bestSkill) ? 0.90 : 0.80
+    best_moves = []
+    for i in validChoices
+      if scores[i] >= (maxscore * best_threshold)
+        best_moves.push(i)
+        best_moves.push(i) if scores[i] == maxscore # Doble peso a la mejor opción
+      end
+    end
+    
+    # Probabilidad de ejecutar la mejor opción según la destreza del entrenador:
+    # Bosses (skill 100): 98% determinista
+    # Entrenadores normales (skill 70): 90% determinista
+    # Salvajes (skill 32): 80% instinto agresivo
+    best_chance = (skill >= PBTrainerAI.bestSkill) ? 98 : (skill >= 70 ? 90 : 80)
+    
+    if best_moves.length > 0 && pbAIRandom(100) < best_chance
+      chosen = best_moves[pbAIRandom(best_moves.length)]
+      pbRegisterMove(index, chosen, false)
+      return
+    end
+    
+    # Ruleta ponderada residual sólo entre opciones válidas (score > 0)
+    randnum = pbAIRandom(totalscore)
+    cumtotal = 0
+    for i in validChoices
+      cumtotal += scores[i]
+      if randnum < cumtotal
+        pbRegisterMove(index, i, false)
+        return
+      end
+    end
+    
+    pbRegisterMove(index, validChoices[0], false)
   end
 
   #-----------------------------------------------------------------------------
