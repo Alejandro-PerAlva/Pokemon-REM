@@ -71,6 +71,8 @@
 #   - Integración en Menú de Pausa: Cajita Oniria Noir justo debajo del Pokévial.
 #     Muestra cargas en ámbar o gris, icono pixel art propio (item719.png) y atajo
 #     rápido con la tecla física [D] ("D: usar").
+#   - NPC de Mejora: Julián (el padre, npc002) en la casa de Pueblo Albor es el
+#     encargado de reforzar el Saco de Dormir (pbRemSleepBagUpgrade) y sirve de punto de cura.
 #
 # Funciones públicas de script:
 #   pbRemSleepBagMax           -> Cargas máximas actuales (1..3).
@@ -103,6 +105,8 @@
 #     "¡El equipo se ha curado! Cargas restantes: X/Y."
 #   - Integración en Menú de Pausa: Cajita superior izquierda con icono (item716.png),
 #     cargas en azul celeste o gris y atajo rápido con la tecla física [Z] ("Z: usar").
+#   - NPC de Mejora: Amparo (la madre, npc001) en la casa de Pueblo Albor entrega y
+#     mejora las cargas del Pokévial (pbRemVialUpgrade) y sirve de punto de cura.
 #
 # Funciones públicas de script:
 #   pbRemVialMax               -> Cargas máximas actuales (1..3).

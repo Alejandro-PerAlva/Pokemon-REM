@@ -6,3 +6,4 @@ documents/
 *.bak*
 PBS_backup_original/
 __pycache__/
+scratch/

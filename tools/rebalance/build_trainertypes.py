@@ -58,15 +58,15 @@ COMMON = [  # simbolo, nombre, dinero, genero, nota (tipos / bioma)
     ("SCHOOLBOY", "Colegial", 16, "Male", "Normal/Bicho/Psiquico; ciudad"),
     ("SCHOOLGIRL", "Colegiala", 16, "Female", "Normal/Bicho/Psiquico; ciudad"),
     ("CAMPER", "Campista", 16, "Male", "Normal/Planta/Bicho; bosque/granja"),
-    ("PICNICKER", "Excursionista", 16, "Female", "Normal/Planta/Bicho; bosque/granja"),
+    ("PICNICKER", "Dominguera", 16, "Female", "Normal/Planta/Bicho; bosque/granja"),
     ("BUGCATCHER_M", "Cazabichos", 16, "Male", "Bicho; bosque temprano"),
     ("BUGCATCHER_F", "Cazabichos", 16, "Female", "Bicho; bosque temprano"),
     # Actos I-II: Aves, parques y crianza
     ("BIRDKEEPER", "Cazapájaros", 32, "Male", "Volador; montana/pradera"),
     ("PARASOLLADY", "Dama Parasol", 40, "Female", "Planta/Hada; pradera/reserva"),
     ("AROMALADY", "Chica Aroma", 32, "Female", "Planta/Hada/Veneno; jardines y praderas"),
-    ("BREEDER_M", "Criador", 48, "Male", "Normal/Hada; granja/pueblo"),
-    ("BREEDER_F", "Criadora", 48, "Female", "Normal/Hada; granja/pueblo"),
+    ("BREEDER_M", "Granjero", 48, "Male", "Normal/Hada; granja/pueblo"),
+    ("BREEDER_F", "Granjera", 48, "Female", "Normal/Hada; granja/pueblo"),
     ("POKEMONRANGER_M", "Pokémon Ranger", 60, "Male", "Planta/Bicho/Normal; bosque/reserva"),
     ("POKEMONRANGER_F", "Pokémon Ranger", 60, "Female", "Planta/Bicho/Normal; bosque/reserva"),
     # Actos II-III: Rutas largas, montaña, minas y cuevas
@@ -75,6 +75,7 @@ COMMON = [  # simbolo, nombre, dinero, genero, nota (tipos / bioma)
     ("HIKER", "Montañero", 32, "Male", "Roca/Tierra/Lucha; cueva/montana"),
     ("WORKER", "Obrero", 32, "Male", "Acero/Tierra; central y minas"),
     ("MINER", "Minero", 32, "Male", "Roca/Tierra/Acero; interior de minas y galerias"),
+    ("RUINMANIAC", "Ruinmaníaco", 48, "Male", "Tierra/Roca/Psiquico; ruinas, templos y yacimientos"),
     ("POKEMANIAC", "Poké Maniaco", 64, "Male", "Normal/Roca/Veneno; cueva/pantano"),
     ("SUPERNERD", "Friki", 48, "Male", "Electrico/Veneno/Psiquico; ruinas"),
     # Actos II-III: Costa, mar y playas
@@ -82,7 +83,8 @@ COMMON = [  # simbolo, nombre, dinero, genero, nota (tipos / bioma)
     ("FISHERMAN_F", "Pescadora", 32, "Female", "Agua; muelles/orillas"),
     ("SWIMMER_M", "Nadador", 16, "Male", "Agua; costas y lagos"),
     ("SWIMMER_F", "Nadadora", 16, "Female", "Agua; costas y lagos"),
-    ("SAILOR", "Marinero", 32, "Male", "Agua/Lucha; puertos, islas"),
+    ("SAILOR_M", "Marinero", 32, "Male", "Agua/Lucha; puertos, islas"),
+    ("SAILOR_F", "Marinera", 32, "Female", "Agua/Lucha; puertos, islas, rutas costeras"),
     ("BEAUTY", "Bella", 56, "Female", "Normal/Agua/Hada; playa/ciudad"),
     # Actos III-IV: Industria, tecnología, ocio, música y mantenimiento
     ("SCIENTIST_M", "Científico", 48, "Male", "Electrico/Acero/Veneno; industrial"),
@@ -94,7 +96,6 @@ COMMON = [  # simbolo, nombre, dinero, genero, nota (tipos / bioma)
     ("ARTIST", "Artista", 32, "Male", "Normal/Psiquico/Color; galerias y ciudades"),
     ("JUGGLER", "Malabarista", 32, "Male", "Fantasma/Psiquico; puente/templo"),
     ("GAMER", "Jugón", 32, "Male", "Electrico/Normal; recreativas/ciudad"),
-    ("JANITOR", "Conserje", 32, "Male", "Veneno/Agua/Normal; edificios, oficinas y pasillos"),
     ("CYCLIST_M", "Ciclista", 32, "Male", "Electrico/Volador/Normal; rutas largas, carreteras y puentes"),
     ("CYCLIST_F", "Ciclista", 32, "Female", "Electrico/Volador/Normal; rutas largas, carreteras y puentes"),
     # Actos III-IV: Mística, templos, sombras y sigilo
@@ -110,7 +111,6 @@ COMMON = [  # simbolo, nombre, dinero, genero, nota (tipos / bioma)
     ("POKEFAN_F", "Pokéfán", 48, "Female", "Normal/Hada/Bebe; ciudades y parques"),
     ("POLICEMAN", "Policía", 48, "Male", "Siniestro/Normal; ciudad, patrullas"),
     ("BURGLAR", "Ladrón", 88, "Male", "Siniestro/Veneno; ruinas/cueva"),
-    ("MAID", "Sirvienta", 32, "Female", "Fantasma/Normal; mansiones/hoteles"),
     ("ARISTOCRAT_M", "Aristócrata", 72, "Male", "Normal/Hada/Psiquico; ciudad/lujo"),
     ("ARISTOCRAT_F", "Aristócrata", 160, "Female", "Normal/Hada/Psiquico; ciudad/lujo"),
     ("RICHBOY", "Niño Bien", 80, "Male", "Normal/Acero/Dragon; mansiones/resort"),
@@ -285,49 +285,8 @@ def compile_data():
 
 def main():
     write_pbs()
-    chars = os.path.join(ROOT, "Graphics", "Characters")
-    made, kept = [], []
-    for i, sym, name, money, gen, audio, note, kind in ALL:
-        p = os.path.join(chars, "trainer%03d.png" % i)
-        if os.path.exists(p):
-            try:
-                with Image.open(p) as test_im:
-                    if test_im.size != (180, 180):
-                        kept.append(p)
-                        continue
-            except: pass
-        make_png(p, i, sym, name); made.append(p)
-    regen = "--regen-commons" in sys.argv
-    ch_made = []
-    for i, sym, name, money, gen, audio, note, kind in ALL:   # overworld del entrenador
-        p = os.path.join(chars, "trchar%03d.png" % i)
-        if os.path.exists(p):
-            try:
-                with Image.open(p) as test_im:
-                    if test_im.size != (256, 256):
-                        continue
-            except: pass
-            if not regen and i not in [57, 58, 59, 60, 61, 62, 63, 71, 72, 73]:
-                continue
-        make_char_png(p, "%03d" % i, col(sym)); ch_made.append(p)
-    npc_made = []
-    for n in range(1, 33):                                    # 32 NPC sin nombre (3 digitos: el motor usa %03d)
-        p = os.path.join(chars, "npc%03d.png" % n)
-        if os.path.exists(p): continue
-        make_char_png(p, "N%02d" % n, (150, 160, 180)); npc_made.append(p)
-    print("trchar nuevos: %d | npc nuevos: %d" % (len(ch_made), len(npc_made)))
-    audio_made = []
-    for k, (bgm, me) in enumerate([A_RIVAL, A_LEADER, A_ELITE, A_CHAMP, A_RECRUIT, A_GENERAL, A_BOSS]):
-        p = os.path.join(ROOT, "Audio", "BGM", bgm + ".wav")
-        if not any(os.path.exists(os.path.join(ROOT, "Audio", "BGM", bgm + e)) for e in (".wav", ".ogg", ".mid", ".mp3")):
-            make_wav(p, 110 + 22 * k, 4.0); audio_made.append(p)
-    for me in ("Victoria Lider", "Victoria Liga"):
-        p = os.path.join(ROOT, "Audio", "ME", me + ".wav")
-        if not any(os.path.exists(os.path.join(ROOT, "Audio", "ME", me + e)) for e in (".wav", ".ogg", ".mid", ".mp3")):
-            make_wav(p, 330 if me.endswith("Lider") else 392, 2.5); audio_made.append(p)
     compile_data()
-    print("PBS escrito: %d tipos" % len(ALL))
-    print("PNG nuevos: %d | respetados: %s" % (len(made), [os.path.basename(x) for x in kept]))
+    print("PBS y Data sincronizados con exito.")
     print("Audio nuevo: %s" % [os.path.relpath(x, ROOT) for x in audio_made])
 
 if __name__ == "__main__":
