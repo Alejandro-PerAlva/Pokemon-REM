@@ -15,11 +15,18 @@ REM_NIGHT_START_HOUR  = 22     # hora a la que salta pbSetNight(true)  (noche: 2
 REM_DAY_START_HOUR    = 8      # hora a la que salta pbSetNight(false)
 REM_PRODIGIO_BST_SPAN = 30     # ± BST de Don Prodigio (se amplía si no hay candidatos)
 
+class PBItems
+  RELOJ = 720 unless defined?(RELOJ)
+end
+
 class PokemonGlobalMetadata
   attr_accessor :remTimeFrozen
+  attr_accessor :itemfinderActive
   if method_defined?(:addNewFrameCount)
     alias rem_orig_addNewFrameCount addNewFrameCount
     def addNewFrameCount
+      # El tiempo no avanza al inicio del juego hasta que el jugador recibe el Reloj Digital
+      return if !($PokemonBag && hasConst?(PBItems,:RELOJ) && $PokemonBag.pbQuantity(getConst(PBItems,:RELOJ))>0)
       return if @remTimeFrozen        # reloj congelado hasta el siguiente pbSetNight/pbRemTimeFree
       rem_orig_addNewFrameCount
     end
@@ -60,6 +67,28 @@ end
 def pbToggleDayNight(freeze=true)
   return pbSetNight(!PBDayNight.isNight?,freeze)
 end
+
+def pbRemAdvanceTime(hours=1, minutes=0)
+  secs = hours*3600 + minutes*60
+  if defined?(NTN_EXTRASECONDS) && NTN_EXTRASECONDS > 0
+    $game_variables[NTN_EXTRASECONDS] += secs
+    pbFadeOutIn(99999){
+      pbGetTimeNow
+      $game_map.need_refresh = true if $game_map
+      for i in 0...10; Graphics.update; end
+    }
+  end
+end
+
+ItemHandlers::UseFromBag.add(:RELOJ,proc{|item|
+  time = pbGetTimeNow
+  h_str = sprintf("%02d:%02d", time.hour, time.min)
+  is_night = PBDayNight.isNight?(time)
+  state_str = is_night ? _INTL("NOCHE") : _INTL("DÍA")
+  sub = is_night ? _INTL("Amanece a las 06:00") : _INTL("Anochece a las 20:00")
+  Kernel.pbMessage(_INTL("RELOJ DIGITAL DE ONIRIA\\nHora actual: {1} ({2})\\n{3}\\n\\nCiclo horario:\\n- DÍA: 06:00 a 19:59\\n- NOCHE: 20:00 a 05:59\\n\\nPuedes consultar la hora en cualquier momento abajo a la izquierda en el Menú de Pausa.", h_str, state_str, sub))
+  next 1
+})
 
 #-------------------------------------------------------------------------------
 # 2. REGLAS NOCTURNAS: nivel x factor y captura prohibida
@@ -655,6 +684,10 @@ def pbDebugTestingMenu
     has_inc = ($PokemonBag && $PokemonBag.pbHasItem?(:INCUBADORA)) ? "Sí" : "No"
     egg = $PokemonGlobal ? $PokemonGlobal.egg : nil
     egg_str = egg ? (egg.eggsteps == 0 ? "¡Listo para abrir!" : "#{egg.eggsteps} pasos") : "Vacía"
+    has_clock = ($PokemonBag && $PokemonBag.pbHasItem?(:RELOJ)) ? "Sí" : "No"
+    t_now = pbGetTimeNow
+    time_str = sprintf("%02d:%02d", t_now.hour, t_now.min)
+    phase_str = PBDayNight.isNight?(t_now) ? "Noche" : "Día"
     
     cmd = Kernel.pbMessage(
       _INTL("BANCO DE PRUEBAS REM\\n¿Qué sistema deseas verificar?"),
@@ -669,6 +702,8 @@ def pbDebugTestingMenu
         _INTL("8. Equipar Objetos a Pokémon (Icono bajo PS)"),
         _INTL("9. Probar IA Competitiva REM (Simulación de Combate) [NUEVO]"),
         _INTL("10. Preparar / Curar Equipo"),
+        _INTL("11. Sistema de Misiones (Pía ON/OFF y Recado de Prueba)"),
+        _INTL("12. Reloj Digital y Control Horario ({1} - {2} | Posee: {3}) [NUEVO]", time_str, phase_str, has_clock),
         _INTL("Salir")
       ]
     )
@@ -961,8 +996,346 @@ def pbDebugTestingMenu
       $PokemonBag.pbStoreItem(:POKEBALL, 20) if hasConst?(PBItems, :POKEBALL)
       Kernel.pbMessage(_INTL("¡Equipo curado al 100%! Bayas Zidra y 20 Poké Balls añadidas a la mochila."))
 
+    when 10 # 11. Sistema de Misiones (Pía ON/OFF y Pruebas)
+      sw = defined?(REM_PIA_QUESTS_SWITCH) ? REM_PIA_QUESTS_SWITCH : 400
+      pia_on = $game_switches[sw]
+      m_cmd = Kernel.pbMessage(
+        _INTL("GESTIÓN DE MISIONES REM:\nPía: {1} | Recados activos: {2}", pia_on ? "ACTIVADA" : "DESACTIVADA", pbRemSidequests.length),
+        [
+          _INTL("Alternar Misiones de Pía (ON/OFF)"),
+          _INTL("Añadir Recado de Prueba (Bruno - Procedural 3 Pasos)"),
+          _INTL("Avanzar Paso Procedural"),
+          _INTL("Fijar Recado de Prueba como LISTO"),
+          _INTL("Completar Recado de Prueba"),
+          _INTL("Resetear Recados y Auto-Interruptores"),
+          _INTL("Volver")
+        ]
+      )
+      case m_cmd
+      when 0
+        $game_switches[sw] = !$game_switches[sw]
+        Kernel.pbMessage(_INTL("Misiones de Pía: {1}.", $game_switches[sw] ? "ACTIVADA (Pestaña visible)" : "DESACTIVADA (Oculta)"))
+      when 1
+        pbAddSidequest(
+          :id => :recado_albor_01,
+          :title => _INTL("El encargo del vecino"),
+          :location => _INTL("Pueblo Albor"),
+          :npc_name => _INTL("Vecino Bruno"),
+          :npc_sprite => "npc008",
+          :steps => [
+            _INTL("El vecino Bruno te ha pedido que revises a fondo los alrededores de Pueblo Albor antes de iniciar tu aventura."),
+            _INTL("Comprueba la salida hacia la Ruta 1 al norte de Pueblo Albor y asegúrate de que no haya peligros."),
+            _INTL("Has inspeccionado la zona. Vuelve a la casa del vecino Bruno en Pueblo Albor para entregar el recado.")
+          ],
+          :summary => _INTL("Inspeccionaste los alrededores de Pueblo Albor y la salida a la Ruta 1 por encargo del vecino Bruno, asegurando el camino antes de iniciar tu aventura.")
+        )
+        $game_self_switches[[3, 14, "A"]] = true
+        $game_self_switches[[3, 14, "B"]] = false
+        $game_self_switches[[3, 14, "C"]] = false
+        $game_map.need_refresh = true if $game_map
+        pbRefreshQuestMarkers
+        Kernel.pbMessage(_INTL("Recado añadido en Paso 1/3 (Interrogante amarillo)."))
+      when 2
+        pbAdvanceSidequest(:recado_albor_01)
+        st = pbGetSidequestStep(:recado_albor_01)
+        if pbRemSidequests[:recado_albor_01] && pbRemSidequests[:recado_albor_01][:state] == :ready
+          $game_self_switches[[3, 14, "B"]] = true
+          pbRefreshQuestMarkers
+          Kernel.pbMessage(_INTL("Avanzado a Paso {1}/3. ¡Misión LISTA PARA ENTREGAR! (Interrogante verde).", st + 1))
+        else
+          Kernel.pbMessage(_INTL("Avanzado a Paso {1}/3.", st + 1))
+        end
+      when 3
+        pbSetSidequestStep(:recado_albor_01, 2)
+        pbSetSidequestState(:recado_albor_01, :ready)
+        $game_self_switches[[3, 14, "B"]] = true
+        $game_map.need_refresh = true if $game_map
+        pbRefreshQuestMarkers
+        Kernel.pbMessage(_INTL("Recado fijado como LISTA (Interrogante verde)."))
+      when 4
+        sum_txt = _INTL("Inspeccionaste los alrededores de Pueblo Albor y la salida a la Ruta 1 por encargo del vecino Bruno, asegurando el camino antes de iniciar tu aventura.")
+        pbCompleteSidequest(:recado_albor_01, sum_txt)
+        $game_self_switches[[3, 14, "C"]] = true
+        $game_map.need_refresh = true if $game_map
+        pbRefreshQuestMarkers
+        Kernel.pbMessage(_INTL("Recado marcado como COMPLETADA (Sin interrogante)."))
+      when 5
+        pbRemSidequests.delete(:recado_albor_01)
+        $game_self_switches[[3, 14, "A"]] = false
+        $game_self_switches[[3, 14, "B"]] = false
+        $game_self_switches[[3, 14, "C"]] = false
+        $game_map.need_refresh = true if $game_map
+        pbRefreshQuestMarkers
+        Kernel.pbMessage(_INTL("Recado de prueba y auto-interruptores restablecidos (Interrogante azul)."))
+      end
+
+    when 11 # 12. Reloj Digital y Control Horario
+      pbRemClockTestMenu
+
     else
       break
+    end
+  end
+end
+
+#-------------------------------------------------------------------------------
+# BANCO DE PRUEBAS: CONTROL HORARIO Y RELOJ DIGITAL
+#-------------------------------------------------------------------------------
+def pbRemClockTestMenu
+  loop do
+    t_now = pbGetTimeNow
+    time_str = sprintf("%02d:%02d", t_now.hour, t_now.min)
+    phase_str = PBDayNight.isNight?(t_now) ? _INTL("NOCHE") : _INTL("DÍA")
+    has_clock = ($PokemonBag && hasConst?(PBItems, :RELOJ) && $PokemonBag.pbQuantity(getConst(PBItems, :RELOJ)) > 0)
+    clock_txt = has_clock ? _INTL("SÍ (En la Mochila)") : _INTL("NO (Sin reloj)")
+    frozen_txt = has_clock ? _INTL("CORRIENDO NORMAL") : _INTL("CONGELADO (A primera hora de la mañana)")
+
+    clk_cmd = Kernel.pbMessage(
+      _INTL("CONTROL HORARIO Y RELOJ DIGITAL:\nHora actual: {1} ({2}) | ¿Posees Reloj?: {3}\nFlujo temporal: {4}\n\nElige una opción:"),
+      [
+        has_clock ? _INTL("1. Quitar Reloj Digital (Empezar sin él / Congelar tiempo)") : _INTL("1. ¡Recibir Reloj Digital! (Activa reloj 88:88 en Menú)"),
+        _INTL("2. Avanzar +1 Hora"),
+        _INTL("3. Avanzar +3 Horas"),
+        _INTL("4. Avanzar +6 Horas"),
+        _INTL("5. Saltar a Hora Específica (06:00, 08:00, 14:00, 19:59, 20:00, 00:00)"),
+        _INTL("6. Alternar Día / Noche"),
+        _INTL("Volver")
+      ]
+    )
+    case clk_cmd
+    when 0 # Dar / Quitar Reloj
+      if has_clock
+        $PokemonBag.pbDeleteItem(getConst(PBItems, :RELOJ), 1)
+        Kernel.pbMessage(_INTL("Se ha retirado el Reloj Digital de tu mochila.\n\nComprobaciones:\n1. Abre el menú con la tecla X: verás que el reloj ha desaparecido de abajo a la izquierda.\n2. El tiempo interno vuelve a quedar congelado."))
+      else
+        Kernel.pbReceiveItem(getConst(PBItems, :RELOJ), 1)
+        Kernel.pbMessage(_INTL("¡Has recibido el Reloj Digital!\n\nComprobaciones:\n1. Abre el menú con la tecla X: abajo a la izquierda verás los dígitos 88:88 grandes y centrados con 'DÍA' (amarillo) o 'NOCHE' (azul oscuro) y la previsión solar debajo.\n2. El tiempo interno ahora corre con normalidad."))
+      end
+    when 1 # +1 hora
+      pbRemAdvanceTime(1, 0)
+      t_new = pbGetTimeNow
+      Kernel.pbMessage(_INTL("Tiempo avanzado +1 hora. Ahora son las {1} ({2}).", sprintf("%02d:%02d", t_new.hour, t_new.min), PBDayNight.isNight?(t_new) ? "NOCHE" : "DÍA"))
+    when 2 # +3 horas
+      pbRemAdvanceTime(3, 0)
+      t_new = pbGetTimeNow
+      Kernel.pbMessage(_INTL("Tiempo avanzado +3 horas. Ahora son las {1} ({2}).", sprintf("%02d:%02d", t_new.hour, t_new.min), PBDayNight.isNight?(t_new) ? "NOCHE" : "DÍA"))
+    when 3 # +6 horas
+      pbRemAdvanceTime(6, 0)
+      t_new = pbGetTimeNow
+      Kernel.pbMessage(_INTL("Tiempo avanzado +6 horas. Ahora son las {1} ({2}).", sprintf("%02d:%02d", t_new.hour, t_new.min), PBDayNight.isNight?(t_new) ? "NOCHE" : "DÍA"))
+    when 4 # Saltar a hora específica
+      h_cmd = Kernel.pbMessage(_INTL("Selecciona la hora a la que deseas saltar:"), [
+        _INTL("06:00 (Amanecer / Inicio de Día)"),
+        _INTL("08:00 (Hora Inicial de Aventura - Tiempo Congelado)"),
+        _INTL("14:00 (Mediodía)"),
+        _INTL("19:59 (Último minuto de luz diurna)"),
+        _INTL("20:00 (Anochecer / Inicio de Noche)"),
+        _INTL("00:00 (Medianoche / Noche cerrada)"),
+        _INTL("Cancelar")
+      ])
+      target_hour = nil
+      case h_cmd
+      when 0 then target_hour = 6
+      when 1 then target_hour = 8
+      when 2 then target_hour = 14
+      when 3 then target_hour = 19
+      when 4 then target_hour = 20
+      when 5 then target_hour = 0
+      end
+      if target_hour
+        if defined?(skipToHour)
+          skipToHour(target_hour)
+          pbFadeOutIn(99999){
+            pbGetTimeNow
+            $game_map.need_refresh = true if $game_map
+            for i in 0...10; Graphics.update; end
+          }
+        else
+          t_curr = pbGetTimeNow
+          diff = (target_hour - t_curr.hour) % 24
+          diff = 24 if diff == 0
+          pbRemAdvanceTime(diff, 0)
+        end
+        t_new = pbGetTimeNow
+        Kernel.pbMessage(_INTL("Hora fijada en {1} ({2}).", sprintf("%02d:%02d", t_new.hour, t_new.min), PBDayNight.isNight?(t_new) ? "NOCHE" : "DÍA"))
+      end
+    when 5 # Alternar Día / Noche
+      pbToggleDayNight(false)
+      t_new = pbGetTimeNow
+      Kernel.pbMessage(_INTL("Ciclo alternado. Ahora son las {1} ({2}).", sprintf("%02d:%02d", t_new.hour, t_new.min), PBDayNight.isNight?(t_new) ? "NOCHE" : "DÍA"))
+    else
+      break
+    end
+  end
+end
+
+def pbRefreshQuestMarkers
+  $game_map.need_refresh = true if $game_map
+end
+
+# Diálogos y gestión del NPC de pruebas de recados en Casa del Jugador (Mapa 3, Evento 14)
+def pbSidequestNPCDialogue(stage)
+  sw = defined?(REM_PIA_QUESTS_SWITCH) ? REM_PIA_QUESTS_SWITCH : 400
+
+  case stage
+  when 0
+    # Disponible (Interrogante Azul)
+    Kernel.pbMessage(_INTL("Vecino Bruno: ¡Hola! Qué alegría verte antes de que salgas de viaje."))
+    cmd = Kernel.pbMessage(_INTL("Opciones del vecino:"), [
+      _INTL("Reloj Digital y Control Horario (Dar/Quitar y Cambiar hora) [NUEVO]"),
+      _INTL("Banco de Pruebas General (Follower, Vuelo, IA, Herramientas...)"),
+      _INTL("Aceptar encargo del vecino (Procedural 3 pasos)"),
+      _INTL("Alternar Misiones de Pía (ON / OFF)"),
+      _INTL("Ahora no")
+    ], 0)
+    case cmd
+    when 0
+      pbRemClockTestMenu
+    when 1
+      pbDebugTestingMenu
+    when 2
+      pbAddSidequest(
+        :id => :recado_albor_01,
+        :title => _INTL("El encargo del vecino"),
+        :location => _INTL("Pueblo Albor"),
+        :npc_name => _INTL("Vecino Bruno"),
+        :npc_sprite => "npc008",
+        :steps => [
+          _INTL("El vecino Bruno te ha pedido que revises a fondo los alrededores de Pueblo Albor antes de iniciar tu aventura."),
+          _INTL("Comprueba la salida hacia la Ruta 1 al norte de Pueblo Albor y asegúrate de que no haya peligros."),
+          _INTL("Has inspeccionado la zona. Vuelve a la casa del vecino Bruno en Pueblo Albor para entregar el recado.")
+        ],
+        :summary => _INTL("Inspeccionaste los alrededores de Pueblo Albor y la salida a la Ruta 1 por encargo del vecino Bruno, asegurando el camino antes de iniciar tu aventura.")
+      )
+      $game_self_switches[[3, 14, "A"]] = true
+      $game_self_switches[[3, 14, "B"]] = false
+      $game_self_switches[[3, 14, "C"]] = false
+      $game_map.need_refresh = true if $game_map
+      pbRefreshQuestMarkers
+      Kernel.pbMessage(_INTL("¡Has aceptado la misión '\\c[1]El encargo del vecino\\c[0]'!"))
+      Kernel.pbMessage(_INTL("Observa cómo el interrogante sobre el vecino ahora es \\c[2]AMARILLO\\c[0] (En curso)."))
+      Kernel.pbMessage(_INTL("Abre el menú de Misiones para consultar los detalles."))
+    when 3
+      $game_switches[sw] = !$game_switches[sw]
+      st = $game_switches[sw] ? "ACTIVADA (Pestaña Pía visible en el menú)" : "DESACTIVADA (Pestaña Pía oculta)"
+      Kernel.pbMessage(_INTL("Misiones de Pía: {1}.", st))
+    end
+
+  when 1
+    # En curso (Interrogante Amarillo)
+    cur_step = pbGetSidequestStep(:recado_albor_01)
+    Kernel.pbMessage(_INTL("Vecino Bruno: ¿Cómo va ese encargo?"))
+    if cur_step == 0
+      Kernel.pbMessage(_INTL("Recuerda revisar primero los alrededores inmediatos de Pueblo Albor."))
+    else
+      Kernel.pbMessage(_INTL("Recuerda echar un ojo a la salida hacia la Ruta 1 antes de dar por cerrada la inspección."))
+    end
+    cmd = Kernel.pbMessage(_INTL("Gestión de misión (En curso):"), [
+      _INTL("Reloj Digital y Control Horario (Dar/Quitar y Cambiar hora) [NUEVO]"),
+      _INTL("Banco de Pruebas General"),
+      _INTL("[Procedural] Actualizar al siguiente objetivo"),
+      _INTL("[Simular] Cumplir todo (Lista para entregar)"),
+      _INTL("Alternar Misiones de Pía (ON / OFF)"),
+      _INTL("Volver")
+    ], 0)
+    case cmd
+    when 0
+      pbRemClockTestMenu
+    when 1
+      pbDebugTestingMenu
+    when 2
+      if cur_step < 1
+        pbAdvanceSidequest(:recado_albor_01)
+        pbRefreshQuestMarkers
+        Kernel.pbMessage(_INTL("¡Objetivo de la misión actualizado!"))
+        Kernel.pbMessage(_INTL("El cuaderno ahora muestra la nueva instrucción: revisar la salida a la Ruta 1."))
+      else
+        pbAdvanceSidequest(:recado_albor_01)
+        $game_self_switches[[3, 14, "B"]] = true
+        $game_map.need_refresh = true if $game_map
+        pbRefreshQuestMarkers
+        Kernel.pbMessage(_INTL("¡Has completado todos los pasos previos!"))
+        Kernel.pbMessage(_INTL("Observa cómo el interrogante ahora es \\c[3]VERDE\\c[0] (Lista para entregar)."))
+        Kernel.pbMessage(_INTL("Habla de nuevo con Bruno para entregarla y recibir tu recompensa sorpresa."))
+      end
+    when 3
+      pbSetSidequestStep(:recado_albor_01, 2)
+      pbSetSidequestState(:recado_albor_01, :ready)
+      $game_self_switches[[3, 14, "B"]] = true
+      $game_map.need_refresh = true if $game_map
+      pbRefreshQuestMarkers
+      Kernel.pbMessage(_INTL("¡Has cumplido el objetivo de '\\c[1]El encargo del vecino\\c[0]'!"))
+      Kernel.pbMessage(_INTL("Observa cómo el interrogante ahora es \\c[3]VERDE\\c[0] (Lista para entregar)."))
+      Kernel.pbMessage(_INTL("Vuelve a hablar con Bruno para entregarla y recibir tu recompensa sorpresa."))
+    when 4
+      $game_switches[sw] = !$game_switches[sw]
+      st = $game_switches[sw] ? "ACTIVADA (Pestaña Pía visible en el menú)" : "DESACTIVADA (Pestaña Pía oculta)"
+      Kernel.pbMessage(_INTL("Misiones de Pía: {1}.", st))
+    end
+
+  when 2
+    # Lista para entregar (Interrogante Verde)
+    Kernel.pbMessage(_INTL("Vecino Bruno: ¡Has vuelto! Y veo que has cumplido la tarea a la perfección."))
+    cmd = Kernel.pbMessage(_INTL("Opciones del vecino:"), [
+      _INTL("Entregar misión y reclamar recompensa"),
+      _INTL("Reloj Digital y Control Horario [NUEVO]"),
+      _INTL("Banco de Pruebas General"),
+      _INTL("Alternar Misiones de Pía (ON / OFF)"),
+      _INTL("Esperar un momento")
+    ], 0)
+    case cmd
+    when 0
+      Kernel.pbMessage(_INTL("Vecino Bruno: ¡Muchísimas gracias! Toma esto como agradecimiento."))
+      Kernel.pbReceiveItem(PBItems::GREATBALL, 5)
+      sum_txt = _INTL("Inspeccionaste los alrededores de Pueblo Albor y la salida a la Ruta 1 por encargo del vecino Bruno, asegurando el camino antes de iniciar tu aventura.")
+      pbCompleteSidequest(:recado_albor_01, sum_txt)
+      $game_self_switches[[3, 14, "C"]] = true
+      $game_map.need_refresh = true if $game_map
+      pbRefreshQuestMarkers
+      Kernel.pbMessage(_INTL("¡Misión completada con éxito!"))
+      Kernel.pbMessage(_INTL("El interrogante ha desaparecido porque ya no hay tareas pendientes."))
+      Kernel.pbMessage(_INTL("La misión ahora figura al final de tu lista como '\\c[3]COMPLETADA\\c[0]'."))
+      Kernel.pbMessage(_INTL("Recuerda que en el menú de Misiones puedes pulsar [D] para ocultarla o mostrarla."))
+    when 1
+      pbRemClockTestMenu
+    when 2
+      pbDebugTestingMenu
+    when 3
+      $game_switches[sw] = !$game_switches[sw]
+      st = $game_switches[sw] ? "ACTIVADA (Pestaña Pía visible en el menú)" : "DESACTIVADA (Pestaña Pía oculta)"
+      Kernel.pbMessage(_INTL("Misiones de Pía: {1}.", st))
+    end
+
+  when 3
+    # Completada (Sin interrogante)
+    Kernel.pbMessage(_INTL("Vecino Bruno: ¡Muchas gracias por tu ayuda con aquel encargo! Eres un entrenador con gran futuro."))
+    cmd = Kernel.pbMessage(_INTL("Opciones del vecino:"), [
+      _INTL("Reloj Digital y Control Horario (Dar/Quitar y Cambiar hora) [NUEVO]"),
+      _INTL("Banco de Pruebas General"),
+      _INTL("[Reiniciar] Volver a probar la misión"),
+      _INTL("Alternar pestaña Pía (ON / OFF)"),
+      _INTL("Charla normal"),
+      _INTL("Salir")
+    ], 0)
+    case cmd
+    when 0
+      pbRemClockTestMenu
+    when 1
+      pbDebugTestingMenu
+    when 2
+      $game_self_switches[[3, 14, "A"]] = false
+      $game_self_switches[[3, 14, "B"]] = false
+      $game_self_switches[[3, 14, "C"]] = false
+      $game_map.need_refresh = true if $game_map
+      pbRemSidequests.delete(:recado_albor_01)
+      pbRefreshQuestMarkers
+      Kernel.pbMessage(_INTL("¡Misión y estados de prueba reiniciados! El interrogante azul vuelve a estar visible."))
+    when 3
+      $game_switches[sw] = !$game_switches[sw]
+      st = $game_switches[sw] ? "ACTIVADA (Pestaña Pía visible en el menú)" : "DESACTIVADA (Pestaña Pía oculta)"
+      Kernel.pbMessage(_INTL("Misiones de Pía: {1}.", st))
+    when 4
+      Kernel.pbMessage(_INTL("Vecino Bruno: Los caminos fuera de Pueblo Albor son peligrosos. ¡Lleva siempre a tus Pokémon preparados!"))
     end
   end
 end
@@ -1006,30 +1379,274 @@ def pbRemEnsureTesterEvent
   return false
 end
 
+# Inyección dinámica del Entrenador de prueba en la Habitación del Jugador (Mapa 3, Pueblo Albor)
+def pbRemEnsureTrainerTesterEvent
+  return false if !$game_map || $game_map.map_id != 3
+  if !$game_map.events.has_key?(998)
+    rpg_ev = RPG::Event.new(25, 13)
+    rpg_ev.id = 998
+    rpg_ev.x = 25
+    rpg_ev.y = 13
+    rpg_ev.name = "Trainer(3)" # Entrenador con visión de 3 casillas hacia la izquierda
+    
+    # Página 1: Buscando pelea
+    p0 = RPG::Event::Page.new
+    p0.condition = RPG::Event::Page::Condition.new
+    p0.trigger = 2 # Event Touch
+    p0.through = false
+    
+    p0.graphic.character_name = "npc001"
+    p0.graphic.direction = 4 # Mirando a la izquierda (hacia la zona donde pasa el jugador)
+    p0.graphic.pattern = 0
+    p0.graphic.opacity = 255
+    p0.graphic.blend_type = 0
+    
+    p0.list = [
+      RPG::EventCommand.new(355, 0, ["Kernel.pbNoticePlayer(get_character(0))"]),
+      RPG::EventCommand.new(101, 0, ["¡Nuestras miradas se han cruzado! ¡A luchar!"]),
+      RPG::EventCommand.new(355, 0, ["pbTrainerTesterBattle"]),
+      RPG::EventCommand.new(0, 0, [])
+    ]
+
+    # Página 2: Derrotado (Self Switch A encendido)
+    p1 = RPG::Event::Page.new
+    p1.condition = RPG::Event::Page::Condition.new
+    p1.condition.self_switch_valid = true
+    p1.condition.self_switch_ch = "A"
+    p1.trigger = 0 # Action Button
+    p1.through = false
+
+    p1.graphic.character_name = "npc001"
+    p1.graphic.direction = 4 # Mirando a la izquierda
+    p1.graphic.pattern = 0
+    p1.graphic.opacity = 255
+    p1.graphic.blend_type = 0
+
+    p1.list = [
+      RPG::EventCommand.new(355, 0, ["pbTrainerTesterDefeatedDialogue"]),
+      RPG::EventCommand.new(0, 0, [])
+    ]
+
+    rpg_ev.pages = [p0, p1]
+    
+    ev = Game_Event.new(3, rpg_ev, $game_map)
+    $game_map.events[998] = ev
+    return true
+  end
+  return false
+end
+
+def pbTrainerTesterBattle
+  Kernel.pbMessage(_INTL("Joven Marcos: ¡Demuéstrame el poder de tu equipo!"))
+  if pbTrainerBattle(PBTrainers::YOUNGSTER, "Ben", _INTL("¡Menuda paliza me has dado!"), false, 0)
+    $game_self_switches[[3, 998, "A"]] = true
+    $game_map.need_refresh = true if $game_map
+    Kernel.pbMessage(_INTL("Joven Marcos: ¡Increíble! Ahora que me has derrotado, las barras de alerta ya no se activarán conmigo."))
+  end
+end
+
+def pbTrainerTesterDefeatedDialogue
+  cmd = Kernel.pbMessage(_INTL("Joven Marcos: ¡Buen combate el de antes!"), [
+    _INTL("Charla normal"),
+    _INTL("Reiniciar alerta (para volver a probar las barras)"),
+    _INTL("Salir")
+  ], 0)
+  if cmd == 1
+    $game_self_switches[[3, 998, "A"]] = false
+    $game_map.need_refresh = true if $game_map
+    Kernel.pbMessage(_INTL("Joven Marcos: ¡Modo alerta reactivado! Aléjate y vuelve a acercarte para ver las barras cinematográficas."))
+  end
+end
+
+#===============================================================================
+#  SISTEMA DE BARRAS CINEMÁTICAS DE ALERTA DE ENTRENADOR (Sol y Luna / Añil)
+#===============================================================================
+module TrainerSensor
+  RANGE_BARS_TRAINER = 4 # Distancia a la línea de visión para activar aviso
+  BAR_SPEED          = 6 # Velocidad de deslizamiento en píxeles por frame
+  BAR_BASE_OPACITY   = 160
+
+  @top = nil
+  @bottom = nil
+  @triggered = false
+  @current_dist = 4
+
+  def self.bar_height
+    return (Graphics.height / 8).round # 48 px en 384p
+  end
+
+  def self.init_sprites
+    return if @top && !@top.disposed?
+    h = bar_height
+    
+    # Barra superior
+    @top = Sprite.new
+    @top.z = 9999
+    @top.bitmap = Bitmap.new(Graphics.width, h)
+    @top.bitmap.fill_rect(0, 0, Graphics.width, h, Color.new(0, 0, 0, BAR_BASE_OPACITY))
+    @top.bitmap.fill_rect(0, h - 2, Graphics.width, 2, Color.new(0, 0, 0, [BAR_BASE_OPACITY + 50, 255].min))
+    @top.y = -h
+    @top.visible = true
+
+    # Barra inferior
+    @bottom = Sprite.new
+    @bottom.z = 9999
+    @bottom.bitmap = Bitmap.new(Graphics.width, h)
+    @bottom.bitmap.fill_rect(0, 0, Graphics.width, h, Color.new(0, 0, 0, BAR_BASE_OPACITY))
+    @bottom.bitmap.fill_rect(0, 0, Graphics.width, 2, Color.new(0, 0, 0, [BAR_BASE_OPACITY + 50, 255].min))
+    @bottom.y = Graphics.height
+    @bottom.visible = true
+  end
+
+  def self.dispose
+    if @top && !@top.disposed?
+      @top.bitmap.dispose if @top.bitmap && !@top.bitmap.disposed?
+      @top.dispose
+      @top = nil
+    end
+    if @bottom && !@bottom.disposed?
+      @bottom.bitmap.dispose if @bottom.bitmap && !@bottom.bitmap.disposed?
+      @bottom.dispose
+      @bottom = nil
+    end
+    @triggered = false
+  end
+
+  def self.show(dist)
+    init_sprites
+    @triggered = true
+    if @current_dist != dist
+      @current_dist = dist
+      if @top && @top.bitmap && !@top.bitmap.disposed?
+        alpha = [[120 + (4 - dist) * 28, 120].max, 220].min
+        h = bar_height
+        @top.bitmap.fill_rect(0, 0, Graphics.width, h, Color.new(0, 0, 0, alpha))
+        @top.bitmap.fill_rect(0, h - 2, Graphics.width, 2, Color.new(0, 0, 0, [alpha + 35, 255].min))
+        @bottom.bitmap.fill_rect(0, 0, Graphics.width, h, Color.new(0, 0, 0, alpha))
+        @bottom.bitmap.fill_rect(0, 0, Graphics.width, 2, Color.new(0, 0, 0, [alpha + 35, 255].min))
+      end
+    end
+  end
+
+  def self.hide
+    @triggered = false
+  end
+
+  def self.update
+    return if !@top || @top.disposed? || !@bottom || @bottom.disposed?
+    h = bar_height
+    
+    is_busy = ($game_temp && $game_temp.message_window_showing) ||
+              ($game_system && $game_system.map_interpreter && $game_system.map_interpreter.running?)
+    
+    want_show = @triggered && !is_busy
+
+    if want_show
+      if @top.y < 0
+        @top.y = [@top.y + BAR_SPEED, 0].min
+      end
+      target_bottom = Graphics.height - h
+      if @bottom.y > target_bottom
+        @bottom.y = [@bottom.y - BAR_SPEED, target_bottom].max
+      end
+    else
+      if @top.y > -h
+        @top.y = [@top.y - BAR_SPEED, -h].max
+      end
+      if @bottom.y < Graphics.height
+        @bottom.y = [@bottom.y + BAR_SPEED, Graphics.height].min
+      end
+    end
+  end
+end
+
+def pbUpdateTrainerWarningBars
+  return if !$game_map || !$game_player
+  
+  if ($game_system && $game_system.map_interpreter && $game_system.map_interpreter.running?) ||
+     ($game_temp && $game_temp.message_window_showing)
+    TrainerSensor.hide
+    TrainerSensor.update
+    return
+  end
+
+  closest_dist = TrainerSensor::RANGE_BARS_TRAINER + 1
+
+  for event in $game_map.events.values
+    next if !event
+    next if !event.name[/^Trainer\((\d+)\)$/i]
+    next if $game_self_switches[[$game_map.map_id, event.id, "A"]] == true
+    next if event.transparent || event.opacity == 0
+
+    range = $~[1].to_i
+    range = 3 if range <= 0
+    dir = event.direction
+    dx = (dir == 6 ? 1 : dir == 4 ? -1 : 0)
+    dy = (dir == 2 ? 1 : dir == 8 ? -1 : 0)
+
+    for i in 0..range
+      target_x = event.x + (dx * i)
+      target_y = event.y + (dy * i)
+      
+      if i > 0 && !event.passable?(target_x - dx, target_y - dy, dir)
+        break
+      end
+      
+      dist = ($game_player.x - target_x).abs + ($game_player.y - target_y).abs
+      if dist < closest_dist
+        closest_dist = dist
+      end
+    end
+  end
+
+  if closest_dist <= TrainerSensor::RANGE_BARS_TRAINER
+    TrainerSensor.show(closest_dist)
+  else
+    TrainerSensor.hide
+  end
+  TrainerSensor.update
+end
+
 class Game_Map
-  alias rem_setup_debug_tester setup
+  alias rem_setup_debug_tester setup unless method_defined?(:rem_setup_debug_tester)
   def setup(map_id)
     rem_setup_debug_tester(map_id)
-    pbRemEnsureTesterEvent if map_id == 3
+    if map_id == 3
+      pbRemEnsureTesterEvent
+      pbRemEnsureTrainerTesterEvent
+    end
   end
 end
 
 class Scene_Map
-  alias rem_createSpritesets_debug createSpritesets
+  alias rem_createSpritesets_debug createSpritesets unless method_defined?(:rem_createSpritesets_debug)
   def createSpritesets
-    pbRemEnsureTesterEvent
+    if $game_map && $game_map.map_id == 3
+      pbRemEnsureTesterEvent
+      pbRemEnsureTrainerTesterEvent
+    end
     rem_createSpritesets_debug
   end
 
-  alias rem_update_debug_tester update
+  alias rem_update_debug_tester update unless method_defined?(:rem_update_debug_tester)
   def update
-    if $game_map && $game_map.map_id == 3 && !$game_map.events.has_key?(999)
-      if pbRemEnsureTesterEvent
+    if $game_map && $game_map.map_id == 3
+      if !$game_map.events.has_key?(998) && pbRemEnsureTrainerTesterEvent
+        disposeSpritesets
+        createSpritesets
+      elsif !$game_map.events.has_key?(999) && pbRemEnsureTesterEvent
         disposeSpritesets
         createSpritesets
       end
     end
     rem_update_debug_tester
+    pbUpdateTrainerWarningBars
+  end
+
+  alias rem_bars_main main unless method_defined?(:rem_bars_main)
+  def main
+    rem_bars_main
+    TrainerSensor.dispose
   end
 end
 
@@ -1414,4 +2031,320 @@ class PokeBattle_Battle
     @scene.pbResetMoveIndex(index)
   end
 end
+
+#===============================================================================
+# Ajuste de altura para la animación de exclamación (! / Alerta de Entrenador)
+# Alineada con la altura de los bocadillos de misión (Quest Markers)
+#===============================================================================
+class AnimationSprite < RPG::Sprite
+  def initialize(animID,map,tileX,tileY,viewport=nil,tinting=false,offsetY=nil)
+    super(viewport)
+    @tileX=tileX
+    @tileY=tileY
+    @offsetY=offsetY.nil? ? ((defined?(EXCLAMATION_ANIMATION_ID) && animID == EXCLAMATION_ANIMATION_ID) ? 26 : 0) : offsetY
+    self.bitmap=Bitmap.new(1,1)
+    self.bitmap.clear
+    @map=map
+    self.x=((@tileX*Game_Map.realResX)-@map.display_x+3)/4+(Game_Map::TILEWIDTH/2)
+    self.y=((@tileY*Game_Map.realResY)-@map.display_y+3)/4+(Game_Map::TILEHEIGHT)-@offsetY
+    pbDayNightTint(self) if tinting
+    self.animation($data_animations[animID],true)
+  end
+
+  def update
+    if !self.disposed?
+      self.x=((@tileX*Game_Map.realResX)-@map.display_x+3)/4+(Game_Map::TILEWIDTH/2)
+      self.y=((@tileY*Game_Map.realResY)-@map.display_y+3)/4+(Game_Map::TILEHEIGHT)-(@offsetY || 0)
+      super
+      self.dispose if !self.effect?
+    end
+  end
+end
+
+class Spriteset_Map
+  def addUserAnimation(animID,x,y,tinting=false,offsetY=nil)
+    offsetY = (defined?(EXCLAMATION_ANIMATION_ID) && animID == EXCLAMATION_ANIMATION_ID ? 26 : 0) if offsetY.nil?
+    viewport=Viewport.new(0,0,Graphics.width,Graphics.height)
+    viewport.z=99999
+    sprite=AnimationSprite.new(animID,$game_map,x,y,viewport,tinting,offsetY)
+    addUserSprite(sprite)
+    return sprite
+  end
+end
+
+def pbExclaim(event,id=EXCLAMATION_ANIMATION_ID,tinting=false,offsetY=nil)
+  if offsetY.nil?
+    offsetY = 26
+    target_ev = event.is_a?(Array) ? event.first : event
+    if target_ev && target_ev.respond_to?(:character_name) && target_ev.character_name != ""
+      begin
+        hue = target_ev.respond_to?(:character_hue) ? target_ev.character_hue : 0
+        bmp = RPG::Cache.character(target_ev.character_name, hue)
+        ch = bmp.height / 4
+        if ch > 64
+          offsetY += (ch - 64)
+        end
+      rescue
+      end
+    end
+  end
+  if event.is_a?(Array)
+    sprite=nil
+    done=[]
+    for i in event
+      if !done.include?(i.id)
+        sprite=$scene.spriteset.addUserAnimation(id,i.x,i.y,tinting,offsetY)
+        done.push(i.id)
+      end
+    end
+  else
+    sprite=$scene.spriteset.addUserAnimation(id,event.x,event.y,tinting,offsetY)
+  end
+  while !sprite.disposed?
+    Graphics.update
+    Input.update
+    pbUpdateSceneMap
+  end
+end
+
+#===============================================================================
+# 5. BUSCAOBJETOS V5/V6 OVERLAY ENGINE (Sprite_Itemfinder)
+#    - Detección continua en segundo plano sin pausar el movimiento.
+#    - Overlay dinámico en la cabeza sincronizado con pasos y dirección.
+#    - 4 estados: 0=Idle, 1=Near (Cerca), 2=Facing (Orientado), 3=Target (Delante).
+#    - Sonido adaptativo y auto-apagado al montar en bicicleta o surfear.
+#===============================================================================
+
+def pbItemfinderActive?
+  return ($PokemonGlobal && $PokemonGlobal.itemfinderActive) ? true : false
+end
+
+def pbToggleItemfinder
+  if !$PokemonBag || $PokemonBag.pbQuantity(getConst(PBItems, :ITEMFINDER)) <= 0
+    Kernel.pbMessage(_INTL("No tienes el Buscaobjetos."))
+    return
+  end
+  if $PokemonGlobal.bicycle
+    Kernel.pbMessage(_INTL("No puedes usar el Buscaobjetos mientras vas en bicicleta."))
+    return
+  end
+  if $PokemonGlobal.surfing
+    Kernel.pbMessage(_INTL("No puedes usar el Buscaobjetos mientras haces Surf."))
+    return
+  end
+
+  $PokemonGlobal.itemfinderActive = !$PokemonGlobal.itemfinderActive
+  if $PokemonGlobal.itemfinderActive
+    pbSEPlay("dexselect", 80, 100)
+  else
+    pbSEPlay("dexselect", 70, 75)
+  end
+end
+
+def pbTurnOffItemfinder
+  return if !$PokemonGlobal || !$PokemonGlobal.itemfinderActive
+  $PokemonGlobal.itemfinderActive = false
+end
+
+def pbItemfinderDetect
+  return nil if !$game_map || !$game_player
+  playerX = $game_player.x
+  playerY = $game_player.y
+  closest = nil
+  min_dist = 999
+
+  for event in $game_map.events.values
+    next if !event
+    next if event.name != "HiddenItem" && !(event.name =~ /^HiddenItem/i)
+    next if $game_self_switches[[$game_map.map_id, event.id, "A"]]
+
+    dist_x = (playerX - event.x).abs
+    dist_y = (playerY - event.y).abs
+    next if dist_x > 8 || dist_y > 6
+
+    dist = dist_x + dist_y
+    if dist < min_dist
+      min_dist = dist
+      closest = event
+    end
+  end
+  return closest
+end
+
+def pbItemfinderState(event)
+  return 0 if !event
+
+  dx = event.x - $game_player.x
+  dy = event.y - $game_player.y
+  dir = $game_player.direction
+
+  # Estado 3: ¡Lo tienes justo delante o bajo los pies!
+  if (dx == 0 && dy == 0) ||
+     (dir == 2 && dx == 0 && dy == 1) ||
+     (dir == 4 && dx == -1 && dy == 0) ||
+     (dir == 6 && dx == 1 && dy == 0) ||
+     (dir == 8 && dx == 0 && dy == -1)
+    return 3
+  end
+
+  dist = dx.abs + dy.abs
+
+  # Estado 2: Cerca (<= 4 casillas) y mirando en su dirección
+  is_facing = false
+  if dist <= 4
+    if dx.abs >= dy.abs
+      is_facing = (dx < 0 && dir == 4) || (dx > 0 && dir == 6)
+    end
+    if !is_facing && dy.abs >= dx.abs
+      is_facing = (dy < 0 && dir == 8) || (dy > 0 && dir == 2)
+    end
+  end
+
+  return 2 if is_facing
+
+  # Estado 1: Detectado en rango (pero más lejos o mirando a otro lado)
+  return 1
+end
+
+class Sprite_Itemfinder < RPG::Sprite
+  def initialize(viewport, character)
+    super(viewport)
+    @character = character
+    @state = -1
+    @bitmaps = {}
+    @head_offset = nil
+    @last_char_name = nil
+    self.visible = false
+  end
+
+  def detect_head_offset
+    return 0 if !@character || !@character.character_name
+    name = @character.character_name.downcase
+    return 6 if name =~ /girl_run/
+    return 6 if name =~ /boy_run|_run/
+    return 4 if name =~ /trchar001|girl/
+    return 0
+  end
+
+  def get_state_bitmap(st)
+    fname = case st
+      when 0 then "Graphics/Characters/Itemfinder/state_0_idle"
+      when 1 then "Graphics/Characters/Itemfinder/state_1_near"
+      when 2 then "Graphics/Characters/Itemfinder/state_2_facing"
+      when 3 then "Graphics/Characters/Itemfinder/state_3_target"
+      else "Graphics/Characters/Itemfinder/state_0_idle"
+    end
+    if !@bitmaps[st] || @bitmaps[st].disposed?
+      path = pbResolveBitmap(fname)
+      if path
+        @bitmaps[st] = Bitmap.new(path)
+      end
+    end
+    return @bitmaps[st]
+  end
+
+  def update
+    super
+    if !$PokemonGlobal || !$PokemonGlobal.itemfinderActive ||
+       $PokemonGlobal.bicycle || $PokemonGlobal.surfing || $PokemonGlobal.diving ||
+       !@character || @character.transparent
+      self.visible = false
+      return
+    end
+
+    event = pbItemfinderDetect
+    new_state = pbItemfinderState(event)
+
+    if new_state != @state || !self.bitmap || self.bitmap.disposed?
+      @state = new_state
+      self.bitmap = get_state_bitmap(@state)
+      self.ox = 32
+      self.oy = 64
+    end
+
+    return if !self.bitmap
+
+    if @last_char_name != @character.character_name
+      @last_char_name = @character.character_name
+      @head_offset = detect_head_offset
+    end
+
+    self.visible = true
+    self.x = @character.screen_x
+    self.y = @character.screen_y + (@head_offset || 0)
+    self.z = @character.screen_z(64) + 1
+
+    cw = 64
+    ch = 64
+    dir = @character.direction
+    sy = ((dir - 2) / 2) * ch
+
+    # Sincronización exacta con el ciclo de marcha y parada del personaje:
+    if @character.pattern != 1
+      # En cualquier paso de movimiento (pattern 0, 2 o 3), seguir con precisión matemática su frame
+      sx = @character.pattern * cw
+    else
+      # Cuando está quieto en reposo (pattern 1), alternar entre frame 1 y frame 3 para parpadear
+      # Ambos frames tienen bob = 0 (altura estándar de reposo), garantizando cero desajuste vertical
+      rate = (@state == 3) ? 10 : 20
+      phase = ((Graphics.frame_count / rate) % 2 == 0) ? 1 : 3
+      sx = phase * cw
+    end
+
+    self.src_rect.set(sx, sy, cw, ch)
+    self.tone.set(0, 0, 0, 0)
+  end
+
+  def dispose
+    @bitmaps.each_value { |b| b.dispose if b && !b.disposed? }
+    @bitmaps.clear
+    super
+  end
+end
+
+class Sprite_Character < RPG::Sprite
+  if !method_defined?(:itemfinder_orig_init)
+    alias itemfinder_orig_init initialize
+    def initialize(viewport, character = nil)
+      itemfinder_orig_init(viewport, character)
+      if @character == $game_player
+        @itemfinder_sprite = Sprite_Itemfinder.new(viewport, @character)
+      end
+    end
+
+    alias itemfinder_orig_update update
+    def update
+      itemfinder_orig_update
+      @itemfinder_sprite.update if @itemfinder_sprite
+    end
+
+    alias itemfinder_orig_dispose dispose
+    def dispose
+      @itemfinder_sprite.dispose if @itemfinder_sprite
+      @itemfinder_sprite = nil
+      itemfinder_orig_dispose
+    end
+  end
+end
+
+Events.onStepTaken += proc {
+  if $PokemonGlobal && $PokemonGlobal.itemfinderActive
+    if $PokemonGlobal.bicycle || $PokemonGlobal.surfing || $PokemonGlobal.diving
+      pbTurnOffItemfinder
+    else
+      event = pbItemfinderDetect
+      st = pbItemfinderState(event)
+      case st
+      when 1
+        pbSEPlay("MiningPing", 55, 85)
+      when 2
+        pbSEPlay("MiningPing", 70, 110)
+      when 3
+        pbSEPlay("MiningPing", 85, 140)
+      end
+    end
+  end
+}
+
+
 

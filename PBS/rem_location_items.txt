@@ -23,10 +23,10 @@ Item6 = SHEARS,1,N,Gimnasio 2 · Ismael · tras la Medalla 2,Tijeras de podar: I
 
 # Ciudad Magno - 11 filas
 [CIUDAD_MAGNETITA]
-Item1 = SURFBOARD,1,J,Gimnasio 3 · Argos · tras la Medalla 3,Tabla de Surf del constructor; se usa con 4 medallas (sustituye a Surf).
+Item1 = SURFBOARD,1,J,Gimnasio 3 · Greta · tras la Medalla 3,Tabla de Surf de la constructora; se usa con 4 medallas (sustituye a Surf).
 Item2 = TM09,1,S,Mercado del Puerto · puesto de fuegos,Fuego Fatuo: stock único; quema al Acero antes del Gimnasio 3.
 Item3 = TM10,1,N,Muelle · marinero veterano,Aqua Jet (40 PB, prioridad): el marinero lo regala en el Acto II; la prioridad no pertenece al Acto I.
-Item4 = TM72,1,J,Gimnasio 3 · Argos,MT de gimnasio 3 (Acero): Cuerno Certero (75 PB).
+Item4 = TM72,1,J,Gimnasio 3 · Greta,MT de gimnasio 3 (Acero): Cuerno Certero (75 PB).
 Item5 = METALPOWDER,1,H,Muelle de carga · tras los contenedores,Polvo Metálico (Ditto).
 Item6 = WATERSTONE,1,H,Cuadrante NO · en el muelle de carga,
 Item7 = UTILITYUMBRELLA,1,N,Mercado del Puerto · vendedor de paraguas,Paraguas Multiuso: regalo del vendedor.
@@ -49,7 +49,7 @@ Item8 = CHILANBERRY,1,B,Cuadrante NO · junto a la fuente de la plaza,
 # Ciudad Rejalgar - 8 filas
 [CIUDAD_REJALGAR]
 Item1 = TM63,1,N,Termas · maestro de baños,Cola Dragón (70 PB): regalo del maestro de baños.
-Item2 = TM79,1,J,Gimnasio 8 · Baltasar,MT de gimnasio 8 (Fuego): Llamarada (110 PB). Potencia máxima, último gimnasio.
+Item2 = TM79,1,J,Gimnasio 8 · Beltrán,MT de gimnasio 8 (Fuego): Llamarada (110 PB). Potencia máxima, último gimnasio.
 Item3 = FIRESTONE,1,E,Ciudad Rejalgar · Misión n.º 16 de Pía «Calor de las termas»,Registrar 3 especies de Fuego en Ciudad Rejalgar. Piedra Fuego de las termas.
 Item4 = HEATROCK,1,H,Cuadrante N · junto a la fuente de la plaza,
 Item5 = FLAMEORB,1,B,Cuadrante N · tras el gimnasio,

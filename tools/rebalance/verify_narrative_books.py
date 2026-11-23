@@ -144,7 +144,7 @@ check('dominants numbered in order 1..6 in the milestones', all(x in T[8] for x 
 check('eight medals are awarded in order', [int(x) for x in re.findall(r'\*\*Medalla (\d)\*\*', T[8])][:8] == [1, 2, 3, 4, 5, 6, 7, 8] or all(f'Medalla {i}' in T[8] for i in range(1, 9)))
 
 print('== 8. Characters: appearances (vol 7) = cast of every chapter (vol 8) ==')
-NAMES = ['Ambrosio', 'Lucián', 'Guiomar', 'Eliseo', 'Nerea', 'Zenobia', 'Alarico', 'Roldán', 'Matilde', 'Ismael', 'Argos', 'Genzo', 'Fausto', 'Hildegarda', 'Isolda', 'Baltasar', 'Nicodemo', 'Leucótea', 'Oriana', 'Anteo', 'Telmo', 'Amparo', 'Pía', 'Eladio y Hortensia']
+NAMES = ['Ambrosio', 'Lucián', 'Guiomar', 'Eliseo', 'Ariadna', 'Zenobia', 'Alarico', 'Roldán', 'Matilde', 'Ismael', 'Greta', 'Genzo', 'Fausto', 'Hildegarda', 'Isolda', 'Beltrán', 'Nicodemo', 'Leucótea', 'Oriana', 'Anteo', 'Telmo', 'Amparo', 'Pía', 'Eladio y Hortensia']
 sec7 = re.split(r'^## ', T[7], flags=re.M)[1:]
 app7 = {}; combat7 = []
 for blk in sec7:
@@ -173,11 +173,11 @@ for who, loc, cb in combat7:
     m = re.search(r'Nv (\d+)', cb)
     if m and f'Nv {m.group(1)}' not in body8[loc]: miss.append((who, loc, m.group(1)))
 check('every battle level of vol 7 is stated in the matching vol-8 chapter', not miss, str(miss[:3]))
-expected_levels = {'Matilde': 16, 'Ismael': 25, 'Argos': 35, 'Genzo': 41, 'Fausto': 49, 'Hildegarda': 54, 'Isolda': 64, 'Baltasar': 70}
+expected_levels = {'Matilde': 16, 'Ismael': 25, 'Greta': 35, 'Genzo': 41, 'Fausto': 49, 'Hildegarda': 54, 'Isolda': 64, 'Beltrán': 70}
 got = {w: int(re.search(r'Nv (\d+)', cb).group(1)) for w, loc, cb in combat7 if w in expected_levels and re.search(r'Nv (\d+)', cb)}
 check('gym Ace levels 16, 25, 35, 41, 49, 54, 64, 70 preserved', got == expected_levels, str(got))
-check('League: Nerea Nv 77 at the threshold, Champion Nv 80, rivals Nv 76', ('Nerea', 'El Umbral de la Liga', 'Sí — Nv 77') in combat7 and any(w == 'Roldán' and 'Nv 80' in cb for w, l, cb in combat7) and sum(1 for w, l, cb in combat7 if l == 'Calzada Corindón (Calle Victoria)') == 2)
-check('Nerea does not fight on the Calzada Corindón', not any(w == 'Nerea' and l.startswith('Calzada') for w, l, cb in combat7))
+check('League: Ariadna Nv 77 at the threshold, Champion Nv 80, rivals Nv 76', ('Ariadna', 'El Umbral de la Liga', 'Sí — Nv 77') in combat7 and any(w == 'Roldán' and 'Nv 80' in cb for w, l, cb in combat7) and sum(1 for w, l, cb in combat7 if l == 'Calzada Corindón (Calle Victoria)') == 2)
+check('Ariadna does not fight on the Calzada Corindón', not any(w == 'Ariadna' and l.startswith('Calzada') for w, l, cb in combat7))
 
 print('== 9. Fragments ledger ==')
 led = T[8][T[8].index('## El libro de cuentas'):T[8].index('## Preludio')]

@@ -79,8 +79,8 @@ NTN_EXTRADAYS=75#-1
 NTN_INITIALYEAR=pbGetTimeNow.year # Can ONLY holds around range 1970-2038
 NTN_INITIALMONTH=pbGetTimeNow.mon
 NTN_INITIALDAY=pbGetTimeNow.day
-NTN_INITIALHOUR=12#pbGetTimeNow.hour
-NTN_INITIALMINUTE=30#pbGetTimeNow.min
+NTN_INITIALHOUR=8 # Inicia a primera hora de la mañana (08:00)
+NTN_INITIALMINUTE=0 # 08:00 en punto
 
 def pbGetTimeNow
   return Time.now if !$ntnEnabled#NTN_ENABLED

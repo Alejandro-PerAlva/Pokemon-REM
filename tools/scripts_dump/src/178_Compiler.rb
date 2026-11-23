@@ -171,8 +171,10 @@ def pbEachFileSectionEx(f)
   sectionname=nil
   lastsection={}
   f.each_line {|line|
-     if lineno==1 && line[0]==0xEF && line[1]==0xBB && line[2]==0xBF
-       line=line[3,line.length-3]
+     if lineno==1
+       while line && line.length>=3 && line[0]==0xEF && line[1]==0xBB && line[2]==0xBF
+         line=line[3,line.length-3]
+       end
      end
      if !line[/^\#/] && !line[/^\s*$/]
        if line[/^\s*\[\s*(.*)\s*\]\s*$/]
@@ -223,8 +225,10 @@ def pbEachSection(f)
   sectionname=nil
   lastsection=[]
   f.each_line {|line|
-     if lineno==1 && line[0]==0xEF && line[1]==0xBB && line[2]==0xBF
-       line=line[3,line.length-3]
+     if lineno==1
+       while line && line.length>=3 && line[0]==0xEF && line[1]==0xBB && line[2]==0xBF
+         line=line[3,line.length-3]
+       end
      end
      if !line[/^\#/] && !line[/^\s*$/]
        if line[/^\s*\[\s*(.+?)\s*\]\s*$/]
@@ -254,8 +258,10 @@ end
 def pbEachCommentedLine(f)
   lineno=1
   f.each_line {|line|
-     if lineno==1 && line[0]==0xEF && line[1]==0xBB && line[2]==0xBF
-       line=line[3,line.length-3]
+     if lineno==1
+       while line && line.length>=3 && line[0]==0xEF && line[1]==0xBB && line[2]==0xBF
+         line=line[3,line.length-3]
+       end
      end
      if !line[/^\#/] && !line[/^\s*$/]
        yield line, lineno
@@ -269,8 +275,10 @@ def pbCompilerEachCommentedLine(filename)
      FileLineData.file=filename
      lineno=1
      f.each_line {|line|
-        if lineno==1 && line[0]==0xEF && line[1]==0xBB && line[2]==0xBF
-          line=line[3,line.length-3]
+        if lineno==1
+          while line && line.length>=3 && line[0]==0xEF && line[1]==0xBB && line[2]==0xBF
+            line=line[3,line.length-3]
+          end
         end
         if !line[/^\#/] && !line[/^\s*$/]
           FileLineData.setLine(line,lineno)
@@ -284,8 +292,10 @@ end
 def pbEachPreppedLine(f)
   lineno=1
   f.each_line {|line|
-     if lineno==1 && line[0]==0xEF && line[1]==0xBB && line[2]==0xBF
-       line=line[3,line.length-3]
+     if lineno==1
+       while line && line.length>=3 && line[0]==0xEF && line[1]==0xBB && line[2]==0xBF
+         line=line[3,line.length-3]
+       end
      end
      line=prepline(line)
      if !line[/^\#/] && !line[/^\s*$/]
@@ -300,8 +310,10 @@ def pbCompilerEachPreppedLine(filename)
      FileLineData.file=filename
      lineno=1
      f.each_line {|line|
-        if lineno==1 && line[0]==0xEF && line[1]==0xBB && line[2]==0xBF
-          line=line[3,line.length-3]
+        if lineno==1
+          while line && line.length>=3 && line[0]==0xEF && line[1]==0xBB && line[2]==0xBF
+            line=line[3,line.length-3]
+          end
         end
         line=prepline(line)
         if !line[/^\#/] && !line[/^\s*$/]
@@ -2035,8 +2047,10 @@ def pbCompileMachines
     f=File.open("PBS/tm.txt","rb")
     FileLineData.file="PBS/tm.txt"
     f.each_line {|line|
-       if lineno==1 && line[0]==0xEF && line[1]==0xBB && line[2]==0xBF
-         line=line[3,line.length-3]
+       if lineno==1
+         while line && line.length>=3 && line[0]==0xEF && line[1]==0xBB && line[2]==0xBF
+           line=line[3,line.length-3]
+         end
        end
        FileLineData.setLine(line,lineno)
        if !line[/^\#/] && !line[/^\s*$/]
@@ -2170,8 +2184,10 @@ def pbCompileTrainers
   File.open("PBS/trainers.txt","rb"){|f|
      FileLineData.file="PBS/trainers.txt"
      f.each_line {|line|
-        if lineno==1 && line[0]==0xEF && line[1]==0xBB && line[2]==0xBF
-          line=line[3,line.length-3]
+        if lineno==1
+          while line && line.length>=3 && line[0]==0xEF && line[1]==0xBB && line[2]==0xBF
+            line=line[3,line.length-3]
+          end
         end
         line=prepline(line)
         if line!=""
@@ -2533,8 +2549,10 @@ def pbCompileEncounters
   File.open("PBS/encounters.txt","rb"){|f|
      lineno=1
      f.each_line {|line|
-        if lineno==1 && line[0]==0xEF && line[1]==0xBB && line[2]==0xBF
-          line=line[3,line.length-3]
+        if lineno==1
+          while line && line.length>=3 && line[0]==0xEF && line[1]==0xBB && line[2]==0xBF
+            line=line[3,line.length-3]
+          end
         end
         line=prepline(line)
         if line.length!=0

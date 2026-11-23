@@ -997,35 +997,35 @@ EndSpeechLose="Man, I lost!"
 Name=LEZUS
 PokemonNos=246,250,252,253,267,269,287,291,292,294,295,300,302,303,310,325,330,349,354,355,363,368
 BeginSpeech=Here I come!
-Type=SAILOR
+Type=SAILOR_M
 EndSpeechWin="Yes, I won!"
 [143]
 EndSpeechLose="Man, I lost!"
 Name=MIJECS
 PokemonNos=270,300,301,302,308,309,316,326,340,345,356,364,366,367
 BeginSpeech=Here I come!
-Type=SAILOR
+Type=SAILOR_M
 EndSpeechWin="Yes, I won!"
 [144]
 EndSpeechLose="Man, I lost!"
 Name=NYAVUL
 PokemonNos=248,249,266,277,300,309,321,324,325,327,329,340,342,347
 BeginSpeech=Here I come!
-Type=SAILOR
+Type=SAILOR_M
 EndSpeechWin="Yes, I won!"
 [145]
 EndSpeechLose="Man, I lost!"
 Name=KINGIUS
 PokemonNos=253,275,284,292,294,295,299,304,314,339,343,354
 BeginSpeech=Here I come!
-Type=SAILOR
+Type=SAILOR_M
 EndSpeechWin="Yes, I won!"
 [146]
 EndSpeechLose="Man, I lost!"
 Name=GRALSIUS
 PokemonNos=253,270,272,284,295,306,312,314,321,335,341,344,360
 BeginSpeech=Here I come!
-Type=SAILOR
+Type=SAILOR_M
 EndSpeechWin="Yes, I won!"
 [147]
 EndSpeechLose="Man, I lost!"

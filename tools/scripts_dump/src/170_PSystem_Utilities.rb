@@ -1016,18 +1016,33 @@ def pbCommonEvent(id)
   return true
 end
 
-def pbExclaim(event,id=EXCLAMATION_ANIMATION_ID,tinting=false)
+def pbExclaim(event,id=EXCLAMATION_ANIMATION_ID,tinting=false,offsetY=nil)
+  if offsetY.nil?
+    offsetY = 26
+    target_ev = event.is_a?(Array) ? event.first : event
+    if target_ev && target_ev.respond_to?(:character_name) && target_ev.character_name != ""
+      begin
+        hue = target_ev.respond_to?(:character_hue) ? target_ev.character_hue : 0
+        bmp = RPG::Cache.character(target_ev.character_name, hue)
+        ch = bmp.height / 4
+        if ch > 64
+          offsetY += (ch - 64)
+        end
+      rescue
+      end
+    end
+  end
   if event.is_a?(Array)
     sprite=nil
     done=[]
     for i in event
       if !done.include?(i.id)
-        sprite=$scene.spriteset.addUserAnimation(id,i.x,i.y,tinting)
+        sprite=$scene.spriteset.addUserAnimation(id,i.x,i.y,tinting,offsetY)
         done.push(i.id)
       end
     end
   else
-    sprite=$scene.spriteset.addUserAnimation(id,event.x,event.y,tinting)
+    sprite=$scene.spriteset.addUserAnimation(id,event.x,event.y,tinting,offsetY)
   end
   while !sprite.disposed?
     Graphics.update

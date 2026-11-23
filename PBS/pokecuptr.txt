@@ -997,28 +997,28 @@ EndSpeechLose="Man, I lost!"
 Name=LENU
 PokemonNos=243,257,278,280,285,289,294,305,306,312,315,319,323,327,330,337,344,346,348,349
 BeginSpeech=Here I come!
-Type=SAILOR
+Type=SAILOR_M
 EndSpeechWin="Yes, I won!"
 [143]
 EndSpeechLose="Man, I lost!"
 Name=NYANS
 PokemonNos=245,246,258,265,267,275,278,290,301,320,324,337,340,349,354,358
 BeginSpeech=Here I come!
-Type=SAILOR
+Type=SAILOR_M
 EndSpeechWin="Yes, I won!"
 [144]
 EndSpeechLose="Man, I lost!"
 Name=DEE
 PokemonNos=247,256,257,263,270,275,282,285,291,294,296,299,304,321,323,330,362
 BeginSpeech=Here I come!
-Type=SAILOR
+Type=SAILOR_M
 EndSpeechWin="Yes, I won!"
 [145]
 EndSpeechLose="Man, I lost!"
 Name=KIDESS
 PokemonNos=271,273,275,284,290,293,314,315,322,330,331,342,351
 BeginSpeech=Here I come!
-Type=SAILOR
+Type=SAILOR_M
 EndSpeechWin="Yes, I won!"
 [146]
 EndSpeechLose="Man, I lost!"

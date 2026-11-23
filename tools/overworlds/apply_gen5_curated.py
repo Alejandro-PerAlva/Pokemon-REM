@@ -26,11 +26,11 @@ INTOCABLES = {
     "trchar002.png": "RIVAL_M (Lucian, rival de REM)",
     "trchar003.png": "RIVAL_F (Guiomar, rival de REM)",
     "trchar006.png": "LEADER_2 (Ismael, Lider de Agua de REM)",
-    "trchar007.png": "LEADER_3 (Argos, Lider de Acero de REM)",
+    "trchar007.png": "LEADER_3 (Greta, Lider de Acero de REM)",
     "trchar009.png": "LEADER_5 (Fausto, Lider de Roca de REM)",
     "trchar010.png": "LEADER_6 (Hildegarda, Lider de Planta de REM)",
     "trchar011.png": "LEADER_7 (Isolda, Lider de Hielo de REM)",
-    "trchar012.png": "LEADER_8 (Baltasar, Lider de Fuego de REM)",
+    "trchar012.png": "LEADER_8 (Beltrán, Lider de Fuego de REM)",
     "trchar013.png": "ELITE_1 (Nicodemo, Alto Mando 1 de REM)",
     "trchar014.png": "ELITE_2 (Oriana, Alto Mando 2 de REM)",
     "trchar015.png": "ELITE_3 (Anteo, Alto Mando 3 de REM)",
@@ -39,7 +39,7 @@ INTOCABLES = {
     "trchar019.png": "MORFEO_RECRUIT_F (Recluta femenina Equipo Morfeo)",
     "trchar020.png": "MORFEO_GENERAL_M (General Alarico Montenegro)",
     "trchar021.png": "MORFEO_GENERAL_F (General Zenobia Montenegro)",
-    "trchar022.png": "MORFEO_SUBCAPTAIN (Subcapitana Nerea)",
+    "trchar022.png": "MORFEO_SUBCAPTAIN (Subcapitana Ariadna)",
     "trchar023.png": "MORFEO_LEADER (Lider Eliseo)",
 }
 

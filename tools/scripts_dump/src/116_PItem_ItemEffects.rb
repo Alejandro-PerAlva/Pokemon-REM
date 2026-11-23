@@ -235,42 +235,7 @@ ItemHandlers::UseInField.add(:SUPERROD,proc{|item|
 })
 
 ItemHandlers::UseInField.add(:ITEMFINDER,proc{|item|
-   event=pbClosestHiddenItem
-   if !event
-     Kernel.pbMessage(_INTL("... ... ... ...¡Nada!\r\nNo responde."))
-   else
-     offsetX=event.x-$game_player.x
-     offsetY=event.y-$game_player.y
-     if offsetX==0 && offsetY==0
-       for i in 0...32
-         Graphics.update
-         Input.update
-         $game_player.turn_right_90 if (i&7)==0
-         pbUpdateSceneMap
-       end
-       Kernel.pbMessage(_INTL("¡El {1} indica algo justo bajo los pies!\1",PBItems.getName(item)))
-     else
-       direction=$game_player.direction
-       if offsetX.abs>offsetY.abs
-         direction=(offsetX<0) ? 4 : 6         
-       else
-         direction=(offsetY<0) ? 8 : 2
-       end
-       for i in 0...8
-         Graphics.update
-         Input.update
-         if i==0
-           $game_player.turn_down if direction==2
-           $game_player.turn_left if direction==4
-           $game_player.turn_right if direction==6
-           $game_player.turn_up if direction==8
-         end
-         pbUpdateSceneMap
-       end
-       Kernel.pbMessage(_INTL("¡Alto!\n¡El {1} está respondiendo!\1",PBItems.getName(item)))
-       Kernel.pbMessage(_INTL("¡Hay algo enterrado muy cerca!"))
-     end
-   end
+   pbToggleItemfinder
 })
 
 ItemHandlers::UseInField.copy(:ITEMFINDER,:DOWSINGMCHN,:DOWSINGMACHINE)

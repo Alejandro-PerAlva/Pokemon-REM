@@ -2914,6 +2914,249 @@ def pbSetQuestStage(id,stage) # stage = nº de objetivos cumplidos (0..4)
   return true
 end
 
+#===============================================================================
+# MISIONES SECUNDARIAS / RECADOS (Sidequests)
+# Almacenadas en $PokemonGlobal.remSidequests ({ id => quest_data_hash })
+# Estados: :active (en curso), :ready (lista para entregar), :completed (hecha)
+#===============================================================================
+class PokemonGlobalMetadata
+  attr_accessor :remSidequests
+  attr_accessor :remQuestsTab
+end
+
+def pbRemSidequests
+  if !$PokemonGlobal.remSidequests
+    $PokemonGlobal.remSidequests = {}
+  end
+  return $PokemonGlobal.remSidequests
+end
+
+module REM_Sidequests
+  REGISTRY = {}
+
+  def self.register(id, hash)
+    REGISTRY[id] = hash
+  end
+
+  def self.entries
+    all = pbRemSidequests.values
+    # Ordenar: primero listas (:ready), luego activas (:active), al final completadas (:completed)
+    return all.sort_by do |q|
+      st_rank = case q[:state]
+        when :ready     then 0
+        when :active    then 1
+        when :completed then 2
+        else 3
+      end
+      [st_rank, q[:order] || 0]
+    end
+  end
+
+  def self.all
+    entries
+  end
+
+  def self.get(id)
+    pbRemSidequests[id]
+  end
+
+  def self.active?(id)
+    q = pbRemSidequests[id]
+    return q && q[:state] == :active
+  end
+
+  def self.ready?(id)
+    q = pbRemSidequests[id]
+    return q && q[:state] == :ready
+  end
+
+  def self.completed?(id)
+    q = pbRemSidequests[id]
+    return q && q[:state] == :completed
+  end
+
+  def self.has?(id)
+    pbRemSidequests.has_key?(id)
+  end
+
+  def self.currentDesc(q)
+    return "" if !q
+    # Si la misión está cumplida, mostramos el resumen / bitácora de lo realizado
+    if q[:state] == :completed
+      if q[:summary] && !q[:summary].to_s.empty?
+        return q[:summary]
+      elsif q[:id] == :recado_albor_01
+        return _INTL("Inspeccionaste los alrededores de Pueblo Albor y la salida a la Ruta 1 por encargo del vecino Bruno, asegurando el camino antes de iniciar tu aventura.")
+      elsif q[:steps] && q[:steps].is_a?(Array) && q[:steps].length > 0
+        return _INTL("Completaste con éxito todos los objetivos de este encargo.")
+      end
+    end
+    if q[:steps] && q[:steps].is_a?(Array) && q[:steps].length > 0
+      st = [[q[:step] || 0, 0].max, q[:steps].length - 1].min
+      return q[:steps][st] || q[:desc] || ""
+    end
+    return q[:desc] || ""
+  end
+
+  # Partir texto usando el ancho de píxeles real del Bitmap para llenar la caja horizontalmente
+  def self.wrapByWidth(bmp, text, max_w, font_size = 22)
+    pbSetNarrowFont(bmp) if defined?(pbSetNarrowFont)
+    bmp.font.size = font_size
+    words = text.to_s.split(" ")
+    lines = []
+    cur = ""
+    for w in words
+      candidate = cur.empty? ? w : (cur + " " + w)
+      if bmp.text_size(candidate).width <= max_w
+        cur = candidate
+      else
+        lines.push(cur) if !cur.empty?
+        cur = w
+      end
+    end
+    lines.push(cur) if !cur.empty?
+    return lines
+  end
+
+  def self.wrap(text, max_chars = 36)
+    words = text.to_s.split(" ")
+    lines = []
+    cur = ""
+    for w in words
+      if cur.empty?
+        cur = w
+      elsif cur.length + 1 + w.length <= max_chars
+        cur += " " + w
+      else
+        lines.push(cur)
+        cur = w
+      end
+    end
+    lines.push(cur) if !cur.empty?
+    return lines
+  end
+end
+
+def pbAddSidequest(id, title=nil, location=nil, npc_name=nil, npc_sprite=nil, desc=nil, reward_text=nil, objectives=nil)
+  d = pbRemSidequests
+  steps = nil
+  summary = nil
+  if title.is_a?(Hash)
+    opts = title
+    title = opts[:title]; location = opts[:location]; npc_name = opts[:npc_name]
+    npc_sprite = opts[:npc_sprite]; desc = opts[:desc]; reward_text = opts[:reward_text]
+    objectives = opts[:objectives]
+    steps = opts[:steps]
+    summary = opts[:summary] || opts[:bitacora] || opts[:log]
+  elsif reward_text.is_a?(Hash)
+    summary = reward_text[:summary] || reward_text[:bitacora]
+  elsif reward_text.is_a?(String) && !reward_text.empty?
+    summary = reward_text
+  end
+  reg = REM_Sidequests::REGISTRY[id] || {}
+
+  raw_steps = steps || (desc.is_a?(Array) ? desc : (reg[:steps] || nil))
+  base_desc = desc.is_a?(Array) ? desc[0] : (desc || reg[:desc] || "")
+
+  cur_state = d[id] ? d[id][:state] : :active
+  data = {
+    :id => id,
+    :title => title || reg[:title] || _INTL("Recado"),
+    :short => reg[:short] || title || _INTL("Recado"),
+    :location => location || reg[:location] || _INTL("Pueblo"),
+    :npc_name => npc_name || reg[:npc_name] || _INTL("Habitante"),
+    :npc_sprite => npc_sprite || reg[:npc_sprite] || "npc008",
+    :desc => base_desc,
+    :steps => raw_steps ? raw_steps.clone : nil,
+    :step => d[id] ? (d[id][:step] || 0) : 0,
+    :summary => summary || reg[:summary] || nil,
+    :reward_text => reward_text.is_a?(String) ? reward_text : (reg[:reward_text] || ""),
+    :objectives => objectives || reg[:objectives] || [],
+    :state => cur_state,
+    :order => d[id] ? d[id][:order] : d.length
+  }
+  d[id] = data
+  $game_map.need_refresh = true if $game_map
+  pbRefreshQuestMarkers if defined?(pbRefreshQuestMarkers)
+  return data
+end
+
+# Avanza de paso en una misión procedural
+def pbAdvanceSidequest(id, new_step_text=nil)
+  q = pbRemSidequests[id]
+  return false if !q
+  q[:steps] = [q[:desc]] if !q[:steps] || !q[:steps].is_a?(Array)
+  if new_step_text && !new_step_text.to_s.empty?
+    q[:steps].push(new_step_text.to_s)
+    q[:step] = q[:steps].length - 1
+  else
+    q[:step] = (q[:step] || 0) + 1
+  end
+  if q[:steps].length > 0 && q[:step] >= q[:steps].length - 1
+    q[:state] = :ready
+  end
+  $game_map.need_refresh = true if $game_map
+  pbRefreshQuestMarkers if defined?(pbRefreshQuestMarkers)
+  return true
+end
+
+def pbSetSidequestStep(id, step_idx, new_text=nil)
+  q = pbRemSidequests[id]
+  return false if !q
+  q[:step] = step_idx
+  if new_text && q[:steps] && q[:steps].is_a?(Array)
+    q[:steps][step_idx] = new_text
+  end
+  $game_map.need_refresh = true if $game_map
+  pbRefreshQuestMarkers if defined?(pbRefreshQuestMarkers)
+  return true
+end
+
+def pbGetSidequestStep(id)
+  q = pbRemSidequests[id]
+  return q ? (q[:step] || 0) : 0
+end
+
+def pbSetSidequestState(id, state)
+  q = pbRemSidequests[id]
+  return false if !q
+  q[:state] = state
+  $game_map.need_refresh = true if $game_map
+  pbRefreshQuestMarkers if defined?(pbRefreshQuestMarkers)
+  return true
+end
+
+def pbSetSidequestSummary(id, summary_text)
+  q = pbRemSidequests[id]
+  return false if !q
+  q[:summary] = summary_text.to_s
+  return true
+end
+
+def pbCompleteSidequest(id, final_summary=nil)
+  q = pbRemSidequests[id]
+  if q && final_summary && !final_summary.to_s.empty?
+    q[:summary] = final_summary.to_s
+  end
+  pbSetSidequestState(id, :completed)
+end
+
+def pbIsSidequestActive?(id)
+  REM_Sidequests.active?(id)
+end
+
+def pbIsSidequestReady?(id)
+  REM_Sidequests.ready?(id)
+end
+
+def pbIsSidequestCompleted?(id)
+  REM_Sidequests.completed?(id)
+end
+
+def pbHasSidequest?(id)
+  REM_Sidequests.has?(id)
+end
+
 class PokemonQuests_Scene
   CYAN=Color.new(74,200,255)
   EMERALD=Color.new(56,216,120)
@@ -2937,6 +3180,17 @@ class PokemonQuests_Scene
     @sprites["species"]=PokemonSprite.new(@viewport)
     @sprites["species"].z=5
     @icons={}
+    @char_bitmaps={}
+    @hide_completed=false
+
+    pia_unlocked = defined?(REM_PIA_QUESTS_SWITCH) && $game_switches[REM_PIA_QUESTS_SWITCH]
+    last_tab = ($PokemonGlobal && $PokemonGlobal.remQuestsTab) ? $PokemonGlobal.remQuestsTab : :sidequests
+    if last_tab == :pia && pia_unlocked
+      @tab = :pia
+    else
+      @tab = :sidequests
+    end
+
     @index=0; @top=0; @shown=nil
     drawBackground
     reload
@@ -2953,10 +3207,22 @@ class PokemonQuests_Scene
         move(-1)
       elsif Input.trigger?(Input::DOWN)
         move(1)
+      elsif Input.trigger?(Input::LEFT) || Input.trigger?(Input::L)
+        switchTab(:pia)
+      elsif Input.trigger?(Input::RIGHT) || Input.trigger?(Input::R)
+        switchTab(:sidequests)
+      elsif @tab == :sidequests && (Input.trigger?(Input::Z) || (Input.triggerex?(0x44) rescue false) || (Input.triggerex?(:D) rescue false))
+        @hide_completed = !@hide_completed
+        pbPlayDecisionSE() if defined?(pbPlayDecisionSE)
+        @index = 0
+        @top = 0
+        reload
+        refresh
       elsif Input.trigger?(Input::C)
         act
       end
     end
+    $PokemonGlobal.remQuestsTab = @tab if $PokemonGlobal
     pbFadeOutAndHide(@sprites) { pbUpdate }
     pbEndScene
   end
@@ -2967,40 +3233,71 @@ class PokemonQuests_Scene
 
   def pbEndScene
     for i in @icons.values; i.dispose if i && !i.disposed?; end
+    if @char_bitmaps
+      for b in @char_bitmaps.values; b.dispose if b && !b.disposed?; end
+    end
     pbDisposeSpriteHash(@sprites)
     @viewport.dispose
   end
 
-  def reload
-    @list=REM_Quests.entries
-    @index=[[@index,@list.length-1].min,0].max
-  end
-
-  def move(d)
-    return if @list.length==0
-    n=[[@index+d,0].max,@list.length-1].min
-    return if n==@index
+  def switchTab(new_tab)
+    pia_unlocked = defined?(REM_PIA_QUESTS_SWITCH) && $game_switches[REM_PIA_QUESTS_SWITCH]
+    return if new_tab == :pia && !pia_unlocked
+    return if @tab == new_tab
     pbPlayCursorSE()
-    @index=n
-    @top=@index if @index<@top
-    @top=@index-ROWS+1 if @index>=@top+ROWS
+    @tab = new_tab
+    @index = 0
+    @top = 0
+    @shown = nil
+    reload
     refresh
   end
 
-  # C: reclama si está lista; pone / quita el seguimiento si no. Las completadas quedan bloqueadas.
-  def act
-    q=@list[@index]
-    return if !q
-    if q[:state]==:ready
-      if pbClaimPiaStarter(q[:sym])
-        reload; refresh
-      end
-    elsif q[:state]==:active
-      pbPiaSelect(nil); reload; refresh
-    elsif q[:state]==:locked
-      pbPiaSelect(q[:sym]); reload; refresh
+  def reload
+    if @tab == :pia
+      @list = REM_Quests.entries
     else
-      pbPlayBuzzerSE() if defined?(pbPlayBuzzerSE)
+      entries = REM_Sidequests.entries
+      if @hide_completed
+        @list = entries.reject { |q| q[:state] == :completed }
+      else
+        @list = entries
+      end
+    end
+    @index = [[@index, @list.length - 1].min, 0].max
+    @top = [[@top, @list.length - ROWS].min, 0].max
+  end
+
+  def move(d)
+    return if @list.length == 0
+    n = [[@index + d, 0].max, @list.length - 1].min
+    return if n == @index
+    pbPlayCursorSE()
+    @index = n
+    @top = @index if @index < @top
+    @top = @index - ROWS + 1 if @index >= @top + ROWS
+    refresh
+  end
+
+  def act
+    if @tab == :pia
+      q = @list[@index]
+      return if !q
+      if q[:state] == :ready
+        if pbClaimPiaStarter(q[:sym])
+          reload; refresh
+        end
+      elsif q[:state] == :active
+        pbPiaSelect(nil); reload; refresh
+      elsif q[:state] == :locked
+        pbPiaSelect(q[:sym]); reload; refresh
+      else
+        pbPlayBuzzerSE() if defined?(pbPlayBuzzerSE)
+      end
+    else
+      # En misiones secundarias todas se realizan a la vez; no se activan/desactivan individualmente.
+      return if @list.length == 0
+      pbPlayDecisionSE() if defined?(pbPlayDecisionSE)
     end
   end
 
@@ -3041,13 +3338,21 @@ class PokemonQuests_Scene
     check(bmp,x+8,cy,EMERALD) if on
   end
 
-  def stateInfo(q)
+  def piaStateInfo(q)
     case q[:state]
     when :active    then return [_INTL("ACTIVA"),CYAN,false,_INTL("EN CURSO")]
     when :ready     then return [_INTL("LISTA"),EMERALD,true,_INTL("LISTA PARA RECLAMAR")]
     when :completed then return [_INTL("HECHA"),EMERALD,false,_INTL("COMPLETADA")]
     end
     return [_INTL("PENDIENTE"),GREY,false,_INTL("SIN INICIAR")]
+  end
+
+  def sidequestStateInfo(q)
+    case q[:state]
+    when :ready     then return [_INTL("LISTA"),EMERALD,true,_INTL("LISTA PARA ENTREGAR")]
+    when :completed then return [_INTL("HECHA"),EMERALD,false,_INTL("COMPLETADA")]
+    else                 return [_INTL("EN CURSO"),CYAN,false,_INTL("EN CURSO")]
+    end
   end
 
   # [x,y,ancho,alto] del área no transparente del fotograma (se calcula una vez por especie)
@@ -3075,15 +3380,208 @@ class PokemonQuests_Scene
     return @icons[q[:species]]
   end
 
+  def charBitmapFor(sprite_name)
+    @char_bitmaps = {} if !@char_bitmaps
+    return @char_bitmaps[sprite_name] if @char_bitmaps.has_key?(sprite_name)
+    bmp = nil
+    path = pbResolveBitmap("Graphics/Characters/#{sprite_name}")
+    if path && path != ""
+      bmp = Bitmap.new(path)
+    end
+    @char_bitmaps[sprite_name] = bmp
+    return bmp
+  end
+
   def refresh
     bmp=@sprites["overlay"].bitmap
     bmp.clear
-    REM_UI.texts(bmp,[[:c,_INTL("MISIONES"),16,22,0,REM_UI::WHITE,30,160]])
-    drawList(bmp)
-    drawDossier(bmp)
+    drawHeader(bmp)
+    if @tab == :pia
+      @sprites["species"].visible = true
+      drawPiaList(bmp)
+      drawPiaDossier(bmp)
+    else
+      @sprites["species"].visible = false
+      if @list.length == 0
+        drawEmptySidequests(bmp)
+      else
+        drawSidequestsList(bmp)
+        drawSidequestDossier(bmp)
+      end
+    end
   end
 
-  def drawList(bmp)
+  def drawHeader(bmp)
+    REM_UI.texts(bmp,[[:c,_INTL("MISIONES"),16,22,0,REM_UI::WHITE,30,160]])
+
+    pia_unlocked = defined?(REM_PIA_QUESTS_SWITCH) && $game_switches[REM_PIA_QUESTS_SWITCH]
+
+    # Tab de la derecha: MISIONES (Recados / Secundarias)
+    # Siempre visible. Posición: x=388..500 (w=112, h=24)
+    sel_sq = (@tab == :sidequests)
+    box(bmp, 388, 12, 112, 24, sel_sq ? ROWSEL : WELL, sel_sq ? CYAN : WELLB)
+    col_sq = sel_sq ? REM_UI::WHITE : GREY
+    REM_UI.texts(bmp, [[:c, _INTL("MISIONES"), 444, 24, 2, col_sq, 16, 95]])
+    if sel_sq
+      bmp.fill_rect(390, 34, 108, 2, CYAN)
+    end
+
+    # Tab a la izquierda de Misiones: PÍA (Encargos del Ayudante)
+    # Solo visible si pia_unlocked == true. Posición: x=270..382 (w=112, h=24)
+    if pia_unlocked
+      sel_pia = (@tab == :pia)
+      box(bmp, 270, 12, 112, 24, sel_pia ? ROWSEL : WELL, sel_pia ? CYAN : WELLB)
+      col_pia = sel_pia ? REM_UI::WHITE : GREY
+      REM_UI.texts(bmp, [[:c, _INTL("PÍA"), 326, 24, 2, col_pia, 16, 95]])
+      if sel_pia
+        bmp.fill_rect(272, 34, 108, 2, CYAN)
+      end
+    end
+  end
+
+  # ---- VISTA VACÍA DE RECADOS ------------------------------------------------
+  def drawEmptySidequests(bmp)
+    box(bmp,12,40,212,332,PANEL,REM_UI::SILVER)
+    box(bmp,26,110,184,180,WELL,WELLB)
+    diamond(bmp, 118, 145, 12, GREY)
+
+    empty_title = @hide_completed ? _INTL("SIN ACTIVAS") : _INTL("SIN MISIONES")
+    empty_sub = @hide_completed ? _INTL("Completadas ocultas.") : _INTL("No tienes ningún")
+    empty_sub2 = @hide_completed ? _INTL("Pulsa [D] para verlas.") : _INTL("recado activo.")
+
+    REM_UI.texts(bmp, [
+      [:c, empty_title, 118, 175, 2, REM_UI::WHITE, 20, 164],
+      [:c, empty_sub, 118, 210, 2, GREY, 16, 164],
+      [:c, empty_sub2, 118, 230, 2, GREY, 16, 164],
+      [:c, _INTL("Habla con la gente"), 118, 255, 2, REM_UI::DIM, 14, 164],
+      [:c, _INTL("para aceptar tareas."), 118, 272, 2, REM_UI::DIM, 14, 164]
+    ])
+
+    box(bmp,232,40,268,120,PANEL,REM_UI::SILVER)
+    box(bmp,240,48,104,104,WELL,WELLB)
+    diamond(bmp, 292, 100, 14, WELLB)
+    REM_UI.texts(bmp, [
+      [:c, _INTL("CUADERNO"), 352, 60, 0, REM_UI::WHITE, 21, 140],
+      [:c, _INTL("Registro de tareas"), 352, 85, 0, GREY, 16, 140]
+    ])
+    pill(bmp, 352, 114, 140, 38, _INTL("VACÍO"), GREY, false, 19)
+
+    box(bmp,232,164,268,208,PANEL,REM_UI::SILVER)
+    REM_UI.texts(bmp, [[:c, _INTL("INFORMACIÓN"), 242, 180, 0, REM_UI::WHITE, 20, 110]])
+    box(bmp,240,196,252,142,ROW,WELLB)
+    REM_UI.texts(bmp, [
+      [:c, _INTL("Explora los pueblos y rutas"), 366, 240, 2, REM_UI::WHITE, 18, 234],
+      [:c, _INTL("en busca de personas con"), 366, 265, 2, GREY, 18, 234],
+      [:c, _INTL("peticiones o necesidades."), 366, 290, 2, GREY, 18, 234]
+    ])
+    box(bmp,240,342,252,24,WELL,WELLB)
+    hint_txt = @hide_completed ? _INTL("[D] Mostrar completadas") : _INTL("[D] Ocultar completadas")
+    REM_UI.texts(bmp, [[:c, hint_txt, 366, 354, 2, REM_UI::DIM, 15, 240]])
+  end
+
+  # ---- LISTA Y EXPEDIENTE DE RECADOS -----------------------------------------
+  def drawSidequestsList(bmp)
+    box(bmp,12,40,212,332,PANEL,REM_UI::SILVER)
+    for r in 0...ROWS
+      i=@top+r
+      break if i>=@list.length
+      q=@list[i]
+      y=46+r*ROWH
+      sel=(i==@index)
+      box(bmp,18,y,192,ROWH-4,sel ? ROWSEL : ROW,sel ? REM_UI::SILVER : WELLB)
+
+      box(bmp,22,y+2,36,36,WELL,WELLB)
+      cb = charBitmapFor(q[:npc_sprite])
+      if cb && !cb.disposed?
+        fw = cb.width / 4; fh = cb.height / 4
+        sc = [30.0 / fw, 30.0 / fh].min
+        dw = (fw * sc).round; dh = (fh * sc).round
+        dx = 22 + (36 - dw) / 2; dy = y + 2 + (36 - dh) / 2
+        bmp.stretch_blt(Rect.new(dx,dy,dw,dh),cb,Rect.new(0,0,fw,fh))
+      else
+        diamond(bmp, 40, y + 20, 6, GREY)
+      end
+
+      # Indicador de estado en esquina inferior del icono
+      if q[:state]==:completed
+        box(bmp,44,y+25,13,13,WELL,EMERALD); check(bmp,50,y+31,EMERALD)
+      elsif q[:state]==:ready
+        box(bmp,44,y+25,13,13,WELL,EMERALD); diamond(bmp,50,y+31,3,EMERALD)
+      else
+        box(bmp,44,y+25,13,13,WELL,CYAN); diamond(bmp,50,y+31,3,CYAN)
+      end
+
+      # Título con ancho completo (142 px) sin píldora para que no haya solapamiento
+      REM_UI.texts(bmp,[[:c,q[:short],62,y+12,0,REM_UI::WHITE,19,142],
+                        [:c,q[:location],62,y+29,0,REM_UI::DIM,15,142]])
+    end
+    if @list.length>ROWS
+      th=318; bh=[th*ROWS/@list.length,18].max
+      by=44+((th-bh)*@top/(@list.length-ROWS))
+      bmp.fill_rect(216,44,3,th,WELL)
+      bmp.fill_rect(216,by,3,bh,REM_UI::SILVER)
+    end
+  end
+
+  def drawSidequestDossier(bmp)
+    q=@list[@index]
+    return if !q
+    info=sidequestStateInfo(q)
+
+    box(bmp,232,40,268,120,PANEL,REM_UI::SILVER)
+    box(bmp,240,48,104,104,WELL,WELLB)
+    bmp.fill_rect(241,100,102,1,GRID); bmp.fill_rect(292,49,1,102,GRID)
+
+    cb = charBitmapFor(q[:npc_sprite])
+    if cb && !cb.disposed?
+      fw = cb.width / 4; fh = cb.height / 4
+      sc = [76.0 / fw, 76.0 / fh].min
+      dw = (fw * sc).round; dh = (fh * sc).round
+      dx = 240 + (104 - dw) / 2; dy = 48 + (104 - dh) / 2
+      bmp.stretch_blt(Rect.new(dx,dy,dw,dh),cb,Rect.new(0,0,fw,fh))
+    else
+      diamond(bmp, 292, 100, 10, GREY)
+    end
+
+    REM_UI.texts(bmp,[[:c,q[:title],352,56,0,REM_UI::WHITE,21,140]])
+    box(bmp,352,70,140,36,WELL,WELLB)
+    REM_UI.texts(bmp,[
+      [:c,_INTL("Lugar: {1}",q[:location]),356,79,0,REM_UI::SILVER,16,132],
+      [:c,_INTL("De: {1}",q[:npc_name]),356,94,0,GREY,16,132]
+    ])
+    pill(bmp,352,114,140,38,info[3],info[1],info[2],19)
+
+    box(bmp,232,164,268,208,PANEL,REM_UI::SILVER)
+    REM_UI.texts(bmp,[[:c,_INTL("OBJETIVO Y DETALLES"),242,180,0,REM_UI::WHITE,20,200]])
+    box(bmp,240,196,252,142,ROW,WELLB)
+
+    # Texto de descripción / objetivo que ocupa toda la caja completa
+    desc_text = REM_Sidequests.currentDesc(q)
+    font_size = 22
+    max_w = 238
+    lines = REM_Sidequests.wrapByWidth(bmp, desc_text, max_w, font_size)
+    if lines.length > 4
+      font_size = 20
+      lines = REM_Sidequests.wrapByWidth(bmp, desc_text, max_w, font_size)
+    end
+    n_lines = [lines.length, 5].min
+    line_h = n_lines <= 3 ? 28 : (n_lines == 4 ? 25 : 22)
+    total_h = n_lines * line_h
+    start_y = 196 + ((142 - total_h) / 2) + (line_h / 2)
+
+    for idx in 0...n_lines
+      y_line = start_y + idx * line_h
+      REM_UI.texts(bmp, [[:c, lines[idx], 246, y_line, 0, REM_UI::WHITE, font_size, max_w]])
+    end
+
+    # Barra inferior con el atajo de ocultar / mostrar completadas
+    box(bmp,240,342,252,24,WELL,WELLB)
+    hint_txt = @hide_completed ? _INTL("[D] Mostrar completadas") : _INTL("[D] Ocultar completadas")
+    REM_UI.texts(bmp,[[:c,hint_txt,366,354,2,REM_UI::DIM,15,240]])
+  end
+
+  # ---- LISTA Y EXPEDIENTE DE PÍA (INICIALES) ---------------------------------
+  def drawPiaList(bmp)
     box(bmp,12,40,212,332,PANEL,REM_UI::SILVER)
     for r in 0...ROWS
       i=@top+r
@@ -3094,7 +3592,7 @@ class PokemonQuests_Scene
       box(bmp,18,y,192,ROWH-4,sel ? ROWSEL : ROW,sel ? REM_UI::SILVER : WELLB)
       ic=iconFor(q)
       bmp.stretch_blt(Rect.new(22,y+2,36,36),ic.bitmap,Rect.new(0,0,64,64)) if ic
-      info=stateInfo(q)
+      info=piaStateInfo(q)
       if q[:state]==:completed
         box(bmp,44,y+25,13,13,WELL,EMERALD); check(bmp,50,y+31,EMERALD)
       elsif q[:state]==:active || q[:state]==:ready
@@ -3104,7 +3602,7 @@ class PokemonQuests_Scene
                         [:c,_INTL("{1}/4 objetivos",REM_Quests.done(q)),62,y+29,0,REM_UI::DIM,15,82]])
       pill(bmp,148,y+10,58,20,info[0],info[1],info[2])
     end
-    if @list.length>ROWS   # barra de desplazamiento
+    if @list.length>ROWS
       th=318; bh=[th*ROWS/@list.length,18].max
       by=44+((th-bh)*@top/(@list.length-ROWS))
       bmp.fill_rect(216,44,3,th,WELL)
@@ -3112,12 +3610,12 @@ class PokemonQuests_Scene
     end
   end
 
-  def drawDossier(bmp)
+  def drawPiaDossier(bmp)
     q=@list[@index]
     sp=@sprites["species"]
     return if !q
-    info=stateInfo(q)
-    # --- tarjeta superior: sprite + identidad ---
+    info=piaStateInfo(q)
+
     box(bmp,232,40,268,120,PANEL,REM_UI::SILVER)
     box(bmp,240,48,104,104,WELL,WELLB)
     bmp.fill_rect(241,100,102,1,GRID); bmp.fill_rect(292,49,1,102,GRID)
@@ -3128,14 +3626,13 @@ class PokemonQuests_Scene
     sp.visible=true
     sp.zoom_x=1.0; sp.zoom_y=1.0
     if sp.bitmap && !sp.bitmap.disposed?
-      bb=boundsFor(q[:species],sp.bitmap)     # caja del dibujo opaco: todos se ajustan al marco por igual
+      bb=boundsFor(q[:species],sp.bitmap)
       z=[88.0/bb[2],88.0/bb[3]].min
       sp.zoom_x=z; sp.zoom_y=z
       sp.x=(292-(bb[0]+bb[2]/2.0)*z).round
       sp.y=(100-(bb[1]+bb[3]/2.0)*z).round
     end
     REM_UI.texts(bmp,[[:c,q[:title],352,56,0,REM_UI::WHITE,20,140]])
-    # fila de tipos (de la especie mostrada, leídos de PBS/pokemon.txt)
     box(bmp,352,70,140,36,WELL,WELLB)
     types=REM_Quests.finalTypes(q[:species])
     tb=AnimatedBitmap.new(_INTL("Graphics/Pictures/types"))
@@ -3146,9 +3643,8 @@ class PokemonQuests_Scene
       bmp.stretch_blt(Rect.new(422+3,76,52,23),tb.bitmap,Rect.new(0,types[1]*28,64,28))
     end
     tb.dispose
-    # estado
     pill(bmp,352,114,140,38,info[3],info[1],info[2],20)
-    # --- objetivos ---
+
     box(bmp,232,164,268,208,PANEL,REM_UI::SILVER)
     d=REM_Quests.done(q)
     REM_UI.texts(bmp,[[:c,_INTL("OBJETIVOS"),242,180,0,REM_UI::WHITE,19,110]])
@@ -3183,6 +3679,7 @@ module REM_UI
     :quest=>["...gggg...",".nnnnnnnn.",".nppppppn.",".npbbbbpn.",".nppppppn.",".npbbbbpn.",".nppppppn.",".npbbbypn.",".nppppppn.",".nnnnnnnn."],
     :card=>["cccccccccccc","cccccccccccc","cwwwccWWWWcc","cwwwcccccccc","cwwwccWWWWcc","cccccccccccc","ccWWWWWWWWcc","cccccccccccc"],
     :save=>["cccccccccccc","ccWWWWWWWWcc","ccWWWWWWyWcc","ccWWWWWWWWcc","cccccccccccc","cwwwwwwwwwwc","cwwwwwwwwwwc","cwwwwwwwwwwc","cwwwwwwwwwwc","cccccccccccc"],
+    :clock=>["....cccccc....","..ccbbbbbbcc..",".cbbbbbbbbbbc.","cbbbbwbbbbbbbc","cbbbbwbbbbbbbc","cbbbbwwwwbbbbc","cbbbbbbbbbbbbc",".cbbbbbbbbbbc.","..ccbbbbbbcc..","....cccccc...."],
     :gear=>["....WWWW....",".WW.WWWW.WW.",".WWWWWWWWWW.","..WWW..WWW..","WWWW....WWWW","WWWW....WWWW","..WWW..WWW..",".WWWWWWWWWW.",".WW.WWWW.WW.","....WWWW...."],
     :bug=>["..g......g..","...g....g...","....GGGG....","...GGGGGG...","ggg.GkkG.ggg","...GGGGGG...","ggg.GkkG.ggg","...GGGGGG...","....GGGG...."],
     :exit=>["WWWWWWWWWW","WnnnnnnnnW","WnnnnnnnnW","WnnnnnnnnW","WnnnnnyynW","WnnnnnnnnW","WnnnnnnnnW","WnnnnnnnnW","WWWWWWWWWW"],
@@ -3242,18 +3739,22 @@ class PokemonMenu_Scene
     @sprites["cards"]=BitmapSprite.new(240,Graphics.height,@viewport)
     @sprites["cards"].x=Graphics.width-240
     @sprites["cards"].visible=false
-    @sprites["vial"]=BitmapSprite.new(190,44,@viewport)
+    @sprites["vial"]=BitmapSprite.new(240,44,@viewport)
     @sprites["vial"].x=10
     @sprites["vial"].y=10
     @sprites["vial"].visible=false
-    @sprites["sleepbag"]=BitmapSprite.new(190,44,@viewport)
+    @sprites["sleepbag"]=BitmapSprite.new(240,44,@viewport)
     @sprites["sleepbag"].x=10
     @sprites["sleepbag"].y=10
     @sprites["sleepbag"].visible=false
-    @sprites["save"]=BitmapSprite.new(190,44,@viewport)
+    @sprites["save"]=BitmapSprite.new(240,44,@viewport)
     @sprites["save"].x=10
     @sprites["save"].y=10
     @sprites["save"].visible=false
+    @sprites["clock"]=BitmapSprite.new(240,44,@viewport)
+    @sprites["clock"].x=10
+    @sprites["clock"].y=Graphics.height-54
+    @sprites["clock"].visible=false
     @saveIndex=-1
     @sprites["infowindow"]=Window_UnformattedTextPokemon.newWithSize("",0,0,32,32,@viewport)
     @sprites["infowindow"].visible=false
@@ -3269,6 +3770,7 @@ class PokemonMenu_Scene
     @sprites["save"].visible=false
     @sprites["sleepbag"].visible=false if @sprites["sleepbag"]
     @sprites["vial"].visible=false
+    @sprites["clock"].visible=false if @sprites["clock"]
     @sprites["cards"].visible=false
     @sprites["infowindow"].visible=false
     @sprites["helpwindow"].visible=false
@@ -3353,13 +3855,24 @@ class PokemonMenu_Scene
     return false
   end
 
-  # Columna de cajitas informativas arriba a la izquierda: Pokévial, Saco de Dormir y Guardar.
+  # ---- Reloj Digital: cajita informativa abajo a la izquierda solo si lo tienes ----
+  def remHasClock?
+    return false if pbInSafari? || pbInBugContest?
+    return false if !hasConst?(PBItems,:RELOJ)
+    return $PokemonBag && $PokemonBag.pbQuantity(getConst(PBItems,:RELOJ))>0
+  rescue
+    return false
+  end
+
+  # Columna de cajitas informativas a la izquierda: Pokévial, Saco de Dormir y Guardar (arriba), y Reloj Digital (abajo).
   # Las cajitas tienen el mismo ancho armónico para mantener la simetría de la interfaz.
   def remDrawVial
     vspr=@sprites["vial"]; bspr=@sprites["sleepbag"]; sspr=@sprites["save"]
+    cspr=@sprites["clock"]
     hasSave=(@saveIndex && @saveIndex>=0)
     hasVial=remHasVial?
     hasBag=remHasSleepBag?
+    hasClock=remHasClock?
 
     cur_v=hasVial ? pbRemVialCharges : 0
     mx_v=hasVial ? pbRemVialMax : 1
@@ -3374,16 +3887,48 @@ class PokemonMenu_Scene
     bhint=empty_b ? _INTL("Vacío") : _INTL("D: usar")
 
     shint=_INTL("S: usar")
+
+    # Datos del Reloj Digital (24h)
+    t_now=pbGetTimeNow
+    time_str=sprintf("%02d:%02d",t_now.hour,t_now.min)
+    is_night=PBDayNight.isNight?(t_now)
+
     probe=sspr.bitmap
     pbSetSystemFont(probe)
     probe.font.size=20
     l1=[probe.text_size(_INTL("Guardar")).width,probe.text_size(_INTL("Cargas: {1}","3/3")).width].max
+
     probe.font.size=17
     l2=[probe.text_size(shint).width,probe.text_size(_INTL("Z: usar")).width,probe.text_size(_INTL("D: usar")).width,probe.text_size(_INTL("Vacío")).width].max
-    w=46+[l1,l2].max+14
+    w_top = 46 + [l1,l2].max + 14
+
+    # Ancho armónico ajustado al máximo sin romper nada:
+    probe=sspr.bitmap
+    pbSetSystemFont(probe)
+    probe.font.size=20
+    l1=[probe.text_size(_INTL("Guardar")).width,probe.text_size(_INTL("Cargas: {1}","3/3")).width].max
+
+    probe.font.size=17
+    l2=[probe.text_size(shint).width,probe.text_size(_INTL("Z: usar")).width,probe.text_size(_INTL("D: usar")).width,probe.text_size(_INTL("Vacío")).width].max
+    w_top = 44 + [l1,l2].max + 12
+
+    if hasClock
+      probe.font.size=32; probe.font.bold=true
+      t_w = probe.text_size(time_str).width
+      probe.font.size=18; probe.font.bold=true
+      lbl_w = [probe.text_size(_INTL("NOCHE")).width, probe.text_size(_INTL("DÍA")).width].max
+      probe.font.size=14; probe.font.bold=false
+      sub_w = [probe.text_size(_INTL("Anochece: 20:00")).width, probe.text_size(_INTL("Amanece: 06:00")).width].max
+      col_w = [lbl_w, sub_w].max + 4
+      clock_w = 8 + t_w + 6 + col_w + 6
+      w = [w_top, clock_w].max
+    else
+      w = [w_top, 140].max
+    end
 
     sspr.visible=false; vspr.visible=false
     bspr.visible=false if bspr
+    cspr.visible=false if cspr
     y=10
     if hasVial
       bmp=vspr.bitmap; bmp.clear
@@ -3405,6 +3950,51 @@ class PokemonMenu_Scene
       remInfoBox(bmp,w,nil,:save,_INTL("Guardar"),REM_UI::WHITE,shint)
       sspr.y=y; sspr.visible=true
     end
+    if hasClock && cspr
+      bmp=cspr.bitmap; bmp.clear
+      # Reloj digital puro abajo a la izquierda: 88:88 grande a la izquierda y estado centrado
+      remClockBox(bmp,w,time_str,is_night)
+      cspr.x=10
+      cspr.y=Graphics.height-54
+      cspr.visible=true
+    end
+  end
+
+  # Cajita digital de 44 px abajo a la izquierda para el Reloj Digital:
+  # - Sin icono de objeto.
+  # - Números 88:88 grandes (32 pt) pegados al margen izquierdo y centrados verticalmente.
+  # - En el espacio derecho: 'DÍA' (amarillo) o 'NOCHE' (azul oscuro) centrado horizontalmente.
+  # - Debajo de DÍA/NOCHE: 'Anochece: 20:00' o 'Amanece: 06:00' también centrado horizontalmente.
+  def remClockBox(bmp,w,time_str,is_night)
+    pbSetSystemFont(bmp)
+    REM_UI.slotBox(bmp,0,0,w,44,Color.new(20,22,29),REM_UI::SILVER,1)
+
+    tag_str = is_night ? _INTL("NOCHE") : _INTL("DÍA")
+    tag_col = is_night ? Color.new(65,120,240) : Color.new(255,215,0)
+    sub_str = is_night ? _INTL("Amanece: 06:00") : _INTL("Anochece: 20:00")
+
+    # 1. Medir números grandes pegados a la izquierda (32 pt)
+    start_x = 8
+    bmp.font.size = 32
+    bmp.font.bold = true
+    t_w = bmp.text_size(time_str).width
+
+    # 2. Espacio derecho para el estado y anochecer/amanecer
+    rx = start_x + t_w + 6
+    col_w = w - rx - 6
+
+    # 1. Dígitos 88:88 grandes a la izquierda (abarcando la altura de 44 px)
+    pbDrawShadowText(bmp, start_x, 0, t_w + 4, 44, time_str, REM_UI::WHITE, Color.new(35,38,48), 0)
+
+    # 2. DÍA (amarillo) o NOCHE (azul oscuro) centrado horizontalmente en el espacio derecho
+    bmp.font.size = 18
+    bmp.font.bold = true
+    pbDrawShadowText(bmp, rx, 4, col_w, 20, tag_str, tag_col, Color.new(25,28,38), 1)
+
+    # 3. Anochece: 20:00 / Amanece: 06:00 también centrado horizontalmente debajo
+    bmp.font.size = 14
+    bmp.font.bold = false
+    pbDrawShadowText(bmp, rx, 22, col_w, 18, sub_str, Color.new(140,148,166), Color.new(20,22,28), 1)
   end
 
   # Cajita de 44 px: hueco de icono (32 px), línea 1 (20 px, con un segundo tramo opcional de otro color) y pista (17 px)
@@ -3420,17 +4010,19 @@ class PokemonMenu_Scene
         ico=AnimatedBitmap.new(file)
         bmp.stretch_blt(Rect.new(8,8,28,28),ico.bitmap,Rect.new(0,0,ico.bitmap.width,ico.bitmap.height))
         ico.dispose
+      else
+        REM_UI.drawMenuIcon(bmp,:clock,22,22,1.0)
       end
     end
     bmp.font.size=20
-    x=46
-    pbDrawShadowText(bmp,x,2,w-50,22,line1,color1,Color.new(40,44,55))
+    x=44
+    pbDrawShadowText(bmp,x,2,w-x-4,22,line1,color1,Color.new(40,44,55))
     if line1b
       x+=bmp.text_size(line1).width
       pbDrawShadowText(bmp,x,2,w-x-4,22,line1b,color1b,Color.new(40,44,55))
     end
     bmp.font.size=17
-    pbDrawShadowText(bmp,46,22,w-50,18,line2,Color.new(122,130,148),Color.new(30,33,42))
+    pbDrawShadowText(bmp,44,22,w-48,18,line2,Color.new(122,130,148),Color.new(30,33,42))
   end
 
   def remUseVial

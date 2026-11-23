@@ -5,15 +5,16 @@ automatically when its animation is finished.
 Used for grass rustling and so forth.
 =end
 class AnimationSprite < RPG::Sprite
-  def initialize(animID,map,tileX,tileY,viewport=nil,tinting=false)
+  def initialize(animID,map,tileX,tileY,viewport=nil,tinting=false,offsetY=nil)
     super(viewport)
     @tileX=tileX
     @tileY=tileY
+    @offsetY=offsetY.nil? ? ((defined?(EXCLAMATION_ANIMATION_ID) && animID == EXCLAMATION_ANIMATION_ID) ? 26 : 0) : offsetY
     self.bitmap=Bitmap.new(1,1)
     self.bitmap.clear
     @map=map
     self.x=((@tileX*Game_Map.realResX)-@map.display_x+3)/4+(Game_Map::TILEWIDTH/2)
-    self.y=((@tileY*Game_Map.realResY)-@map.display_y+3)/4+(Game_Map::TILEHEIGHT)
+    self.y=((@tileY*Game_Map.realResY)-@map.display_y+3)/4+(Game_Map::TILEHEIGHT)-@offsetY
     pbDayNightTint(self) if tinting
     self.animation($data_animations[animID],true)
   end
@@ -26,7 +27,7 @@ class AnimationSprite < RPG::Sprite
   def update
     if !self.disposed?
       self.x=((@tileX*Game_Map.realResX)-@map.display_x+3)/4+(Game_Map::TILEWIDTH/2)
-      self.y=((@tileY*Game_Map.realResY)-@map.display_y+3)/4+(Game_Map::TILEHEIGHT)
+      self.y=((@tileY*Game_Map.realResY)-@map.display_y+3)/4+(Game_Map::TILEHEIGHT)-@offsetY
       super
       self.dispose if !self.effect?
     end
@@ -45,10 +46,11 @@ class Spriteset_Map
     _animationSprite_initialize(map)
   end
 
-  def addUserAnimation(animID,x,y,tinting=false)
+  def addUserAnimation(animID,x,y,tinting=false,offsetY=nil)
+    offsetY = (defined?(EXCLAMATION_ANIMATION_ID) && animID == EXCLAMATION_ANIMATION_ID ? 26 : 0) if offsetY.nil?
     viewport=Viewport.new(0,0,Graphics.width,Graphics.height)
     viewport.z=99999
-    sprite=AnimationSprite.new(animID,$game_map,x,y,viewport,tinting)
+    sprite=AnimationSprite.new(animID,$game_map,x,y,viewport,tinting,offsetY)
     addUserSprite(sprite)
     return sprite
   end

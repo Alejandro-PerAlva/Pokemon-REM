@@ -16,8 +16,8 @@
 5,LEADER_1,Líder,40,Combate Lider,Victoria Lider,,Female,100,
 # Gimnasio 2: Ismael (Agua)
 6,LEADER_2,Líder,50,Combate Lider,Victoria Lider,,Male,100,
-# Gimnasio 3: Argos (Acero)
-7,LEADER_3,Líder,60,Combate Lider,Victoria Lider,,Male,100,
+# Gimnasio 3: Greta (Acero)
+7,LEADER_3,Líder,60,Combate Lider,Victoria Lider,,Female,100,
 # Gimnasio 4: Genzo (Lucha)
 8,LEADER_4,Líder,70,Combate Lider,Victoria Lider,,Male,100,
 # Gimnasio 5: Fausto (Roca)
@@ -26,7 +26,7 @@
 10,LEADER_6,Líder,90,Combate Lider,Victoria Lider,,Female,100,
 # Gimnasio 7: Isolda (Hielo)
 11,LEADER_7,Líder,100,Combate Lider,Victoria Lider,,Female,100,
-# Gimnasio 8: Baltasar (Fuego)
+# Gimnasio 8: Beltrán (Fuego)
 12,LEADER_8,Líder,110,Combate Lider,Victoria Lider,,Male,100,
 # Alto Mando 1: Nicodemo (Bicho)
 13,ELITE_1,Alto Mando,120,Combate Alto Mando,Victoria Liga,,Male,100,
@@ -46,7 +46,7 @@
 20,MORFEO_GENERAL_M,General,100,Combate General Morfeo,,,Male,100,
 # La General: Zenobia Montenegro
 21,MORFEO_GENERAL_F,General,100,Combate General Morfeo,,,Female,100,
-# Subcapitana: Nerea
+# Subcapitana: Ariadna
 22,MORFEO_SUBCAPTAIN,Subcapitana,100,Combate General Morfeo,,,Female,100,
 # Lider del Equipo Morfeo: Eliseo
 23,MORFEO_LEADER,Líder Supremo,150,Combate Lider Morfeo,,,Male,100,

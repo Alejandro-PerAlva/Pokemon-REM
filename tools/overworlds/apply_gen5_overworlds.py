@@ -105,9 +105,9 @@ copy_sprite(g5("trchar005.png"), "trchar005.png",
 copy_sprite(g5("trchar006.png"), "trchar006.png",
     "LEADER_2 (Ismael, Gimnasio Agua, M) — Gen5 Characters trchar006.")
 
-# trchar007 = LEADER_3 Argos (Acero, masculino)
+# trchar007 = LEADER_3 Greta (Acero, femenina)
 copy_sprite(g5("trchar007.png"), "trchar007.png",
-    "LEADER_3 (Argos, Gimnasio Acero, M) — Gen5 Characters trchar007.")
+    "LEADER_3 (Greta, Gimnasio Acero, F) — Gen5 Characters trchar007.")
 
 # trchar008 = LEADER_4 Genzo (Lucha, masculino)
 copy_sprite(g5("trchar008.png"), "trchar008.png",
@@ -125,9 +125,9 @@ copy_sprite(g5("trchar010.png"), "trchar010.png",
 copy_sprite(g5("trchar011.png"), "trchar011.png",
     "LEADER_7 (Isolda, Gimnasio Hielo, F) — Gen5 Characters trchar011.")
 
-# trchar012 = LEADER_8 Baltasar (Fuego, masculino)
+# trchar012 = LEADER_8 Beltrán (Fuego, masculino)
 copy_sprite(g5("trchar012.png"), "trchar012.png",
-    "LEADER_8 (Baltasar, Gimnasio Fuego, M) — Gen5 Characters trchar012.")
+    "LEADER_8 (Beltrán, Gimnasio Fuego, M) — Gen5 Characters trchar012.")
 
 # trchar013 = ELITE_1 Nicodemo (Bicho, masculino)
 copy_sprite(g5("trchar013.png"), "trchar013.png",
@@ -172,10 +172,10 @@ copy_sprite(bw("BW_132_Plasma_Ghetsis.png"), "trchar020.png",
 copy_sprite(bw("BW_046_Clerk_F.png"), "trchar021.png",
     "MORFEO_GENERAL_F (Zenobia) — BW_046_Clerk_F: mujer de uniforme formal y porte autoritario. Match de silueta para generala con monóculo.")
 
-# trchar022 = MORFEO_SUBCAPTAIN Nerea: cabello corto oscuro, táctica, uniforme.
+# trchar022 = MORFEO_SUBCAPTAIN Ariadna: cabello corto oscuro, táctica, uniforme.
 # BW_117_Plasma_Shadow_Triad = figuras ninja/tácticas de Plasma — silueta discreta y de acción.
 copy_sprite(bw("BW_117_Plasma_Shadow_Triad.png"), "trchar022.png",
-    "MORFEO_SUBCAPTAIN (Nerea) — BW_117_Plasma_Shadow_Triad: figura táctica y ágil de organización. Nerea es subcapitana operativa.")
+    "MORFEO_SUBCAPTAIN (Ariadna) — BW_117_Plasma_Shadow_Triad: figura táctica y ágil de organización. Ariadna es subcapitana operativa.")
 
 # trchar023 = MORFEO_LEADER Eliseo: sereno, túnica índigo, liderazgo tranquilo.
 # BW_131_Plasma_N = N es el líder sereno y conectado con la naturaleza. Paralelo narrativo muy fuerte.

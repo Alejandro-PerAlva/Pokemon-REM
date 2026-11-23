@@ -30,12 +30,12 @@ FIXED = [
     ("PROFESSOR", "Profesor", 100, "Male", N, "Profesor Ambrosio"),
     ("LEADER_1", "Lider", 40, "Female", A_LEADER, "Gimnasio 1: Matilde (Normal)"),
     ("LEADER_2", "Lider", 50, "Male", A_LEADER, "Gimnasio 2: Ismael (Agua)"),
-    ("LEADER_3", "Lider", 60, "Male", A_LEADER, "Gimnasio 3: Argos (Acero)"),
+    ("LEADER_3", "Lider", 60, "Female", A_LEADER, "Gimnasio 3: Greta (Acero)"),
     ("LEADER_4", "Lider", 70, "Male", A_LEADER, "Gimnasio 4: Genzo (Lucha)"),
     ("LEADER_5", "Lider", 80, "Male", A_LEADER, "Gimnasio 5: Fausto (Roca)"),
     ("LEADER_6", "Lider", 90, "Female", A_LEADER, "Gimnasio 6: Hildegarda (Planta)"),
     ("LEADER_7", "Lider", 100, "Female", A_LEADER, "Gimnasio 7: Isolda (Hielo)"),
-    ("LEADER_8", "Lider", 110, "Male", A_LEADER, "Gimnasio 8: Baltasar (Fuego)"),
+    ("LEADER_8", "Lider", 110, "Male", A_LEADER, "Gimnasio 8: Beltrán (Fuego)"),
     ("ELITE_1", "Alto Mando", 120, "Male", A_ELITE, "Alto Mando 1: Nicodemo (Bicho)"),
     ("ELITE_2", "Alto Mando", 120, "Female", A_ELITE, "Alto Mando 2: Oriana (Psíquico)"),
     ("ELITE_3", "Alto Mando", 120, "Male", A_ELITE, "Alto Mando 3: Anteo (Siniestro)"),
@@ -45,7 +45,7 @@ FIXED = [
     ("MORFEO_RECRUIT_F", "Recluta Morfeo", 16, "Female", A_RECRUIT, "Recluta F del Equipo Morfeo"),
     ("MORFEO_GENERAL_M", "General", 100, "Male", A_GENERAL, "El General: Alarico Montenegro"),
     ("MORFEO_GENERAL_F", "General", 100, "Female", A_GENERAL, "La General: Zenobia Montenegro"),
-    ("MORFEO_SUBCAPTAIN", "Subcapitana", 100, "Female", A_GENERAL, "Subcapitana: Nerea"),
+    ("MORFEO_SUBCAPTAIN", "Subcapitana", 100, "Female", A_GENERAL, "Subcapitana: Ariadna"),
     ("MORFEO_LEADER", "Lider Supremo", 150, "Male", A_BOSS, "Lider del Equipo Morfeo: Eliseo"),
 ]
 # El PBS usa acentos; el dict mapea el nombre sin tilde a su forma correcta.

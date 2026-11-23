@@ -4,6 +4,8 @@ docs/
 documents/
 *.pdf
 *.bak*
+*_backup_*/
 PBS_backup_original/
 __pycache__/
 scratch/
+previews/

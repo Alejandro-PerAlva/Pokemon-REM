@@ -5,9 +5,9 @@
 # Formato: texto plano en español (UTF-8 BOM, CRLF), secciones [npcNNN] y comentarios con «#».
 
 # Reparto (32 slots):
-# - npc001-012 = 12 IDENTIFICABLES (NPC con función o historia propia; 6 Male + 6 Female).
-# - npc013-024 = 12 GENÉRICOS organizados por edad (2 Niños pequeños, 4 Jóvenes, 4 Adultos, 2 Ancianos).
-# - npc025-032 = 8 SLOTS DE REPUESTO (libres para asignar en el futuro según necesidades).
+# - npc001-016 = 16 IDENTIFICABLES (NPC con función o historia propia; 8 Male + 8 Female).
+# - npc017-028 = 12 GENÉRICOS organizados por edad (2 Niños pequeños, 4 Jóvenes, 4 Adultos, 2 Ancianos).
+# - npc029-032 = 4 SLOTS DE REPUESTO (libres para asignar en el futuro según necesidades).
 # Las profesiones (marinero, pescador, montañero, policía, etc.) NO usan hueco npc: salen de los trcharNNN de entrenador.
 
 [npc001]
@@ -26,150 +26,146 @@ Description = Mujer con uniforme y gorra de tienda. Atiende el mostrador de los 
 Gender = Female
 
 [npc004]
+Name = Oficial de pasarutas (chico)
+Description = Joven con uniforme azul y gorra de plato con visera roja. Atiende el mostrador de las casetas de control entre rutas y ciudades.
+Gender = Male
+
+[npc005]
+Name = Oficial de pasarutas (chica)
+Description = Joven con uniforme azul, sombrero de copa corta y falda rosa. Atiende el mostrador de las casetas de control entre rutas y ciudades.
+Gender = Female
+
+[npc006]
+Name = Administrador de gimnasios
+Description = Joven con traje verde azulado, camisa blanca y diadema con micrófono. Gestor administrativo de la Liga a la entrada de los gimnasios.
+Gender = Male
+
+[npc007]
+Name = Administradora de gimnasios
+Description = Joven con chaqueta verde azulada, falda blanca y diadema con micrófono. Gestora administrativa de la Liga a la entrada de los gimnasios.
+Gender = Female
+
+[npc008]
 Name = Julián (el padre)
 Description = Hombre de aspecto sereno y ropa sobria. Padre del protagonista; punto de curación del hogar en Pueblo Albor y encargado de mejorar el Saco de Dormir.
 Gender = Male
 
-[npc005]
+[npc009]
 Name = Amparo (la madre)
 Description = Mujer de unos 40 años, delantal y gesto cálido. Madre del protagonista; punto de curación del hogar en Pueblo Albor y encargada de entregar y mejorar el Pokévial.
 Gender = Female
 
-[npc006]
-Name = Pía (ayudante del Profesor)
-Description = Joven aplicada con bata de laboratorio. Atiende el mostrador del laboratorio de Albor: entrega de iniciales, misiones y hitos de captura.
-Gender = Female
-
-[npc007]
-Name = Hortensia (la Guardería)
-Description = Anciana de pelo blanco recogido y ropa rústica en tonos marrones y tierra. Dueña de la guardería de Granja Apatita; activa la mecánica de crianza, entrega de huevos y la Incubadora Portátil.
-Gender = Female
-
-[npc008]
-Name = Telmo (el Viejo Pescador)
-Description = Pescador veterano con chubasquero amarillo impermeable y gorro de lluvia. Presencia el duelo de la Ruta 12, entrega la caña de pescar (única caña) en Pueblo Nácar y viaja en barco a Isla Obsidiana.
-Gender = Male
-
-[npc009]
-Name = Ámbar (la Conservadora del Museo)
-Description = Joven científica con bata blanca de laboratorio y gafas, aire analítico de conservadora. Revive los fósiles en el museo de Pueblo Casiterita.
-Gender = Female
-
 [npc010]
-Name = Silvestre (el Árbitro)
-Description = Hombre con camisa de árbitro a rayas verticales blancas y negras y silbato al cuello. Arbitra y recibe con consejos en los gimnasios y en la Liga Pokémon.
-Gender = Male
+Name = Pía (ayudante del Profesor)
+Description = Mujer joven con bata de laboratorio y gafas. Atiende el laboratorio de Pueblo Albor y gestiona las misiones secundarias del expediente del Profesor.
+Gender = Female
 
 [npc011]
-Name = Don Prodigio (Intercambio Prodigio)
-Description = Hombre maduro distinguido y enigmático, con traje oscuro formal y sombrero calado con cinta turquesa. Marchante misterioso que gestiona la mecánica de Intercambio Prodigio (wonder trade).
-Gender = Male
-
-[npc012]
-Name = Acampador de fogata
-Description = Montañero corpulento y barbudo con gran mochila a la espalda y ropa de senderismo. Viajero campestre que cuenta los 24 relatos de las fogatas nocturnas en las rutas.
-Gender = Male
-
-# --- 12 Genéricos (Organizados por edad: 2 Niños pequeños, 4 Jóvenes, 4 Adultos, 2 Ancianos) ---
-
-[npc013]
-Name = Niño pequeño
-Description = Niño pequeño en camiseta roja y bermudas (BW_001). Pueblos, parques y casas.
-Gender = Male
-
-[npc014]
-Name = Niña pequeña
-Description = Niña pequeña con vestidito verde y lazo fucsia (BW_002). Pueblos, parques y casas.
+Name = Hortensia (la Guardería)
+Description = Anciana de aspecto dulce con delantal de flores. Regenta la Guardería Pokémon en el camino a Ciudad Calceda.
 Gender = Female
 
+[npc012]
+Name = Telmo (el Viejo Pescador)
+Description = Anciano con impermeable y barba blanca. Entrega la Caña Vieja y enseña a pescar en los muelles de Ciudad Calaire.
+Gender = Male
+
+[npc013]
+Name = Ámbar (la Conservadora del Museo)
+Description = Mujer de mediana edad con chaleco de expedición y lupa. Atiende el museo de Pueblo Casitero y revive los fósiles prehistóricos.
+Gender = Female
+
+[npc014]
+Name = Silvestre (el Árbitro)
+Description = Hombre atlético con uniforme a rayas y silbato. Árbitro oficial de la Liga presente a la entrada de cada gimnasio para dar consejos y agua fresca.
+Gender = Male
+
 [npc015]
-Name = Chico escolar
-Description = Niño/chico en edad escolar con gorra azul y zapatillas deportivas (BW_003). Pueblos, escuelas y parques.
+Name = Don Prodigio (Intercambio Prodigio)
+Description = Hombre excéntrico con chistera y capa de colores. Gestiona los intercambios sorpresa y funciones de intercambio en puntos clave.
 Gender = Male
 
 [npc016]
-Name = Chica escolar
-Description = Niña/chica en edad escolar con coletas y vestido azul (BW_006). Pueblos, escuelas y parques.
-Gender = Female
+Name = Acampador de fogata
+Description = Montañero con mochila grande y chaqueta térmica. Descansa junto a las fogatas de ruta, comparte leyendas locales y permite descansar.
+Gender = Male
 
 [npc017]
-Name = Joven informal
-Description = Chico joven con chaqueta marrón casual (BW_012). Calles, tiendas y plazas.
+Name = Niño pequeño
+Description = Niño de corta edad con peto vaquero y gorra hacia atrás. Corretea por plazas y parques.
 Gender = Male
 
 [npc018]
-Name = Joven con chaleco
-Description = Chico joven con chaleco verde oliva (BW_014). Calles, tiendas y plazas.
-Gender = Male
+Name = Niña pequeña
+Description = Niña de corta edad con vestido sencillo y lazo en el pelo. Juega en las calles de los pueblos.
+Gender = Female
 
 [npc019]
-Name = Hombre adulto
-Description = Hombre adulto en camiseta naranja y vaqueros (BW_013). Vecino corriente de pueblos, ciudades y rutas.
+Name = Chico escolar
+Description = Joven estudiante con uniforme de academia o mochila escolar. Frecuenta Ciudad Calceda y bibliotecas.
 Gender = Male
 
 [npc020]
-Name = Mujer adulta
-Description = Mujer adulta en chaqueta morada y falda clásica (NPC 14). Vecina corriente de pueblos, ciudades y rutas.
+Name = Chica escolar
+Description = Joven estudiante con falda de tablas y libreta en mano. Frecuenta Ciudad Calceda y bibliotecas.
 Gender = Female
 
 [npc021]
-Name = Hombre corpulento
-Description = Hombre corpulento y campechano con camiseta verde (BW_018). Mercados, muelles y plazas.
+Name = Joven informal
+Description = Chico adolescente con camiseta y auriculares al cuello. Pasea por ciudades y muelles.
 Gender = Male
 
 [npc022]
-Name = Mujer de mercado
-Description = Mujer madura con delantal verde de mercado (NPC 04). Puestos de mercado, tiendas y cocinas.
+Name = Joven con chaleco
+Description = Chica adolescente con chaleco y zapatillas deportivas. Pasea por plazas y miradores.
 Gender = Female
 
 [npc023]
-Name = Anciano
-Description = Anciano con barba canosa y abrigo marrón (BW_021). Vecino de pueblos y casas.
+Name = Hombre adulto
+Description = Ciudadano común de mediana edad con camisa de manga corta. Habitante de pueblos y ciudades.
 Gender = Male
 
 [npc024]
-Name = Anciana
-Description = Anciana de pelo canoso recogido en moño y abrigo morado (BW_022). Vecina de pueblos y casas.
+Name = Mujer adulta
+Description = Ciudadana común de mediana edad con vestido informal. Habitante de pueblos y ciudades.
 Gender = Female
 
-# --- 8 Slots de Repuesto (Libres para asignar en el futuro) ---
-
 [npc025]
-Name = (Repuesto 1)
-Description = Slot libre reservado para futuros NPCs según necesidad del desarrollo.
-Gender = Mixed
+Name = Hombre corpulento
+Description = Hombre robusto de complexión ancha, aspecto bonachón y ropa cómoda. Frecuenta mercados y puertos.
+Gender = Male
 
 [npc026]
-Name = (Repuesto 2)
-Description = Slot libre reservado para futuros NPCs según necesidad del desarrollo.
-Gender = Mixed
+Name = Mujer de mercado
+Description = Mujer de aspecto alegre con cesta de mimbre o delantal de comerciante. Frecuenta puestos y mercadillos.
+Gender = Female
 
 [npc027]
-Name = (Repuesto 3)
-Description = Slot libre reservado para futuros NPCs según necesidad del desarrollo.
-Gender = Mixed
+Name = Anciano
+Description = Hombre de avanzada edad con bastón de madera y paso pausado. Descansa en bancos de plazas y jardines.
+Gender = Male
 
 [npc028]
-Name = (Repuesto 4)
-Description = Slot libre reservado para futuros NPCs según necesidad del desarrollo.
-Gender = Mixed
+Name = Anciana
+Description = Mujer de avanzada edad con chal sobre los hombros y peinado recogido. Da consejos sabios en los pueblos.
+Gender = Female
 
 [npc029]
-Name = (Repuesto 5)
-Description = Slot libre reservado para futuros NPCs según necesidad del desarrollo.
+Name = (Repuesto 1)
+Description = Slot libre para NPC identificable o genérico según necesidades futuras.
 Gender = Mixed
 
 [npc030]
-Name = (Repuesto 6)
-Description = Slot libre reservado para futuros NPCs según necesidad del desarrollo.
+Name = (Repuesto 2)
+Description = Slot libre para NPC identificable o genérico según necesidades futuras.
 Gender = Mixed
 
 [npc031]
-Name = (Repuesto 7)
-Description = Slot libre reservado para futuros NPCs según necesidad del desarrollo.
+Name = (Repuesto 3)
+Description = Slot libre para NPC identificable o genérico según necesidades futuras.
 Gender = Mixed
 
 [npc032]
-Name = (Repuesto 8)
-Description = Slot libre reservado para futuros NPCs según necesidad del desarrollo.
+Name = (Repuesto 4)
+Description = Slot libre para NPC identificable o genérico según necesidades futuras.
 Gender = Mixed
