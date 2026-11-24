@@ -337,14 +337,14 @@ M68 = cap 80 / 100 | Acto 5 | Cap. 68 | Med. 8 | Frag. 6 | Jefe S— | Meseta Ce
 705 = Regalo_Unico_PuebloCasitero_ROOTFOSSIL
 706 = Regalo_Unico_PuebloCasitero_CLAWFOSSIL
 707 = Regalo_Unico_PuebloCasitero_MACHOBRACE
-708 = Regalo_Unico_PuebloNacara_OLDROD
+708 = Regalo_Unico_PuebloNacara_OLDROD | Telmo entrega la Caña de Pescar única
 709 = Regalo_Unico_PuebloNacara_SHELLBELL
 710 = Tienda_Unica_MesetaCeleste_TM76
 711 = Tienda_Unica_MesetaCeleste_TM97
 712 = Regalo_Unico_GranjaApato_WAILMERPAIL
 713 = Regalo_Unico_GranjaApato_LUCKYEGG
 714 = Regalo_Unico_Ruta3_PICKAXE
-715 = Regalo_Unico_Ruta12_GOODROD
+715 = Reserva_SinUso_Ruta12 | Antiguo slot de Caña Buena (caña unificada en 504 OLDROD)
 
 [SWITCHES_LEGENDARIES]
 # Bloque 5 · Legendarios postgame (rango 761-820)

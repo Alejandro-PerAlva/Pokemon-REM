@@ -7995,13 +7995,13 @@ Note = Podado (Vol. 9 §1.2, motivo ESC): Muñeco de huida: huir de un salvaje y
 Note = Catálogo REM (Vol. 9 §2.1): categoría Clave · rareza Clave.
 
 [ITEM_OLDROD]
-Note = Catálogo REM (Vol. 9 §2.1): categoría Clave · rareza Clave.
+Note = Unificada en REM como la única Caña de Pescar (504 OLDROD, nombre en juego: «Caña de Pescar»). Conserva las tablas 70/30 exactas y pica con tasa alta.
 
 [ITEM_GOODROD]
-Note = Catálogo REM (Vol. 9 §2.1): categoría Clave · rareza Clave.
+Note = Eliminada en REM al unificar las tres cañas en una única Caña de Pescar (504 OLDROD).
 
 [ITEM_SUPERROD]
-Note = Catálogo REM (Vol. 9 §2.1): categoría Clave · rareza Clave.
+Note = Eliminada en REM al unificar las tres cañas en una única Caña de Pescar (504 OLDROD).
 
 [ITEM_ITEMFINDER]
 Note = Catálogo REM (Vol. 9 §2.1): categoría Clave · rareza Clave.

@@ -67,7 +67,7 @@ Gender = Female
 
 [npc012]
 Name = Telmo (el Viejo Pescador)
-Description = Anciano con impermeable y barba blanca. Entrega la Caña Vieja y enseña a pescar en los muelles de Ciudad Calaire.
+Description = Anciano con impermeable y barba blanca. Entrega la Caña de Pescar y enseña a pescar en los muelles de Ciudad Calaire.
 Gender = Male
 
 [npc013]

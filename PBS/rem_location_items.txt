@@ -173,20 +173,19 @@ Item15 = ULTRABALL,1,B,Centro · tras el montón de mineral,Suministro de ruta (
 Item16 = HEAVYBALL,1,B,Cuadrante O · en la entrada de la mina,
 Item17 = IAPAPABERRY,1,B,Cuadrante SO · en el puesto del boticario,
 
-# Pueblo Nacara - 12 filas
+# Pueblo Nacara - 0 filas
 [PUEBLO_NACAR]
-Item1 = OLDROD,1,N,Casa de Telmo · mesa de pesca,Caña Vieja de Telmo (Acto III).
-Item2 = SUPERROD,1,E,Casa de Telmo · tras calmar a Darkrai,Supercaña de Telmo (postgame).
-Item3 = TM49,1,N,Casa de Telmo,Neblina: Telmo enseña a «leer la bruma».
-Item4 = TM57,1,N,Casa de Telmo · mesa de pesca,Psíquico (90 PB): Telmo lo cuenta como «vieja canción del fondo».
-Item5 = HEARTSCALE,1,H,Cuadrante O · junto a la grúa,
-Item6 = SHELLBELL,1,N,Casa de Telmo · estantería,Concha Campana: regalo del viejo pescador.
-Item7 = CALMMINT,1,B,Cuadrante NO · junto a la grúa,
-Item8 = PEARL,1,H,Centro · junto a la grúa,
-Item9 = DEEPSEATOOTH,1,H,Puerto · bajo el muelle de pesca,Objeto de evolución (Clamperl → Huntail): se usa sobre el Pokémon como una piedra.
-Item10 = MAXPOTION,1,B,Cuadrante N · en el muelle de carga,Suministro de ruta (consumible común).
-Item11 = DIVEBALL,1,B,Cuadrante NO · bajo el faro,
-Item12 = AGUAVBERRY,1,H,Cuadrante NE · en el muelle de carga,
+Item1 = OLDROD,1,N,Casa de Telmo · mesa de pesca,Caña de Pescar de Telmo (Acto III).
+Item2 = TM49,1,N,Casa de Telmo,Neblina: Telmo enseña a «leer la bruma».
+Item3 = TM57,1,N,Casa de Telmo · mesa de pesca,Psíquico (90 PB): Telmo lo cuenta como «vieja canción del fondo».
+Item4 = HEARTSCALE,1,H,Cuadrante O · junto a la grúa,
+Item5 = SHELLBELL,1,N,Casa de Telmo · estantería,Concha Campana: regalo del viejo pescador.
+Item6 = CALMMINT,1,B,Cuadrante NO · junto a la grúa,
+Item7 = PEARL,1,H,Centro · junto a la grúa,
+Item8 = DEEPSEATOOTH,1,H,Puerto · bajo el muelle de pesca,Objeto de evolución (Clamperl → Huntail): se usa sobre el Pokémon como una piedra.
+Item9 = MAXPOTION,1,B,Cuadrante N · en el muelle de carga,Suministro de ruta (consumible común).
+Item10 = DIVEBALL,1,B,Cuadrante NO · bajo el faro,
+Item11 = AGUAVBERRY,1,H,Cuadrante NE · en el muelle de carga,
 
 # Meseta Celeste (Liga Pokémon) - 7 filas
 [MESETA_CELESTITA]
@@ -845,27 +844,26 @@ Item12 = PPUP,1,H,Centro · en el puente de cuerda,
 Item13 = ULTRABALL,2,B,Cuadrante N · tras un derrumbe parcial,Suministro de ruta (consumible común).
 Item14 = MAXELIXIR,2,N,Fogata nocturna · Gaspar (agrimensor jubilado),Relato de fogata «La senda recta» (rem_lore_fogatas.txt, RELATO_22): solo de noche; se escucha las veces que se quiera y el objeto se da solo la primera vez (interruptor Fogata_Regalo_Ruta22, pendiente de alta).
 
-# Ruta 12 - 19 filas
+# Ruta 12 - 0 filas
 [RUTA_12]
-Item1 = GOODROD,1,N,Plataforma del pescador · tercera isla,Caña Buena del pescador de la plataforma.
-Item2 = TM37,1,B,Plataforma de madera · tercera isla,Vozarrón (90 PB): el eco del mar.
-Item3 = TM41,1,B,Plataforma de madera · segunda isla,Hidroariete (90 PB): potencia Agua física antes de la ciénaga.
-Item4 = DOMEFOSSIL,1,H,Cuadrante NO · sobre un islote bajo,
-Item5 = HEARTSCALE,1,H,Cuadrante O · en una plataforma de madera,
-Item6 = SHEDSHELL,1,B,Cuadrante NO · en un banco de niebla,
-Item7 = BLACKSLUDGE,1,B,Cuadrante E · junto a la boya central,
-Item8 = BOLDMINT,1,B,Cuadrante NE · en el rompeolas,
-Item9 = SUPERREPEL,2,H,Cuadrante N · sobre un islote bajo,Suministro de ruta (consumible común).
-Item10 = KINGSROCK,1,H,Cuadrante S · en el rompeolas,Objeto de evolución (Poliwhirl → Politoed / Slowpoke → Slowking): se usa sobre el Pokémon como una piedra.
-Item11 = MYSTICWATER,1,B,Cuadrante NE · junto a un pecio varado,
-Item12 = DRAGONSCALE,1,H,Cuadrante N · junto a la boya central,Objeto de evolución (Seadra → Kingdra): se usa sobre el Pokémon como una piedra.
-Item13 = ENERGYPOWDER,1,B,Cuadrante NO · en una plataforma de madera,
-Item14 = NETBALL,1,B,Cuadrante N · en un banco de niebla,
-Item15 = LUREBALL,1,B,Cuadrante E · en el rompeolas,
-Item16 = LUMBERRY,1,B,Cuadrante SO · en una plataforma de madera,
-Item17 = IAPAPABERRY,1,H,Cuadrante NE · junto a la boya central,
-Item18 = PASSHOBERRY,1,B,Cuadrante E · en una plataforma de madera,
-Item19 = ULTRABALL,3,N,Fogata nocturna · Nicanor (pescador de altura),Relato de fogata «Las tablas de los pescadores» (rem_lore_fogatas.txt, RELATO_12): solo de noche; se escucha las veces que se quiera y el objeto se da solo la primera vez (interruptor Fogata_Regalo_Ruta12, pendiente de alta).
+Item1 = TM37,1,B,Plataforma de madera · tercera isla,Vozarrón (90 PB): el eco del mar.
+Item2 = TM41,1,B,Plataforma de madera · segunda isla,Hidroariete (90 PB): potencia Agua física antes de la ciénaga.
+Item3 = DOMEFOSSIL,1,H,Cuadrante NO · sobre un islote bajo,
+Item4 = HEARTSCALE,1,H,Cuadrante O · en una plataforma de madera,
+Item5 = SHEDSHELL,1,B,Cuadrante NO · en un banco de niebla,
+Item6 = BLACKSLUDGE,1,B,Cuadrante E · junto a la boya central,
+Item7 = BOLDMINT,1,B,Cuadrante NE · en el rompeolas,
+Item8 = SUPERREPEL,2,H,Cuadrante N · sobre un islote bajo,Suministro de ruta (consumible común).
+Item9 = KINGSROCK,1,H,Cuadrante S · en el rompeolas,Objeto de evolución (Poliwhirl → Politoed / Slowpoke → Slowking): se usa sobre el Pokémon como una piedra.
+Item10 = MYSTICWATER,1,B,Cuadrante NE · junto a un pecio varado,
+Item11 = DRAGONSCALE,1,H,Cuadrante N · junto a la boya central,Objeto de evolución (Seadra → Kingdra): se usa sobre el Pokémon como una piedra.
+Item12 = ENERGYPOWDER,1,B,Cuadrante NO · en una plataforma de madera,
+Item13 = NETBALL,1,B,Cuadrante N · en un banco de niebla,
+Item14 = LUREBALL,1,B,Cuadrante E · en el rompeolas,
+Item15 = LUMBERRY,1,B,Cuadrante SO · en una plataforma de madera,
+Item16 = IAPAPABERRY,1,H,Cuadrante NE · junto a la boya central,
+Item17 = PASSHOBERRY,1,B,Cuadrante E · en una plataforma de madera,
+Item18 = ULTRABALL,3,N,Fogata nocturna · Nicanor (pescador de altura),Relato de fogata «Las tablas de los pescadores» (rem_lore_fogatas.txt, RELATO_12): solo de noche; se escucha las veces que se quiera y el objeto se da solo la primera vez (interruptor Fogata_Regalo_Ruta12, pendiente de alta).
 
 # Ruta 13 - 19 filas
 [RUTA_13]

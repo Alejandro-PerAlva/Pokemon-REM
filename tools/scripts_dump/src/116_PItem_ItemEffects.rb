@@ -132,8 +132,6 @@ ItemHandlers::UseFromBag.add(:OLDROD,proc{|item|
    end
 })
 
-ItemHandlers::UseFromBag.copy(:OLDROD,:GOODROD,:SUPERROD)
-
 ItemHandlers::UseFromBag.add(:ITEMFINDER,proc{|item| next 2 })
 
 ItemHandlers::UseFromBag.copy(:ITEMFINDER,:DOWSINGMCHN,:DOWSINGMACHINE)
@@ -195,6 +193,7 @@ ItemHandlers::UseInField.add(:BICYCLE,proc{|item|
 
 ItemHandlers::UseInField.copy(:BICYCLE,:MACHBIKE,:ACROBIKE)
 
+# Caña de Pescar única (:OLDROD): tabla principal OldRod (70/30 en REM) con respaldo GoodRod/SuperRod y tasa de picada alta (rodtype=3)
 ItemHandlers::UseInField.add(:OLDROD,proc{|item|
    terrain=Kernel.pbFacingTerrainTag
    notCliff=$game_map.passable?($game_player.x,$game_player.y,$game_player.direction)
@@ -202,35 +201,16 @@ ItemHandlers::UseInField.add(:OLDROD,proc{|item|
      Kernel.pbMessage(_INTL("Eso no se puede usar aquí."))
      next
    end
-   encounter=$PokemonEncounters.hasEncounter?(EncounterTypes::OldRod)
-   if pbFishing(encounter,1)
-     pbEncounter(EncounterTypes::OldRod)
+   enctype=nil
+   if $PokemonEncounters.hasEncounter?(EncounterTypes::OldRod)
+     enctype=EncounterTypes::OldRod
+   elsif $PokemonEncounters.hasEncounter?(EncounterTypes::GoodRod)
+     enctype=EncounterTypes::GoodRod
+   elsif $PokemonEncounters.hasEncounter?(EncounterTypes::SuperRod)
+     enctype=EncounterTypes::SuperRod
    end
-})
-
-ItemHandlers::UseInField.add(:GOODROD,proc{|item|
-   terrain=Kernel.pbFacingTerrainTag
-   notCliff=$game_map.passable?($game_player.x,$game_player.y,$game_player.direction)
-   if !PBTerrain.isWater?(terrain) || (!notCliff && !$PokemonGlobal.surfing)
-     Kernel.pbMessage(_INTL("Eso no se puede usar aquí."))
-     next
-   end
-   encounter=$PokemonEncounters.hasEncounter?(EncounterTypes::GoodRod)
-   if pbFishing(encounter,2)
-     pbEncounter(EncounterTypes::GoodRod)
-   end
-})
-
-ItemHandlers::UseInField.add(:SUPERROD,proc{|item|
-   terrain=Kernel.pbFacingTerrainTag
-   notCliff=$game_map.passable?($game_player.x,$game_player.y,$game_player.direction)
-   if !PBTerrain.isWater?(terrain) || (!notCliff && !$PokemonGlobal.surfing)
-     Kernel.pbMessage(_INTL("Eso no se puede usar aquí."))
-     next
-   end
-   encounter=$PokemonEncounters.hasEncounter?(EncounterTypes::SuperRod)
-   if pbFishing(encounter,3)
-     pbEncounter(EncounterTypes::SuperRod)
+   if pbFishing(enctype!=nil,3)
+     pbEncounter(enctype)
    end
 })
 

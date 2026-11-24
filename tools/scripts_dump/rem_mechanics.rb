@@ -2133,6 +2133,11 @@ def pbToggleItemfinder
     return
   end
 
+  if $PokemonGlobal.fishing
+    Kernel.pbMessage(_INTL("No puedes usar el Buscaobjetos mientras pescas."))
+    return
+  end
+
   $PokemonGlobal.itemfinderActive = !$PokemonGlobal.itemfinderActive
   if $PokemonGlobal.itemfinderActive
     pbSEPlay("dexselect", 80, 100)
@@ -2212,18 +2217,59 @@ class Sprite_Itemfinder < RPG::Sprite
     @character = character
     @state = -1
     @bitmaps = {}
-    @head_offset = nil
+    @head_offsets = nil
     @last_char_name = nil
+    @cw = 80
+    @ch = 80
     self.visible = false
   end
 
-  def detect_head_offset
-    return 0 if !@character || !@character.character_name
-    name = @character.character_name.downcase
-    return 6 if name =~ /girl_run/
-    return 6 if name =~ /boy_run|_run/
-    return 4 if name =~ /trchar001|girl/
-    return 0
+  def detect_head_offsets(char_name)
+    table = {}
+    hue = (@character && @character.respond_to?(:character_hue)) ? (@character.character_hue || 0) : 0
+    bmp = (char_name && char_name != "") ? (RPG::Cache.character(char_name, hue) rescue nil) : nil
+    if bmp && !bmp.disposed? && bmp.width >= 4 && bmp.height >= 4
+      char_cw = bmp.width / 4
+      char_ch = bmp.height / 4
+      x0 = char_cw / 4
+      x1 = (3 * char_cw) / 4
+      for d_idx in 0...4
+        for p_idx in 0...4
+          base_x = p_idx * char_cw
+          base_y = d_idx * char_ch
+          top_y = nil
+          for y in 0...char_ch
+            x = x0
+            while x < x1
+              if bmp.get_pixel(base_x + x, base_y + y).alpha > 128
+                top_y = y
+                break
+              end
+              x += 2
+            end
+            break if top_y
+          end
+          if top_y
+            extra_bob = (p_idx == 0 || p_idx == 2) ? 2 : 0
+            table[[d_idx, p_idx]] = (top_y - 2) - extra_bob
+          end
+        end
+      end
+      return table if !table.empty?
+    end
+    fb = 0
+    nm = (char_name || "").downcase
+    if nm =~ /_run/
+      fb = 6
+    elsif nm =~ /trchar001|girl/
+      fb = 4
+    end
+    for d_idx in 0...4
+      for p_idx in 0...4
+        table[[d_idx, p_idx]] = fb
+      end
+    end
+    return table
   end
 
   def get_state_bitmap(st)
@@ -2245,9 +2291,12 @@ class Sprite_Itemfinder < RPG::Sprite
 
   def update
     super
-    if !$PokemonGlobal || !$PokemonGlobal.itemfinderActive ||
-       $PokemonGlobal.bicycle || $PokemonGlobal.surfing || $PokemonGlobal.diving ||
-       !@character || @character.transparent
+    if !$PokemonGlobal || !$PokemonGlobal.itemfinderActive || !@character || @character.transparent
+      self.visible = false
+      return
+    end
+    if $PokemonGlobal.bicycle || $PokemonGlobal.surfing || $PokemonGlobal.diving || $PokemonGlobal.fishing
+      pbTurnOffItemfinder
       self.visible = false
       return
     end
@@ -2258,31 +2307,42 @@ class Sprite_Itemfinder < RPG::Sprite
     if new_state != @state || !self.bitmap || self.bitmap.disposed?
       @state = new_state
       self.bitmap = get_state_bitmap(@state)
-      self.ox = 32
-      self.oy = 64
+      if self.bitmap
+        @cw = self.bitmap.width / 4
+        @ch = self.bitmap.height / 4
+        self.ox = @cw / 2
+        self.oy = @ch
+      end
     end
 
     return if !self.bitmap
 
     if @last_char_name != @character.character_name
       @last_char_name = @character.character_name
-      @head_offset = detect_head_offset
+      @head_offsets = detect_head_offsets(@last_char_name)
     end
+
+    dir = @character.direction
+    dir_idx = (dir - 2) / 2
+    dir_idx = 0 if dir_idx < 0 || dir_idx > 3
+    pat = @character.pattern
+    y_off = (@head_offsets && @head_offsets[[dir_idx, pat]]) ? @head_offsets[[dir_idx, pat]] : 0
 
     self.visible = true
     self.x = @character.screen_x
-    self.y = @character.screen_y + (@head_offset || 0)
+    self.y = @character.screen_y + y_off
     self.z = @character.screen_z(64) + 1
+    self.zoom_x = Game_Map::TILEWIDTH / 32.0
+    self.zoom_y = Game_Map::TILEHEIGHT / 32.0
 
-    cw = 64
-    ch = 64
-    dir = @character.direction
-    sy = ((dir - 2) / 2) * ch
+    cw = @cw
+    ch = @ch
+    sy = dir_idx * ch
 
     # Sincronización exacta con el ciclo de marcha y parada del personaje:
-    if @character.pattern != 1
+    if pat != 1
       # En cualquier paso de movimiento (pattern 0, 2 o 3), seguir con precisión matemática su frame
-      sx = @character.pattern * cw
+      sx = pat * cw
     else
       # Cuando está quieto en reposo (pattern 1), alternar entre frame 1 y frame 3 para parpadear
       # Ambos frames tienen bob = 0 (altura estándar de reposo), garantizando cero desajuste vertical
@@ -2329,7 +2389,7 @@ end
 
 Events.onStepTaken += proc {
   if $PokemonGlobal && $PokemonGlobal.itemfinderActive
-    if $PokemonGlobal.bicycle || $PokemonGlobal.surfing || $PokemonGlobal.diving
+    if $PokemonGlobal.bicycle || $PokemonGlobal.surfing || $PokemonGlobal.diving || $PokemonGlobal.fishing
       pbTurnOffItemfinder
     else
       event = pbItemfinderDetect
