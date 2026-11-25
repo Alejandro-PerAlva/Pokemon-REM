@@ -29,7 +29,7 @@ module PBDayNight
      Tone.new(0,     0,     0,    0),   # Day/afternoon
      Tone.new(-30,   -30,   5,  68),   # Day/evening      # 6PM
      Tone.new(-30,   -30,   5,  68),   # Day/evening
-     Tone.new(-35,   -35,   7,  68),   # Day/evening
+     Tone.new(-70,-70,11,68),   # Night
      Tone.new(-70,-70,11,68),   # Night
      Tone.new(-70,-70,11,68),   # Night
      Tone.new(-70,-70,11,68)   # Night
@@ -71,7 +71,7 @@ module PBDayNight
 # Devuelve verdadero si está anocheciendo.
   def self.isEvening?(time=nil)
     time=pbGetTimeNow if !time
-    return (time.hour>=17 && time.hour<20)
+    return (time.hour>=18 && time.hour<20)
   end
 
 # Devuelve un número representando la cantidad de luz de día.

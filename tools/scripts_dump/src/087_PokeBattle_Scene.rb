@@ -1647,17 +1647,20 @@ class PokeBattle_Scene
       backdrop=$PokemonGlobal.nextBattleBack
     end
     # Choose bases
+    use_bases=!(defined?(USEBATTLEBASES) && !USEBATTLEBASES)
     base=""
-    trialname=""
-    if environ==PBEnvironment::Grass || environ==PBEnvironment::TallGrass
-      trialname="Grass"
-    elsif environ==PBEnvironment::Sand
-      trialname="Sand"
-    elsif $PokemonGlobal.surfing
-      trialname="Water"
-    end
-    if pbResolveBitmap(sprintf("Graphics/Battlebacks/playerbase"+backdrop+trialname))
-      base=trialname
+    if use_bases
+      trialname=""
+      if environ==PBEnvironment::Grass || environ==PBEnvironment::TallGrass
+        trialname="Grass"
+      elsif environ==PBEnvironment::Sand
+        trialname="Sand"
+      elsif $PokemonGlobal.surfing
+        trialname="Water"
+      end
+      if pbResolveBitmap(sprintf("Graphics/Battlebacks/playerbase"+backdrop+trialname))
+        base=trialname
+      end
     end
     # Choose time of day
     time=""
@@ -1675,8 +1678,8 @@ class PokeBattle_Scene
     end
     # Apply graphics
     battlebg="Graphics/Battlebacks/battlebg"+backdrop+time
-    enemybase="Graphics/Battlebacks/enemybase"+backdrop+base+time
-    playerbase="Graphics/Battlebacks/playerbase"+backdrop+base+time
+    enemybase=use_bases ? "Graphics/Battlebacks/enemybase"+backdrop+base+time : nil
+    playerbase=use_bases ? "Graphics/Battlebacks/playerbase"+backdrop+base+time : nil
     pbAddPlane("battlebg",battlebg,@viewport)
     pbAddSprite("playerbase",
        PokeBattle_SceneConstants::PLAYERBASEX,
@@ -1691,6 +1694,10 @@ class PokeBattle_Scene
     @sprites["battlebg"].z=0
     @sprites["playerbase"].z=1
     @sprites["enemybase"].z=1
+    if !use_bases
+      @sprites["playerbase"].visible=false if @sprites["playerbase"]
+      @sprites["enemybase"].visible=false if @sprites["enemybase"]
+    end
   end
 
   # Returns whether the party line-ups are currently appearing on-screen
