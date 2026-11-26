@@ -37,8 +37,7 @@ class HallOfFameScene
     typename = PBTypes.getName(type_id) rescue "Normal"
     name_map = {
       "Lucha" => "Luch",
-      "Normal" => "NORMAL",
-      "Hada" => "Psíquico"
+      "Normal" => "NORMAL"
     }
     target = name_map[typename] || typename
     if pbResolveBitmap("Graphics/Pictures/HallOfFame/" + target)
